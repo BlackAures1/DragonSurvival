@@ -26,12 +26,13 @@ public class DragonAltarGUI extends Screen {
         super.init();
         this.addButton(new ExtendedButton(0, 0, 200, 20, "test",
                 $ -> {
-                    if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
-                        Vec3d placeHolder = new Vec3d(0, 0, 0);
-                        DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.CAVE, 0, 0, 0, 0, placeHolder, placeHolder));
-                        System.out.println("not stonks");
-                    } else
-                        System.out.println("stonks");
+                    if (Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+                        if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
+                            Vec3d placeHolder = new Vec3d(0, 0, 0);
+                            DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.CAVE, 0, 0, 0, 0, placeHolder, placeHolder));
+                            System.out.println("not stonks");
+                        } else
+                            System.out.println("stonks");
                 }
         ));
 
