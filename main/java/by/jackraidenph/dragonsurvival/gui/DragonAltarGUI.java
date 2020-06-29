@@ -3,8 +3,10 @@ package by.jackraidenph.dragonsurvival.gui;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.network.MessageSyncCapability;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
@@ -25,7 +27,8 @@ public class DragonAltarGUI extends Screen {
         this.addButton(new ExtendedButton(0, 0, 200, 20, "test",
                 $ -> {
                     if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
-                        DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(true, "cave", 0));
+                        Vec3d placeHolder = new Vec3d(0, 0, 0);
+                        DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.CAVE, 0, 0, 0, 0, placeHolder, placeHolder));
                         System.out.println("not stonks");
                     } else
                         System.out.println("stonks");

@@ -18,7 +18,6 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
