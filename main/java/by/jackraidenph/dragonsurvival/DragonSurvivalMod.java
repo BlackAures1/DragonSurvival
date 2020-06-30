@@ -37,7 +37,7 @@ public class DragonSurvivalMod {
     private static int nextId = 0;
     IPlayerStateHandler cap;
     PlayerEntity player;
-    DragonModel model;
+    DragonModel model = new DragonModel();
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -72,12 +72,11 @@ public class DragonSurvivalMod {
     public void onRender(RenderLivingEvent.Pre e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
-            model = new DragonModel(player);
             if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
                 cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
-                    model.render(e.getMatrixStack(), e.getBuffers().getBuffer(RenderType.getEntityTranslucent(new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon.png"))), e.getLight(), 0, e.getPartialRenderTick(), 1.0f, 1.0f, 1.0f);
+                    model.render(e.getMatrixStack(), e.getBuffers().getBuffer(RenderType.getEntityTranslucent(new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon.png"))), e.getLight(), 0, e.getPartialRenderTick(), player.getYaw(e.getPartialRenderTick()), 1.0f, 1.0f);
                 }
             }
         }

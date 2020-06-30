@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer main;
@@ -56,11 +55,8 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer bone19;
     private final ModelRenderer bone20;
     private final ModelRenderer bone21;
-    private final PlayerEntity player;
 
-    public DragonModel(PlayerEntity player) {
-        this.player = player;
-
+    public DragonModel() {
         textureWidth = 128;
         textureHeight = 128;
 
@@ -359,7 +355,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0F, 1.5F, 0F);
         matrixStack.rotate(new Quaternion(180f, 0f, 0f, true));
-        setRotationAngle(main, 0, player.getYaw(partialTicks) * 0.017453292F, 0);
+        setRotationAngle(main, 0, headYaw * 0.017453292F, 0);
         main.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
