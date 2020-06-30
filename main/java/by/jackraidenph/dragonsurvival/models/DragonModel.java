@@ -5,11 +5,13 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class Dragon<T extends Entity> extends EntityModel<T> {
+public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer main;
     private final ModelRenderer main_body;
     private final ModelRenderer maim_pelvis;
@@ -54,8 +56,11 @@ public class Dragon<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer bone19;
     private final ModelRenderer bone20;
     private final ModelRenderer bone21;
+    private final PlayerEntity player;
 
-    public Dragon() {
+    public DragonModel(PlayerEntity player) {
+        this.player = player;
+
         textureWidth = 128;
         textureHeight = 128;
 
@@ -350,18 +355,17 @@ public class Dragon<T extends Entity> extends EntityModel<T> {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float partialTicks, float headYaw, float headPitch, float scale) {
+        matrixStack.scale(scale, scale, scale);
+        matrixStack.translate(0F, 1.5F, 0F);
+        matrixStack.rotate(new Quaternion(180f, 0f, 0f, true));
+        setRotationAngle(main, 0, player.getYaw(partialTicks) * 0.017453292F, 0);
         main.render(matrixStack, buffer, packedLight, packedOverlay);
-
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
-    }
-
-    public void rotateBody(float angle) {
-        this.setRotationAngle(this.main, 0, angle/60.0F, 0);
     }
 }
