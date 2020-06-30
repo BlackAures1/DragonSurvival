@@ -61,7 +61,7 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
-    public void onCapability(AttachCapabilitiesEvent<Entity> event) {
+    public void onCapabileity(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new PlayerStateProvider());
             LOGGER.info("Successfully attached capability to the PlayerEntity!");
@@ -76,7 +76,25 @@ public class DragonSurvivalMod {
                 cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
-                    model.render(e.getMatrixStack(), e.getBuffers().getBuffer(RenderType.getEntityTranslucent(new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon.png"))), e.getLight(), 0, e.getPartialRenderTick(), player.getYaw(e.getPartialRenderTick()), 1.0f, 1.0f);
+
+                    model.setRotationAngles(
+                            player,
+                            player.limbSwing,
+                            player.limbSwingAmount,
+                            player.ticksExisted,
+                            player.getYaw(e.getPartialRenderTick()),
+                            player.getPitch(e.getPartialRenderTick()));
+
+                    model.render(
+                            e.getMatrixStack(),
+                            e.getBuffers().getBuffer(RenderType.getEntityTranslucent(new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon.png"))),
+                            e.getLight(),
+                            0,
+                            e.getPartialRenderTick(),
+                            player.getYaw(e.getPartialRenderTick()),
+                            player.getPitch(e.getPartialRenderTick()),
+                            1.0f);
+
                 }
             }
         }

@@ -9,6 +9,11 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer main;
@@ -55,6 +60,11 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer bone19;
     private final ModelRenderer bone20;
     private final ModelRenderer bone21;
+    List<ModelRenderer> tail;
+    List<ModelRenderer> LegBR;
+    List<ModelRenderer> LegBL;
+    List<ModelRenderer> LegFR;
+    List<ModelRenderer> LegFL;
 
     public DragonModel() {
         textureWidth = 128;
@@ -343,20 +353,52 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         bone21.setTextureOffset(0, 64).addBox(-1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
         bone21.setTextureOffset(63, 31).addBox(0.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
         bone21.setTextureOffset(63, 29).addBox(1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+        tail = new ArrayList<>(Arrays.asList(bone, bone11, bone12, bone13, bone14));
+        LegFL = new ArrayList<>(Arrays.asList(Leg1, bone6, bone9, bone10));
+        LegFR = new ArrayList<>(Arrays.asList(Leg2, bone2, bone3, bone7));
+        LegBL = new ArrayList<>(Arrays.asList(Leg3, bone8, bone5, bone4));
+        LegBR = new ArrayList<>(Arrays.asList(Leg4, bone19, bone20, bone21));
     }
 
     @Override
     public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        //previously the render function, render code was moved to a method below
+        //this.main.rotateAngleY = netHeadYaw * 0.017453292F;
+
+        this.Leg4.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
+        this.Leg2.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
+
+        this.Leg1.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F;
+        this.Leg3.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
+
+        /*LegBR.get(entity.world.rand.nextInt(LegBR.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
+        LegBL.get(entity.world.rand.nextInt(LegBL.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount) * 0.2F;
+        LegFL.get(entity.world.rand.nextInt(LegFL.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F;
+        LegFR.get(entity.world.rand.nextInt(LegFR.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount) * 0.2F;*/
+
+        this.tail.get(entity.world.rand.nextInt(tail.size())).rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
+        this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f - 0.175f;
+        this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
+        this.NeckandHead.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0575f + 1.8326f;
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float partialTicks, float headYaw, float headPitch, float scale) {
+        matrixStack.push();
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0F, 1.5F, 0F);
         matrixStack.rotate(new Quaternion(180f, 0f, 0f, true));
-        setRotationAngle(main, 0, headYaw * 0.017453292F, 0);
+       /* float headYawR = MathHelper.clamp(headYaw % 360, -90, 90) * -0.017453292F;
+        float headPitchR = (headPitch + 90) * -0.017453292F;
+
+        if (headYaw % 360 > 90 | headYaw % 360 < -90)
+            this.main.rotateAngleY = headYaw % 360 * 0.017453292F;
+        else {
+            this.Head.rotateAngleX = headPitchR;
+            this.Head.rotateAngleZ = headYawR;
+        }*/
         main.render(matrixStack, buffer, packedLight, packedOverlay);
+        matrixStack.pop();
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
