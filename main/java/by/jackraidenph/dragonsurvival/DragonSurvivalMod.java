@@ -6,10 +6,13 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.network.IMessage;
 import by.jackraidenph.dragonsurvival.network.MessageSyncCapability;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -80,21 +83,22 @@ public class DragonSurvivalMod {
                     model.setRotationAngles(
                             player,
                             player.limbSwing,
-                            player.limbSwingAmount,
+                            MathHelper.lerp(e.getPartialRenderTick(), player.limbSwingAmount, player.prevLimbSwingAmount),
                             player.ticksExisted,
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
 
+                    String texture = "textures/" + Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getType().toString().toLowerCase() + ".png";
+
                     model.render(
                             e.getMatrixStack(),
-                            e.getBuffers().getBuffer(RenderType.getEntityTranslucent(new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon.png"))),
+                            e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
                             e.getLight(),
-                            0,
+                            LivingRenderer.getPackedOverlay(player, 0.0f),
                             e.getPartialRenderTick(),
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()),
                             1.0f);
-
                 }
             }
         }

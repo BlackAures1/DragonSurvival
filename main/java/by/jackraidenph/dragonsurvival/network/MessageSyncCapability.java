@@ -31,6 +31,7 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
                                  double bodyYaw,
                                  double neckLength,
                                  double headYaw,
+                                 double headPitch,
                                  Vec3d headPos,
                                  Vec3d tailPos) {
         this.type = type;
@@ -38,6 +39,7 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
         this.bodyYaw = bodyYaw;
         this.neckLength = neckLength;
         this.headYaw = headYaw;
+        this.headPitch = headPitch;
         this.headPos = headPos;
         this.tailPos = tailPos;
     }
@@ -48,6 +50,7 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
         this.bodyYaw = (double) data.getMovementData().get("bodyYaw");
         this.neckLength = data.getNeckLength();
         this.headYaw = (double) data.getMovementData().get("headYaw");
+        this.headPitch = (double) data.getMovementData().get("headPitch");;
         this.headPos = (Vec3d) data.getMovementData().get("headPos");
         this.tailPos = (Vec3d) data.getMovementData().get("tailPos");
     }
@@ -59,6 +62,7 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
         b.writeDouble(m.bodyYaw);
         b.writeDouble(m.neckLength);
         b.writeDouble(m.headYaw);
+        b.writeDouble(m.headPitch);
         writeVec3d(b, m.headPos);
         writeVec3d(b, m.tailPos);
     }
@@ -68,6 +72,7 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
         return new MessageSyncCapability(
                 b.readEnumValue(DragonType.class),
                 b.readInt(),
+                b.readDouble(),
                 b.readDouble(),
                 b.readDouble(),
                 b.readDouble(),

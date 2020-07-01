@@ -24,17 +24,38 @@ public class DragonAltarGUI extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.addButton(new ExtendedButton(0, 0, 200, 20, "test",
+        this.addButton(new ExtendedButton(0, 0, 200, 20, "CAVE",
                 $ -> {
                     if (Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
                         if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
                             Vec3d placeHolder = new Vec3d(0, 0, 0);
-                            DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.CAVE, 0, 0, 0, 0, placeHolder, placeHolder));
+                            DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.CAVE, 0, 0, 0, 0, 0, placeHolder, placeHolder));
                             System.out.println("not stonks");
                         } else
                             System.out.println("stonks");
                 }
         ));
-
+        this.addButton(new ExtendedButton(0, 20, 200, 20, "FOREST",
+                $ -> {
+                    if (Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+                        if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
+                            Vec3d placeHolder = new Vec3d(0, 0, 0);
+                            DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.FOREST, 0, 0, 0, 0, 0, placeHolder, placeHolder));
+                            System.out.println("not stonks");
+                        } else
+                            System.out.println("stonks");
+                }
+        ));
+        this.addButton(new ExtendedButton(0, 40, 200, 20, "SEA",
+                $ -> {
+                    if (Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+                        if (!Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getIsDragon()) {
+                            Vec3d placeHolder = new Vec3d(0, 0, 0);
+                            DragonSurvivalMod.INSTANCE.sendToServer(new MessageSyncCapability(DragonType.SEA, 0, 0, 0, 0, 0, placeHolder, placeHolder));
+                            System.out.println("not stonks");
+                        } else
+                            System.out.println("stonks");
+                }
+        ));
     }
 }

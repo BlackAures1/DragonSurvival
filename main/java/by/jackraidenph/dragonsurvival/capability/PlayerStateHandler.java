@@ -87,8 +87,9 @@ public class PlayerStateHandler implements IPlayerStateHandler {
     public static class DragonData {
         DragonType type;
         int level;
-        double bodyYaw;
         double neckLength;
+
+        double bodyYaw;
         double headYaw;
         double headPitch;
         Vec3d headPos;
@@ -110,12 +111,14 @@ public class PlayerStateHandler implements IPlayerStateHandler {
                           Vec3d tailPos) {
             this.type = type;
             this.level = level;
-            this.bodyYaw = bodyYaw;
             this.neckLength = neckLength;
+
+            this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
             this.headPos = headPos;
             this.tailPos = tailPos;
+
             this.headPosLastTick = headPos;
             this.tailPosLastTick = tailPos;
             this.headYawLastTick = headYaw;
