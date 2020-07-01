@@ -15,8 +15,6 @@ public interface IPlayerStateHandler {
 
     void setMovementLastTick(double bodyYawLastTick, double headYawLastTick, double headPitchLastTick, Vec3d headPosLastTick, Vec3d tailPosLastTick);
 
-    //HashMap<String, Object> getMovementDataLastTick();
-
     HashMap<String, Object> getMovementData();
 
     DragonType getType();

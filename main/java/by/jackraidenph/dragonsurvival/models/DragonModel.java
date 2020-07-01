@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     List<ModelRenderer> LegBL;
     List<ModelRenderer> LegFR;
     List<ModelRenderer> LegFL;
+    List<ModelRenderer> NeckHead;
+    float[] offsets;
 
     public DragonModel() {
         textureWidth = 128;
@@ -119,7 +122,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         bone13.addChild(bone16);
         setRotationAngle(bone16, 0.2618F, 0.0F, 0.0F);
         bone16.setTextureOffset(101, 15).addBox(-1.0F, -0.7709F, 0.2067F, 2.0F, 1.0F, 8.0F, 0.0F, false);
-        bone16.setTextureOffset(0, 25).addBox(-6.0F, -0.1066F, 1.0622F, 12.0F, 0.0F, 13.0F, 0.0F, false);
+        bone16.setTextureOffset(0, 25).addBox(-6.0F, -0.1066F, 1.0622F, 12.0F, 0.01F, 13.0F, 0.0F, false);
 
         bone14 = new ModelRenderer(this);
         bone14.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -144,21 +147,21 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         Neckand.addChild(Neckand4);
         setRotationAngle(Neckand4, -0.4363F, 0.0F, 0.0F);
         Neckand4.setTextureOffset(44, 74).addBox(-3.0F, -7.0F, -6.0F, 6.0F, 6.0F, 8.0F, 0.0F, false);
-        Neckand4.setTextureOffset(21, 35).addBox(0.0F, -5.6693F, 1.648F, 0.0F, 8.0F, 3.0F, 0.0F, false);
+        Neckand4.setTextureOffset(21, 35).addBox(0.0F, -5.6693F, 1.648F, 0.01F, 8.0F, 3.0F, 0.0F, false);
 
         Neckand8 = new ModelRenderer(this);
         Neckand8.setRotationPoint(0.0F, 1.2321F, -1.866F);
         Neckand4.addChild(Neckand8);
         setRotationAngle(Neckand8, -0.2618F, 0.0F, 0.0F);
         Neckand8.setTextureOffset(90, 41).addBox(-2.0F, -12.0F, -5.0F, 4.0F, 6.0F, 7.0F, 0.0F, false);
-        Neckand8.setTextureOffset(41, 62).addBox(-0.01F, -11.6331F, 0.5524F, 0.0F, 4.0F, 4.0F, 0.0F, false);
+        Neckand8.setTextureOffset(41, 62).addBox(-0.01F, -11.6331F, 0.5524F, 0.01F, 4.0F, 4.0F, 0.0F, false);
 
         Neckand12 = new ModelRenderer(this);
         Neckand12.setRotationPoint(0.0F, 0.7071F, -1.2247F);
         Neckand8.addChild(Neckand12);
         setRotationAngle(Neckand12, -0.0873F, 0.0F, 0.0F);
         Neckand12.setTextureOffset(100, 79).addBox(-1.99F, -17.0F, -4.0F, 4.0F, 5.0F, 6.0F, 0.0F, false);
-        Neckand12.setTextureOffset(0, 55).addBox(0.0F, -17.7483F, 0.7779F, 0.0F, 6.0F, 4.0F, 0.0F, false);
+        Neckand12.setTextureOffset(0, 55).addBox(0.0F, -17.7483F, 0.7779F, 0.01F, 6.0F, 4.0F, 0.0F, false);
 
         Head = new ModelRenderer(this);
         Head.setRotationPoint(0.0F, -9.2944F, 8.4455F);
@@ -359,17 +362,30 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         LegFR = new ArrayList<>(Arrays.asList(Leg2, bone2, bone3, bone7));
         LegBL = new ArrayList<>(Arrays.asList(Leg3, bone8, bone5, bone4));
         LegBR = new ArrayList<>(Arrays.asList(Leg4, bone19, bone20, bone21));
+        NeckHead = new ArrayList<>(Arrays.asList(Neckand4, Neckand8, Neckand12, Head));
+        offsets = new float[]{-0.4363F, -0.2618F, -0.0873F, -1.3963F};
     }
 
     @Override
     public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //this.main.rotateAngleY = netHeadYaw * 0.017453292F;
 
+        float yaw = MathHelper.wrapDegrees(netHeadYaw);
+
         this.Leg4.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
         this.Leg2.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
 
         this.Leg1.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F;
         this.Leg3.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
+
+        /*this.NeckandHead.rotateAngleY = netHeadYaw * 0.017453292F;
+        this.main_body.rotateAngleY = ((PlayerEntity)entity).renderYawOffset * 0.017453292F;
+        this.maim_pelvis.rotateAngleY = ((PlayerEntity)entity).renderYawOffset * 0.017453292F;
+        this.Legs_all.rotateAngleY = ((PlayerEntity)entity).renderYawOffset * 0.017453292F;*/
+
+        this.main.rotateAngleY = ((PlayerEntity) entity).renderYawOffset * 0.017453292F;
+        this.NeckandHead.rotateAngleY = (netHeadYaw * 0.017453292F) - this.main.rotateAngleY;
+        this.Head.rotateAngleX = (headPitch * 0.017453292F) - 1.5707964f;
 
         /*LegBR.get(entity.world.rand.nextInt(LegBR.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
         LegBL.get(entity.world.rand.nextInt(LegBL.size())).rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount) * 0.2F;
