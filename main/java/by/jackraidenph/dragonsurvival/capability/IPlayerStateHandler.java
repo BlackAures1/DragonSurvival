@@ -9,6 +9,8 @@ public interface IPlayerStateHandler {
 
     boolean getIsDragon();
 
+    PlayerStateHandler.DragonData getData();
+
     void setData(PlayerStateHandler.DragonData data);
 
     void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos);

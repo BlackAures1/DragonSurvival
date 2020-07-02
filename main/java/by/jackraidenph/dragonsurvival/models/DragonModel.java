@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -66,6 +67,8 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     List<ModelRenderer> LegFR;
     List<ModelRenderer> LegFL;
     List<ModelRenderer> NeckHead;
+    float partialTicks = 0.0F;
+    PlayerEntity player;
     float[] offsets;
 
     public DragonModel() {
@@ -251,6 +254,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
 
         NeckandMain = new ModelRenderer(this);
         NeckandMain.setRotationPoint(0.0F, -2.0F, -2.0F);
+        setRotationAngle(NeckandMain, -0.3235F, 0F, 0F);
         NeckandHead.addChild(NeckandMain);
         setRotationAngle(NeckandMain, -0.4363F, 0.0F, 0.0F);
         NeckandMain.setTextureOffset(49, 59).addBox(-4.0F, -2.2679F, -4.2811F, 8.0F, 6.0F, 9.0F, 0.0F, false);
@@ -258,6 +262,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
 
         NeckandFOne = new ModelRenderer(this);
         NeckandFOne.setRotationPoint(0.0F, -2.4824F, 0.2278F);
+        setRotationAngle(NeckandFOne, -0.3235F, 0F, 0F);
         NeckandMain.addChild(NeckandFOne);
         NeckandFOne.setTextureOffset(44, 74).addBox(-3.0F, -3.0F, -4.0F, 6.0F, 6.0F, 8.0F, 0.0F, false);
         NeckandFOne.setTextureOffset(15, 56).addBox(0.0F, -3.0F, -6.9282F, 0.0F, 7.0F, 3.0F, 0.0F, false);
@@ -265,6 +270,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
 
         NeckandTwo = new ModelRenderer(this);
         NeckandTwo.setRotationPoint(0.0F, -2.7679F, 0.134F);
+        setRotationAngle(NeckandTwo, -0.3235F, 0F, 0F);
         NeckandFOne.addChild(NeckandTwo);
         NeckandTwo.setTextureOffset(88, 27).addBox(-2.0F, -4.2726F, -2.9294F, 4.0F, 6.0F, 7.0F, 0.0F, false);
         NeckandTwo.setTextureOffset(74, 58).addBox(-0.01F, -4.0706F, -6.5863F, 0.0F, 6.0F, 4.0F, 0.0F, false);
@@ -272,6 +278,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
 
         NeckandThree = new ModelRenderer(this);
         NeckandThree.setRotationPoint(0.0F, -3.5655F, 0.8458F);
+        setRotationAngle(NeckandThree, -0.3235F, 0F, 0F);
         NeckandTwo.addChild(NeckandThree);
         NeckandThree.setTextureOffset(100, 81).addBox(-1.99F, -5.0457F, -2.9541F, 4.0F, 5.0F, 6.0F, 0.0F, false);
         NeckandThree.setTextureOffset(72, 44).addBox(0.0F, -4.8298F, -6.5064F, 0.0F, 6.0F, 4.0F, 0.0F, false);
@@ -376,31 +383,53 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
 
     @Override
     public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        player = (PlayerEntity) entity;
 
-        float yaw = MathHelper.wrapDegrees(netHeadYaw);
+        //this.maim_pelvis.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
+        //this.main_body.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
+        this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
+
+        this.tail.get(entity.world.rand.nextInt(tail.size())).rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
+        this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
+        //this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
+        this.NeckandHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.083f) * -0.0575f + 1.8326f;
+        this.Leg1.rotateAngleX = -this.main_body.rotateAngleX;
+        this.Leg2.rotateAngleX = -this.main_body.rotateAngleX;
+
+        /*this.NeckandMain.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
+        this.NeckandFOne.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
+        this.NeckandTwo.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;*/
+        this.NeckandThree.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
+
+        //this.main_body.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -5.0F;
+        this.maim_pelvis.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
+
+        //this.Leg1.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
+        //this.Leg2.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
+        this.Leg3.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
+        this.Leg4.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
 
         this.Leg4.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
         this.Leg2.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
 
-        this.Leg1.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F;
+        this.Leg1.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
         this.Leg3.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
 
-        this.bone9.rotateAngleX = (MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 1.4835F;
-        this.bone3.rotateAngleX = (MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 1.4835F;
+        this.bone9.rotateAngleX = -(MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 1.4835F;
+        this.bone3.rotateAngleX = -(MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 1.4835F;
         this.bone20.rotateAngleX = (MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 0.9599F;
-        this.bone5.rotateAngleX = (MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F + 0.9599F;
+        this.bone5.rotateAngleX = (MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 0.9599F;
 
-        this.tail.get(entity.world.rand.nextInt(tail.size())).rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
-        this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
-        this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
-        this.NeckandHead.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0575f + 1.8326f;
-        this.Leg1.rotateAngleX -= this.main_body.rotateAngleX;
-        this.Leg2.rotateAngleX -= this.main_body.rotateAngleX;
+        this.bone7.rotateAngleX = MathHelper.clamp(this.bone7.rotateAngleX, -2.0F, -1.5708F);
+        this.bone4.rotateAngleX = MathHelper.clamp(this.bone4.rotateAngleX, -2.0F, -1.5708F);
+        this.bone10.rotateAngleX = MathHelper.clamp(this.bone10.rotateAngleX, -2.0F, -1.5708F);
+        this.bone21.rotateAngleX = MathHelper.clamp(this.bone21.rotateAngleX, -2.0F, -1.5708F);
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float partialTicks, float headYaw, float headPitch, float scale) {
         matrixStack.push();
+        this.partialTicks = partialTicks;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0F, 1.5F, 0F);

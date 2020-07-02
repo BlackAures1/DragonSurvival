@@ -11,11 +11,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -75,20 +78,20 @@ public class DragonSurvivalMod {
     public void onRender(RenderLivingEvent.Pre e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
-            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
-                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
+            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
+                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElseGet(null);
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
                     model.setRotationAngles(
                             player,
                             player.limbSwing,
-                            MathHelper.lerp(e.getPartialRenderTick(), player.limbSwingAmount, player.prevLimbSwingAmount),
+                            MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
                             player.ticksExisted,
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
 
-                    String texture = "textures/" + Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getType().toString().toLowerCase() + ".png";
+                    String texture = "textures/" + Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null).getType().toString().toLowerCase() + ".png";
 
                     model.render(
                             e.getMatrixStack(),
@@ -99,6 +102,30 @@ public class DragonSurvivalMod {
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()),
                             1.0f);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onClone(PlayerEvent.Clone e) {
+        if (!player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent())
+            return;
+        PlayerEntity player = e.getPlayer();
+        IPlayerStateHandler cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+        IPlayerStateHandler oldCap = e.getOriginal().getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+        cap.setData(oldCap.getData());
+    }
+
+    @SubscribeEvent
+    public void onCollision(GetCollisionBoxesEvent e) {
+        System.out.println(e);
+        if (e.getEntity() instanceof PlayerEntity) {
+            player = (PlayerEntity) e.getEntity();
+            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
+                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
+                if (cap.getIsDragon()) {
+                    System.out.println(e.getCollisionBoxesList());
                 }
             }
         }

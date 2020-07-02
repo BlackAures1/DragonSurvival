@@ -7,6 +7,7 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -99,8 +100,8 @@ public class MessageSyncCapability implements IMessage<MessageSyncCapability> {
         PlayerEntity player;
         player = supplier.get().getDirection().getReceptionSide().isServer() ? supplier.get().getSender() : Minecraft.getInstance().player;
         IPlayerStateHandler cap;
-        if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
-            cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
+            cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
             cap.setData(new PlayerStateHandler.DragonData(m.type, m.level, m.bodyYaw, m.neckLength, m.headYaw, m.headPitch, m.headPos, m.tailPos));
         }
         supplier.get().setPacketHandled(true);

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import java.util.HashMap;
 import java.util.Optional;
 
+
 public class PlayerStateHandler implements IPlayerStateHandler {
     private Optional<DragonData> data = Optional.ofNullable(null);
 
@@ -18,9 +19,13 @@ public class PlayerStateHandler implements IPlayerStateHandler {
     }
 
     @Override
+    public DragonData getData() {
+        return this.data.orElse(null);
+    }
+
+    @Override
     public void setData(DragonData data) {
-        if (this.data.isPresent())
-            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(this.data.get()));
+        DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(data));
         this.data = Optional.ofNullable(data);
     }
 
