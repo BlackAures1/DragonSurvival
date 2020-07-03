@@ -25,8 +25,6 @@ public class CapabilityStorage implements Capability.IStorage<IPlayerStateHandle
 
     @Override
     public INBT writeNBT(Capability<IPlayerStateHandler> capability, IPlayerStateHandler instance, Direction side) {
-        if (side != Direction.DOWN)
-            return null;
         CompoundNBT tag = new CompoundNBT();
         tag.putBoolean("isDragon", instance.getIsDragon());
         if (instance.getIsDragon()) {
@@ -46,8 +44,6 @@ public class CapabilityStorage implements Capability.IStorage<IPlayerStateHandle
 
     @Override
     public void readNBT(Capability<IPlayerStateHandler> capability, IPlayerStateHandler instance, Direction side, INBT base) {
-        if (side != Direction.DOWN)
-            return;
         CompoundNBT tag = (CompoundNBT) base;
         if (tag.getBoolean("isDragon")) {
             System.out.println("stonks");

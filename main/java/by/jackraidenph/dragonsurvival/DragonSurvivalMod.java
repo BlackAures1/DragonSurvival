@@ -25,6 +25,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,8 +43,10 @@ public class DragonSurvivalMod {
     );
     private static int nextId = 0;
     IPlayerStateHandler cap;
+    IPlayerStateHandler capUpd;
     PlayerEntity player;
     DragonModel model = new DragonModel();
+    PlayerEntity playerUpd;
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -75,11 +78,23 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
+    public void onLogged(PlayerEvent.PlayerLoggedInEvent e) {
+        if (((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+            INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getData()));
+    }
+
+    @SubscribeEvent
+    public void onLogged(PlayerEvent.PlayerLoggedOutEvent e) {
+        if (((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+            INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getData()));
+    }
+
+    @SubscribeEvent
     public void onRender(RenderLivingEvent.Pre e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
-            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
-                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElseGet(null);
+            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
+                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
@@ -107,13 +122,26 @@ public class DragonSurvivalMod {
         }
     }
 
+    /*@SubscribeEvent
+    public void onLivingUpdate(LivingEvent.LivingUpdateEvent e) {
+        if (e.getEntityLiving() instanceof PlayerEntity) {
+            playerUpd = (PlayerEntity) e.getEntityLiving();
+            if (playerUpd.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
+                capUpd = playerUpd.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+                if(capUpd.getIsDragon()){
+                    capUpd.setMovementData(playerUpd.renderYawOffset, playerUpd.rotationYawHead, playerUpd.rotationPitch, );
+                }
+            }
+        }
+    }*/
+
     @SubscribeEvent
     public void onClone(PlayerEvent.Clone e) {
-        if (!player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent())
+        if (!player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
             return;
         PlayerEntity player = e.getPlayer();
-        IPlayerStateHandler cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
-        IPlayerStateHandler oldCap = e.getOriginal().getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+        IPlayerStateHandler cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        IPlayerStateHandler oldCap = e.getOriginal().getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
         cap.setData(oldCap.getData());
     }
 
