@@ -10,7 +10,9 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -19,16 +21,24 @@ import java.util.List;
 
 public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer main;
-    private final ModelRenderer main_body;
-    private final ModelRenderer Leg1;
+    private final ModelRenderer leg_fl;
     private final ModelRenderer bone6;
     private final ModelRenderer bone9;
     private final ModelRenderer bone10;
-    private final ModelRenderer Leg2;
+    private final ModelRenderer leg_fr;
     private final ModelRenderer bone2;
     private final ModelRenderer bone3;
     private final ModelRenderer bone7;
-    private final ModelRenderer maim_pelvis;
+    private final ModelRenderer leg_bl;
+    private final ModelRenderer bone8;
+    private final ModelRenderer bone5;
+    private final ModelRenderer bone4;
+    private final ModelRenderer leg_br;
+    private final ModelRenderer bone19;
+    private final ModelRenderer bone20;
+    private final ModelRenderer bone21;
+    private final ModelRenderer main_body;
+    private final ModelRenderer main_pelvis;
     private final ModelRenderer Tail;
     private final ModelRenderer bone;
     private final ModelRenderer bone11;
@@ -36,15 +46,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer bone13;
     private final ModelRenderer bone16;
     private final ModelRenderer bone14;
-    private final ModelRenderer Leg4;
-    private final ModelRenderer bone19;
-    private final ModelRenderer bone20;
-    private final ModelRenderer bone21;
-    private final ModelRenderer Leg3;
-    private final ModelRenderer bone8;
-    private final ModelRenderer bone5;
-    private final ModelRenderer bone4;
-    private final ModelRenderer NeckandHead;
+    private final ModelRenderer neck_and_head;
     private final ModelRenderer NeckandMain;
     private final ModelRenderer NeckandFOne;
     private final ModelRenderer NeckandTwo;
@@ -62,14 +64,14 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer muscles;
     private final ModelRenderer teeth2;
     List<ModelRenderer> tail;
-    List<ModelRenderer> LegBR;
-    List<ModelRenderer> LegBL;
-    List<ModelRenderer> LegFR;
-    List<ModelRenderer> LegFL;
     List<ModelRenderer> NeckHead;
     float partialTicks = 0.0F;
     PlayerEntity player;
     float[] offsets;
+    double fl;
+    double bl;
+    double fr;
+    double br;
 
     public DragonModel() {
         textureWidth = 128;
@@ -79,31 +81,22 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         main.setRotationPoint(0.0F, 24.0F, 0.0F);
 
 
-        main_body = new ModelRenderer(this);
-        main_body.setRotationPoint(0.0F, -17.0F, 1.0F);
-        main.addChild(main_body);
-        main_body.setTextureOffset(0, 0).addBox(-5.5F, -5.5F, -11.5F, 11.0F, 11.0F, 14.0F, -0.5F, false);
-        main_body.setTextureOffset(0, 38).addBox(-2.0F, -7.0F, -11.01F, 4.0F, 8.0F, 13.0F, 0.0F, false);
-        main_body.setTextureOffset(0, 59).addBox(-1.0F, -8.0F, -11.0F, 2.0F, 8.0F, 11.0F, 0.0F, false);
-        main_body.setTextureOffset(0, 74).addBox(0.0F, 5.0F, -10.0F, 0.0F, 4.0F, 11.0F, 0.0F, false);
-        main_body.setTextureOffset(46, 35).addBox(0.0F, -8.0F, -11.0F, 0.0F, 11.0F, 13.0F, 0.0F, false);
-
-        Leg1 = new ModelRenderer(this);
-        Leg1.setRotationPoint(5.0F, -2.0F, -6.0F);
-        main_body.addChild(Leg1);
-        Leg1.setTextureOffset(91, 42).addBox(-3.75F, -1.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg1.setTextureOffset(22, 69).addBox(0.1F, -8.0F, -3.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
+        leg_fl = new ModelRenderer(this);
+        leg_fl.setRotationPoint(5.0F, -19.0F, -5.0F);
+        main.addChild(leg_fl);
+        leg_fl.setTextureOffset(91, 42).addBox(-3.75F, -1.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        leg_fl.setTextureOffset(22, 69).addBox(0.1F, -8.0F, -3.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
 
         bone6 = new ModelRenderer(this);
         bone6.setRotationPoint(-1.0F, 6.0F, 0.0F);
-        Leg1.addChild(bone6);
-        setRotationAngle(bone6, 0.0873F, 0.0F, 0.0F);
+        leg_fl.addChild(bone6);
+        setRotationAngle(bone6, 0.5236F, 0.0F, 0.0F);
         bone6.setTextureOffset(20, 91).addBox(-2.0F, -1.7193F, -3.2182F, 4.0F, 9.0F, 6.0F, -1.0F, false);
 
         bone9 = new ModelRenderer(this);
         bone9.setRotationPoint(0.0F, 5.9962F, -1.0872F);
         bone6.addChild(bone9);
-        setRotationAngle(bone9, 1.4835F, 0.0F, 0.0F);
+        setRotationAngle(bone9, 1.0472F, 0.0F, 0.0F);
         bone9.setTextureOffset(0, 104).addBox(-0.9F, -1.2487F, -5.9903F, 2.0F, 3.0F, 7.0F, 0.0F, false);
 
         bone10 = new ModelRenderer(this);
@@ -115,22 +108,22 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         bone10.setTextureOffset(0, 44).addBox(0.0F, -1.0F, -4.0F, 0.0F, 2.0F, 5.0F, 0.0F, false);
         bone10.setTextureOffset(21, 43).addBox(1.0F, -1.0F, -4.0F, 0.0F, 2.0F, 5.0F, 0.0F, false);
 
-        Leg2 = new ModelRenderer(this);
-        Leg2.setRotationPoint(-5.0F, -2.0F, -6.0F);
-        main_body.addChild(Leg2);
-        Leg2.setTextureOffset(0, 89).addBox(-0.25F, -1.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg2.setTextureOffset(72, 73).addBox(0.0F, -8.0F, -3.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
+        leg_fr = new ModelRenderer(this);
+        leg_fr.setRotationPoint(-5.0F, -19.0F, -5.0F);
+        main.addChild(leg_fr);
+        leg_fr.setTextureOffset(0, 89).addBox(-0.25F, -1.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        leg_fr.setTextureOffset(72, 73).addBox(0.0F, -8.0F, -3.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
 
         bone2 = new ModelRenderer(this);
         bone2.setRotationPoint(1.0F, 6.0F, 0.0F);
-        Leg2.addChild(bone2);
-        setRotationAngle(bone2, 0.0873F, 0.0F, 0.0F);
+        leg_fr.addChild(bone2);
+        setRotationAngle(bone2, 0.5236F, 0.0F, 0.0F);
         bone2.setTextureOffset(48, 88).addBox(-2.0F, -1.7193F, -3.2182F, 4.0F, 9.0F, 6.0F, -1.0F, false);
 
         bone3 = new ModelRenderer(this);
         bone3.setRotationPoint(0.0F, 5.9962F, -1.0872F);
         bone2.addChild(bone3);
-        setRotationAngle(bone3, 1.4835F, 0.0F, 0.0F);
+        setRotationAngle(bone3, 1.0472F, 0.0F, 0.0F);
         bone3.setTextureOffset(103, 57).addBox(-1.1F, -1.2487F, -5.9903F, 2.0F, 3.0F, 7.0F, 0.0F, false);
 
         bone7 = new ModelRenderer(this);
@@ -142,16 +135,81 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         bone7.setTextureOffset(0, 23).addBox(0.0F, -1.0F, -4.0F, 0.0F, 2.0F, 2.0F, 0.0F, false);
         bone7.setTextureOffset(0, 0).addBox(1.0F, -1.0F, -4.0F, 0.0F, 2.0F, 2.0F, 0.0F, false);
 
-        maim_pelvis = new ModelRenderer(this);
-        maim_pelvis.setRotationPoint(0.0F, -21.0F, 1.0F);
-        main.addChild(maim_pelvis);
-        maim_pelvis.setTextureOffset(27, 28).addBox(-4.5F, -1.4F, 0.5F, 9.0F, 10.0F, 10.0F, -0.5F, false);
-        maim_pelvis.setTextureOffset(96, 5).addBox(-1.0F, -3.0F, 2.0F, 2.0F, 5.0F, 8.0F, 0.0F, false);
-        maim_pelvis.setTextureOffset(90, 72).addBox(-0.02F, -5.0F, 2.0F, 0.0F, 7.0F, 8.0F, 0.0F, false);
+        leg_bl = new ModelRenderer(this);
+        leg_bl.setRotationPoint(5.0F, -18.0F, 10.0F);
+        main.addChild(leg_bl);
+        leg_bl.setTextureOffset(68, 96).addBox(-3.9F, -2.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        leg_bl.setTextureOffset(88, 94).addBox(0.0F, -6.0F, -3.0F, 0.0F, 9.0F, 8.0F, 0.0F, false);
+
+        bone8 = new ModelRenderer(this);
+        bone8.setRotationPoint(-2.0F, 7.0F, -1.0F);
+        leg_bl.addChild(bone8);
+        setRotationAngle(bone8, 0.5236F, 0.0F, 0.0F);
+        bone8.setTextureOffset(86, 62).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 9.0F, 5.0F, -1.0F, false);
+
+        bone5 = new ModelRenderer(this);
+        bone5.setRotationPoint(0.0F, 4.1025F, -0.1415F);
+        bone8.addChild(bone5);
+        setRotationAngle(bone5, 0.9599F, 0.0F, 0.0F);
+        bone5.setTextureOffset(56, 105).addBox(-1.0F, -1.2169F, -6.0948F, 2.0F, 2.0F, 6.0F, 0.0F, false);
+        bone5.setTextureOffset(6, 38).addBox(0.0F, 0.043F, -1.6346F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+
+        bone4 = new ModelRenderer(this);
+        bone4.setRotationPoint(0.0F, -0.622F, -6.3679F);
+        bone5.addChild(bone4);
+        setRotationAngle(bone4, -1.4835F, 0.0F, 0.0F);
+        bone4.setTextureOffset(18, 106).addBox(-2.0F, -1.3415F, -3.4342F, 4.0F, 3.0F, 5.0F, -0.5F, false);
+        bone4.setTextureOffset(41, 63).addBox(-1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+        bone4.setTextureOffset(61, 22).addBox(0.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+        bone4.setTextureOffset(21, 43).addBox(1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+        leg_br = new ModelRenderer(this);
+        leg_br.setRotationPoint(-5.0F, -18.0F, 10.0F);
+        main.addChild(leg_br);
+        leg_br.setTextureOffset(84, 87).addBox(-0.1F, -2.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        leg_br.setTextureOffset(40, 95).addBox(0.0F, -6.0F, -3.0F, 0.0F, 9.0F, 8.0F, 0.0F, false);
+
+        bone19 = new ModelRenderer(this);
+        bone19.setRotationPoint(2.0F, 7.0F, -1.0F);
+        leg_br.addChild(bone19);
+        setRotationAngle(bone19, 0.5236F, 0.0F, 0.0F);
+        bone19.setTextureOffset(79, 13).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 9.0F, 5.0F, -1.0F, false);
+
+        bone20 = new ModelRenderer(this);
+        bone20.setRotationPoint(0.0F, 4.1025F, -0.1415F);
+        bone19.addChild(bone20);
+        setRotationAngle(bone20, 0.9599F, 0.0F, 0.0F);
+        bone20.setTextureOffset(88, 0).addBox(-1.0F, -1.2169F, -6.0948F, 2.0F, 2.0F, 6.0F, 0.0F, false);
+        bone20.setTextureOffset(6, 22).addBox(0.0F, 0.043F, -1.6346F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+
+        bone21 = new ModelRenderer(this);
+        bone21.setRotationPoint(0.0F, -0.622F, -6.3679F);
+        bone20.addChild(bone21);
+        setRotationAngle(bone21, -1.4835F, 0.0F, 0.0F);
+        bone21.setTextureOffset(104, 104).addBox(-2.0F, -1.3415F, -3.4342F, 4.0F, 3.0F, 5.0F, -0.5F, false);
+        bone21.setTextureOffset(63, 31).addBox(-1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+        bone21.setTextureOffset(63, 29).addBox(0.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+        bone21.setTextureOffset(47, 63).addBox(1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+        main_body = new ModelRenderer(this);
+        main_body.setRotationPoint(0.0F, -17.0F, 1.0F);
+        main.addChild(main_body);
+        main_body.setTextureOffset(0, 0).addBox(-5.5F, -5.5F, -11.5F, 11.0F, 11.0F, 14.0F, -0.5F, false);
+        main_body.setTextureOffset(0, 38).addBox(-2.0F, -7.0F, -11.01F, 4.0F, 8.0F, 13.0F, 0.0F, false);
+        main_body.setTextureOffset(0, 59).addBox(-1.0F, -8.0F, -11.0F, 2.0F, 8.0F, 11.0F, 0.0F, false);
+        main_body.setTextureOffset(0, 74).addBox(0.0F, 5.0F, -10.0F, 0.0F, 4.0F, 11.0F, 0.0F, false);
+        main_body.setTextureOffset(46, 35).addBox(0.0F, -8.0F, -11.0F, 0.0F, 11.0F, 13.0F, 0.0F, false);
+
+        main_pelvis = new ModelRenderer(this);
+        main_pelvis.setRotationPoint(0.0F, -21.0F, 1.0F);
+        main.addChild(main_pelvis);
+        main_pelvis.setTextureOffset(27, 28).addBox(-4.5F, -1.4F, 0.5F, 9.0F, 10.0F, 10.0F, -0.5F, false);
+        main_pelvis.setTextureOffset(96, 5).addBox(-1.0F, -3.0F, 2.0F, 2.0F, 5.0F, 8.0F, 0.0F, false);
+        main_pelvis.setTextureOffset(90, 72).addBox(-0.02F, -5.0F, 2.0F, 0.0F, 7.0F, 8.0F, 0.0F, false);
 
         Tail = new ModelRenderer(this);
         Tail.setRotationPoint(0.0F, 2.0F, 7.0F);
-        maim_pelvis.addChild(Tail);
+        main_pelvis.addChild(Tail);
 
 
         bone = new ModelRenderer(this);
@@ -190,96 +248,39 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         setRotationAngle(bone14, 0.0F, 0.0F, -1.5708F);
         bone14.setTextureOffset(23, 0).addBox(-5.0F, 0.0359F, 1.0622F, 12.0F, 0.0F, 13.0F, 0.0F, false);
 
-        Leg4 = new ModelRenderer(this);
-        Leg4.setRotationPoint(-5.0F, 3.0F, 9.0F);
-        maim_pelvis.addChild(Leg4);
-        Leg4.setTextureOffset(84, 87).addBox(-0.1F, -2.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg4.setTextureOffset(40, 95).addBox(0.0F, -6.0F, -3.0F, 0.0F, 9.0F, 8.0F, 0.0F, false);
-
-        bone19 = new ModelRenderer(this);
-        bone19.setRotationPoint(2.0F, 7.0F, -1.0F);
-        Leg4.addChild(bone19);
-        setRotationAngle(bone19, 0.5236F, 0.0F, 0.0F);
-        bone19.setTextureOffset(79, 13).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 9.0F, 5.0F, -1.0F, false);
-
-        bone20 = new ModelRenderer(this);
-        bone20.setRotationPoint(0.0F, 4.1025F, -0.1415F);
-        bone19.addChild(bone20);
-        setRotationAngle(bone20, 0.9599F, 0.0F, 0.0F);
-        bone20.setTextureOffset(88, 0).addBox(-1.0F, -1.2169F, -6.0948F, 2.0F, 2.0F, 6.0F, 0.0F, false);
-        bone20.setTextureOffset(6, 22).addBox(0.0F, 0.043F, -1.6346F, 0.0F, 3.0F, 3.0F, 0.0F, false);
-
-        bone21 = new ModelRenderer(this);
-        bone21.setRotationPoint(0.0F, -0.622F, -6.3679F);
-        bone20.addChild(bone21);
-        setRotationAngle(bone21, -1.4835F, 0.0F, 0.0F);
-        bone21.setTextureOffset(104, 104).addBox(-2.0F, -1.3415F, -3.4342F, 4.0F, 3.0F, 5.0F, -0.5F, false);
-        bone21.setTextureOffset(63, 31).addBox(-1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-        bone21.setTextureOffset(63, 29).addBox(0.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-        bone21.setTextureOffset(47, 63).addBox(1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-
-        Leg3 = new ModelRenderer(this);
-        Leg3.setRotationPoint(5.0F, 3.0F, 9.0F);
-        maim_pelvis.addChild(Leg3);
-        Leg3.setTextureOffset(68, 96).addBox(-3.9F, -2.0F, -3.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg3.setTextureOffset(88, 94).addBox(0.0F, -6.0F, -3.0F, 0.0F, 9.0F, 8.0F, 0.0F, false);
-
-        bone8 = new ModelRenderer(this);
-        bone8.setRotationPoint(-2.0F, 7.0F, -1.0F);
-        Leg3.addChild(bone8);
-        setRotationAngle(bone8, 0.5236F, 0.0F, 0.0F);
-        bone8.setTextureOffset(86, 62).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 9.0F, 5.0F, -1.0F, false);
-
-        bone5 = new ModelRenderer(this);
-        bone5.setRotationPoint(0.0F, 4.1025F, -0.1415F);
-        bone8.addChild(bone5);
-        setRotationAngle(bone5, 0.9599F, 0.0F, 0.0F);
-        bone5.setTextureOffset(56, 105).addBox(-1.0F, -1.2169F, -6.0948F, 2.0F, 2.0F, 6.0F, 0.0F, false);
-        bone5.setTextureOffset(6, 38).addBox(0.0F, 0.043F, -1.6346F, 0.0F, 3.0F, 3.0F, 0.0F, false);
-
-        bone4 = new ModelRenderer(this);
-        bone4.setRotationPoint(0.0F, -0.622F, -6.3679F);
-        bone5.addChild(bone4);
-        setRotationAngle(bone4, -1.4835F, 0.0F, 0.0F);
-        bone4.setTextureOffset(18, 106).addBox(-2.0F, -1.3415F, -3.4342F, 4.0F, 3.0F, 5.0F, -0.5F, false);
-        bone4.setTextureOffset(41, 63).addBox(-1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-        bone4.setTextureOffset(61, 22).addBox(0.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-        bone4.setTextureOffset(21, 43).addBox(1.0F, -0.8363F, -5.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-
-        NeckandHead = new ModelRenderer(this);
-        NeckandHead.setRotationPoint(0.0F, -19.0F, -9.0F);
-        main.addChild(NeckandHead);
-        setRotationAngle(NeckandHead, 2.0071F, 0.0F, 0.0F);
+        neck_and_head = new ModelRenderer(this);
+        neck_and_head.setRotationPoint(0.0F, -19.0F, -9.0F);
+        main.addChild(neck_and_head);
+        setRotationAngle(neck_and_head, 2.0071F, 0.0F, 0.0F);
 
 
         NeckandMain = new ModelRenderer(this);
-        NeckandMain.setRotationPoint(0.0F, -2.0F, -2.0F);
-        setRotationAngle(NeckandMain, -0.3235F, 0F, 0F);
-        NeckandHead.addChild(NeckandMain);
+        NeckandMain.setRotationPoint(0.0F, 0.0F, -2.0F);
+        neck_and_head.addChild(NeckandMain);
         setRotationAngle(NeckandMain, -0.4363F, 0.0F, 0.0F);
-        NeckandMain.setTextureOffset(49, 59).addBox(-4.0F, -2.2679F, -4.2811F, 8.0F, 6.0F, 9.0F, 0.0F, false);
-        NeckandMain.setTextureOffset(0, 30).addBox(-0.01F, -2.5294F, -7.3094F, 0.0F, 7.0F, 4.0F, 0.0F, false);
+        NeckandMain.setTextureOffset(49, 59).addBox(-4.0F, -4.0805F, -5.1263F, 8.0F, 6.0F, 9.0F, 0.0F, false);
+        NeckandMain.setTextureOffset(0, 30).addBox(-0.01F, -4.342F, -8.1547F, 0.0F, 7.0F, 4.0F, 0.0F, false);
 
         NeckandFOne = new ModelRenderer(this);
-        NeckandFOne.setRotationPoint(0.0F, -2.4824F, 0.2278F);
-        setRotationAngle(NeckandFOne, -0.3235F, 0F, 0F);
+        NeckandFOne.setRotationPoint(0.0F, -3.295F, 0.3825F);
         NeckandMain.addChild(NeckandFOne);
-        NeckandFOne.setTextureOffset(44, 74).addBox(-3.0F, -3.0F, -4.0F, 6.0F, 6.0F, 8.0F, 0.0F, false);
-        NeckandFOne.setTextureOffset(15, 56).addBox(0.0F, -3.0F, -6.9282F, 0.0F, 7.0F, 3.0F, 0.0F, false);
-        NeckandFOne.setTextureOffset(21, 35).addBox(0.0F, -2.6693F, 3.648F, 0.0F, 8.0F, 3.0F, 0.0F, false);
+        setRotationAngle(NeckandFOne, -0.5236F, 0.0F, 0.0F);
+        NeckandFOne.setTextureOffset(44, 74).addBox(-3.0F, -4.0F, -5.0F, 6.0F, 6.0F, 8.0F, 0.0F, false);
+        NeckandFOne.setTextureOffset(15, 56).addBox(0.0F, -4.0F, -7.9282F, 0.0F, 7.0F, 3.0F, 0.0F, false);
+        NeckandFOne.setTextureOffset(21, 35).addBox(0.0F, -3.6693F, 2.648F, 0.0F, 8.0F, 3.0F, 0.0F, false);
 
         NeckandTwo = new ModelRenderer(this);
-        NeckandTwo.setRotationPoint(0.0F, -2.7679F, 0.134F);
-        setRotationAngle(NeckandTwo, -0.3235F, 0F, 0F);
+        NeckandTwo.setRotationPoint(0.0F, -3.7679F, -0.866F);
         NeckandFOne.addChild(NeckandTwo);
+        setRotationAngle(NeckandTwo, -0.5236F, 0.0F, 0.0F);
         NeckandTwo.setTextureOffset(88, 27).addBox(-2.0F, -4.2726F, -2.9294F, 4.0F, 6.0F, 7.0F, 0.0F, false);
         NeckandTwo.setTextureOffset(74, 58).addBox(-0.01F, -4.0706F, -6.5863F, 0.0F, 6.0F, 4.0F, 0.0F, false);
         NeckandTwo.setTextureOffset(0, 61).addBox(-0.01F, -3.9057F, 2.6229F, 0.0F, 4.0F, 4.0F, 0.0F, false);
 
         NeckandThree = new ModelRenderer(this);
         NeckandThree.setRotationPoint(0.0F, -3.5655F, 0.8458F);
-        setRotationAngle(NeckandThree, -0.3235F, 0F, 0F);
         NeckandTwo.addChild(NeckandThree);
+        setRotationAngle(NeckandThree, -0.2618F, 0.0F, 0.0F);
         NeckandThree.setTextureOffset(100, 81).addBox(-1.99F, -5.0457F, -2.9541F, 4.0F, 5.0F, 6.0F, 0.0F, false);
         NeckandThree.setTextureOffset(72, 44).addBox(0.0F, -4.8298F, -6.5064F, 0.0F, 6.0F, 4.0F, 0.0F, false);
         NeckandThree.setTextureOffset(0, 55).addBox(0.0F, -5.7939F, 1.8238F, 0.0F, 6.0F, 4.0F, 0.0F, false);
@@ -287,7 +288,6 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         Head = new ModelRenderer(this);
         Head.setRotationPoint(0.0F, -7.4033F, 1.4716F);
         NeckandThree.addChild(Head);
-        setRotationAngle(Head, -0.2618F, 0.0F, 0.0F);
         Head.setTextureOffset(71, 0).addBox(-3.1F, -3.7602F, -3.7807F, 1.0F, 1.0F, 2.0F, 0.0F, false);
         Head.setTextureOffset(65, 36).addBox(2.1F, -3.7602F, -3.7807F, 1.0F, 1.0F, 2.0F, 0.0F, false);
         Head.setTextureOffset(50, 9).addBox(0.0F, -6.3403F, -5.1667F, 0.0F, 8.0F, 8.0F, 0.0F, false);
@@ -373,50 +373,57 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         teeth2.setTextureOffset(0, 0).addBox(0.88F, 4.2944F, -8.4455F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 
         tail = new ArrayList<>(Arrays.asList(bone, bone11, bone12, bone13, bone14));
-        LegFL = new ArrayList<>(Arrays.asList(Leg1, bone6, bone9, bone10));
-        LegFR = new ArrayList<>(Arrays.asList(Leg2, bone2, bone3, bone7));
-        LegBL = new ArrayList<>(Arrays.asList(Leg3, bone8, bone5, bone4));
-        LegBR = new ArrayList<>(Arrays.asList(Leg4, bone19, bone20, bone21));
         NeckHead = new ArrayList<>(Arrays.asList(NeckandMain, NeckandFOne, NeckandTwo, Head));
         offsets = new float[]{-0.4363F, -0.2618F, -0.0873F, -1.3963F};
+    }
+
+    public static BlockPos rotatePosXDouble(double x, double z, double angle) {
+        double angleDeg = Math.toRadians(angle);
+        double[] coords = new double[2];
+        coords[0] = x * Math.cos(angleDeg) - z * Math.sin(angleDeg);
+        coords[1] = x * Math.sin(angleDeg) + z * Math.cos(angleDeg);
+        return new BlockPos(coords[0], 0, coords[1]);
     }
 
     @Override
     public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         player = (PlayerEntity) entity;
 
-        //this.maim_pelvis.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
+        //this.main_pelvis.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
         //this.main_body.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
-        this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
+        //this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
+
+        //this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
+        //this.neck_and_head.rotateAngleY = (float) (netHeadYaw * (Math.PI / 180.0F));
 
         this.tail.get(entity.world.rand.nextInt(tail.size())).rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
         this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
-        //this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
-        this.NeckandHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.083f) * -0.0575f + 1.8326f;
-        this.Leg1.rotateAngleX = -this.main_body.rotateAngleX;
-        this.Leg2.rotateAngleX = -this.main_body.rotateAngleX;
+        this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
+        this.neck_and_head.rotateAngleX = MathHelper.cos(ageInTicks * 0.083f) * -0.0575f + 1.8326f;
+        this.leg_fl.rotateAngleX = -this.main_body.rotateAngleX;
+        this.leg_fr.rotateAngleX = -this.main_body.rotateAngleX;
 
         /*this.NeckandMain.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
         this.NeckandFOne.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
         this.NeckandTwo.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;*/
-        this.NeckandThree.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
+        //this.NeckandThree.rotateAngleY = (float) (MathHelper.wrapDegrees(netHeadYaw) * (Math.PI / 180.0F)) - this.main.rotateAngleY;
 
-        //this.main_body.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -5.0F;
-        this.maim_pelvis.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
+        this.main_body.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -5.0F;
+        this.main_pelvis.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
 
         //this.Leg1.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
         //this.Leg2.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / 2.0F;
-        this.Leg3.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
-        this.Leg4.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
+        this.leg_bl.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
+        this.leg_br.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
 
-        this.Leg4.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
-        this.Leg2.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
+        this.leg_br.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
+        this.leg_fr.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
 
-        this.Leg1.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
-        this.Leg3.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
+        this.leg_fl.rotateAngleX = (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.2F;
+        this.leg_bl.rotateAngleX = (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F;
 
-        this.bone9.rotateAngleX = -(MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 1.4835F;
-        this.bone3.rotateAngleX = -(MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 1.4835F;
+        this.bone9.rotateAngleX = -(MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 1.0472F;
+        this.bone3.rotateAngleX = -(MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 1.0472F;
         this.bone20.rotateAngleX = (MathHelper.sin((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F + 0.9599F;
         this.bone5.rotateAngleX = (MathHelper.sin(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F + 0.9599F;
 
@@ -426,15 +433,59 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         this.bone21.rotateAngleX = MathHelper.clamp(this.bone21.rotateAngleX, -2.0F, -1.5708F);
     }
 
+    public int getHeightAtPos(World worldIn, double x, double y, double z) {
+        int i = (int) y;
+        while (!worldIn.getBlockState(new BlockPos(x, i, z)).isSolid())
+            --i;
+        return i + 1;
+    }
+
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float partialTicks, float headYaw, float headPitch, float scale) {
-        matrixStack.push();
+
+        fl = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() + 0.25, this.player.getPosY(), this.player.getPosZ() + 0.4375D), 0.0D, 1.0D);
+        bl = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() + 0.25D, this.player.getPosY(), this.player.getPosZ() - 0.375D), 0.0D, 1.0D);
+        fr = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() - 0.5D, this.player.getPosY(), this.player.getPosZ() + 0.4375D), 0.0D, 1.0D);
+        br = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() - 0.5D, this.player.getPosY(), this.player.getPosZ() - 0.375D), 0.0D, 1.0D);
         this.partialTicks = partialTicks;
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        matrixStack.push();
+
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
         matrixStack.scale(scale, scale, scale);
-        matrixStack.translate(0F, 1.5F, 0F);
+        //matrixStack.translate(0F, 1.5F, 0F);
         matrixStack.rotate(new Quaternion(180f, 0f, 0f, true));
-        main.render(matrixStack, buffer, packedLight, packedOverlay);
+        double max = 0.0F;
+        if (Math.max(fl, fr) != Math.max(bl, br))
+            max = Math.max(fl, fr) > Math.max(bl, br) ? Math.max(fl, fr) : Math.max(bl, br) * -1;
+        matrixStack.rotate(new Quaternion((float) (max * 30f), 0f, 0f, true));
+        matrixStack.translate(0, Math.abs(max) * 0.35f, max * 0.25f);
+        main_body.render(matrixStack, buffer, packedLight, packedOverlay);
+        main_pelvis.render(matrixStack, buffer, packedLight, packedOverlay);
+        matrixStack.translate(0, -Math.abs(max) * 0.35f, -max * 0.25f);
+        matrixStack.rotate(new Quaternion((float) -(max * 30f), 0f, 0f, true));
+
+        matrixStack.translate(0, MathHelper.clamp(max, .0, 1.0) * 0.35f, 0);
+        neck_and_head.render(matrixStack, buffer, packedLight, packedOverlay);
+        matrixStack.translate(0, -MathHelper.clamp(max, .0, 1.0) * 0.35f, 0);
+
+        if (Math.max(fl, fr) != Math.max(bl, br)) {
+            matrixStack.translate(0, Math.max(fl, fr), 0);
+            leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
+            leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
+            matrixStack.translate(0, -Math.max(fl, fr), 0);
+
+            matrixStack.translate(0,  Math.max(bl, br), 0);
+            leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
+            leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
+            matrixStack.translate(0, - Math.max(bl, br), 0);
+        } else {
+            leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
+            leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
+            leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
+            leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
+        }
+
         matrixStack.pop();
     }
 

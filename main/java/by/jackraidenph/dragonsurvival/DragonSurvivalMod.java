@@ -1,17 +1,16 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.IPlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
+import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.network.IMessage;
-import by.jackraidenph.dragonsurvival.network.MessageSyncCapability;
-import net.minecraft.client.Minecraft;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -42,11 +41,8 @@ public class DragonSurvivalMod {
             PROTOCOL_VERSION::equals
     );
     private static int nextId = 0;
-    IPlayerStateHandler cap;
-    IPlayerStateHandler capUpd;
     PlayerEntity player;
     DragonModel model = new DragonModel();
-    PlayerEntity playerUpd;
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -61,8 +57,9 @@ public class DragonSurvivalMod {
     private void setup(final FMLCommonSetupEvent event) {
         PlayerStateCapability.register();
         LOGGER.info("Successfully registered PlayerStateCapabilityHandler!");
-        register(MessageSyncCapability.class, new MessageSyncCapability());
-        LOGGER.info("Successfully registered MessageSyncCapability!");
+        register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
+        register(PacketSyncCapability.class, new PacketSyncCapability());
+        LOGGER.info("Successfully registered Messages!");
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
@@ -70,7 +67,7 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
-    public void onCapabileity(AttachCapabilitiesEvent<Entity> event) {
+    public void onCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new PlayerStateProvider());
             LOGGER.info("Successfully attached capability to the PlayerEntity!");
@@ -78,23 +75,24 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
-    public void onLogged(PlayerEvent.PlayerLoggedInEvent e) {
-        if (((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
-            INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getData()));
+    public void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
+        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->
+                cap.getMovementData().ifPresent(data ->
+                        INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
     }
 
     @SubscribeEvent
-    public void onLogged(PlayerEvent.PlayerLoggedOutEvent e) {
-        if (((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
-            INSTANCE.send(PacketDistributor.ALL.noArg(), new MessageSyncCapability(((PlayerEntity) e.getEntityLiving()).getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).getData()));
+    public void onLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
+        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->
+                cap.getMovementData().ifPresent(data ->
+                        INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
     }
 
     @SubscribeEvent
     public void onRender(RenderLivingEvent.Pre e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
-            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
-                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
+            PlayerStateProvider.getCap(player).ifPresent(cap -> {
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
@@ -106,7 +104,7 @@ public class DragonSurvivalMod {
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
 
-                    String texture = "textures/" + Minecraft.getInstance().player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null).getType().toString().toLowerCase() + ".png";
+                    String texture = "textures/" + cap.getType().toString().toLowerCase() + ".png";
 
                     model.render(
                             e.getMatrixStack(),
@@ -118,7 +116,7 @@ public class DragonSurvivalMod {
                             player.getPitch(e.getPartialRenderTick()),
                             1.0f);
                 }
-            }
+            });
         }
     }
 
@@ -137,12 +135,13 @@ public class DragonSurvivalMod {
 
     @SubscribeEvent
     public void onClone(PlayerEvent.Clone e) {
-        if (!player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent())
+        if (!PlayerStateProvider.getCap(e.getPlayer()).isPresent())
             return;
-        PlayerEntity player = e.getPlayer();
-        IPlayerStateHandler cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
-        IPlayerStateHandler oldCap = e.getOriginal().getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
-        cap.setData(oldCap.getData());
+        PlayerStateHandler cap = PlayerStateProvider.getCap(e.getPlayer()).orElse(null);
+        PlayerStateHandler oldCap = PlayerStateProvider.getCap(e.getOriginal()).orElse(null);
+        cap.setMovementData(oldCap.getMovementData().orElse(null), true);
+        cap.setLevel(cap.getLevel());
+        cap.setType(cap.getType());
     }
 
     @SubscribeEvent
@@ -150,12 +149,11 @@ public class DragonSurvivalMod {
         System.out.println(e);
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
-            if (player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).isPresent()) {
-                cap = player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElseGet(null);
+            PlayerStateProvider.getCap(player).ifPresent(cap -> {
                 if (cap.getIsDragon()) {
                     System.out.println(e.getCollisionBoxesList());
                 }
-            }
+            });
         }
     }
 }

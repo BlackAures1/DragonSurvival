@@ -6,13 +6,12 @@ import java.util.concurrent.Callable;
 
 public class PlayerStateCapability {
     public static void register() {
-        CapabilityManager.INSTANCE.register(IPlayerStateHandler.class, new CapabilityStorage(), new Factory());
+        CapabilityManager.INSTANCE.register(PlayerStateHandler.class, new CapabilityStorage(), new Factory());
     }
 
-    private static class Factory implements Callable<IPlayerStateHandler> {
-
+    private static class Factory implements Callable<PlayerStateHandler> {
         @Override
-        public IPlayerStateHandler call() throws Exception {
+        public PlayerStateHandler call() {
             return new PlayerStateHandler();
         }
     }
