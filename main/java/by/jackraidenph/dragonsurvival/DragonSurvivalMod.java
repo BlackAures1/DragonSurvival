@@ -9,13 +9,20 @@ import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -132,6 +139,22 @@ public class DragonSurvivalMod {
             }
         }
     }*/
+
+    @SubscribeEvent
+    public void onJoin(EntityJoinWorldEvent e) {
+        if (!(e.getEntity() instanceof MonsterEntity || e.getEntity() instanceof VillagerEntity) & e.getEntity() instanceof CreatureEntity) {
+            ((MobEntity) e.getEntity()).goalSelector.addGoal(2, new AvoidEntityGoal(
+                    (CreatureEntity) e.getEntity(),
+                    PlayerEntity.class,
+                    livingEntity -> PlayerStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).getIsDragon(),
+                    20.0F,
+                    1.3F,
+                    1.5F,
+                    EntityPredicates.CAN_AI_TARGET));
+        }
+
+
+    }
 
     @SubscribeEvent
     public void onClone(PlayerEvent.Clone e) {
