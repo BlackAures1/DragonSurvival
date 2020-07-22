@@ -3,10 +3,13 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
+import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.network.IMessage;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.CreatureEntity;
@@ -15,6 +18,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
@@ -23,9 +27,11 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -55,11 +61,13 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
+        EntityTypesInit.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
         INSTANCE.registerMessage(nextId++, clazz, message::encode, message::decode, message::handle);
     }
+
 
     private void setup(final FMLCommonSetupEvent event) {
         PlayerStateCapability.register();
@@ -71,6 +79,7 @@ public class DragonSurvivalMod {
 
     private void setupClient(final FMLClientSetupEvent event) {
         LOGGER.info("Successfully registered DragonRenderer!");
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST.get(), MagicalBeastRenderer::new);
     }
 
     @SubscribeEvent
@@ -96,6 +105,22 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
+    public void onDeath(LivingDeathEvent e) {
+        if (e.getEntityLiving() instanceof PlayerEntity)
+            return;
+
+        if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
+            MagicalBeastEntity beast = EntityTypesInit.MAGICAL_BEAST.get().create(e.getEntityLiving().world);
+            e.getEntityLiving().world.addEntity(beast);
+            beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
+        }
+
+        if (e.getEntityLiving() instanceof MagicalBeastEntity) {
+
+        }
+    }
+
+    @SubscribeEvent
     public void onRender(RenderLivingEvent.Pre e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
@@ -111,7 +136,7 @@ public class DragonSurvivalMod {
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
 
-                    String texture = "textures/" + cap.getType().toString().toLowerCase() + ".png";
+                    String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
 
                     model.render(
                             e.getMatrixStack(),
@@ -127,19 +152,6 @@ public class DragonSurvivalMod {
         }
     }
 
-    /*@SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent e) {
-        if (e.getEntityLiving() instanceof PlayerEntity) {
-            playerUpd = (PlayerEntity) e.getEntityLiving();
-            if (playerUpd.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).isPresent()) {
-                capUpd = playerUpd.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
-                if(capUpd.getIsDragon()){
-                    capUpd.setMovementData(playerUpd.renderYawOffset, playerUpd.rotationYawHead, playerUpd.rotationPitch, );
-                }
-            }
-        }
-    }*/
-
     @SubscribeEvent
     public void onJoin(EntityJoinWorldEvent e) {
         if (!(e.getEntity() instanceof MonsterEntity || e.getEntity() instanceof VillagerEntity) & e.getEntity() instanceof CreatureEntity) {
@@ -153,18 +165,29 @@ public class DragonSurvivalMod {
                     EntityPredicates.CAN_AI_TARGET));
         }
 
-
+        /*if (e.getEntity() instanceof MagicalBeastEntity)
+            if (new Random().nextFloat() + 0.1F <= 0.3F) {
+                SkeletonEntity skeletonEntity = new SkeletonEntity(EntityType.SKELETON, e.getWorld());
+                e.getWorld().addEntity(skeletonEntity);
+                //skeletonEntity.setPositionAndUpdate(e.getEntity().getPosX(), e.getEntity().getPosY(), e.getEntity().getPosZ());
+                MagicalBeastEntity beastEntity = (MagicalBeastEntity) e.getEntity();
+                skeletonEntity.startRiding(beastEntity);
+            }*/
     }
 
     @SubscribeEvent
     public void onClone(PlayerEvent.Clone e) {
-        if (!PlayerStateProvider.getCap(e.getPlayer()).isPresent())
-            return;
-        PlayerStateHandler cap = PlayerStateProvider.getCap(e.getPlayer()).orElse(null);
-        PlayerStateHandler oldCap = PlayerStateProvider.getCap(e.getOriginal()).orElse(null);
-        cap.setMovementData(oldCap.getMovementData().orElse(null), true);
-        cap.setLevel(cap.getLevel());
-        cap.setType(cap.getType());
+        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(capNew ->
+                PlayerStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
+                    if (!capNew.getIsDragon())
+                        return;
+
+                    PlayerStateHandler cap = capNew;
+                    PlayerStateHandler oldCap = capOld;
+                    cap.setMovementData(oldCap.getMovementData().orElse(null), true);
+                    cap.setLevel(cap.getLevel());
+                    cap.setType(cap.getType());
+                }));
     }
 
     @SubscribeEvent

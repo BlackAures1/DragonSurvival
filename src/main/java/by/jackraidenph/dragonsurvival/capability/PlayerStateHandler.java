@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class PlayerStateHandler {
     private boolean isDragon;
+    private boolean isHiding;
     private DragonType type = DragonType.SEA;
     private int level;
     private Optional<DragonMovementData> data = Optional.ofNullable(null);
@@ -22,6 +23,14 @@ public class PlayerStateHandler {
 
     public void setIsDragon(boolean isDragon) {
         this.isDragon = isDragon;
+    }
+
+    public boolean getIsHiding() {
+        return isHiding;
+    }
+
+    public void setIsHiding(boolean hiding) {
+        isHiding = hiding;
     }
 
     public void setMovementData(DragonMovementData data, boolean doSync) {
@@ -58,9 +67,9 @@ public class PlayerStateHandler {
 
     public void syncData(boolean isServer) {
         if (isServer) {
-            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.getType(), this.level));
+            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         } else {
-            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(this.isDragon, this.getType(), this.level));
+            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         }
     }
 

@@ -31,7 +31,7 @@ public class DragonAltarGUI extends Screen {
                         .filter(cap -> !cap.getIsDragon())
                         .ifPresent(cap -> {
                             Vec3d placeHolder = new Vec3d(0, 0, 0);
-                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, DragonType.CAVE, 0));
+                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, DragonType.CAVE, 0));
                             DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                             cap.setIsDragon(true);
                             cap.setType(DragonType.CAVE);
@@ -44,7 +44,7 @@ public class DragonAltarGUI extends Screen {
                         .filter(cap -> !cap.getIsDragon())
                         .ifPresent(cap -> {
                             Vec3d placeHolder = new Vec3d(0, 0, 0);
-                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, DragonType.FOREST, 0));
+                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, DragonType.FOREST, 0));
                             DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                             cap.setIsDragon(true);
                             cap.setType(DragonType.FOREST);
@@ -56,7 +56,7 @@ public class DragonAltarGUI extends Screen {
                         .filter(cap -> !cap.getIsDragon())
                         .ifPresent(cap -> {
                             Vec3d placeHolder = new Vec3d(0, 0, 0);
-                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, DragonType.SEA, 0));
+                            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, DragonType.SEA, 0));
                             DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                             cap.setIsDragon(true);
                             cap.setType(DragonType.SEA);
