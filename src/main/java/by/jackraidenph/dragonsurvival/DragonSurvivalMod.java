@@ -18,14 +18,16 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -62,12 +64,12 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
         EntityTypesInit.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
         INSTANCE.registerMessage(nextId++, clazz, message::encode, message::decode, message::handle);
     }
-
 
     private void setup(final FMLCommonSetupEvent event) {
         PlayerStateCapability.register();
@@ -75,6 +77,12 @@ public class DragonSurvivalMod {
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncCapability.class, new PacketSyncCapability());
         LOGGER.info("Successfully registered Messages!");
+        for (Biome b : Biome.BIOMES) {
+            b.getSpawns(EntityTypesInit.MAGICAL_BEAST.get().getClassification()).add(new Biome.SpawnListEntry(EntityTypesInit.MAGICAL_BEAST.get(), 1, 1, 3));
+            System.out.println(b);
+        }
+        LOGGER.info("Successfully registered Entity Spawns!");
+
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
@@ -112,7 +120,7 @@ public class DragonSurvivalMod {
         if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
             MagicalBeastEntity beast = EntityTypesInit.MAGICAL_BEAST.get().create(e.getEntityLiving().world);
             e.getEntityLiving().world.addEntity(beast);
-            beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
+            //beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
         }
 
         if (e.getEntityLiving() instanceof MagicalBeastEntity) {

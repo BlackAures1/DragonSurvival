@@ -13,5 +13,9 @@ public class EntityTypesInit {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = new DeferredRegister<>(ForgeRegistries.ENTITIES, DragonSurvivalMod.MODID);
 
-    public static final RegistryObject<EntityType<MagicalBeastEntity>> MAGICAL_BEAST = ENTITY_TYPES.register("magical_beast", () -> EntityType.Builder.<MagicalBeastEntity>create(MagicalBeastEntity::new, EntityClassification.MONSTER).size(1.2f, 1.6f).build(new ResourceLocation(DragonSurvivalMod.MODID, "magical_beast").toString()));
+    public static final RegistryObject<EntityType<MagicalBeastEntity>> MAGICAL_BEAST =
+            ENTITY_TYPES.register("magical_beast", () -> EntityType.Builder.<MagicalBeastEntity>create(MagicalBeastEntity::new, EntityClassification.MONSTER)
+                    .size(0.9f, 1.5625f)
+                    .build(new ResourceLocation(DragonSurvivalMod.MODID, "magical_beast")
+                            .toString()));
 }
