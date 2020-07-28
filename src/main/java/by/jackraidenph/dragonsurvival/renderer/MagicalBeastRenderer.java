@@ -41,14 +41,4 @@ public class MagicalBeastRenderer extends MobRenderer<MagicalBeastEntity, Magica
     public ResourceLocation getEntityTexture(MagicalBeastEntity entity) {
         return MAGICAL_BEAST_TEXTURES.get(entity.type);
     }
-
-    @Override
-    public void render(MagicalBeastEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        Minecraft.getInstance().textureManager.bindTexture(this.getEntityTexture(entityIn));
-        ModShaders.color_cycle.start();
-        ARBShaderObjects.glUniform1fARB(ModShaders.color_cycle.getUniform("angle"), 0.25f);
-        ARBShaderObjects.glUniform1fARB(ModShaders.color_cycle.getUniform("time"), (int) System.currentTimeMillis()/100.0f);
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        ModShaders.color_cycle.stop();
-    }
 }

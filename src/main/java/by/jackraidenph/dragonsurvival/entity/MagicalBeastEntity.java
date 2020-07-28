@@ -5,7 +5,10 @@ import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +25,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MagicalBeastEntity extends MonsterEntity {
 
@@ -36,16 +40,33 @@ public class MagicalBeastEntity extends MonsterEntity {
         scale = this.size / this.getHeight();
     }
 
+    protected static int getActualDistance(PlayerEntity player) {
+
+        AtomicInteger distance = new AtomicInteger();
+
+        if (player != null) {
+            PlayerStateProvider.getCap(player).ifPresent(cap -> {
+                if (cap.getIsDragon() && !cap.getIsHiding())
+                    distance.set(30);
+                else if (cap.getIsDragon())
+                    distance.set(18);
+                else
+                    distance.set(10);
+            });
+        }
+        return distance.get();
+    }
+
     @Override
     public void livingTick() {
         super.livingTick();
         this.world.addParticle(
                 ParticleTypes.SMOKE,
-                this.getPosX() + this.world.getRandom().nextFloat() - 0.5F,
+                this.getPosX() + this.world.getRandom().nextFloat() * 1.5 - 0.75F,
                 this.getPosY() + this.getHeight() / 1.5F * scale,
-                this.getPosZ() + this.world.getRandom().nextFloat() - 0.5F,
+                this.getPosZ() + this.world.getRandom().nextFloat() * 1.5 - 0.75F,
                 0,
-                this.world.getRandom().nextFloat() / 8f,
+                this.world.getRandom().nextFloat() / 12.5f,
                 0);
     }
 
@@ -69,11 +90,9 @@ public class MagicalBeastEntity extends MonsterEntity {
         super.registerGoals();
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(2, new FindPlayerGoal(this));
-        this.targetSelector.addGoal(1, new isNearestDragonTargetGoal(this, true));
+        this.targetSelector.addGoal(1, new FindPlayerGoal(this));
+        this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
     }
 
     @Override
@@ -85,7 +104,7 @@ public class MagicalBeastEntity extends MonsterEntity {
     protected void registerAttributes() {
         super.registerAttributes();
 
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.575D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.475D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0F);
@@ -116,7 +135,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         boolean flag = blockstate.getMaterial().blocksMovement();
         boolean flag1 = blockstate.getFluidState().isTagged(FluidTags.WATER);
         if (flag && !flag1) {
-            this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+            this.world.playSound(null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
             this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
             return true;
@@ -127,8 +146,6 @@ public class MagicalBeastEntity extends MonsterEntity {
 
     static class isNearestDragonTargetGoal extends NearestAttackableTargetGoal {
 
-        int distance;
-
         public isNearestDragonTargetGoal(MobEntity p_i50313_1_, boolean p_i50313_3_) {
             super(p_i50313_1_, PlayerEntity.class, p_i50313_3_);
         }
@@ -136,94 +153,38 @@ public class MagicalBeastEntity extends MonsterEntity {
         @Override
         protected AxisAlignedBB getTargetableArea(double p_188511_1_) {
 
-            distance = 10;
             PlayerEntity player = (PlayerEntity) this.nearestTarget;
 
-            if (player != null) {
-                PlayerStateProvider.getCap(player).ifPresent(cap -> {
-                    if (cap.getIsDragon() && !cap.getIsHiding())
-                        distance = 30;
-                    else if (cap.getIsDragon())
-                        distance = 18;
-                    else
-                        distance = 10;
-                });
-            }
-
-            return this.goalOwner.getBoundingBox().grow(distance);
+            return this.goalOwner.getBoundingBox().grow(getActualDistance(player));
         }
     }
 
     static class FindPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
         private final MagicalBeastEntity beast;
-        private final EntityPredicate field_220792_n = new EntityPredicate();
-
-        private PlayerEntity player;
-        private int aggroTime;
-        private int teleportTime;
 
         public FindPlayerGoal(MagicalBeastEntity beastIn) {
             super(beastIn, PlayerEntity.class, false);
             this.beast = beastIn;
         }
 
-        /**
-         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-         * method as well.
-         */
         @Override
-        public boolean shouldExecute() {
-            return this.player != null;
+        protected AxisAlignedBB getTargetableArea(double p_188511_1_) {
+
+            PlayerEntity player = (PlayerEntity) this.nearestTarget;
+
+            return this.goalOwner.getBoundingBox().grow(getActualDistance(player));
         }
 
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
         @Override
         public void startExecuting() {
-            this.aggroTime = 5;
-            this.teleportTime = 0;
-        }
-
-        /**
-         * Reset the task's internal state. Called when this task is interrupted by another one
-         */
-        @Override
-        public void resetTask() {
-            this.player = null;
-            super.resetTask();
-        }
-
-        /**
-         * Returns whether an in-progress EntityAIBase should continue executing
-         */
-        @Override
-        public boolean shouldContinueExecuting() {
-            if (this.player != null) {
-                this.beast.faceEntity(this.player, 10.0F, 10.0F);
-                return true;
-            } else {
-                return this.nearestTarget != null && this.field_220792_n.canTarget(this.beast, this.nearestTarget) ? true : super.shouldContinueExecuting();
-            }
-        }
-
-        @Override
-        public void tick() {
-            if (this.player != null) {
-                if (--this.aggroTime <= 0) {
-                    this.nearestTarget = this.player;
-                    this.player = null;
-                    super.startExecuting();
-                }
-            } else {
-                if (this.nearestTarget != null && !this.beast.isPassenger()) {
-                    this.teleportTime = 0;
-                } else if (this.nearestTarget.getDistanceSq(this.beast) > 256.0D && this.teleportTime++ >= 30 && this.beast.teleportToEntity(this.nearestTarget)) {
-                    this.teleportTime = 0;
+            if (this.nearestTarget != null) {
+                if (this.nearestTarget instanceof PlayerEntity) {
+                    float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
+                    if (diff <= 4 & diff >= 0) {
+                        beast.teleportToEntity(this.nearestTarget);
+                    }
                 }
             }
-
-            super.tick();
         }
 
     }
