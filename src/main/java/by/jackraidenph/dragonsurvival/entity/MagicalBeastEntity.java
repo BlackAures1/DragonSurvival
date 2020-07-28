@@ -10,7 +10,6 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
@@ -23,7 +22,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class MagicalBeastEntity extends MonsterEntity {
 
@@ -34,7 +32,7 @@ public class MagicalBeastEntity extends MonsterEntity {
     public MagicalBeastEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
         this.type = worldIn.getRandom().nextInt(MagicalBeastRenderer.MAGICAL_BEAST_TEXTURES.size());
-        this.size =  worldIn.getRandom().nextFloat() + 0.95F;
+        this.size = worldIn.getRandom().nextFloat() + 0.95F;
         scale = this.size / this.getHeight();
     }
 
@@ -42,12 +40,12 @@ public class MagicalBeastEntity extends MonsterEntity {
     public void livingTick() {
         super.livingTick();
         this.world.addParticle(
-                this.world.getRandom().nextBoolean() ? ParticleTypes.SMOKE : ParticleTypes.LARGE_SMOKE,
+                ParticleTypes.SMOKE,
                 this.getPosX() + this.world.getRandom().nextFloat() - 0.5F,
                 this.getPosY() + this.getHeight() / 1.5F * scale,
                 this.getPosZ() + this.world.getRandom().nextFloat() - 0.5F,
                 0,
-                this.world.getRandom().nextFloat() / 5f,
+                this.world.getRandom().nextFloat() / 8f,
                 0);
     }
 
@@ -74,8 +72,8 @@ public class MagicalBeastEntity extends MonsterEntity {
         this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, new FindPlayerGoal(this));
-        this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new FindPlayerGoal(this));
+        this.targetSelector.addGoal(1, new isNearestDragonTargetGoal(this, true));
     }
 
     @Override
@@ -87,16 +85,15 @@ public class MagicalBeastEntity extends MonsterEntity {
     protected void registerAttributes() {
         super.registerAttributes();
 
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.375D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.575D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0F);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(29.5F);
 
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("healthAmount", scale, AttributeModifier.Operation.MULTIPLY_BASE));
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier("movementSpeed", 1f / scale, AttributeModifier.Operation.MULTIPLY_BASE));
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("damageAmount", scale, AttributeModifier.Operation.MULTIPLY_BASE));
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).applyModifier(new AttributeModifier("attackKnockback", scale, AttributeModifier.Operation.MULTIPLY_BASE));
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("healthBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("damageBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).applyModifier(new AttributeModifier("attackBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
     }
 
     private boolean teleportToEntity(Entity p_70816_1_) {
@@ -119,15 +116,10 @@ public class MagicalBeastEntity extends MonsterEntity {
         boolean flag = blockstate.getMaterial().blocksMovement();
         boolean flag1 = blockstate.getFluidState().isTagged(FluidTags.WATER);
         if (flag && !flag1) {
-            net.minecraftforge.event.entity.living.EnderTeleportEvent event = new net.minecraftforge.event.entity.living.EnderTeleportEvent(this, x, y, z, 0);
-            if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event)) return false;
-            boolean flag2 = this.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
-            if (flag2) {
-                this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
-                this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
-            }
+            this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+            this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
-            return flag2;
+            return true;
         } else {
             return false;
         }
@@ -164,7 +156,7 @@ public class MagicalBeastEntity extends MonsterEntity {
 
     static class FindPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
         private final MagicalBeastEntity beast;
-        private final EntityPredicate field_220792_n = (new EntityPredicate()).setLineOfSiteRequired();
+        private final EntityPredicate field_220792_n = new EntityPredicate();
 
         private PlayerEntity player;
         private int aggroTime;
@@ -179,6 +171,7 @@ public class MagicalBeastEntity extends MonsterEntity {
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
+        @Override
         public boolean shouldExecute() {
             return this.player != null;
         }
@@ -186,6 +179,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         /**
          * Execute a one shot task or start executing a continuous task
          */
+        @Override
         public void startExecuting() {
             this.aggroTime = 5;
             this.teleportTime = 0;
@@ -194,6 +188,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
+        @Override
         public void resetTask() {
             this.player = null;
             super.resetTask();
@@ -202,6 +197,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
+        @Override
         public boolean shouldContinueExecuting() {
             if (this.player != null) {
                 this.beast.faceEntity(this.player, 10.0F, 10.0F);
@@ -211,6 +207,7 @@ public class MagicalBeastEntity extends MonsterEntity {
             }
         }
 
+        @Override
         public void tick() {
             if (this.player != null) {
                 if (--this.aggroTime <= 0) {

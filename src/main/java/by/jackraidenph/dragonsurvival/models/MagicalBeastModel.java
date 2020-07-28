@@ -4,11 +4,15 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
 
 
 import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
+import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
+import by.jackraidenph.dragonsurvival.shader.ModShaders;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.ARBShaderObjects;
 
 public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     private final ModelRenderer Main;
@@ -278,7 +282,7 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     public void setRotationAngles(MagicalBeastEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.entity = entity;
 
-        this.lower_jaw.rotateAngleX = MathHelper.cos(entity.swingProgress * 0.183f) * 0.0575f;
+        this.lower_jaw.rotateAngleX = MathHelper.cos(entity.swingProgress * 100 * 0.183f) * 0.0575f;
 
         this.back_leg_left.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
         this.back_leg_right.rotateAngleZ = (((MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.33F) + ((MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.2F)) / -2.0F;
@@ -297,7 +301,7 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
         float scale = entity.size / entity.getHeight();
-        matrixStack.translate(0, 1.0F - scale, 0);
+        matrixStack.translate(0, scale - 1.0F, 0);
         matrixStack.scale(scale, scale, scale);
         Main.render(matrixStack, buffer, packedLight, packedOverlay);
         matrixStack.pop();

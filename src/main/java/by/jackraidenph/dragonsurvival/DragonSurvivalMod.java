@@ -10,6 +10,7 @@ import by.jackraidenph.dragonsurvival.network.IMessage;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
+import by.jackraidenph.dragonsurvival.shader.ModShaders;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.CreatureEntity;
@@ -43,6 +44,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.ARBShaderObjects;
 
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
@@ -64,7 +66,6 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
         EntityTypesInit.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
@@ -78,11 +79,9 @@ public class DragonSurvivalMod {
         register(PacketSyncCapability.class, new PacketSyncCapability());
         LOGGER.info("Successfully registered Messages!");
         for (Biome b : Biome.BIOMES) {
-            b.getSpawns(EntityTypesInit.MAGICAL_BEAST.get().getClassification()).add(new Biome.SpawnListEntry(EntityTypesInit.MAGICAL_BEAST.get(), 1, 1, 3));
-            System.out.println(b);
+            b.getSpawns(EntityTypesInit.MAGICAL_BEAST.get().getClassification()).add(new Biome.SpawnListEntry(EntityTypesInit.MAGICAL_BEAST.get(), 1, 1, 2));
         }
         LOGGER.info("Successfully registered Entity Spawns!");
-
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
@@ -120,7 +119,7 @@ public class DragonSurvivalMod {
         if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
             MagicalBeastEntity beast = EntityTypesInit.MAGICAL_BEAST.get().create(e.getEntityLiving().world);
             e.getEntityLiving().world.addEntity(beast);
-            //beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
+            beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
         }
 
         if (e.getEntityLiving() instanceof MagicalBeastEntity) {
