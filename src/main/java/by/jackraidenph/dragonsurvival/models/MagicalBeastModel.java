@@ -301,8 +301,8 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
         float scale = entity.size / entity.getHeight();
-        matrixStack.translate(0, scale - 1.0F, 0);
         matrixStack.scale(scale, scale, scale);
+        matrixStack.translate(0, 1.0f - scale, 0);
         Main.render(matrixStack, buffer, packedLight, packedOverlay);
         matrixStack.pop();
     }
