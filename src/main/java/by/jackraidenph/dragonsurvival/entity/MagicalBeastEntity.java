@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -58,9 +59,16 @@ public class MagicalBeastEntity extends MonsterEntity {
     }
 
     @Override
+    protected void onDeathUpdate() {
+        super.onDeathUpdate();
+        if (this.deathTime == 19) {
+            world.setBlockState(this.getPosition(), BlockInit.predator_star.getDefaultState());
+        }
+    }
+
+    @Override
     public void livingTick() {
         super.livingTick();
-        System.out.println(this.getPosX() + " " + this.getPosY() + " " + this.getPosZ());
         this.world.addParticle(
                 ParticleTypes.SMOKE,
                 this.getPosX() + this.world.getRandom().nextFloat() * 1.5 - 0.75F,
@@ -93,7 +101,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.targetSelector.addGoal(1, new FindPlayerGoal(this));
-        this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
+        this.targetSelector.addGoal(1, new isNearestDragonTargetGoal(this, true));
     }
 
     @Override
@@ -119,9 +127,9 @@ public class MagicalBeastEntity extends MonsterEntity {
     private boolean teleportToEntity(Entity p_70816_1_) {
         Vec3d vec3d = new Vec3d(this.getPosX() - p_70816_1_.getPosX(), this.getPosYHeight(0.5D) - p_70816_1_.getPosYEye(), this.getPosZ() - p_70816_1_.getPosZ());
         vec3d = vec3d.normalize();
-        double d1 = this.getPosX() + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * 3.0D;
-        double d2 = this.getPosY() + (double) (this.rand.nextInt(16) - 8) - vec3d.y * 3.0D;
-        double d3 = this.getPosZ() + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.z * 3.0D;
+        double d1 = this.getPosX() + (this.rand.nextDouble() - 0.5D) * 4.0D - vec3d.x * 3.0D;
+        double d2 = this.getPosY() + (double) (this.rand.nextInt(16) - 4) - vec3d.y * 3.0D;
+        double d3 = this.getPosZ() + (this.rand.nextDouble() - 0.5D) * 4.0D - vec3d.z * 3.0D;
         return this.teleportTo(d1, d2, d3);
     }
 
@@ -136,7 +144,6 @@ public class MagicalBeastEntity extends MonsterEntity {
         boolean flag = blockstate.getMaterial().blocksMovement();
         boolean flag1 = blockstate.getFluidState().isTagged(FluidTags.WATER);
         this.attemptTeleport(x, y, z, true);
-        //this.setPosition(blockpos$mutable.getX(), blockpos$mutable.getY(), blockpos$mutable.getZ());
         if (flag && !flag1) {
             this.world.playSound(null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
             this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
@@ -200,9 +207,7 @@ public class MagicalBeastEntity extends MonsterEntity {
 
         @Override
         protected AxisAlignedBB getTargetableArea(double p_188511_1_) {
-
             PlayerEntity player = (PlayerEntity) this.nearestTarget;
-
             return this.goalOwner.getBoundingBox().grow(getActualDistance(player));
         }
     }
@@ -218,7 +223,6 @@ public class MagicalBeastEntity extends MonsterEntity {
         @Override
         protected AxisAlignedBB getTargetableArea(double p_188511_1_) {
             PlayerEntity player = (PlayerEntity) this.nearestTarget;
-
             return this.goalOwner.getBoundingBox().grow(getActualDistance(player));
         }
 
@@ -228,7 +232,6 @@ public class MagicalBeastEntity extends MonsterEntity {
                 if (this.nearestTarget instanceof PlayerEntity) {
                     float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
                     if (diff >= -3 & diff <= 0) {
-                        System.out.println("BLYAJ");
                         beast.teleportToEntity(this.nearestTarget);
                     }
                 }

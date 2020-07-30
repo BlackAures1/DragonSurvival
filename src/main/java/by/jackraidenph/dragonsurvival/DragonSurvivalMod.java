@@ -121,10 +121,6 @@ public class DragonSurvivalMod {
             e.getEntityLiving().world.addEntity(beast);
             beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
         }
-
-        if (e.getEntityLiving() instanceof MagicalBeastEntity) {
-
-        }
     }
 
     @SubscribeEvent
