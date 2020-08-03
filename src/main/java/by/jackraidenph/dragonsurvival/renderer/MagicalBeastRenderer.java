@@ -33,7 +33,7 @@ public class MagicalBeastRenderer extends MobRenderer<MagicalBeastEntity, Magica
     ));
 
     public MagicalBeastRenderer(EntityRendererManager p_i50961_1_) {
-        super(p_i50961_1_, new MagicalBeastModel(), 0.5F);
+        super(p_i50961_1_, new MagicalBeastModel(), 1.0F);
         ModShaders.register();
     }
 

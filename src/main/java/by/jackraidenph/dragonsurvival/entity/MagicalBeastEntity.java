@@ -62,7 +62,8 @@ public class MagicalBeastEntity extends MonsterEntity {
     protected void onDeathUpdate() {
         super.onDeathUpdate();
         if (this.deathTime == 19) {
-            world.setBlockState(this.getPosition(), BlockInit.predator_star.getDefaultState());
+            world.setBlockState(this.getPosition(), BlockInit.PREDATOR_STAR_BLOCK.getDefaultState());
+            this.spawnExplosionParticle();
         }
     }
 
@@ -71,9 +72,9 @@ public class MagicalBeastEntity extends MonsterEntity {
         super.livingTick();
         this.world.addParticle(
                 ParticleTypes.SMOKE,
-                this.getPosX() + this.world.getRandom().nextFloat() * 1.5 - 0.75F,
+                this.getPosX() + this.world.getRandom().nextFloat() * 1.25 - 0.75F,
                 this.getPosY() + this.getHeight() / 1.5F * scale,
-                this.getPosZ() + this.world.getRandom().nextFloat() * 1.5 - 0.75F,
+                this.getPosZ() + this.world.getRandom().nextFloat() * 1.25 - 0.75F,
                 0,
                 this.world.getRandom().nextFloat() / 12.5f,
                 0);
@@ -101,7 +102,7 @@ public class MagicalBeastEntity extends MonsterEntity {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.targetSelector.addGoal(1, new FindPlayerGoal(this));
-        this.targetSelector.addGoal(1, new isNearestDragonTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
     }
 
     @Override
@@ -125,11 +126,10 @@ public class MagicalBeastEntity extends MonsterEntity {
     }
 
     private boolean teleportToEntity(Entity p_70816_1_) {
-        Vec3d vec3d = new Vec3d(this.getPosX() - p_70816_1_.getPosX(), this.getPosYHeight(0.5D) - p_70816_1_.getPosYEye(), this.getPosZ() - p_70816_1_.getPosZ());
-        vec3d = vec3d.normalize();
-        double d1 = this.getPosX() + (this.rand.nextDouble() - 0.5D) * 4.0D - vec3d.x * 3.0D;
-        double d2 = this.getPosY() + (double) (this.rand.nextInt(16) - 4) - vec3d.y * 3.0D;
-        double d3 = this.getPosZ() + (this.rand.nextDouble() - 0.5D) * 4.0D - vec3d.z * 3.0D;
+        Vec3d vec = p_70816_1_.getPositionVec().subtract(p_70816_1_.getLookVec().mul(3, 1, 3));
+        double d1 = vec.getX();
+        double d2 = 256;
+        double d3 = vec.getZ();
         return this.teleportTo(d1, d2, d3);
     }
 
@@ -231,7 +231,7 @@ public class MagicalBeastEntity extends MonsterEntity {
             if (this.nearestTarget != null) {
                 if (this.nearestTarget instanceof PlayerEntity) {
                     float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
-                    if (diff >= -3 & diff <= 0) {
+                    if (diff <= 3 & diff >= -2) {
                         beast.teleportToEntity(this.nearestTarget);
                     }
                 }

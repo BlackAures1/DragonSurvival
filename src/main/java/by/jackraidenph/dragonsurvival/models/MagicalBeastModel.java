@@ -4,15 +4,12 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
 
 
 import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
-import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
 import by.jackraidenph.dragonsurvival.shader.ModShaders;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.ARBShaderObjects;
 
 public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     private final ModelRenderer Main;
@@ -293,8 +290,15 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
         this.left_front_leg.rotateAngleX = -0.2618F + (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.4F;
         this.back_leg_left.rotateAngleX = -0.2618F + (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.4F;
 
-        this.Neck_and_head.rotateAngleY = MathHelper.wrapDegrees((float) (netHeadYaw * (Math.PI / 180.0F)));
+        this.head.rotateAngleY = MathHelper.wrapDegrees((float) (netHeadYaw * (Math.PI / 180.0F)));
         this.head.rotateAngleX = 0.5236F + MathHelper.wrapDegrees((float) (headPitch * (Math.PI / 180.0F)));
+
+        this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
+
+        this.setRotationAngle(this.star,
+                (float) (MathHelper.cos(ageInTicks / 55.5f) * 360 * (Math.PI / 180.0F)),
+                (float) (MathHelper.sin(ageInTicks / 55.5f) * 360 * (Math.PI / 180.0F)),
+                (float) (MathHelper.cos(ageInTicks / -55.5f) * 360 * (Math.PI / 180.0F)));
     }
 
     @Override
@@ -303,7 +307,9 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
         float scale = entity.size / entity.getHeight();
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, 1.0f - scale, 0);
+        ModShaders.color_cycle.start();
         Main.render(matrixStack, buffer, packedLight, packedOverlay);
+        ModShaders.color_cycle.stop();
         matrixStack.pop();
     }
 

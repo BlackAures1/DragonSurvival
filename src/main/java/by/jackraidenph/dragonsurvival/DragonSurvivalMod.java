@@ -5,12 +5,13 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.network.IMessage;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
-import by.jackraidenph.dragonsurvival.shader.ModShaders;
+import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.CreatureEntity;
@@ -20,20 +21,20 @@ import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -44,7 +45,6 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.ARBShaderObjects;
 
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
@@ -64,6 +64,7 @@ public class DragonSurvivalMod {
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitchEvent);
         MinecraftForge.EVENT_BUS.register(this);
         EntityTypesInit.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
@@ -85,8 +86,8 @@ public class DragonSurvivalMod {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-        LOGGER.info("Successfully registered DragonRenderer!");
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST.get(), MagicalBeastRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
     }
 
     @SubscribeEvent
@@ -113,7 +114,7 @@ public class DragonSurvivalMod {
 
     @SubscribeEvent
     public void onDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof PlayerEntity)
+        if (e.getEntityLiving() instanceof PlayerEntity || e.getEntityLiving() instanceof MagicalBeastEntity)
             return;
 
         if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
@@ -121,6 +122,15 @@ public class DragonSurvivalMod {
             e.getEntityLiving().world.addEntity(beast);
             beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
         }
+    }
+
+    @SubscribeEvent
+    public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
+        LOGGER.info("Successfully added sprites!");
     }
 
     @SubscribeEvent
