@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.renderer;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.shader.ModShaders;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -13,14 +12,13 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.ARBShaderObjects;
 
 public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity> {
 
-    public static final Material CAGE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID,"te/star/cage"));
+    public static final Material CAGE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
     public static final Material WIND_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
-    public static final Material VERTICAL_WIND_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID,"te/star/wind_vertical"));
-    public static final Material OPEN_EYE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID,"te/star/open_eye"));
+    public static final Material VERTICAL_WIND_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
+    public static final Material OPEN_EYE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
     private final ModelRenderer field_228872_h_ = new ModelRenderer(16, 16, 0, 0);
     private final ModelRenderer field_228873_i_;
     private final ModelRenderer field_228874_j_;
@@ -28,6 +26,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
 
     public PredatorStarTESR(TileEntityRendererDispatcher p_i226009_1_) {
         super(p_i226009_1_);
+
         this.field_228872_h_.addBox(-4.0F, -4.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.01F);
         this.field_228873_i_ = new ModelRenderer(64, 32, 0, 0);
         this.field_228873_i_.addBox(-8.0F, -8.0F, -8.0F, 16.0F, 16.0F, 16.0F);
@@ -44,7 +43,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         float f1 = tileEntityIn.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
         float f2 = MathHelper.sin(f * 0.1F) / 2.0F + 0.5F;
         f2 = f2 * f2 + f2;
-        matrixStackIn.push();
+       /* matrixStackIn.push();
         matrixStackIn.translate(0.5D, (double) (0.3F + f2 * 0.2F), 0.5D);
         Vector3f vector3f = new Vector3f(0.5F, 1.0F, 0.5F);
         vector3f.normalize();
@@ -69,7 +68,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180.0F));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
         this.field_228873_i_.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
-        matrixStackIn.pop();
+        matrixStackIn.pop();*/
         ActiveRenderInfo activerenderinfo = this.renderDispatcher.renderInfo;
         matrixStackIn.push();
         matrixStackIn.translate(0.5D, (double) (0.3F + f2 * 0.2F), 0.5D);

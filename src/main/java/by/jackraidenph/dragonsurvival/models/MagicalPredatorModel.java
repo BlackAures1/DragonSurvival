@@ -3,15 +3,14 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
 // Paste this class into your mod and generate all required imports
 
 
-import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
-import by.jackraidenph.dragonsurvival.shader.ModShaders;
+import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
-public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
+public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
     private final ModelRenderer Main;
     private final ModelRenderer All_body;
     private final ModelRenderer body;
@@ -45,9 +44,9 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     private final ModelRenderer head;
     private final ModelRenderer lower_jaw;
     private final ModelRenderer eyebrows;
-    private MagicalBeastEntity entity;
+    private MagicalPredatorEntity entity;
 
-    public MagicalBeastModel() {
+    public MagicalPredatorModel() {
         textureWidth = 128;
         textureHeight = 128;
 
@@ -276,7 +275,7 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
     }
 
     @Override
-    public void setRotationAngles(MagicalBeastEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setRotationAngles(MagicalPredatorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.entity = entity;
 
         this.lower_jaw.rotateAngleX = MathHelper.cos(entity.swingProgress * 100 * 0.183f) * 0.0575f;
@@ -290,7 +289,7 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
         this.left_front_leg.rotateAngleX = -0.2618F + (MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) * 0.4F;
         this.back_leg_left.rotateAngleX = -0.2618F + (MathHelper.cos((float) (limbSwing * 0.6662F + Math.PI)) * 1.4F * limbSwingAmount) * 0.4F;
 
-        this.head.rotateAngleY = MathHelper.wrapDegrees((float) (netHeadYaw * (Math.PI / 180.0F)));
+        this.Neck_and_head.rotateAngleY = MathHelper.wrapDegrees((float) (netHeadYaw * (Math.PI / 180.0F)));
         this.head.rotateAngleX = 0.5236F + MathHelper.wrapDegrees((float) (headPitch * (Math.PI / 180.0F)));
 
         this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
@@ -307,9 +306,7 @@ public class MagicalBeastModel extends EntityModel<MagicalBeastEntity> {
         float scale = entity.size / entity.getHeight();
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, 1.0f - scale, 0);
-        ModShaders.color_cycle.start();
         Main.render(matrixStack, buffer, packedLight, packedOverlay);
-        ModShaders.color_cycle.stop();
         matrixStack.pop();
     }
 

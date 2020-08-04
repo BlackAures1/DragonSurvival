@@ -3,15 +3,17 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
+import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.network.IMessage;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
+import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
+import by.jackraidenph.dragonsurvival.shader.ModShaders;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.CreatureEntity;
@@ -24,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,9 +35,12 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -65,8 +69,8 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitchEvent);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationHandler.spec);
         MinecraftForge.EVENT_BUS.register(this);
-        EntityTypesInit.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
@@ -79,15 +83,14 @@ public class DragonSurvivalMod {
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncCapability.class, new PacketSyncCapability());
         LOGGER.info("Successfully registered Messages!");
-        for (Biome b : Biome.BIOMES) {
-            b.getSpawns(EntityTypesInit.MAGICAL_BEAST.get().getClassification()).add(new Biome.SpawnListEntry(EntityTypesInit.MAGICAL_BEAST.get(), 1, 1, 2));
-        }
+        DeferredWorkQueue.runLater(EntityTypesInit::addSpawn);
         LOGGER.info("Successfully registered Entity Spawns!");
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST.get(), MagicalBeastRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
+        DeferredWorkQueue.runLater(ModShaders::register);
     }
 
     @SubscribeEvent
@@ -114,11 +117,11 @@ public class DragonSurvivalMod {
 
     @SubscribeEvent
     public void onDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof PlayerEntity || e.getEntityLiving() instanceof MagicalBeastEntity)
+        if (e.getEntityLiving() instanceof PlayerEntity || e.getEntityLiving() instanceof MagicalPredatorEntity)
             return;
 
         if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
-            MagicalBeastEntity beast = EntityTypesInit.MAGICAL_BEAST.get().create(e.getEntityLiving().world);
+            MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(e.getEntityLiving().world);
             e.getEntityLiving().world.addEntity(beast);
             beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
         }

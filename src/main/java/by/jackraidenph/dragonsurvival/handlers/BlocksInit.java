@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class BlockInit {
+public class BlocksInit {
 
     public static final Block DRAGON_ALTAR_BLOCK = new DragonAltarBlock(
             Block.Properties

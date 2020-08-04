@@ -12,7 +12,7 @@ public class TileEntityTypesInit {
 
     public static final TileEntityType<PredatorStarTileEntity> PREDATOR_STAR_TILE_ENTITY_TYPE = TileEntityType.Builder.create(
             PredatorStarTileEntity::new,
-            BlockInit.PREDATOR_STAR_BLOCK)
+            BlocksInit.PREDATOR_STAR_BLOCK)
             .build(null);
 
     @SubscribeEvent

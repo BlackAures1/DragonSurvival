@@ -1,23 +1,17 @@
 package by.jackraidenph.dragonsurvival.renderer;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
-import by.jackraidenph.dragonsurvival.models.MagicalBeastModel;
-import by.jackraidenph.dragonsurvival.shader.ModShaders;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.models.MagicalPredatorModel;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.ARBShaderObjects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MagicalBeastRenderer extends MobRenderer<MagicalBeastEntity, MagicalBeastModel> {
+public class MagicalPredatorRenderer extends MobRenderer<MagicalPredatorEntity, MagicalPredatorModel> {
 
     public static List<ResourceLocation> MAGICAL_BEAST_TEXTURES = new ArrayList<>(Arrays.asList(
             new ResourceLocation(DragonSurvivalMod.MODID, "textures/magical_beast/magical_predator_dark.png"),
@@ -32,13 +26,12 @@ public class MagicalBeastRenderer extends MobRenderer<MagicalBeastEntity, Magica
             new ResourceLocation(DragonSurvivalMod.MODID, "textures/magical_beast/magical_predator_zombie.png")
     ));
 
-    public MagicalBeastRenderer(EntityRendererManager p_i50961_1_) {
-        super(p_i50961_1_, new MagicalBeastModel(), 1.0F);
-        ModShaders.register();
+    public MagicalPredatorRenderer(EntityRendererManager p_i50961_1_) {
+        super(p_i50961_1_, new MagicalPredatorModel(), 0.66F);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(MagicalBeastEntity entity) {
+    public ResourceLocation getEntityTexture(MagicalPredatorEntity entity) {
         return MAGICAL_BEAST_TEXTURES.get(entity.type);
     }
 }

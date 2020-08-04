@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
-import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
+import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.block.Block;
@@ -14,14 +14,11 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
-import java.util.List;
 import java.util.Random;
 
 public class PredatorStarBlock extends Block {
@@ -40,7 +37,7 @@ public class PredatorStarBlock extends Block {
             entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth());
             worldIn.destroyBlock(pos, false);
             if (new Random().nextInt(3) == 0) {
-                MagicalBeastEntity beast = EntityTypesInit.MAGICAL_BEAST.get().create(worldIn);
+                MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addEntity(beast);
                 beast.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
             }
@@ -61,7 +58,7 @@ public class PredatorStarBlock extends Block {
     @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         super.onEntityCollision(state, worldIn, pos, entityIn);
-        if (!(entityIn instanceof MagicalBeastEntity))
+        if (!(entityIn instanceof MagicalPredatorEntity))
             this.blockBehaviour(entityIn, worldIn, pos);
     }
 
@@ -88,7 +85,7 @@ public class PredatorStarBlock extends Block {
 
         @Override
         public boolean shouldContinueExecuting() {
-            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
+            return entity.world.getBlockState(pos).getBlock() == BlocksInit.PREDATOR_STAR_BLOCK;
         }
 
         @Override
@@ -99,7 +96,7 @@ public class PredatorStarBlock extends Block {
 
         @Override
         public boolean shouldExecute() {
-            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
+            return entity.world.getBlockState(pos).getBlock() == BlocksInit.PREDATOR_STAR_BLOCK;
         }
     }
 

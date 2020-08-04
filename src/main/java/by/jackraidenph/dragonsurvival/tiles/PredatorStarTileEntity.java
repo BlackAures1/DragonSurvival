@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.tiles;
 
 import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
-import by.jackraidenph.dragonsurvival.entity.MagicalBeastEntity;
+import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -41,7 +41,7 @@ public class PredatorStarTileEntity extends TileEntity implements ITickableTileE
 
         List<Entity> l = this.world.getEntitiesWithinAABB(CreatureEntity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(16.0F));
         for (Entity e : l) {
-            if (!(e instanceof MagicalBeastEntity))
+            if (!(e instanceof MagicalPredatorEntity))
                 ((CreatureEntity) e).goalSelector.addGoal(-1, new PredatorStarBlock.CallEntity((CreatureEntity) e, pos));
         }
 

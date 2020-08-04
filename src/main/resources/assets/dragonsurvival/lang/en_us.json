@@ -1,0 +1,13 @@
+{
+  "_comment": "Entity",
+  "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
+  "item.dragonsurvival.magical_predator_entity_spawn_egg": "Magical Predator Spawn Egg",
+
+  "_comment": "Block",
+  "block.dragonsurvival.predator_star": "Predator Star",
+  "block.dragonsurvival.dragon_altar": "Dragon Altar",
+
+  "_comment": "Tooltip",
+  "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
+  "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities"
+}

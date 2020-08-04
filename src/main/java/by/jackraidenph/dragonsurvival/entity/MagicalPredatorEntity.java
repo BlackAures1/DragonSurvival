@@ -1,15 +1,12 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
-import by.jackraidenph.dragonsurvival.renderer.MagicalBeastRenderer;
+import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
+import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,17 +23,18 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MagicalBeastEntity extends MonsterEntity {
+public class MagicalPredatorEntity extends MonsterEntity {
 
     public int type;
     public float size;
     private float scale;
 
-    public MagicalBeastEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
+    public MagicalPredatorEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
-        this.type = worldIn.getRandom().nextInt(MagicalBeastRenderer.MAGICAL_BEAST_TEXTURES.size());
+        this.type = worldIn.getRandom().nextInt(MagicalPredatorRenderer.MAGICAL_BEAST_TEXTURES.size());
         this.size = worldIn.getRandom().nextFloat() + 0.95F;
         scale = this.size / this.getHeight();
     }
@@ -62,7 +60,7 @@ public class MagicalBeastEntity extends MonsterEntity {
     protected void onDeathUpdate() {
         super.onDeathUpdate();
         if (this.deathTime == 19) {
-            world.setBlockState(this.getPosition(), BlockInit.PREDATOR_STAR_BLOCK.getDefaultState());
+            world.setBlockState(this.getPosition(), BlocksInit.PREDATOR_STAR_BLOCK.getDefaultState());
             this.spawnExplosionParticle();
         }
     }
@@ -100,7 +98,8 @@ public class MagicalBeastEntity extends MonsterEntity {
         super.registerGoals();
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(4, new devourXP(this.world, this));
         this.targetSelector.addGoal(1, new FindPlayerGoal(this));
         this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
     }
@@ -199,6 +198,37 @@ public class MagicalBeastEntity extends MonsterEntity {
         }
     }
 
+    static class devourXP extends Goal {
+
+        World world;
+        MagicalPredatorEntity entity;
+
+        public devourXP(World worldIn, MagicalPredatorEntity entityIn) {
+            this.world = worldIn;
+            this.entity = entityIn;
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(5), Objects::nonNull).forEach(
+                    xpOrb -> {
+                        Vec3d velocityVec = this.entity.getPositionVec().mul(xpOrb.getPositionVec()).normalize();
+                        xpOrb.addVelocity(velocityVec.getX(), velocityVec.getY(), velocityVec.getZ());
+                        if (xpOrb.getBoundingBox().intersects(this.entity.getBoundingBox())) {
+                            xpOrb.remove();
+                            this.entity.size += 0.01;
+                        }
+                    }
+            );
+            super.tick();
+        }
+    }
+
     static class isNearestDragonTargetGoal extends NearestAttackableTargetGoal {
 
         public isNearestDragonTargetGoal(MobEntity p_i50313_1_, boolean p_i50313_3_) {
@@ -213,9 +243,9 @@ public class MagicalBeastEntity extends MonsterEntity {
     }
 
     static class FindPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
-        private final MagicalBeastEntity beast;
+        private final MagicalPredatorEntity beast;
 
-        public FindPlayerGoal(MagicalBeastEntity beastIn) {
+        public FindPlayerGoal(MagicalPredatorEntity beastIn) {
             super(beastIn, PlayerEntity.class, false);
             this.beast = beastIn;
         }
