@@ -76,7 +76,7 @@ public class EntityTypesInit {
         if (!includeList.isEmpty()) {
             for (BiomeDictionary.Type type : includeList) {
                 for (Biome biome : BiomeDictionary.getBiomes(type)) {
-                    if (!biome.getSpawns(EntityClassification.CREATURE).isEmpty()) {
+                    if (!biome.getSpawns(EntityClassification.MONSTER).isEmpty()) {
                         spawnableBiomes.add(biome);
                     }
                 }

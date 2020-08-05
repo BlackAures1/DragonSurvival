@@ -43,7 +43,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         float f1 = tileEntityIn.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
         float f2 = MathHelper.sin(f * 0.1F) / 2.0F + 0.5F;
         f2 = f2 * f2 + f2;
-       /* matrixStackIn.push();
+        matrixStackIn.push();
         matrixStackIn.translate(0.5D, (double) (0.3F + f2 * 0.2F), 0.5D);
         Vector3f vector3f = new Vector3f(0.5F, 1.0F, 0.5F);
         vector3f.normalize();
@@ -51,7 +51,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         this.field_228875_k_.render(matrixStackIn, CAGE_TEXTURE.getBuffer(bufferIn, RenderType::getEntityTranslucent), combinedLightIn, combinedOverlayIn);
         matrixStackIn.pop();
         int i = tileEntityIn.getTicksExisted() / 66 % 3;
-        matrixStackIn.push();
+        /*matrixStackIn.push();
         matrixStackIn.translate(0.5D, 0.5D, 0.5D);
         if (i == 1) {
             matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
