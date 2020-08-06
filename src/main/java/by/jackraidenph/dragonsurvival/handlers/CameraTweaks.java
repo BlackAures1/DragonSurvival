@@ -1,12 +1,14 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entities.RenderViewEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -14,6 +16,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
@@ -42,32 +46,52 @@ public class CameraTweaks {
         }
     }
 
-    private static void setCamera(EntityViewRenderEvent.CameraSetup event, double dx, double dy, double dz, Vec3d lookVec) throws InvocationTargetException, IllegalAccessException {
+    private static void setCamera(EntityViewRenderEvent.CameraSetup event, double dx, double dy, double dz, Vec3d lookVec) {
         ActiveRenderInfo info = event.getInfo();
 
-        movePosition.invoke(info, dx, dy, dz);
+        try {
+            movePosition.invoke(info, dx, dy, dz);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
         //setPosition.invoke(info, dx, dy, dz);
     }
+
+    public static final int maxNeckLen = 1;
+
+    private static double neckLen = 0;
 
     @SubscribeEvent
     public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Minecraft minecraft = Minecraft.getInstance();
-        ActiveRenderInfo info = event.getInfo();
+        PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> {
+            ActiveRenderInfo info = event.getInfo();
 
-        float pitch = event.getPitch();
+            float pitch = event.getPitch();
 
-        //pitch=0 => dx=2, dy=0
-        //pitch=90 => dx=0, dy=2
-        //pitch=-90 => dx=0, dy=-2
+            //pitch=0 => dx=2, dy=0
+            //pitch=90 => dx=0, dy=2
+            //pitch=-90 => dx=0, dy=-2
 
-        int neckLen = 10;
-        double dx = (90 - abs(pitch)) / 90 * neckLen;
-        double dy = pitch / 90 * neckLen;
+            double dx = (90 - abs(pitch)) / 90 * neckLen;
+            double dy = pitch / 90 * neckLen;
 
-        //System.out.println(event.getPitch());
+            setCamera(event, dx, dy + 1, 0, null);
+        });
 
-        setCamera(event, dx, dy+1, 0, null);
-        //GL11.glTranslated(0, -1, 0);
+    }
 
+    @SubscribeEvent
+    public static void onPlayerEnterToWorld(EntityJoinWorldEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (event.getEntity() instanceof PlayerEntity && event.getEntity() == minecraft.player)
+            PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> neckLen = maxNeckLen);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.ClientTickEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player != null && neckLen < maxNeckLen)
+            PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> neckLen += 0.1);
     }
 }
