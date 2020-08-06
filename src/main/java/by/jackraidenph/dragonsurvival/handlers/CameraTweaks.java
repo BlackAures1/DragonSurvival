@@ -86,7 +86,7 @@ public class CameraTweaks {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && neckLen < maxNeckLen)
             if(playerIsDragon(minecraft.player))
-                neckLen += 0.01;
+                neckLen += 0.02;
     }
 
     private static boolean playerIsDragon(PlayerEntity player) {
