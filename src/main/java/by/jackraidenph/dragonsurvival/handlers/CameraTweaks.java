@@ -54,7 +54,7 @@ public class CameraTweaks {
     private static double neckLen = 0;
 
     @SubscribeEvent
-    public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) {
         Minecraft minecraft = Minecraft.getInstance();
         if(playerIsDragon(minecraft.player)){
             ActiveRenderInfo info = event.getInfo();
