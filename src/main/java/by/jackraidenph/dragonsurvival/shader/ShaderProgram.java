@@ -1,82 +1,68 @@
 package by.jackraidenph.dragonsurvival.shader;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL20;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import org.lwjgl.opengl.ARBFragmentShader;
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-
 public class ShaderProgram {
-    private int programID; 
+    private int programID;
 
-    public ShaderProgram()
-    {
-        programID = ARBShaderObjects.glCreateProgramObjectARB();
+    public ShaderProgram() {
+        programID = GL20.glCreateProgram();
     }
 
-    public ShaderProgram addFragment(String path)
-    {
-        return add(path, ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+    public ShaderProgram addFragment(String path) {
+        return add(path, GL20.GL_FRAGMENT_SHADER);
     }
 
-    public ShaderProgram addVertex(String path)
-    {
-        return add(path, ARBVertexShader.GL_VERTEX_SHADER_ARB);
+    public ShaderProgram addVertex(String path) {
+        return add(path, GL20.GL_VERTEX_SHADER);
     }
 
 
-    public ShaderProgram add(String path, int shaderType)
-    {
-        int shaderID = ARBShaderObjects.glCreateShaderObjectARB(shaderType); 
-        ARBShaderObjects.glShaderSourceARB(shaderID, readFile(path));
-        ARBShaderObjects.glCompileShaderARB(shaderID); 
-     
-        if (ARBShaderObjects.glGetObjectParameteriARB(shaderID,
-                ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
-            throw new RuntimeException("Shader compilation error!\n" +
-                    ARBShaderObjects.glGetInfoLogARB(shaderID, ARBShaderObjects.
-                            glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB)));
+    public ShaderProgram add(String path, int shaderType) {
+        int shaderID = GL20.glCreateShader(shaderType);
+        GL20.glShaderSource(shaderID, readFile(path));
+        GL20.glCompileShader(shaderID);
+
+        if (GL20.glGetShaderi(shaderID,
+                GL20.GL_COMPILE_STATUS) == GL20.GL_FALSE)
+            throw new RuntimeException("Shader compilation error!\n " +
+                    GL20.glGetShaderInfoLog(shaderID, GL20.
+                            glGetShaderi(shaderID, GL20.GL_INFO_LOG_LENGTH)));
 
 
-        ARBShaderObjects.glAttachObjectARB(programID, shaderID);
+        GL20.glAttachShader(programID, shaderID);
         return this;
     }
 
 
-    public ShaderProgram compile()
-    {
-        ARBShaderObjects.glLinkProgramARB(programID);
+    public ShaderProgram compile() {
+        GL20.glLinkProgram(programID);
         return this;
     }
 
-    public void start()
-    {
-        ARBShaderObjects.glUseProgramObjectARB(programID);
+    public void start() {
+        GL20.glUseProgram(programID);
     }
 
-    public void stop()
-    {
-        ARBShaderObjects.glUseProgramObjectARB(0);
-    }
-
-    
-    public int getUniform(String name) 
-    {
-        return ARBShaderObjects.glGetUniformLocationARB(programID, name);
+    public void stop() {
+        GL20.glUseProgram(0);
     }
 
 
-    private String readFile(String path)
-    {
-        try 
-        {
+    public int getUniform(String name) {
+        return GL20.glGetUniformLocation(programID, name);
+    }
+
+
+    private String readFile(String path) {
+        try {
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(DragonSurvivalMod.MODID, path)).getInputStream(), "UTF-8"));
             String str;
@@ -85,8 +71,7 @@ public class ShaderProgram {
 
             return builder.toString();
 
-        } catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
