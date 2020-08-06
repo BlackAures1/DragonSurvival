@@ -1,27 +1,19 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.entities.RenderViewEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
-import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -64,7 +56,7 @@ public class CameraTweaks {
     @SubscribeEvent
     public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Minecraft minecraft = Minecraft.getInstance();
-        PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> {
+        if(playerIsDragon(minecraft.player)){
             ActiveRenderInfo info = event.getInfo();
 
             float pitch = event.getPitch();
@@ -77,7 +69,7 @@ public class CameraTweaks {
             double dy = pitch / 90 * neckLen;
 
             setCamera(event, dx, dy + 1, 0, null);
-        });
+        };
 
     }
 
@@ -85,13 +77,19 @@ public class CameraTweaks {
     public static void onPlayerEnterToWorld(EntityJoinWorldEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (event.getEntity() instanceof PlayerEntity && event.getEntity() == minecraft.player)
-            PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> neckLen = maxNeckLen);
+            if(playerIsDragon(minecraft.player))
+                neckLen = maxNeckLen;
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.ClientTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && neckLen < maxNeckLen)
-            PlayerStateProvider.getCap(minecraft.player).ifPresent(capa -> neckLen += 0.1);
+            if(playerIsDragon(minecraft.player))
+                neckLen += 0.01;
+    }
+
+    private static boolean playerIsDragon(PlayerEntity player) {
+        return PlayerStateProvider.getCap(player).filter(PlayerStateHandler::getIsDragon).isPresent();
     }
 }
