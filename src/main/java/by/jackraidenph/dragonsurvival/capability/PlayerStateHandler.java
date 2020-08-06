@@ -14,7 +14,7 @@ public class PlayerStateHandler {
     private boolean isDragon;
     private DragonType type = DragonType.SEA;
     private int level;
-    private Optional<DragonMovementData> data = Optional.ofNullable(null);
+    private Optional<DragonMovementData> data = Optional.empty();
 
     public boolean getIsDragon() {
         return this.isDragon;
