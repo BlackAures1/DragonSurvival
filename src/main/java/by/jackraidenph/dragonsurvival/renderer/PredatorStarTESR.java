@@ -1,12 +1,10 @@
 package by.jackraidenph.dragonsurvival.renderer;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.shader.ShaderCallback;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.shader.ShaderWrappedRenderLayer;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.Material;
@@ -18,9 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity> {
 
     public static final Material CAGE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
@@ -28,15 +23,32 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
     public static final Material VERTICAL_WIND_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
     public static final Material OPEN_EYE_TEXTURE = new Material(AtlasTexture.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
 
-    private static final ShaderCallback CALLBACK = shader -> {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC+3:00"));
-        float angle1 = (cal.get(Calendar.SECOND) + (cal.get(Calendar.MILLISECOND) / 1000.0f)) % (float) Math.PI * 2;
-
-        int angle = GlStateManager.getUniformLocation(shader, "angle");
+    /*private static final ShaderCallback CALLBACK = shader -> {
+        int width = GlStateManager.getUniformLocation(shader, "width");
         ShaderHelper.FLOAT_BUF.position(0);
-        ShaderHelper.FLOAT_BUF.put(0, angle1);
-        RenderSystem.glUniform1(angle, ShaderHelper.FLOAT_BUF);
-    };
+        ShaderHelper.FLOAT_BUF.put(0, 1920);
+        RenderSystem.glUniform1(width, ShaderHelper.FLOAT_BUF);
+
+        int height = GlStateManager.getUniformLocation(shader, "height");
+        ShaderHelper.FLOAT_BUF.position(0);
+        ShaderHelper.FLOAT_BUF.put(0, 1080);
+        RenderSystem.glUniform1(height, ShaderHelper.FLOAT_BUF);
+
+        int image = GlStateManager.getUniformLocation(shader, "image");
+        ShaderHelper.FLOAT_BUF.position(0);
+        ShaderHelper.FLOAT_BUF.put(0, 0);
+        RenderSystem.glUniform1(image, ShaderHelper.FLOAT_BUF);
+
+        GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GL11.glBindTexture(GL13.GL_TEXTURE_2D, Minecraft.getInstance().getFramebuffer().framebufferTexture);
+
+        int imageBack = GlStateManager.getUniformLocation(shader, "imageBack");
+        ShaderHelper.FLOAT_BUF.position(0);
+        ShaderHelper.FLOAT_BUF.put(0, 3);
+        RenderSystem.glUniform1(imageBack, ShaderHelper.FLOAT_BUF);
+
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+    };*/
     private final ModelRenderer field_228872_h_ = new ModelRenderer(16, 16, 0, 0);
     private final ModelRenderer field_228873_i_;
     private final ModelRenderer field_228874_j_;
@@ -56,7 +68,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
 
     private static RenderType makeRenderType(ResourceLocation texture) {
         RenderType normal = RenderType.getEntityTranslucent(texture);
-        return new ShaderWrappedRenderLayer(ShaderHelper.BotaniaShader.COLOR_CYCLE, CALLBACK, normal);
+        return new ShaderWrappedRenderLayer(ShaderHelper.BotaniaShader.COLOR_CYCLE, null, normal);
     }
 
     @Override
@@ -71,7 +83,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         Vector3f vector3f = new Vector3f(0.5F, 1.0F, 0.5F);
         vector3f.normalize();
         matrixStackIn.rotate(new Quaternion(vector3f, f1, true));
-        this.field_228875_k_.render(matrixStackIn, CAGE_TEXTURE.getBuffer(bufferIn, PredatorStarTESR::makeRenderType), combinedLightIn, combinedOverlayIn);
+        this.field_228875_k_.render(matrixStackIn, CAGE_TEXTURE.getBuffer(bufferIn, RenderType::getEntityTranslucent), combinedLightIn, combinedOverlayIn);
 
         matrixStackIn.pop();
         /*int i = tileEntityIn.getTicksExisted() / 66 % 3;
@@ -107,7 +119,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(activerenderinfo.getPitch()));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
         matrixStackIn.scale(1.3333334F, 1.3333334F, 1.3333334F);
-        this.field_228872_h_.render(matrixStackIn, OPEN_EYE_TEXTURE.getBuffer(bufferIn, PredatorStarTESR::makeRenderType), combinedLightIn, combinedOverlayIn);
+        this.field_228872_h_.render(matrixStackIn, OPEN_EYE_TEXTURE.getBuffer(bufferIn, RenderType::getEntityTranslucent), combinedLightIn, combinedOverlayIn);
 
         matrixStackIn.pop();
         GL11.glPopMatrix();

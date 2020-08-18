@@ -7,9 +7,7 @@ import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
-import by.jackraidenph.dragonsurvival.network.IMessage;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.*;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
@@ -83,8 +81,10 @@ public class DragonSurvivalMod {
         LOGGER.info("Successfully registered PlayerStateCapabilityHandler!");
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncCapability.class, new PacketSyncCapability());
+        register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
+        register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         LOGGER.info("Successfully registered Messages!");
-        DeferredWorkQueue.runLater(EntityTypesInit::addSpawn);
+        EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered Entity Spawns!");
     }
 

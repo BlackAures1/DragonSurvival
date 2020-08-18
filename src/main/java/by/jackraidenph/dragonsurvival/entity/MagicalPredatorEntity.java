@@ -1,7 +1,10 @@
 package by.jackraidenph.dragonsurvival.entity;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
+import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
+import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -21,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -37,6 +41,16 @@ public class MagicalPredatorEntity extends MonsterEntity {
         this.type = worldIn.getRandom().nextInt(MagicalPredatorRenderer.MAGICAL_BEAST_TEXTURES.size());
         this.size = worldIn.getRandom().nextFloat() + 0.95F;
         scale = this.size / this.getHeight();
+    }
+
+    @Override
+    protected boolean isDespawnPeaceful() {
+        return true;
+    }
+
+    @Override
+    public boolean preventDespawn() {
+        return true;
     }
 
     protected static int getActualDistance(PlayerEntity player) {
@@ -215,14 +229,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
 
         @Override
         public void tick() {
-            this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(5), Objects::nonNull).forEach(
+            this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(4), Objects::nonNull).forEach(
                     xpOrb -> {
-                        Vec3d velocityVec = this.entity.getPositionVec().mul(xpOrb.getPositionVec()).normalize();
-                        xpOrb.addVelocity(velocityVec.getX(), velocityVec.getY(), velocityVec.getZ());
-                        if (xpOrb.getBoundingBox().intersects(this.entity.getBoundingBox())) {
-                            xpOrb.remove();
-                            this.entity.size += 0.01;
-                        }
+                        DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()));
                     }
             );
             super.tick();
