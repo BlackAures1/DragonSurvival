@@ -12,7 +12,7 @@ import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
-import by.jackraidenph.dragonsurvival.shader.ModShaders;
+import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -53,7 +53,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "main"),
@@ -70,6 +70,7 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitchEvent);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationHandler.spec);
+        ShaderHelper.initShaders();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -90,7 +91,6 @@ public class DragonSurvivalMod {
     private void setupClient(final FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
-        DeferredWorkQueue.runLater(ModShaders::register);
     }
 
     @SubscribeEvent

@@ -6,15 +6,18 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.function.Function;
 
 public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
     private final ModelRenderer Main;
     private final ModelRenderer All_body;
     private final ModelRenderer body;
-    private final ModelRenderer star;
     private final ModelRenderer hind;
     private final ModelRenderer pelvis_and_hind_legs;
     private final ModelRenderer tail;
@@ -44,9 +47,12 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
     private final ModelRenderer head;
     private final ModelRenderer lower_jaw;
     private final ModelRenderer eyebrows;
+    private final ModelRenderer star;
     private MagicalPredatorEntity entity;
 
-    public MagicalPredatorModel() {
+    public MagicalPredatorModel(Function<ResourceLocation, RenderType> renderTypeIn) {
+        super(renderTypeIn);
+
         textureWidth = 128;
         textureHeight = 128;
 
@@ -274,6 +280,13 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
         eyebrows.setTextureOffset(30, 49).addBox(3.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
     }
 
+    public static void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = z;
+    }
+
     @Override
     public void setRotationAngles(MagicalPredatorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.entity = entity;
@@ -294,26 +307,14 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
 
         this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
 
-        this.setRotationAngle(this.star,
-                (float) (MathHelper.cos(ageInTicks / 55.5f) * 360 * (Math.PI / 180.0F)),
-                (float) (MathHelper.sin(ageInTicks / 55.5f) * 360 * (Math.PI / 180.0F)),
-                (float) (MathHelper.cos(ageInTicks / -55.5f) * 360 * (Math.PI / 180.0F)));
+        setRotationAngle(star,
+                (float) Math.sin(ageInTicks* 0.225F),
+                (float) Math.cos(ageInTicks* 0.225F),
+                (float) Math.sin(ageInTicks* 0.225F));
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        matrixStack.push();
-        float scale = entity.size / entity.getHeight();
-        matrixStack.scale(scale, scale, scale);
-        matrixStack.translate(0, 1.0f - scale, 0);
         Main.render(matrixStack, buffer, packedLight, packedOverlay);
-        matrixStack.pop();
-    }
-
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
     }
 }
