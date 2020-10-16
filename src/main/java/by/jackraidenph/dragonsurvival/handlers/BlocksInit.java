@@ -26,7 +26,7 @@ public class BlocksInit {
                     .harvestLevel(2)
                     .hardnessAndResistance(5.0f)
                     .lightValue(5)
-                    .sound(SoundType.ANVIL));
+                    .sound(SoundType.STONE));
 
     public static final Block PREDATOR_STAR_BLOCK = new PredatorStarBlock(
             Block.Properties
@@ -35,7 +35,7 @@ public class BlocksInit {
                     .hardnessAndResistance(9999)
                     .tickRandomly()
                     .noDrops()
-                    .sound(SoundType.STONE));
+                    .sound(SoundType.NETHER_WART));
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {

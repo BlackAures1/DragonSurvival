@@ -13,7 +13,7 @@ public class ConfigurationHandler {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Spawn SPAWN = new Spawn(BUILDER);
-    public static final ForgeConfigSpec spec = BUILDER.build();
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static class General {
 

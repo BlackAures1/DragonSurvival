@@ -46,9 +46,8 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
     private final ModelRenderer neck;
     private final ModelRenderer head;
     private final ModelRenderer lower_jaw;
-    private final ModelRenderer eyebrows;
+    //private final ModelRenderer eyebrows;
     private final ModelRenderer star;
-    private MagicalPredatorEntity entity;
 
     public MagicalPredatorModel(Function<ResourceLocation, RenderType> renderTypeIn) {
         super(renderTypeIn);
@@ -257,7 +256,7 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
         head.setTextureOffset(11, 46).addBox(-2.0F, -2.0F, -5.0F, 4.0F, 4.0F, 5.0F, 0.0F, false);
         head.setTextureOffset(50, 47).addBox(-2.3F, -1.0F, -4.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
         head.setTextureOffset(46, 12).addBox(1.3F, -1.0F, -4.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-        head.setTextureOffset(49, 24).addBox(-1.5F, -2.5F, -4.0F, 3.0F, 2.0F, 5.0F, 0.0F, false);
+        //head.setTextureOffset(49, 24).addBox(-1.5F, -2.5F, -4.0F, 3.0F, 2.0F, 5.0F, 0.0F, false);
 
         lower_jaw = new ModelRenderer(this);
         lower_jaw.setRotationPoint(0.0F, 2.0F, -1.0F);
@@ -272,24 +271,22 @@ public class MagicalPredatorModel extends EntityModel<MagicalPredatorEntity> {
         lower_jaw.setTextureOffset(37, 41).addBox(-2.0F, -0.5359F, -7.0F, 4.0F, 2.0F, 0.0F, 0.0F, false);
         lower_jaw.setTextureOffset(6, 14).addBox(-1.0F, 2.0F, -7.0F, 2.0F, 1.0F, 0.0F, 0.0F, false);
 
-        eyebrows = new ModelRenderer(this);
+        /*eyebrows = new ModelRenderer(this);
         eyebrows.setRotationPoint(-2.0F, -1.0F, -4.0F);
         head.addChild(eyebrows);
         setRotationAngle(eyebrows, 0.2618F, 0.0F, 0.0F);
         eyebrows.setTextureOffset(54, 20).addBox(-0.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
-        eyebrows.setTextureOffset(30, 49).addBox(3.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        eyebrows.setTextureOffset(30, 49).addBox(3.5F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);*/
     }
 
-    public static void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+    private static void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
     }
 
     @Override
     public void setRotationAngles(MagicalPredatorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.entity = entity;
 
         this.lower_jaw.rotateAngleX = MathHelper.cos(entity.swingProgress * 100 * 0.183f) * 0.0575f;
 

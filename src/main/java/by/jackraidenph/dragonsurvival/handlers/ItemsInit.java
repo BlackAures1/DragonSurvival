@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemsInit {
     @SubscribeEvent
-    public static void registerEntitySpawnEggs(final RegistryEvent.Register<Item> event) {
+    public static void register(final RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
 
         );

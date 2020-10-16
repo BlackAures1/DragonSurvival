@@ -43,7 +43,7 @@ public class PredatorStarBlock extends Block {
 
     public void blockBehaviour(Entity entity, World worldIn, BlockPos pos) {
         if (entity instanceof LivingEntity) {
-            entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth());
+            entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth()+1);
             worldIn.destroyBlock(pos, false);
             if (new Random().nextInt(3) == 0) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);

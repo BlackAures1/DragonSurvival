@@ -1,9 +1,9 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
@@ -13,6 +13,7 @@ import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -31,9 +32,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -67,7 +66,7 @@ public class DragonSurvivalMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitchEvent);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationHandler.spec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationHandler.SPEC);
         ShaderHelper.initShaders();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -89,6 +88,7 @@ public class DragonSurvivalMod {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(BlocksInit.DRAGON_ALTAR_BLOCK, RenderType.getTranslucent());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
     }
@@ -198,24 +198,9 @@ public class DragonSurvivalMod {
                     if (!capNew.getIsDragon())
                         return;
 
-                    PlayerStateHandler cap = capNew;
-                    PlayerStateHandler oldCap = capOld;
-                    cap.setMovementData(oldCap.getMovementData().orElse(null), true);
-                    cap.setLevel(cap.getLevel());
-                    cap.setType(cap.getType());
+                    capNew.setMovementData(capOld.getMovementData().orElse(null), true);
+                    capNew.setLevel(capNew.getLevel());
+                    capNew.setType(capNew.getType());
                 }));
-    }
-
-    @SubscribeEvent
-    public void onCollision(GetCollisionBoxesEvent e) {
-        System.out.println(e);
-        if (e.getEntity() instanceof PlayerEntity) {
-            player = (PlayerEntity) e.getEntity();
-            PlayerStateProvider.getCap(player).ifPresent(cap -> {
-                if (cap.getIsDragon()) {
-                    System.out.println(e.getCollisionBoxesList());
-                }
-            });
-        }
     }
 }

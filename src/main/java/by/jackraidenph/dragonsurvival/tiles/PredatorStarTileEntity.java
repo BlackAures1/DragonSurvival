@@ -39,11 +39,14 @@ public class PredatorStarTileEntity extends TileEntity implements ITickableTileE
     public void tick() {
         ++this.ticksExisted;
 
-        List<Entity> l = this.world.getEntitiesWithinAABB(CreatureEntity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(16.0F));
+        // :(
+        /*List<Entity> l = this.world.getEntitiesWithinAABB(CreatureEntity.class, new AxisAlignedBB(pos, pos.add(1, 1, 1)).grow(16.0F));
         for (Entity e : l) {
             if (!(e instanceof MagicalPredatorEntity))
-                ((CreatureEntity) e).goalSelector.addGoal(-1, new PredatorStarBlock.CallEntity((CreatureEntity) e, pos));
-        }
+                if (((CreatureEntity) e).goalSelector.getRunningGoals().noneMatch(prioritizedGoal -> (prioritizedGoal.getGoal() instanceof PredatorStarBlock.CallEntity))) {
+                    ((CreatureEntity) e).goalSelector.addGoal(-1, new PredatorStarBlock.CallEntity((CreatureEntity) e, pos));
+                }
+        }*/
 
         if (this.world.isRemote) {
             ++this.activeRotation;

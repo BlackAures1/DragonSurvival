@@ -3,7 +3,6 @@ package by.jackraidenph.dragonsurvival.entity;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
-import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import net.minecraft.block.BlockState;
@@ -16,7 +15,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -43,17 +44,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         scale = this.size / this.getHeight();
     }
 
-    @Override
-    protected boolean isDespawnPeaceful() {
-        return true;
-    }
-
-    @Override
-    public boolean preventDespawn() {
-        return true;
-    }
-
-    protected static int getActualDistance(PlayerEntity player) {
+    private static int getActualDistance(PlayerEntity player) {
 
         AtomicInteger distance = new AtomicInteger();
 
@@ -68,6 +59,16 @@ public class MagicalPredatorEntity extends MonsterEntity {
             });
         }
         return distance.get();
+    }
+
+    @Override
+    protected boolean isDespawnPeaceful() {
+        return true;
+    }
+
+    @Override
+    public boolean preventDespawn() {
+        return true;
     }
 
     @Override
@@ -90,6 +91,22 @@ public class MagicalPredatorEntity extends MonsterEntity {
                 0,
                 this.world.getRandom().nextFloat() / 12.5f,
                 0);
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+        return SoundEvents.ENTITY_SKELETON_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_SKELETON_DEATH;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_SKELETON_AMBIENT;
     }
 
     @Override
