@@ -46,12 +46,12 @@ public class DragonInventoryContainer extends PlayerContainer {
         this.isLocalWorld = localWorld;
         this.player = playerIn;
         craftMatrix = new CraftingInventory(this, 3, 3);
-        this.addSlot(new CraftingResultSlot(playerInventory.player, this.craftMatrix, this.craftResult, 0, 154, 28));
+        this.addSlot(new CraftingResultSlot(playerInventory.player, this.craftMatrix, this.craftResult, 0, 178, 33));
 
         int slotIndex = 0;
         for (int i = 0; i < craftMatrix.getWidth(); ++i) {
             for (int j = 0; j < craftMatrix.getHeight(); ++j) {
-                this.addSlot(new Slot(this.craftMatrix, slotIndex++, 98 + j * 18, 18 + i * 18));
+                this.addSlot(new Slot(this.craftMatrix, slotIndex++, 111 + j * 18, 15 + i * 18));
             }
         }
 

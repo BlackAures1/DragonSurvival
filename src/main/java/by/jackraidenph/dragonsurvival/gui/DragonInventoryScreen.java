@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.gui;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer> implements IRecipeShownListener {
     private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
+    static final ResourceLocation BACKGROUND = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/dragon_inventory.png");
     /**
      * The old x position of the mouse pointer
      */
@@ -55,6 +57,8 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
         if (this.minecraft.playerController.isInCreativeMode()) {
             this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
         } else {
+            xSize = 204;
+            ySize = 166;
             super.init();
             this.widthTooNarrow = this.width < 379;
             this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
@@ -62,11 +66,11 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
             this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
             this.children.add(this.recipeBookGui);
             this.setFocusedDefault(this.recipeBookGui);
-            this.addButton(new ImageButton(guiLeft + this.xSize, guiTop + ySize - 24, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
+            this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
                 this.recipeBookGui.initSearchBar(this.widthTooNarrow);
                 this.recipeBookGui.toggleVisibility();
                 this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
-                ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize, guiTop + ySize - 24);
+                ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - 30, guiTop + ySize - 26);
                 this.buttonClicked = true;
             }));
         }
@@ -103,7 +107,7 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
      */
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(INVENTORY_BACKGROUND);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
