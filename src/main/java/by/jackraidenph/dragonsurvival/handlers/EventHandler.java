@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 public class EventHandler {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent entityJoinWorldEvent) {
+        //TODO change only when is dragon
         Entity entity = entityJoinWorldEvent.getEntity();
         if (entity instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entity;

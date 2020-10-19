@@ -129,8 +129,8 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
     }
 
     public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity p_228187_5_) {
-        float f = (float) Math.atan((double) (mouseX / 40.0F));
-        float f1 = (float) Math.atan((double) (mouseY / 40.0F));
+        float f = (float) Math.atan(mouseX / 40.0F);
+        float f1 = (float) Math.atan(mouseY / 40.0F);
         RenderSystem.pushMatrix();
         RenderSystem.translatef((float) posX, (float) posY, 1050.0F);
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
