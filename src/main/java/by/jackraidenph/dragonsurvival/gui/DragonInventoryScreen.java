@@ -111,9 +111,21 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
+        //x, y, u, v, width, height
+        blit(i, j - 26, 0, 198, 28, 40);
+        if (isPointInRegion(28, -26, 28, 40, mouseX, mouseY))
+            blit(i + 28, j - 26, 28, 198, 30, 40);
+        else
+            blit(i + 28, j - 26, 57, 198, 30, 40);
+        if (isPointInRegion(57, -26, 30, 40, mouseX, mouseY))
+            blit(i + 57, j - 26, 86, 198, 30, 40);
+        else
+            blit(i + 57, j - 26, 115, 198, 30, 40);
+        if (isPointInRegion(86, -25, 30, 40, mouseX, mouseY))
+            blit(i + 86, j - 26, 144, 198, 30, 40);
+        else
+            blit(i + 86, j - 26, 173, 198, 30, 40);
         drawEntityOnScreen(i + 51, j + 75, 30, (float) (i + 51) - this.oldMouseX, (float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
-        minecraft.getTextureManager().bindTexture(BACKGROUND);
-        blit(i, j - 26, 0, 198, xSize, 40);
     }
 
     public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity p_228187_5_) {
