@@ -99,12 +99,12 @@ public class DragonInventoryContainer extends PlayerContainer {
             this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
         }
 
-        this.addSlot(new Slot(playerInventory, 40, 77, 62) {
-            @OnlyIn(Dist.CLIENT)
-            public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
-                return Pair.of(DragonInventoryContainer.LOCATION_BLOCKS_TEXTURE, DragonInventoryContainer.EMPTY_ARMOR_SLOT_SHIELD);
-            }
-        });
+//        this.addSlot(new Slot(playerInventory, 40, 77, 62) {
+//            @OnlyIn(Dist.CLIENT)
+//            public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+//                return Pair.of(DragonInventoryContainer.LOCATION_BLOCKS_TEXTURE, DragonInventoryContainer.EMPTY_ARMOR_SLOT_SHIELD);
+//            }
+//        });
     }
 
     public void fillStackedContents(RecipeItemHelper itemHelperIn) {
