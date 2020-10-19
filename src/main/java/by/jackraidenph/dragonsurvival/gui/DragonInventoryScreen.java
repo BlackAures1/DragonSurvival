@@ -80,7 +80,7 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.title.getFormattedText(), 97.0F, 8.0F, 4210752);
+//        this.font.drawString(this.title.getFormattedText(), 97.0F, 8.0F, 4210752);
     }
 
     public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
@@ -112,6 +112,8 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
         int j = this.guiTop;
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
         drawEntityOnScreen(i + 51, j + 75, 30, (float) (i + 51) - this.oldMouseX, (float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
+        minecraft.getTextureManager().bindTexture(BACKGROUND);
+        blit(i, j - 26, 0, 198, xSize, 40);
     }
 
     public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity p_228187_5_) {
