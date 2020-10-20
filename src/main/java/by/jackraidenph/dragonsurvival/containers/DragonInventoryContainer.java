@@ -174,21 +174,21 @@ public class DragonInventoryContainer extends PlayerContainer {
             itemstack = itemstack1.copy();
             EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstack);
             if (index == 0) {
-                if (!this.mergeItemStack(itemstack1, 9, 45, true)) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
-            } else if (index >= 1 && index < 5) {
-                if (!this.mergeItemStack(itemstack1, 9, 45, false)) {
+            } else if (index >= 1 + 5 && index < 5 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 5 && index < 9) {
-                if (!this.mergeItemStack(itemstack1, 9, 45, false)) {
+            } else if (index >= 5 + 5 && index < 9 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (equipmentslottype.getSlotType() == EquipmentSlotType.Group.ARMOR && !this.inventorySlots.get(8 - equipmentslottype.getIndex()).getHasStack()) {
-                int i = 8 - equipmentslottype.getIndex();
+                int i = 8 - equipmentslottype.getIndex() + 5;
                 if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -196,15 +196,15 @@ public class DragonInventoryContainer extends PlayerContainer {
                 if (!this.mergeItemStack(itemstack1, 45, 46, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 9 && index < 36) {
-                if (!this.mergeItemStack(itemstack1, 36, 45, false)) {
+            } else if (index >= 9 + 5 && index < 36 + 5) {
+                if (!this.mergeItemStack(itemstack1, 36 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 36 && index < 45) {
-                if (!this.mergeItemStack(itemstack1, 9, 36, false)) {
+            } else if (index >= 36 + 5 && index < 45 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 36 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 9, 45, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
                 return ItemStack.EMPTY;
             }
 
