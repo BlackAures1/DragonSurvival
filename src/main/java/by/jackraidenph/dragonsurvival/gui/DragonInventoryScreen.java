@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Quaternion;
@@ -46,34 +45,34 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
     }
 
     public void tick() {
-        if (this.minecraft.playerController.isInCreativeMode()) {
-            this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
-        } else {
-            this.recipeBookGui.tick();
-        }
+//        if (this.minecraft.playerController.isInCreativeMode()) {
+//            this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
+//        } else {
+        this.recipeBookGui.tick();
+//        }
     }
 
     protected void init() {
-        if (this.minecraft.playerController.isInCreativeMode()) {
-            this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
-        } else {
-            xSize = 204;
-            ySize = 166;
-            super.init();
-            this.widthTooNarrow = this.width < 379;
-            this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
-            this.removeRecipeBookGui = true;
-            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
-            this.children.add(this.recipeBookGui);
-            this.setFocusedDefault(this.recipeBookGui);
-            this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
+//        if (this.minecraft.playerController.isInCreativeMode()) {
+//            this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
+//        } else {
+        xSize = 204;
+        ySize = 166;
+        super.init();
+        this.widthTooNarrow = this.width < 379;
+        this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
+        this.removeRecipeBookGui = true;
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+        this.children.add(this.recipeBookGui);
+        this.setFocusedDefault(this.recipeBookGui);
+        this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
                 this.recipeBookGui.initSearchBar(this.widthTooNarrow);
                 this.recipeBookGui.toggleVisibility();
                 this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
                 ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - 30, guiTop + ySize - 26);
                 this.buttonClicked = true;
             }));
-        }
+//        }
     }
 
     /**
