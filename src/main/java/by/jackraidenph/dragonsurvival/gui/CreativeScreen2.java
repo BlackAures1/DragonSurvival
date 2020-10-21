@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+@Deprecated
 @OnlyIn(Dist.CLIENT)
 public class CreativeScreen2 extends DisplayEffectsScreen<CreativeScreen2.CreativeContainer> {
     /**
