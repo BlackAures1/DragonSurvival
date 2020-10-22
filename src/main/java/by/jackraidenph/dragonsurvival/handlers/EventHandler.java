@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -18,7 +19,10 @@ public class EventHandler {
         if (playerEntity.isCreative() && playerEntity.container instanceof DragonInventoryContainer) {
             setPlayerContainer(playerEntity);
         } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
-            setDragonContainer(playerEntity);
+            PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {
+                if (playerStateHandler.getIsDragon())
+                    setDragonContainer(playerEntity);
+            });
         }
     }
 
