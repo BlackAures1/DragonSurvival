@@ -17,8 +17,8 @@ public class BlockEntities {
     public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> registryEvent)
     {
         IForgeRegistry<TileEntityType<?>> forgeRegistry=registryEvent.getRegistry();
-        dragonGateBlockEntityEntityType=new TileEntityType<>(() -> new DragonGateBlockEntity(dragonGateBlockEntityEntityType), Collections.singleton(BlockInit.dragonGate),null);
-        dragonGateBlockEntityEntityType.setRegistryName(BlockInit.dragonGate.getRegistryName());
+        dragonGateBlockEntityEntityType=new TileEntityType<>(() -> new DragonGateBlockEntity(dragonGateBlockEntityEntityType), Collections.singleton(BlockInit.dragonGateController),null);
+        dragonGateBlockEntityEntityType.setRegistryName(BlockInit.dragonGateController.getRegistryName());
         forgeRegistry.register(dragonGateBlockEntityEntityType);
     }
 }
