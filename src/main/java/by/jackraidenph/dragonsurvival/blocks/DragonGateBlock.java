@@ -7,7 +7,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 
 public class DragonGateBlock extends Block {
-    public static DirectionProperty horizontal=DirectionProperty.create("direction", Direction.EAST,Direction.NORTH,Direction.SOUTH,Direction.WEST);
+    public static DirectionProperty horizontal=DirectionProperty.create("facing", Direction.EAST,Direction.NORTH,Direction.SOUTH,Direction.WEST);
     public DragonGateBlock(Properties properties) {
         super(properties);
     }
