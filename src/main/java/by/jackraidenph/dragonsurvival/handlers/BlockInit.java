@@ -37,8 +37,8 @@ public class BlockInit {
                     .lightValue(5)
                     .sound(SoundType.ANVIL));
 
-    static final DragonGateBlock dragonGate=new DragonGateBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(5,30));
-    static final DragonGateController dragonGateController=new DragonGateController(Block.Properties.create(Material.WOOD).hardnessAndResistance(5,30));
+    public static final DragonGateBlock dragonGate=new DragonGateBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(5,30));
+    public static final DragonGateController dragonGateController=new DragonGateController(Block.Properties.create(Material.WOOD).hardnessAndResistance(5,30));
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
