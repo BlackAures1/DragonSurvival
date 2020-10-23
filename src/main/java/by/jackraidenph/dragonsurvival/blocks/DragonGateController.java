@@ -5,10 +5,14 @@ import by.jackraidenph.dragonsurvival.handlers.BlockEntities;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -49,5 +53,10 @@ public class DragonGateController extends DragonGateBlock {
         worldIn.removeBlock(pos.offset(direction).up(),false);
         worldIn.removeBlock(pos.offset(direction).up(2),false);
         super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        return ActionResultType.PASS;
     }
 }

@@ -1,11 +1,22 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.blockentities.DragonGateBlockEntity;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DragonGateBlock extends Block {
     public static DirectionProperty horizontal=DirectionProperty.create("facing", Direction.EAST,Direction.NORTH,Direction.SOUTH,Direction.WEST);
@@ -22,5 +33,19 @@ public class DragonGateBlock extends Block {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return getDefaultState().with(horizontal,context.getPlacementHorizontalFacing());
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        BlockPos controllerPos=getControllerPosition(worldIn,state,pos);
+        DragonGateBlockEntity blockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(controllerPos);
+        blockEntity.toggle(player.getHorizontalFacing());
+        return ActionResultType.SUCCESS;
+    }
+
+    public static BlockPos getControllerPosition(World worldIn, BlockState state, BlockPos pos)
+    {
+        Direction direction=state.get(horizontal).getOpposite();
+        return Stream.of(pos.offset(direction),pos.offset(direction).down(),pos.offset(direction).down(2),pos.down(),pos.down(2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock()== BlockInit.dragonGateController).collect(Collectors.toSet()).iterator().next();
     }
 }
