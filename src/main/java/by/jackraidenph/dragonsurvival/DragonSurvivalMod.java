@@ -49,6 +49,7 @@ public class DragonSurvivalMod {
     );
     private static int nextId = 0;
     PlayerEntity player;
+    //TODO server crash
     DragonModel model = new DragonModel();
 
     public DragonSurvivalMod() {
