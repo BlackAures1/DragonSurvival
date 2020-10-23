@@ -1,4 +1,5 @@
 {
-  "block.dragon_survival.dragon_gate": "Dragon Gate",
-  "block.dragon_survival.dragon_gate_controller": "Dragon Gate Controller"
+  "itemGroup.dragonsurvival.blocks": "Dragon Survival - blocks",
+  "block.dragonsurvival.dragon_gate": "Dragon Gate",
+  "block.dragonsurvival.dragon_gate_controller": "Dragon Gate Controller"
 }
