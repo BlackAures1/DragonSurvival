@@ -6,9 +6,7 @@ import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -43,6 +41,39 @@ public class DragonGateController extends DragonGateBlock {
         worldIn.setBlockState(pos.offset(direction), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
         worldIn.setBlockState(pos.offset(direction).up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
         worldIn.setBlockState(pos.offset(direction).up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+        DragonGateBlockEntity blockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(pos);
+        Vec3d playerPosvec=placer.getPositionVec();
+        Vec3d targetVector=new Vec3d(pos.getX(),pos.getY(),pos.getZ());
+        Vec3d placement=targetVector.subtract(playerPosvec);
+        boolean leftSide=false;
+        switch (direction)
+        {
+            case WEST:
+                if(placement.z>-0.5)
+                {
+                    leftSide=true;
+                }
+                break;
+            case NORTH:
+                if(placement.x<-0.5)
+                {
+                    leftSide=true;
+                }
+                break;
+            case EAST:
+                if(placement.z<-0.5)
+                {
+                    leftSide=true;
+                }
+                break;
+            case SOUTH:
+                if(placement.x>-0.5)
+                {
+                    leftSide=true;
+                }
+                break;
+        }
+        blockEntity.openToLeft =leftSide;
     }
 
     @Override
@@ -57,7 +88,7 @@ public class DragonGateController extends DragonGateBlock {
             worldIn.removeBlock(pos.offset(direction).up(2), false);
         }
         else{
-            if(dragonGateBlockEntity.leftSide)
+            if(dragonGateBlockEntity.openToLeft)
             {
 
             }

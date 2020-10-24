@@ -39,7 +39,10 @@ public class DragonGateBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         BlockPos controllerPos=getControllerPosition(worldIn,state,pos);
         DragonGateBlockEntity blockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(controllerPos);
-        blockEntity.toggle(player.getHorizontalFacing());
+        if(blockEntity!=null)
+            blockEntity.toggle();
+        else
+            worldIn.removeBlock(pos,false);
         return ActionResultType.SUCCESS;
     }
 
