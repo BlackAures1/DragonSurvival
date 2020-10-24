@@ -26,7 +26,17 @@ public class DragonGateBlockEntity extends TileEntity {
         {
             if(openToLeft)
             {
+                //rotate counter-clockwise
+                world.removeBlock(pos.offset(direction), false);
+                world.removeBlock(pos.offset(direction).up(), false);
+                world.removeBlock(pos.offset(direction).up(2), false);
 
+                world.setBlockState(pos.up(),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateYCCW()));
+                world.setBlockState(pos.up(2),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateYCCW()));
+
+                world.setBlockState(pos.offset(direction.rotateYCCW()),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateYCCW()));
+                world.setBlockState(pos.offset(direction.rotateYCCW()).up(),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateYCCW()));
+                world.setBlockState(pos.offset(direction.rotateYCCW()).up(2),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateYCCW()));
             }
             else {
                 //rotate clockwise
@@ -38,7 +48,8 @@ public class DragonGateBlockEntity extends TileEntity {
                 //rotate near blocks
                 world.setBlockState(pos.up(), BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal, direction.rotateY()));
                 world.setBlockState(pos.up(2), BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal, direction.rotateY()));
-//            world.setBlockState(pos, blockState.with(DragonGateBlock.horizontal,direction.rotateY()));
+                //TODO
+                //world.setBlockState(pos, blockState.with(DragonGateBlock.horizontal,direction.rotateY()));
 
                 //set rear blocks
                 world.setBlockState(pos.offset(direction.rotateY()), BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal, direction.rotateY()));
@@ -50,7 +61,17 @@ public class DragonGateBlockEntity extends TileEntity {
         else{
             if(openToLeft)
             {
+                //rotate clockwise
+                world.removeBlock(pos.offset(direction.rotateYCCW()),false);
+                world.removeBlock(pos.offset(direction.rotateYCCW()).up(),false);
+                world.removeBlock(pos.offset(direction.rotateYCCW()).up(2),false);
 
+                world.setBlockState(pos.up(),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateY()));
+                world.setBlockState(pos.up(2),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction.rotateY()));
+
+                world.setBlockState(pos.offset(direction),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction));
+                world.setBlockState(pos.offset(direction).up(),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction));
+                world.setBlockState(pos.offset(direction).up(2),BlockInit.dragonGate.getDefaultState().with(DragonGateBlock.horizontal,direction));
             }
             else {
                 //rotate counter-clockwise
