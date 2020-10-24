@@ -6,13 +6,16 @@ import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -40,18 +43,32 @@ public class DragonGateController extends DragonGateBlock {
         worldIn.setBlockState(pos.offset(direction), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
         worldIn.setBlockState(pos.offset(direction).up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
         worldIn.setBlockState(pos.offset(direction).up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        DragonGateBlockEntity dragonGateBlockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(pos);
-
     }
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        Direction direction=state.get(horizontal);
-        worldIn.removeBlock(pos.up(),false);
-        worldIn.removeBlock(pos.up(2),false);
-        worldIn.removeBlock(pos.offset(direction),false);
-        worldIn.removeBlock(pos.offset(direction).up(),false);
-        worldIn.removeBlock(pos.offset(direction).up(2),false);
+        DragonGateBlockEntity dragonGateBlockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(pos);
+        Direction direction = state.get(horizontal);
+        if(dragonGateBlockEntity.closed) {
+            worldIn.removeBlock(pos.up(), false);
+            worldIn.removeBlock(pos.up(2), false);
+            worldIn.removeBlock(pos.offset(direction), false);
+            worldIn.removeBlock(pos.offset(direction).up(), false);
+            worldIn.removeBlock(pos.offset(direction).up(2), false);
+        }
+        else{
+            if(dragonGateBlockEntity.leftSide)
+            {
+
+            }
+            else{
+                worldIn.removeBlock(pos.up(),false);
+                worldIn.removeBlock(pos.up(2),false);
+                worldIn.removeBlock(pos.offset(direction.rotateY()),false);
+                worldIn.removeBlock(pos.offset(direction.rotateY()).up(),false);
+                worldIn.removeBlock(pos.offset(direction.rotateY()).up(2),false);
+            }
+        }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
