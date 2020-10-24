@@ -53,7 +53,7 @@ public class BlockInit {
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName("dragon_altar"));
         IForgeRegistry<Item> forgeRegistry= event.getRegistry();
-        forgeRegistry.register(new BlockItem(dragonGate,new Item.Properties().group(blocks)).setRegistryName(dragonGate.getRegistryName()));
+//        forgeRegistry.register(new BlockItem(dragonGate,new Item.Properties().group(blocks)).setRegistryName(dragonGate.getRegistryName()));
         forgeRegistry.register(new BlockItem(dragonGateController,new Item.Properties().group(blocks)).setRegistryName(dragonGateController.getRegistryName()));
     }
 }
