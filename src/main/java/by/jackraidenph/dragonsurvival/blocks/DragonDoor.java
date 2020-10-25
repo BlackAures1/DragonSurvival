@@ -28,6 +28,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -166,7 +167,7 @@ public class DragonDoor extends Block {
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getPos();
-        if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
+        if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context) && context.getWorld().getBlockState(blockpos.up(2)).isReplaceable(context)) {
             World world = context.getWorld();
             boolean flag = world.isBlockPowered(blockpos) || world.isBlockPowered(blockpos.up());
             return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(HINGE, this.getHingeSide(context)).with(POWERED, flag).with(OPEN, flag).with(PART, Part.BOTTOM);
@@ -225,6 +226,29 @@ public class DragonDoor extends Block {
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(PART, FACING, OPEN, HINGE, POWERED);
+    }
+
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        //TODO
+        boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.offset(state.get(PART) == Part.BOTTOM ? Direction.UP : Direction.DOWN));
+        if (blockIn != this && flag != state.get(POWERED)) {
+            if (flag != state.get(OPEN)) {
+                this.playSound(worldIn, pos, flag);
+            }
+
+            worldIn.setBlockState(pos, state.with(POWERED, flag).with(OPEN, flag), 2);
+        }
+
+    }
+
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos blockpos = pos.down();
+        BlockState blockstate = worldIn.getBlockState(blockpos);
+        if (state.get(PART) == Part.BOTTOM) {
+            return blockstate.isSolidSide(worldIn, blockpos, Direction.UP);
+        } else {
+            return blockstate.getBlock() == this;
+        }
     }
 }
 
