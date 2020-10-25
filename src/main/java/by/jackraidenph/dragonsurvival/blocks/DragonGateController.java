@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
+@Deprecated
 public class DragonGateController extends DragonGateBlock {
     public DragonGateController(Properties properties) {
         super(properties);

@@ -4,12 +4,9 @@ import by.jackraidenph.dragonsurvival.blockentities.DragonGateBlockEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.Collections;
-
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+//@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockEntities {
 
     public static TileEntityType<DragonGateBlockEntity> dragonGateBlockEntityEntityType;
@@ -17,8 +14,5 @@ public class BlockEntities {
     public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> registryEvent)
     {
         IForgeRegistry<TileEntityType<?>> forgeRegistry=registryEvent.getRegistry();
-        dragonGateBlockEntityEntityType=new TileEntityType<>(() -> new DragonGateBlockEntity(dragonGateBlockEntityEntityType), Collections.singleton(BlockInit.dragonGateController),null);
-        dragonGateBlockEntityEntityType.setRegistryName(BlockInit.dragonGateController.getRegistryName());
-        forgeRegistry.register(dragonGateBlockEntityEntityType);
     }
 }

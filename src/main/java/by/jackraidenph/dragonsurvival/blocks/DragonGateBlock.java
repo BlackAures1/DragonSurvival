@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+@Deprecated
 public class DragonGateBlock extends Block {
     public static DirectionProperty horizontal=DirectionProperty.create("facing", Direction.EAST,Direction.NORTH,Direction.SOUTH,Direction.WEST);
     public DragonGateBlock(Properties properties) {

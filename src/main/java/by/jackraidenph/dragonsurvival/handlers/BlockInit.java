@@ -2,11 +2,14 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
+import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
 import by.jackraidenph.dragonsurvival.blocks.DragonGateBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonGateController;
+import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -38,22 +41,20 @@ public class BlockInit {
                     .sound(SoundType.ANVIL));
 
     public static final DragonGateBlock dragonGate=new DragonGateBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(-1,30));
-    public static final DragonGateController dragonGateController=new DragonGateController(Block.Properties.create(Material.WOOD).hardnessAndResistance(5,30));
-
+    public static final DragonGateController dragonGateController = new DragonGateController(Block.Properties.create(Material.WOOD).hardnessAndResistance(5, 30));
+    public static final DragonDoor dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
         event.getRegistry().register(dragon_altar);
         IForgeRegistry<Block> forgeRegistry= event.getRegistry();
-        forgeRegistry.register(dragonGate.setRegistryName(DragonSurvivalMod.MODID,"dragon_gate"));
-        forgeRegistry.register(dragonGateController.setRegistryName(DragonSurvivalMod.MODID,"dragon_gate_controller"));
-
+        forgeRegistry.register(dragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
     }
 
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName("dragon_altar"));
-        IForgeRegistry<Item> forgeRegistry= event.getRegistry();
-//        forgeRegistry.register(new BlockItem(dragonGate,new Item.Properties().group(blocks)).setRegistryName(dragonGate.getRegistryName()));
-        forgeRegistry.register(new BlockItem(dragonGateController,new Item.Properties().group(blocks)).setRegistryName(dragonGateController.getRegistryName()));
+        IForgeRegistry<Item> forgeRegistry = event.getRegistry();
+        Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
+        forgeRegistry.register(dragonDoorItem);
     }
 }
