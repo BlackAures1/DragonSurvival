@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,18 +38,22 @@ public class DragonGateBlock extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        BlockPos controllerPos=getControllerPosition(worldIn,state,pos);
-        DragonGateBlockEntity blockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(controllerPos);
-        if(blockEntity!=null)
-            blockEntity.toggle();
-        else
-            worldIn.removeBlock(pos,false);
+        BlockPos controllerPos = getControllerPosition(worldIn, state, pos);
+        if (controllerPos != null) {
+            DragonGateBlockEntity blockEntity = (DragonGateBlockEntity) worldIn.getTileEntity(controllerPos);
+            if (blockEntity != null)
+                blockEntity.toggle();
+        } else {
+            worldIn.removeBlock(pos, false);
+        }
         return ActionResultType.SUCCESS;
     }
 
-    public static BlockPos getControllerPosition(World worldIn, BlockState state, BlockPos pos)
-    {
-        Direction direction=state.get(horizontal).getOpposite();
-        return Stream.of(pos.offset(direction),pos.offset(direction).down(),pos.offset(direction).down(2),pos.down(),pos.down(2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock()== BlockInit.dragonGateController).collect(Collectors.toSet()).iterator().next();
+    public static BlockPos getControllerPosition(World worldIn, BlockState state, BlockPos pos) {
+        Direction direction = state.get(horizontal).getOpposite();
+        Set<BlockPos> blockPosSet = Stream.of(pos.offset(direction), pos.offset(direction).down(), pos.offset(direction).down(2), pos.down(), pos.down(2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == BlockInit.dragonGateController).collect(Collectors.toSet());
+        if (blockPosSet.isEmpty())
+            return null;
+        return blockPosSet.iterator().next();
     }
 }

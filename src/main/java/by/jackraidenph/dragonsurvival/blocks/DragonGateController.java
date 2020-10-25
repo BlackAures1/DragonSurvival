@@ -14,6 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -67,34 +68,37 @@ public class DragonGateController extends DragonGateBlock {
                 }
                 break;
             case SOUTH:
-                if(placement.x>-0.5)
-                {
-                    leftSide=true;
+                if (placement.x > -0.5) {
+                    leftSide = true;
                 }
                 break;
         }
-        blockEntity.openToLeft =leftSide;
+        blockEntity.openToLeft = leftSide;
+        if (worldIn.isRemote) {
+            if (leftSide)
+                placer.sendMessage(new TranslationTextComponent("ds.opens.to.left"));
+            else
+                placer.sendMessage(new TranslationTextComponent("ds.opens.to.right"));
+        }
     }
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        DragonGateBlockEntity dragonGateBlockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(pos);
+        DragonGateBlockEntity dragonGateBlockEntity = (DragonGateBlockEntity) worldIn.getTileEntity(pos);
         Direction direction = state.get(horizontal);
-        if(dragonGateBlockEntity.closed) {
-            worldIn.removeBlock(pos.up(), false);
-            worldIn.removeBlock(pos.up(2), false);
+        worldIn.removeBlock(pos.up(), false);
+        worldIn.removeBlock(pos.up(2), false);
+        if (dragonGateBlockEntity.closed) {
             worldIn.removeBlock(pos.offset(direction), false);
             worldIn.removeBlock(pos.offset(direction).up(), false);
             worldIn.removeBlock(pos.offset(direction).up(2), false);
-        }
-        else{
-            if(dragonGateBlockEntity.openToLeft)
-            {
-
+        } else {
+            if (dragonGateBlockEntity.openToLeft) {
+                worldIn.removeBlock(pos.offset(direction.rotateYCCW()), false);
+                worldIn.removeBlock(pos.offset(direction.rotateYCCW()).up(), false);
+                worldIn.removeBlock(pos.offset(direction.rotateYCCW()).up(2), false);
             }
             else{
-                worldIn.removeBlock(pos.up(),false);
-                worldIn.removeBlock(pos.up(2),false);
                 worldIn.removeBlock(pos.offset(direction.rotateY()),false);
                 worldIn.removeBlock(pos.offset(direction.rotateY()).up(),false);
                 worldIn.removeBlock(pos.offset(direction.rotateY()).up(2),false);

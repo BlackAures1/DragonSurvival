@@ -1,5 +1,7 @@
 {
   "itemGroup.dragon.survival.blocks": "Dragon Survival - blocks",
   "block.dragonsurvival.dragon_gate": "Dragon Gate",
-  "block.dragonsurvival.dragon_gate_controller": "Dragon Gate Controller"
+  "block.dragonsurvival.dragon_gate_controller": "Dragon Gate Controller",
+  "ds.opens.to.left": "The gate will open to the left",
+  "ds.opens.to.right": "The gate will open to the right"
 }
