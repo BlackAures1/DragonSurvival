@@ -1,6 +1,5 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
-import by.jackraidenph.dragonsurvival.blockentities.DragonGateBlockEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -9,7 +8,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 //@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockEntities {
 
-    public static TileEntityType<DragonGateBlockEntity> dragonGateBlockEntityEntityType;
     @SubscribeEvent
     public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> registryEvent)
     {
