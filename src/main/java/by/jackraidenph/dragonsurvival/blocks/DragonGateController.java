@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.blockentities.DragonGateBlockEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockEntities;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,22 +35,20 @@ public class DragonGateController extends DragonGateBlock {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        Direction direction=state.get(horizontal);
-        worldIn.setBlockState(pos.up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        worldIn.setBlockState(pos.up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        worldIn.setBlockState(pos.offset(direction), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        worldIn.setBlockState(pos.offset(direction).up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        worldIn.setBlockState(pos.offset(direction).up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
-        DragonGateBlockEntity blockEntity= (DragonGateBlockEntity) worldIn.getTileEntity(pos);
-        Vec3d playerPosvec=placer.getPositionVec();
-        Vec3d targetVector=new Vec3d(pos.getX(),pos.getY(),pos.getZ());
-        Vec3d placement=targetVector.subtract(playerPosvec);
-        boolean leftSide=false;
-        switch (direction)
-        {
+        Direction direction = state.get(horizontal);
+//        worldIn.setBlockState(pos.up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+//        worldIn.setBlockState(pos.up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+//        worldIn.setBlockState(pos.offset(direction), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+//        worldIn.setBlockState(pos.offset(direction).up(), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+//        worldIn.setBlockState(pos.offset(direction).up(2), BlockInit.dragonGate.getDefaultState().with(horizontal,direction));
+        DragonGateBlockEntity blockEntity = (DragonGateBlockEntity) worldIn.getTileEntity(pos);
+        Vec3d playerPosvec = placer.getPositionVec();
+        Vec3d targetVector = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+        Vec3d placement = targetVector.subtract(playerPosvec);
+        boolean leftSide = false;
+        switch (direction) {
             case WEST:
-                if(placement.z>-0.5)
-                {
+                if (placement.z > -0.5) {
                     leftSide=true;
                 }
                 break;

@@ -229,7 +229,6 @@ public class DragonDoor extends Block {
     }
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        //TODO
         boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.offset(state.get(PART) == Part.BOTTOM ? Direction.UP : Direction.DOWN));
         if (blockIn != this && flag != state.get(POWERED)) {
             if (flag != state.get(OPEN)) {
@@ -238,7 +237,9 @@ public class DragonDoor extends Block {
 
             worldIn.setBlockState(pos, state.with(POWERED, flag).with(OPEN, flag), 2);
         }
-
+        if (state.get(PART) == Part.TOP) {
+            worldIn.setBlockState(pos.down(), worldIn.getBlockState(pos.down()).with(OPEN, flag), 2);
+        }
     }
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
