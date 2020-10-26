@@ -3,8 +3,6 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
-import by.jackraidenph.dragonsurvival.blocks.DragonGateBlock;
-import by.jackraidenph.dragonsurvival.blocks.DragonGateController;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -40,8 +38,6 @@ public class BlockInit {
                     .lightValue(5)
                     .sound(SoundType.ANVIL));
 
-    public static final DragonGateBlock dragonGate=new DragonGateBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(-1,30));
-    public static final DragonGateController dragonGateController = new DragonGateController(Block.Properties.create(Material.WOOD).hardnessAndResistance(5, 30));
     public static final DragonDoor dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
