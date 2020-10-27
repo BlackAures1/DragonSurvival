@@ -14,12 +14,14 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     private boolean isDragon;
     private DragonType type;
     private int level;
+    private boolean isHiding;
 
     public PacketSyncCapability() {
     }
 
-    public PacketSyncCapability(boolean isDragon, DragonType type, int level) {
+    public PacketSyncCapability(boolean isDragon, boolean isHiding, DragonType type, int level) {
         this.isDragon = isDragon;
+        this.isHiding = isHiding;
         this.type = type;
         this.level = level;
     }
@@ -27,6 +29,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     @Override
     public void encode(PacketSyncCapability m, PacketBuffer b) {
         b.writeBoolean(m.isDragon);
+        b.writeBoolean(m.isHiding);
         b.writeEnumValue(m.type);
         b.writeInt(m.level);
     }
@@ -34,6 +37,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     @Override
     public PacketSyncCapability decode(PacketBuffer b) {
         return new PacketSyncCapability(
+                b.readBoolean(),
                 b.readBoolean(),
                 b.readEnumValue(DragonType.class),
                 b.readInt());
@@ -45,7 +49,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
 
         if (player == null)
             return;
-        
+
         PlayerStateProvider.getCap(player).ifPresent(cap -> {
             cap.setIsDragon(m.isDragon);
             cap.setType(m.type);

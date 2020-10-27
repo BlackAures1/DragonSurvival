@@ -36,6 +36,7 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
                         tag.put("tailPos", writeVec3d(data.tailPos));
                     }
             );
+            tag.putBoolean("isHiding", instance.getIsHiding());
             tag.putString("type", instance.getType().toString());
             tag.putInt("level", instance.getLevel());
         }
@@ -57,6 +58,7 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
                             getVec3d(tag.get("headPos")),
                             getVec3d(tag.get("tailPos"))
                     ), true);
+            instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
             instance.setLevel(tag.getInt("level"));
         }

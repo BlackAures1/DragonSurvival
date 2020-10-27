@@ -1,12 +1,17 @@
-package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.5.4
+package by.jackraidenph.dragonsurvival.models;
 // Exported for Minecraft version 1.15
 // Paste this class into your mod and generate all required imports
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderTypeBuffers;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -393,9 +398,6 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         //this.main_body.rotateAngleY = MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset);
         //this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
 
-        //this.main.rotateAngleY = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
-        //this.neck_and_head.rotateAngleY = (float) (netHeadYaw * (Math.PI / 180.0F));
-
         this.tail.get(entity.world.rand.nextInt(tail.size())).rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
         this.lower_jaw.rotateAngleX = MathHelper.cos(ageInTicks * 0.183f) * 0.0575f;
         this.main_body.rotateAngleX = Math.abs(MathHelper.cos(ageInTicks * 0.083f)) * -0.0775f;
@@ -431,6 +433,9 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         this.bone4.rotateAngleX = MathHelper.clamp(this.bone4.rotateAngleX, -2.0F, -1.5708F);
         this.bone10.rotateAngleX = MathHelper.clamp(this.bone10.rotateAngleX, -2.0F, -1.5708F);
         this.bone21.rotateAngleX = MathHelper.clamp(this.bone21.rotateAngleX, -2.0F, -1.5708F);
+
+        this.main.rotateAngleZ = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
+        this.neck_and_head.rotateAngleY = (float) (netHeadYaw * (Math.PI / 180.0F));
     }
 
     public int getHeightAtPos(World worldIn, double x, double y, double z) {
@@ -448,6 +453,10 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         fr = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() - 0.5D, this.player.getPosY(), this.player.getPosZ() + 0.4375D), 0.0D, 1.0D);
         br = MathHelper.clamp(this.player.getPosY() - getHeightAtPos(this.player.world, this.player.getPosX() - 0.5D, this.player.getPosY(), this.player.getPosZ() - 0.375D), 0.0D, 1.0D);
         this.partialTicks = partialTicks;
+
+        matrixStack.push();
+        Minecraft.getInstance().getItemRenderer().renderItem(this.player.getHeldItemMainhand(), ItemCameraTransforms.TransformType.GROUND, packedLight, packedOverlay, matrixStack, IRenderTypeBuffer.getImpl(new BufferBuilder(256)));
+        matrixStack.pop();
 
         matrixStack.push();
 
@@ -475,10 +484,10 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
             leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
             matrixStack.translate(0, -Math.max(fl, fr), 0);
 
-            matrixStack.translate(0,  Math.max(bl, br), 0);
+            matrixStack.translate(0, Math.max(bl, br), 0);
             leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
             leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
-            matrixStack.translate(0, - Math.max(bl, br), 0);
+            matrixStack.translate(0, -Math.max(bl, br), 0);
         } else {
             leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
             leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
