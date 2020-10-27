@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
+import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -22,6 +23,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(DragonSurvivalMod.MODID)
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockInit {
+    public static Block PREDATOR_STAR_BLOCK;
     static ItemGroup blocks=new ItemGroup("dragon.survival.blocks") {
         @Override
         public ItemStack createIcon() {
@@ -44,15 +46,24 @@ public class BlockInit {
                         .sound(SoundType.ANVIL));
         event.getRegistry().register(dragon_altar);
         IForgeRegistry<Block> forgeRegistry= event.getRegistry();
+        PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties
+                .create(Material.DRAGON_EGG)
+                .doesNotBlockMovement()
+                .hardnessAndResistance(9999)
+                .tickRandomly()
+                .noDrops()
+                .sound(SoundType.NETHER_WART));
+        forgeRegistry.register(PREDATOR_STAR_BLOCK.setRegistryName(DragonSurvivalMod.MODID,"predator_star"));
         dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
         forgeRegistry.register(dragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
     }
 
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName("dragon_altar"));
+        event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(blocks)).setRegistryName("dragon_altar"));
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
         Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
+        forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
     }
 }

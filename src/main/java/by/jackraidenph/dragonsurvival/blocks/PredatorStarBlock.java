@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.block.Block;
@@ -28,7 +28,6 @@ public class PredatorStarBlock extends Block {
 
     public PredatorStarBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
-        this.setRegistryName("predator_star");
     }
 
     @Override
@@ -94,7 +93,7 @@ public class PredatorStarBlock extends Block {
 
         @Override
         public boolean shouldContinueExecuting() {
-            return entity.world.getBlockState(pos).getBlock() == BlocksInit.PREDATOR_STAR_BLOCK;
+            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
         }
 
         @Override
@@ -105,7 +104,7 @@ public class PredatorStarBlock extends Block {
 
         @Override
         public boolean shouldExecute() {
-            return entity.world.getBlockState(pos).getBlock() == BlocksInit.PREDATOR_STAR_BLOCK;
+            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
         }
     }
 

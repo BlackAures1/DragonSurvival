@@ -3,7 +3,7 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlocksInit;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
@@ -89,7 +89,7 @@ public class DragonSurvivalMod {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-        RenderTypeLookup.setRenderLayer(BlocksInit.DRAGON_ALTAR_BLOCK, RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar, RenderType.getTranslucent());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
     }
