@@ -84,17 +84,25 @@ public class DragonAltarGUI extends Screen {
         this.guiTop = (this.height - this.ySize) / 2;
 
         this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, "CAVE",
-                $ -> initiateDragonForm(DragonType.CAVE))
-
+                $ -> {
+                    initiateDragonForm(DragonType.CAVE);
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.cave_dragon_choice"));
+                })
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 58, this.guiTop + 6, 49, 147, "FOREST",
-                $ -> initiateDragonForm(DragonType.FOREST))
+                $ -> {
+                    initiateDragonForm(DragonType.FOREST);
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.forest_dragon_choice"));
+                })
 
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 110, this.guiTop + 6, 49, 147, "SEA",
-                $ -> initiateDragonForm(DragonType.SEA))
+                $ -> {
+                    initiateDragonForm(DragonType.SEA);
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.sea_dragon_choice"));
+                })
 
         );
     }
