@@ -11,6 +11,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
@@ -23,8 +25,8 @@ public class DragonAltarGUI extends Screen {
     private int guiTop;
     private HashMap<Integer, Integer> wtf = Maps.newHashMap();
 
-    public DragonAltarGUI(ITextComponent p_i51108_1_) {
-        super(p_i51108_1_);
+    public DragonAltarGUI(ITextComponent title) {
+        super(title);
     }
 
     @Override
@@ -66,9 +68,12 @@ public class DragonAltarGUI extends Screen {
             if (mouseX > startX + 161 && mouseX < startX + 211) {
                 blit(startX + 162, startY + 6, 364, 0, 49, 149, xSize, ySize);
             }
+            if(mouseX>startX+5 && mouseX<startX+211) {
+                fill(startX + 8, startY + 166, 316, guiTop+240, 0xff333333);
+                String warning =TextFormatting.RED + new TranslationTextComponent( "ds.dragon_altar_warning1").getString()+ TextFormatting.RESET + new TranslationTextComponent("ds.dragon_altar_warning2").getString();
+                font.drawSplitString(warning, startX + 10, startY + 153 + 20, 200, 0xffffff);
+            }
         }
-
-        //super.render(mouseX, mouseY, partialTicks);
     }
 
     @Override
