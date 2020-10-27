@@ -29,20 +29,22 @@ public class BlockInit {
         }
     };
 
-    public static final Block dragon_altar = new DragonAltarBlock(
-            Block.Properties
-                    .create(Material.ANVIL)
-                    .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(2)
-                    .hardnessAndResistance(5.0f)
-                    .lightValue(5)
-                    .sound(SoundType.ANVIL));
+    public static Block dragon_altar;
 
-    public static final DragonDoor dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
+    public static DragonDoor dragonDoor;
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
+        //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
+        dragon_altar = new DragonAltarBlock(Block.Properties
+                        .create(Material.ANVIL)
+                        .harvestTool(ToolType.PICKAXE)
+                        .harvestLevel(2)
+                        .hardnessAndResistance(5.0f)
+                        .lightValue(5)
+                        .sound(SoundType.ANVIL));
         event.getRegistry().register(dragon_altar);
         IForgeRegistry<Block> forgeRegistry= event.getRegistry();
+        dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
         forgeRegistry.register(dragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
     }
 
