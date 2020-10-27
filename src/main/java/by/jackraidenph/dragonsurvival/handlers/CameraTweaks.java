@@ -4,7 +4,6 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -14,9 +13,11 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
@@ -24,15 +25,22 @@ import static java.lang.Math.abs;
 public class CameraTweaks {
 
     private static Method movePosition;
-    private static Method setPosition;
+//    private static Method setPosition;
 
     static {
         try {
-            movePosition = ActiveRenderInfo.class.getDeclaredMethod("movePosition", double.class, double.class, double.class);
-            setPosition = ActiveRenderInfo.class.getDeclaredMethod("setPosition", double.class, double.class, double.class);
+            if(FMLLoader.isProduction())
+            {
+                DragonSurvivalMod.LOGGER.info("Found methods: "+Arrays.toString(ActiveRenderInfo.class.getDeclaredMethods()));
+                movePosition=ActiveRenderInfo.class.getDeclaredMethod("func_216782_a",double.class,double.class,double.class);
+            }
+            else{
 
+                movePosition =ActiveRenderInfo.class.getDeclaredMethod("movePosition", double.class, double.class, double.class);
+//                setPosition = ActiveRenderInfo.class.getDeclaredMethod("setPosition", double.class, double.class, double.class);
+            }
             movePosition.setAccessible(true);
-            setPosition.setAccessible(true);
+//            setPosition.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
