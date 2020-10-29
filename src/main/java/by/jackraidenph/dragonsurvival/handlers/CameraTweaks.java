@@ -1,15 +1,12 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +62,7 @@ public class CameraTweaks {
     @SubscribeEvent
     public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if(playerIsDragon(minecraft.player)){
+        if(DragonSurvivalMod.playerIsDragon(minecraft.player)){
             ActiveRenderInfo info = event.getInfo();
 
             float pitch = event.getPitch();
@@ -86,7 +83,7 @@ public class CameraTweaks {
     public static void onPlayerEnterToWorld(EntityJoinWorldEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (event.getEntity() instanceof PlayerEntity && event.getEntity() == minecraft.player)
-            if(playerIsDragon(minecraft.player))
+            if(DragonSurvivalMod.playerIsDragon(minecraft.player))
                 neckLen = maxNeckLen;
     }
 
@@ -94,17 +91,8 @@ public class CameraTweaks {
     public static void onPlayerTick(TickEvent.ClientTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && neckLen < maxNeckLen)
-            if (playerIsDragon(minecraft.player))
+            if (DragonSurvivalMod.playerIsDragon(minecraft.player))
                 neckLen += 0.02;
     }
 
-    private static boolean playerIsDragon(PlayerEntity player) {
-        return PlayerStateProvider.getCap(player).filter(PlayerStateHandler::getIsDragon).isPresent();
-    }
-
-    @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent renderHandEvent) {
-        if (playerIsDragon(Minecraft.getInstance().player) && renderHandEvent.getItemStack().isEmpty())
-            renderHandEvent.setCanceled(true);
-    }
 }

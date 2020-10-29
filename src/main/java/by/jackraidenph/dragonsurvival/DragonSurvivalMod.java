@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
+import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
@@ -75,6 +76,10 @@ public class DragonSurvivalMod {
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
         INSTANCE.registerMessage(nextId++, clazz, message::encode, message::decode, message::handle);
+    }
+
+    public static boolean playerIsDragon(PlayerEntity player) {
+        return PlayerStateProvider.getCap(player).filter(PlayerStateHandler::getIsDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
