@@ -44,6 +44,9 @@ public class CameraTweaks {
         }
     }
 
+    /**
+     * Synchronizes the camera to dragon head
+     */
     private static void setCamera(EntityViewRenderEvent.CameraSetup event, double dx, double dy, double dz, Vec3d lookVec) {
         ActiveRenderInfo info = event.getInfo();
 
@@ -73,9 +76,9 @@ public class CameraTweaks {
 
             double dx = (90 - abs(pitch)) / 90 * neckLen;
             double dy = pitch / 90 * neckLen;
-
-            setCamera(event, dx, dy + 1, 0, null);
-        };
+            //TODO
+//            setCamera(event, dx, dy + 1, 0, null);
+        }
 
     }
 
