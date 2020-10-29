@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -93,11 +94,17 @@ public class CameraTweaks {
     public static void onPlayerTick(TickEvent.ClientTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && neckLen < maxNeckLen)
-            if(playerIsDragon(minecraft.player))
+            if (playerIsDragon(minecraft.player))
                 neckLen += 0.02;
     }
 
     private static boolean playerIsDragon(PlayerEntity player) {
         return PlayerStateProvider.getCap(player).filter(PlayerStateHandler::getIsDragon).isPresent();
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent renderHandEvent) {
+        if (playerIsDragon(Minecraft.getInstance().player) && renderHandEvent.getItemStack().isEmpty())
+            renderHandEvent.setCanceled(true);
     }
 }
