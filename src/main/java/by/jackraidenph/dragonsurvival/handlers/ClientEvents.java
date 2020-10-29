@@ -13,12 +13,12 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -30,6 +30,8 @@ public class ClientEvents {
 
     public static float bodyYaw;
     public static float neckYaw;
+    //TODO server crash
+    public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
 
     static {
         neckAndHead.renderBody = false;
@@ -78,6 +80,47 @@ public class ClientEvents {
         if (minecraft.player != null && (minecraft.gameSettings.keyBindForward.isPressed() || minecraft.gameSettings.keyBindLeft.isPressed() || minecraft.gameSettings.keyBindRight.isPressed() || minecraft.gameSettings.keyBindBack.isPressed())) {
             bodyYaw = minecraft.player.rotationYaw;
             neckYaw = -minecraft.player.rotationYawHead;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
+        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
+        DragonSurvivalMod.LOGGER.info("Successfully added sprites!");
+    }
+
+    @SubscribeEvent
+    public static void onRender(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> e) {
+        if (e.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) e.getEntity();
+            PlayerStateProvider.getCap(player).ifPresent(cap -> {
+                if (cap.getIsDragon()) {
+                    e.setCanceled(true);
+
+                    ClientEvents.dragonModel.setRotationAngles(
+                            player,
+                            player.limbSwing,
+                            MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
+                            player.ticksExisted,
+                            player.getYaw(e.getPartialRenderTick()),
+                            player.getPitch(e.getPartialRenderTick()));
+
+                    String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
+                    e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                    ClientEvents.dragonModel.render(
+                            e.getMatrixStack(),
+                            e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
+                            e.getLight(),
+                            LivingRenderer.getPackedOverlay(player, 0.0f),
+                            e.getPartialRenderTick(),
+                            player.getYaw(e.getPartialRenderTick()),
+                            player.getPitch(e.getPartialRenderTick()),
+                            1.0f);
+                }
+            });
         }
     }
 }

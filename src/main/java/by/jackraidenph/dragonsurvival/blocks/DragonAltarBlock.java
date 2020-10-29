@@ -18,6 +18,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.stream.Stream;
 
@@ -37,7 +39,16 @@ public class DragonAltarBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+    public ActionResultType onBlockActivated(BlockState blockState, World worldIn, BlockPos blockPos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+
+        if (worldIn.isRemote) {
+            openGUi();
+        }
+        return ActionResultType.SUCCESS;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openGUi() {
         Minecraft.getInstance().displayGuiScreen(new DragonAltarGUI(new TextComponent() {
             @Override
             public String getUnformattedComponentText() {
@@ -49,7 +60,6 @@ public class DragonAltarBlock extends Block {
                 return this;
             }
         }));
-        return ActionResultType.SUCCESS;
     }
 
     @Override
