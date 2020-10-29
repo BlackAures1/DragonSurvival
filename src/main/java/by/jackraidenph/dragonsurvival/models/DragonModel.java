@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderTypeBuffers;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -25,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DragonModel<T extends Entity> extends EntityModel<T> {
+    public boolean renderHead=true, renderBody=true;
     private final ModelRenderer main;
     private final ModelRenderer leg_fl;
     private final ModelRenderer bone6;
@@ -51,12 +51,12 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     private final ModelRenderer bone13;
     private final ModelRenderer bone16;
     private final ModelRenderer bone14;
-    private final ModelRenderer neck_and_head;
+    public final ModelRenderer neck_and_head;
     private final ModelRenderer NeckandMain;
     private final ModelRenderer NeckandFOne;
     private final ModelRenderer NeckandTwo;
     private final ModelRenderer NeckandThree;
-    private final ModelRenderer Head;
+    public final ModelRenderer Head;
     private final ModelRenderer central_horn;
     private final ModelRenderer Horn_left;
     private final ModelRenderer bone25;
@@ -71,7 +71,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
     List<ModelRenderer> tail;
     List<ModelRenderer> NeckHead;
     float partialTicks = 0.0F;
-    PlayerEntity player;
+    public PlayerEntity player;
     float[] offsets;
     double fl;
     double bl;
@@ -435,13 +435,18 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         this.bone21.rotateAngleX = MathHelper.clamp(this.bone21.rotateAngleX, -2.0F, -1.5708F);
 
         this.main.rotateAngleZ = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
-        this.neck_and_head.rotateAngleY = (float) (netHeadYaw * (Math.PI / 180.0F));
+        //TODO fix rotation
+        this.neck_and_head.rotateAngleY =(float) (netHeadYaw *Math.PI / 180.0F);
     }
 
     public int getHeightAtPos(World worldIn, double x, double y, double z) {
         int i = (int) y;
         while (!worldIn.getBlockState(new BlockPos(x, i, z)).isSolid())
+        {
             --i;
+            if(i<0)
+                break;
+        }
         return i + 1;
     }
 
@@ -469,32 +474,36 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
             max = Math.max(fl, fr) > Math.max(bl, br) ? Math.max(fl, fr) : Math.max(bl, br) * -1;
         matrixStack.rotate(new Quaternion((float) (max * 30f), 0f, 0f, true));
         matrixStack.translate(0, Math.abs(max) * 0.35f, max * 0.25f);
-        main_body.render(matrixStack, buffer, packedLight, packedOverlay);
-        main_pelvis.render(matrixStack, buffer, packedLight, packedOverlay);
+        if(renderBody) {
+            main_body.render(matrixStack, buffer, packedLight, packedOverlay);
+            main_pelvis.render(matrixStack, buffer, packedLight, packedOverlay);
+        }
         matrixStack.translate(0, -Math.abs(max) * 0.35f, -max * 0.25f);
         matrixStack.rotate(new Quaternion((float) -(max * 30f), 0f, 0f, true));
 
         matrixStack.translate(0, MathHelper.clamp(max, .0, 1.0) * 0.35f, 0);
-        neck_and_head.render(matrixStack, buffer, packedLight, packedOverlay);
+        if(renderHead)
+            neck_and_head.render(matrixStack, buffer, packedLight, packedOverlay);
         matrixStack.translate(0, -MathHelper.clamp(max, .0, 1.0) * 0.35f, 0);
 
-        if (Math.max(fl, fr) != Math.max(bl, br)) {
-            matrixStack.translate(0, Math.max(fl, fr), 0);
-            leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
-            leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
-            matrixStack.translate(0, -Math.max(fl, fr), 0);
+        if(renderBody) {
+            if (Math.max(fl, fr) != Math.max(bl, br)) {
+                matrixStack.translate(0, Math.max(fl, fr), 0);
+                leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
+                leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
+                matrixStack.translate(0, -Math.max(fl, fr), 0);
 
-            matrixStack.translate(0, Math.max(bl, br), 0);
-            leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
-            leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
-            matrixStack.translate(0, -Math.max(bl, br), 0);
-        } else {
-            leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
-            leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
-            leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
-            leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
+                matrixStack.translate(0, Math.max(bl, br), 0);
+                leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
+                leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
+                matrixStack.translate(0, -Math.max(bl, br), 0);
+            } else {
+                leg_fl.render(matrixStack, buffer, packedLight, packedOverlay);
+                leg_fr.render(matrixStack, buffer, packedLight, packedOverlay);
+                leg_bl.render(matrixStack, buffer, packedLight, packedOverlay);
+                leg_br.render(matrixStack, buffer, packedLight, packedOverlay);
+            }
         }
-
         matrixStack.pop();
     }
 

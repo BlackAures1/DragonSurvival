@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
@@ -15,6 +16,7 @@ import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.CreatureEntity;
@@ -160,7 +162,7 @@ public class DragonSurvivalMod {
                             player.getPitch(e.getPartialRenderTick()));
 
                     String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
-
+                    e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     model.render(
                             e.getMatrixStack(),
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
