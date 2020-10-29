@@ -15,6 +15,7 @@ import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
@@ -61,7 +62,7 @@ public class DragonSurvivalMod {
     private static int nextId = 0;
     PlayerEntity player;
     //TODO server crash
-    DragonModel model = new DragonModel();
+    DragonModel<PlayerEntity> model = new DragonModel<>();
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -138,7 +139,7 @@ public class DragonSurvivalMod {
     }
 
     @SubscribeEvent
-    public void onRender(RenderLivingEvent.Pre e) {
+    public void onRender(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> e) {
         if (e.getEntity() instanceof PlayerEntity) {
             player = (PlayerEntity) e.getEntity();
             PlayerStateProvider.getCap(player).ifPresent(cap -> {
