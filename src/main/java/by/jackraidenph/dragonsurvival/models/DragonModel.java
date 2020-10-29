@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.models;
 // Paste this class into your mod and generate all required imports
 
 
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -435,8 +436,7 @@ public class DragonModel<T extends Entity> extends EntityModel<T> {
         this.bone21.rotateAngleX = MathHelper.clamp(this.bone21.rotateAngleX, -2.0F, -1.5708F);
 
         this.main.rotateAngleZ = (float) (MathHelper.lerp(this.partialTicks, ((PlayerEntity) entity).prevRenderYawOffset, ((PlayerEntity) entity).renderYawOffset) * (Math.PI / 180.0F));
-        //TODO fix rotation
-        this.neck_and_head.rotateAngleY =(float) (netHeadYaw *Math.PI / 180.0F);
+        this.neck_and_head.rotateAngleY = (float) ((netHeadYaw + ClientEvents.neckYaw) * Math.PI / 180.0F);
     }
 
     public int getHeightAtPos(World worldIn, double x, double y, double z) {

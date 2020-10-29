@@ -65,7 +65,7 @@ public class DragonSurvivalMod {
     private static int nextId = 0;
     PlayerEntity player;
     //TODO server crash
-    DragonModel<PlayerEntity> model = new DragonModel<>();
+    public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -153,7 +153,7 @@ public class DragonSurvivalMod {
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
-                    model.setRotationAngles(
+                    dragonModel.setRotationAngles(
                             player,
                             player.limbSwing,
                             MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
@@ -163,7 +163,7 @@ public class DragonSurvivalMod {
 
                     String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
-                    model.render(
+                    dragonModel.render(
                             e.getMatrixStack(),
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
                             e.getLight(),

@@ -29,6 +29,7 @@ public class ClientEvents {
     public static DragonModel<PlayerEntity> neckAndHead = new DragonModel<>();
 
     public static float bodyYaw;
+    public static float neckYaw;
 
     static {
         neckAndHead.renderBody = false;
@@ -65,7 +66,6 @@ public class ClientEvents {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
             matrixStack.translate(0, -2, -1);
             bodyAndLimbs.render(renderHandEvent.getMatrixStack(), renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))), renderHandEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0), renderHandEvent.getPartialTicks(), player.getYaw(renderHandEvent.getPartialTicks()), player.getPitch(renderHandEvent.getPartialTicks()), 1);
-            //TODO fix rotation
             matrixStack.translate(0, 0, 0.15);
             neckAndHead.render(renderHandEvent.getMatrixStack(), renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))), renderHandEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0), renderHandEvent.getPartialTicks(), player.getYaw(renderHandEvent.getPartialTicks()), player.getPitch(renderHandEvent.getPartialTicks()), 1);
             matrixStack.pop();
@@ -77,6 +77,7 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && (minecraft.gameSettings.keyBindForward.isPressed() || minecraft.gameSettings.keyBindLeft.isPressed() || minecraft.gameSettings.keyBindRight.isPressed() || minecraft.gameSettings.keyBindBack.isPressed())) {
             bodyYaw = minecraft.player.rotationYaw;
+            neckYaw = -minecraft.player.rotationYawHead;
         }
     }
 }
