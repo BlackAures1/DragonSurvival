@@ -64,8 +64,10 @@ public class ClientProxy implements Proxy {
             World world = Minecraft.getInstance().world;
             if (world != null) {
                 Entity entity = world.getEntityByID(m.id);
-                ((MagicalPredatorEntity) entity).size = m.size;
-                ((MagicalPredatorEntity) entity).type = m.type;
+                if (entity != null) {
+                    ((MagicalPredatorEntity) entity).size = m.size;
+                    ((MagicalPredatorEntity) entity).type = m.type;
+                }
             }
         };
     }
