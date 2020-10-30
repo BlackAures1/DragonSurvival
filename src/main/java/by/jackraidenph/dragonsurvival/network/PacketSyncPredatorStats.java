@@ -1,21 +1,18 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.ExperienceOrbEntity;
+import by.jackraidenph.dragonsurvival.ClientProxy;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketSyncPredatorStats implements IMessage<PacketSyncPredatorStats> {
 
-    private float size;
-    private int type;
-    private int id;
+    public float size;
+    public int type;
+    public int id;
 
     public PacketSyncPredatorStats() {
     }
@@ -43,9 +40,7 @@ public class PacketSyncPredatorStats implements IMessage<PacketSyncPredatorStats
 
     @Override
     public void handle(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
-        World world = Minecraft.getInstance().world;
-        ((MagicalPredatorEntity)world.getEntityByID(m.id)).size = m.size;
-        ((MagicalPredatorEntity)world.getEntityByID(m.id)).type = m.type;
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new ClientProxy().syncPredatorStats(m, supplier));
         supplier.get().setPacketHandled(true);
     }
 }

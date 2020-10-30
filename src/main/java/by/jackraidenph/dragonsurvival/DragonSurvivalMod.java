@@ -41,7 +41,9 @@ public class DragonSurvivalMod {
             PROTOCOL_VERSION::equals
     );
     private static int nextId = 0;
-    PlayerEntity player;
+    public static ClientProxy clientProxy;
+    public static ServerProxy serverProxy;
+
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
