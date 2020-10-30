@@ -31,7 +31,7 @@ public class ClientEvents {
 
     public static float bodyYaw;
     public static float neckYaw;
-    //TODO server crash
+
     public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
 
     static {
