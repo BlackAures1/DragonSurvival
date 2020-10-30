@@ -40,15 +40,12 @@ public class DragonSurvivalMod {
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
-    private static int nextId = 0;
-    public static ClientProxy clientProxy;
-    public static ServerProxy serverProxy;
 
+    private static int nextId = 0;
 
     public DragonSurvivalMod() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitchEvent);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigurationHandler.SPEC);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -79,14 +76,4 @@ public class DragonSurvivalMod {
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();
     }
-
-
-
-
-
-
-
-
-
-
 }
