@@ -54,31 +54,33 @@ public class ClientEvents {
         ClientPlayerEntity player = Minecraft.getInstance().player;
 
         PlayerStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-            if (renderHandEvent.getItemStack().isEmpty())
-                renderHandEvent.setCanceled(true);
-            MatrixStack matrixStack = renderHandEvent.getMatrixStack();
-            matrixStack.push();
-            bodyAndLimbs.player = player;
-            neckAndHead.player = player;
-            float partialTicks = renderHandEvent.getPartialTicks();
-            float playerYaw = player.getYaw(partialTicks);
-            float playerPitch = player.getPitch(partialTicks);
-            bodyAndLimbs.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-            neckAndHead.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-            String texture = "textures/dragon/" + playerStateHandler.getType().toString().toLowerCase() + ".png";
-            matrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
-            matrixStack.translate(0, -2, -1);
-            ResourceLocation resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, texture);
-            IVertexBuilder buffer = renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
-            int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
-            int light = renderHandEvent.getLight();
-            bodyAndLimbs.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-            matrixStack.translate(0, 0, 0.15);
-            neckAndHead.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-            matrixStack.pop();
+            if (playerStateHandler.getIsDragon()) {
+                if (renderHandEvent.getItemStack().isEmpty())
+                    renderHandEvent.setCanceled(true);
+                MatrixStack matrixStack = renderHandEvent.getMatrixStack();
+                matrixStack.push();
+                bodyAndLimbs.player = player;
+                neckAndHead.player = player;
+                float partialTicks = renderHandEvent.getPartialTicks();
+                float playerYaw = player.getYaw(partialTicks);
+                float playerPitch = player.getPitch(partialTicks);
+                bodyAndLimbs.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
+                neckAndHead.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
+                String texture = "textures/dragon/" + playerStateHandler.getType().toString().toLowerCase() + ".png";
+                matrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
+                matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+                matrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
+                matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
+                matrixStack.translate(0, -2, -1);
+                ResourceLocation resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, texture);
+                IVertexBuilder buffer = renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
+                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
+                int light = renderHandEvent.getLight();
+                bodyAndLimbs.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                matrixStack.translate(0, 0, 0.15);
+                neckAndHead.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                matrixStack.pop();
+            }
         });
     }
 
