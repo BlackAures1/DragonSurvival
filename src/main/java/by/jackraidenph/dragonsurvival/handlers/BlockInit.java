@@ -24,7 +24,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockInit {
     public static Block PREDATOR_STAR_BLOCK;
-    static ItemGroup blocks=new ItemGroup("dragon.survival.blocks") {
+    public static ItemGroup blocks = new ItemGroup("dragon.survival.blocks") {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(dragon_altar);
