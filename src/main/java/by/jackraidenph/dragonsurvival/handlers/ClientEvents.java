@@ -19,7 +19,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -91,15 +94,6 @@ public class ClientEvents {
             bodyYaw = minecraft.player.rotationYaw;
             neckYaw = -minecraft.player.rotationYawHead;
         }
-    }
-
-    @SubscribeEvent
-    public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
-        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
-        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
-        event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
-        DragonSurvivalMod.LOGGER.info("Successfully added sprites!");
     }
 
     @SubscribeEvent
