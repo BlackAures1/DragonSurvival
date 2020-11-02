@@ -40,6 +40,7 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
             tag.putString("type", instance.getType().toString());
             tag.putInt("level", instance.getLevel());
         }
+        //TODO redo
         instance.syncData(true);
         instance.syncMovement(true);
         return tag;

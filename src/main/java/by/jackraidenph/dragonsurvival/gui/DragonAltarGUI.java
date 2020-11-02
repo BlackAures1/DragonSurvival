@@ -105,6 +105,10 @@ public class DragonAltarGUI extends Screen {
                 })
 
         );
+
+        addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, "Human", b -> {
+            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.FOREST, 0));
+        }));
     }
 
     private void initiateDragonForm(DragonType type) {

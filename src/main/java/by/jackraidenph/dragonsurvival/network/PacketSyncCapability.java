@@ -45,7 +45,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     @Override
     public void handle(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
         if (supplier.get().getDirection() == NetworkDirection.PLAY_TO_SERVER)
-            new ServerProxy().syncCapability(packetSyncCapability, supplier);
+            new ServerProxy().syncCapability(packetSyncCapability, supplier); //TODO
         supplier.get().setPacketHandled(true);
     }
 }
