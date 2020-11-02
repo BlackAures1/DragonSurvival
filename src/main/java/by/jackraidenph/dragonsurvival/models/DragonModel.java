@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Deprecated
 public class DragonModel<T extends Entity> extends EntityModel<T> {
     public boolean renderHead=true, renderBody=true;
     private final ModelRenderer main;

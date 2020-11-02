@@ -4,12 +4,16 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
 
 
 import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class DragonModel2 extends EntityModel<Entity> {
@@ -39,12 +43,12 @@ public class DragonModel2 extends EntityModel<Entity> {
     private final ModelRenderer Tail4;
     private final ModelRenderer Tail5;
     private final ModelRenderer Tail_0;
-    private final ModelRenderer NeckandHead;
-    private final ModelRenderer NeckandMain;
-    private final ModelRenderer Neckand_3;
-    private final ModelRenderer Neckand_2;
-    private final ModelRenderer Neckand_1;
-    private final ModelRenderer Head;
+    public final ModelRenderer NeckandHead;
+    public final ModelRenderer NeckandMain;
+    public final ModelRenderer Neckand_3;
+    public final ModelRenderer Neckand_2;
+    public final ModelRenderer Neckand_1;
+    public final ModelRenderer Head;
     private final ModelRenderer central_horn;
     private final ModelRenderer Horn_left;
     private final ModelRenderer bone25;
@@ -374,7 +378,6 @@ public class DragonModel2 extends EntityModel<Entity> {
 
     @Override
     public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        //previously the render function, render code was moved to a method below
 
         //left front
         LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
@@ -395,11 +398,25 @@ public class DragonModel2 extends EntityModel<Entity> {
         Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
 
         lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
+
+        Neckand_3.rotateAngleZ = -(float) ((netHeadYaw + ClientEvents.neckYaw) * Math.PI / 180.0F);
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
+        PlayerEntity playerEntity = Minecraft.getInstance().player;
+        if (Head.showModel) {
+            int stage = PlayerStateProvider.getCap(playerEntity).orElse(null).getLevel();
+            switch (stage) {
+                case 0:
+                    matrixStack.scale(0.5f, 0.5f, 0.5f);
+                    break;
+                case 1:
+                    matrixStack.scale(0.75f, 0.75f, 0.75f);
+                    break;
+            }
+        }
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
         LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);

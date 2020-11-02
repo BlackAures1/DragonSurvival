@@ -4,8 +4,8 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
-import by.jackraidenph.dragonsurvival.models.DragonModel;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -20,28 +20,30 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
 
-    public static DragonModel<PlayerEntity> bodyAndLimbs = new DragonModel<>();
-    public static DragonModel<PlayerEntity> neckAndHead = new DragonModel<>();
+//    public static DragonModel<PlayerEntity> bodyAndLimbs = new DragonModel<>();
+//    public static DragonModel<PlayerEntity> neckAndHead = new DragonModel<>();
 
     public static float bodyYaw;
     public static float neckYaw;
 
-    public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
-    public static DragonModel2 dragonModel2 = new DragonModel2();
+    //    public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
+    public static DragonModel2 thirdPersonModel = new DragonModel2();
+    public static DragonModel2 firstPersonModel = new DragonModel2();
+
     static {
-        neckAndHead.renderBody = false;
-        bodyAndLimbs.renderHead = false;
-        neckAndHead.Head.showModel = false;
+//        neckAndHead.renderBody = false;
+//        bodyAndLimbs.renderHead = false;
+//        neckAndHead.Head.showModel = false;
+
+        firstPersonModel.Head.showModel = false;
+        firstPersonModel.Neckand_1.showModel = false;
     }
 
     @SubscribeEvent
@@ -61,29 +63,25 @@ public class ClientEvents {
             if (playerStateHandler.getIsDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
                     renderHandEvent.setCanceled(true);
-                MatrixStack matrixStack = renderHandEvent.getMatrixStack();
-                matrixStack.push();
-                bodyAndLimbs.player = player;
-                neckAndHead.player = player;
+                MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
+                eventMatrixStack.push();
                 float partialTicks = renderHandEvent.getPartialTicks();
                 float playerYaw = player.getYaw(partialTicks);
                 float playerPitch = player.getPitch(partialTicks);
-                bodyAndLimbs.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                neckAndHead.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                String texture = "textures/dragon/" + playerStateHandler.getType().toString().toLowerCase() + ".png";
-                matrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
-                matrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-                matrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
-                matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
-                matrixStack.translate(0, -2, -1);
+                firstPersonModel.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
+                String texture = constructTexture(playerStateHandler.getType(), playerStateHandler.getLevel());
+                eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
+                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
+                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
+                eventMatrixStack.translate(0, -2, -1);
                 ResourceLocation resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, texture);
                 IVertexBuilder buffer = renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
-                bodyAndLimbs.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-                matrixStack.translate(0, 0, 0.15);
-                neckAndHead.render(renderHandEvent.getMatrixStack(), buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-                matrixStack.pop();
+                firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                eventMatrixStack.translate(0, 0, 0.15);
+                eventMatrixStack.pop();
             }
         });
     }
@@ -105,7 +103,7 @@ public class ClientEvents {
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
-                    dragonModel2.setRotationAngles(
+                    thirdPersonModel.setRotationAngles(
                             player,
                             player.limbSwing,
                             MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
@@ -138,7 +136,7 @@ public class ClientEvents {
                     }
                     texture += ".png";
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
-                    dragonModel2.render(
+                    thirdPersonModel.render(
                             e.getMatrixStack(),
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
                             e.getLight(),
@@ -150,5 +148,38 @@ public class ClientEvents {
                 }
             });
         }
+    }
+
+    @SubscribeEvent
+    public static void onRenderHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
+        float pticks = renderGameOverlayEvent.getPartialTicks();
+    }
+
+    private static String constructTexture(DragonType dragonType, int stage) {
+        String texture = "textures/dragon/";
+        switch (dragonType) {
+            case SEA:
+                texture += "sea";
+                break;
+            case CAVE:
+                texture += "cave";
+                break;
+            case FOREST:
+                texture += "forest";
+                break;
+        }
+        switch (stage) {
+            case 0:
+                texture += "_newborn";
+                break;
+            case 1:
+                texture += "_young";
+                break;
+            case 2:
+                texture += "_adult";
+                break;
+        }
+        texture += ".png";
+        return texture;
     }
 }
