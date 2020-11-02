@@ -1,11 +1,9 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.ClientProxy;
 import by.jackraidenph.dragonsurvival.ServerProxy;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -45,9 +43,9 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     }
 
     @Override
-    public void handle(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> new ServerProxy().syncCapability(m, supplier));
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new ClientProxy().syncCapability(m, supplier));
+    public void handle(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
+        if (supplier.get().getDirection() == NetworkDirection.PLAY_TO_SERVER)
+            new ServerProxy().syncCapability(packetSyncCapability, supplier);
         supplier.get().setPacketHandled(true);
     }
 }
