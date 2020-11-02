@@ -20,7 +20,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -111,30 +114,7 @@ public class ClientEvents {
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
                     int level = cap.getLevel();
-                    String texture = "textures/dragon/";
-                    switch (cap.getType()) {
-                        case SEA:
-                            texture += "sea";
-                            break;
-                        case CAVE:
-                            texture += "cave";
-                            break;
-                        case FOREST:
-                            texture += "forest";
-                            break;
-                    }
-                    switch (level) {
-                        case 0:
-                            texture += "_newborn";
-                            break;
-                        case 1:
-                            texture += "_young";
-                            break;
-                        case 2:
-                            texture += "_adult";
-                            break;
-                    }
-                    texture += ".png";
+                    String texture = constructTexture(cap.getType(), level);
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
                             e.getMatrixStack(),
@@ -148,11 +128,6 @@ public class ClientEvents {
                 }
             });
         }
-    }
-
-    @SubscribeEvent
-    public static void onRenderHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
-        float pticks = renderGameOverlayEvent.getPartialTicks();
     }
 
     private static String constructTexture(DragonType dragonType, int stage) {
