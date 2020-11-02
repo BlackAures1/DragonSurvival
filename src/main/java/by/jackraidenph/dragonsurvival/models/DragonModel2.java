@@ -5,6 +5,7 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -376,11 +377,15 @@ public class DragonModel2 extends EntityModel<Entity> {
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        matrixStack.push();
+        matrixStack.translate(0, 1.5, 0);
+        matrixStack.rotate(new Quaternion(180, 0, 0, true));
         Leg1.render(matrixStack, buffer, packedLight, packedOverlay);
         Leg2.render(matrixStack, buffer, packedLight, packedOverlay);
         Leg3.render(matrixStack, buffer, packedLight, packedOverlay);
         Leg4.render(matrixStack, buffer, packedLight, packedOverlay);
         main.render(matrixStack, buffer, packedLight, packedOverlay);
+        matrixStack.pop();
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {

@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
 import by.jackraidenph.dragonsurvival.models.DragonModel;
+import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,7 @@ public class ClientEvents {
     public static float neckYaw;
 
     public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
-
+    public static DragonModel2 dragonModel2 = new DragonModel2();
     static {
         neckAndHead.renderBody = false;
         bodyAndLimbs.renderHead = false;
@@ -104,7 +105,7 @@ public class ClientEvents {
                 if (cap.getIsDragon()) {
                     e.setCanceled(true);
 
-                    ClientEvents.dragonModel.setRotationAngles(
+                    dragonModel2.setRotationAngles(
                             player,
                             player.limbSwing,
                             MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
@@ -137,7 +138,7 @@ public class ClientEvents {
                     }
                     texture += ".png";
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
-                    ClientEvents.dragonModel.render(
+                    dragonModel2.render(
                             e.getMatrixStack(),
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
                             e.getLight(),
