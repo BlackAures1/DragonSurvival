@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
 // Paste this class into your mod and generate all required imports
 
 
+import by.jackraidenph.dragonsurvival.Functions;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.Quaternion;
@@ -373,6 +374,16 @@ public class DragonModel2 extends EntityModel<Entity> {
     @Override
     public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //previously the render function, render code was moved to a method below
+
+        //left front
+        Leg1.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+
+        //right front
+        Leg2.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+
+        Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+
+        Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
     }
 
     @Override
