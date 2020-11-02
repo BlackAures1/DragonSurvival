@@ -389,11 +389,10 @@ public class DragonModel2 extends EntityModel<Entity> {
         float speed = ageInTicks / 20;
         //start
         Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
-        Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
-        Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
-        //middle
-        Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
         Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
+        Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
+        Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
+        Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
 
         lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
     }
