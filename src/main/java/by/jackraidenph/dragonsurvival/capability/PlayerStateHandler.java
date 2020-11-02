@@ -65,7 +65,6 @@ public class PlayerStateHandler {
         this.type = type;
     }
 
-    //TODO
     public void syncCapabilityData(boolean isServer) {
         if (isServer) {
             DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
