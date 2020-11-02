@@ -13,7 +13,7 @@ import java.util.Optional;
 public class PlayerStateHandler {
     private boolean isDragon;
     private boolean isHiding;
-    private DragonType type = DragonType.SEA;
+    private DragonType type = DragonType.NONE;
     private int level;
     private Optional<DragonMovementData> data = Optional.empty();
 

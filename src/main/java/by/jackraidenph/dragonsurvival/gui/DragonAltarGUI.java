@@ -110,7 +110,7 @@ public class DragonAltarGUI extends Screen {
             PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
-                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.FOREST, 0));
+                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, 0));
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
             });
         }));
