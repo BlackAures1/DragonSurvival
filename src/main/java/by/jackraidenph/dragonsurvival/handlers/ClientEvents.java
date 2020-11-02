@@ -111,7 +111,7 @@ public class ClientEvents {
                             player.ticksExisted,
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
-
+                    int level = cap.getLevel();
                     String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     ClientEvents.dragonModel.render(
