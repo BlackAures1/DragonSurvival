@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.network;
 
+import by.jackraidenph.dragonsurvival.ClientProxy;
 import by.jackraidenph.dragonsurvival.ServerProxy;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.network.PacketBuffer;
@@ -45,7 +46,9 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     @Override
     public void handle(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
         if (supplier.get().getDirection() == NetworkDirection.PLAY_TO_SERVER)
-            new ServerProxy().syncCapability(packetSyncCapability, supplier); //TODO
+            new ServerProxy().syncCapability(packetSyncCapability, supplier);
+        else
+            new ClientProxy().syncCapability(packetSyncCapability, supplier);
         supplier.get().setPacketHandled(true);
     }
 }

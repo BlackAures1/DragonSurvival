@@ -30,15 +30,14 @@ public class ClientProxy implements Proxy {
 
     @Override
     public DistExecutor.SafeRunnable syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            if (Minecraft.getInstance().player != null) {
-                PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
-                    cap.setIsDragon(packetSyncCapability.isDragon);
-                    cap.setType(packetSyncCapability.type);
-                    cap.setLevel(packetSyncCapability.level);
-                });
-            }
-        };
+        if (Minecraft.getInstance().player != null) {
+            PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
+                cap.setIsDragon(packetSyncCapability.isDragon);
+                cap.setType(packetSyncCapability.type);
+                cap.setLevel(packetSyncCapability.level);
+            });
+        }
+        return null;
     }
 
     @Override

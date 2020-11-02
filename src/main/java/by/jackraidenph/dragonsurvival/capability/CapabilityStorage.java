@@ -18,8 +18,9 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
 
     private static Vec3d getVec3d(INBT nbt) {
         CompoundNBT tag = (CompoundNBT) nbt;
-        Vec3d vec;
-        vec = new Vec3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z"));
+        Vec3d vec = Vec3d.ZERO;
+        if (tag != null && tag.contains("X"))
+            vec = new Vec3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z"));
         return vec;
     }
 

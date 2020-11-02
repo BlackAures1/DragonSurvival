@@ -25,16 +25,15 @@ public class ServerProxy implements Proxy {
 
     @Override
     public DistExecutor.SafeRunnable syncCapability(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            ServerPlayerEntity playerEntity = supplier.get().getSender();
-            if (playerEntity != null) {
-                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> {
-                    cap.setIsDragon(m.isDragon);
-                    cap.setType(m.type);
-                    cap.setLevel(m.level);
-                });
-            }
-        };
+        ServerPlayerEntity playerEntity = supplier.get().getSender();
+        if (playerEntity != null) {
+            PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> {
+                cap.setIsDragon(m.isDragon);
+                cap.setType(m.type);
+                cap.setLevel(m.level);
+            });
+        }
+        return null;
     }
 
     @Override

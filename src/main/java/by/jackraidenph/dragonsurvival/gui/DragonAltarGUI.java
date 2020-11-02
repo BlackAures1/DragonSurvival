@@ -114,9 +114,7 @@ public class DragonAltarGUI extends Screen {
     private void initiateDragonForm(DragonType type) {
         if (Minecraft.getInstance().player == null)
             return;
-
         PlayerStateProvider.getCap(Minecraft.getInstance().player)
-                //.filter(cap -> !cap.getIsDragon())
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
                     DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, 0));
