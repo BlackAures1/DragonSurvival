@@ -69,7 +69,7 @@ public class DragonAltarGUI extends Screen {
                 blit(startX + 162, startY + 6, 364, 0, 49, 149, xSize, ySize);
             }
             if(mouseX>startX+5 && mouseX<startX+211) {
-                fill(startX + 8, startY + 166, guiLeft+210, guiTop+240, 0xff333333);
+                fill(startX + 8, startY + 166, guiLeft + 210, guiTop + 242, 0xff333333);
                 String warning =TextFormatting.RED + new TranslationTextComponent( "ds.dragon_altar_warning1").getString()+ TextFormatting.RESET + new TranslationTextComponent("ds.dragon_altar_warning2").getString();
                 font.drawSplitString(warning, startX + 10, startY + 153 + 20, 200, 0xffffff);
             }
