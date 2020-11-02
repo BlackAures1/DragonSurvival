@@ -112,7 +112,30 @@ public class ClientEvents {
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
                     int level = cap.getLevel();
-                    String texture = "textures/dragon/" + cap.getType().toString().toLowerCase() + ".png";
+                    String texture = "textures/dragon/";
+                    switch (cap.getType()) {
+                        case SEA:
+                            texture += "sea";
+                            break;
+                        case CAVE:
+                            texture += "cave";
+                            break;
+                        case FOREST:
+                            texture += "forest";
+                            break;
+                    }
+                    switch (level) {
+                        case 0:
+                            texture += "_newborn";
+                            break;
+                        case 1:
+                            texture += "_young";
+                            break;
+                        case 2:
+                            texture += "_adult";
+                            break;
+                    }
+                    texture += ".png";
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     ClientEvents.dragonModel.render(
                             e.getMatrixStack(),
