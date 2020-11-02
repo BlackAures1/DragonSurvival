@@ -24,4 +24,9 @@ public class Functions {
     public static float getDefaultHeadPitch(float pitch) {
         return pitch * 0.017453292F;
     }
+
+    public static float degreesToRadians(float degrees) {
+        return (float) (degrees * Math.PI / 180);
+    }
+
 }

@@ -10,13 +10,14 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 public class DragonModel2 extends EntityModel<Entity> {
-    private final ModelRenderer Leg1;
+    private final ModelRenderer LeftFrontLeg;
     private final ModelRenderer Forearm1;
     private final ModelRenderer Elbow1;
     private final ModelRenderer hand1;
-    private final ModelRenderer Leg2;
+    private final ModelRenderer RightFrontLeg;
     private final ModelRenderer Forearm2;
     private final ModelRenderer Elbow2;
     private final ModelRenderer hand2;
@@ -31,12 +32,12 @@ public class DragonModel2 extends EntityModel<Entity> {
     private final ModelRenderer main;
     private final ModelRenderer main_body;
     private final ModelRenderer maim_pelvis;
-    private final ModelRenderer Tail;
+    private final ModelRenderer Tail1;
     private final ModelRenderer Tail_5;
-    private final ModelRenderer Tail_4;
-    private final ModelRenderer Tail_3;
-    private final ModelRenderer Tail_2;
-    private final ModelRenderer Tail_1;
+    private final ModelRenderer Tail2;
+    private final ModelRenderer Tail3;
+    private final ModelRenderer Tail4;
+    private final ModelRenderer Tail5;
     private final ModelRenderer Tail_0;
     private final ModelRenderer NeckandHead;
     private final ModelRenderer NeckandMain;
@@ -62,14 +63,14 @@ public class DragonModel2 extends EntityModel<Entity> {
         textureWidth = 128;
         textureHeight = 128;
 
-        Leg1 = new ModelRenderer(this);
-        Leg1.setRotationPoint(5.0F, 6.0F, -7.0F);
-        Leg1.setTextureOffset(91, 42).addBox(-3.75F, -2.0F, -2.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg1.setTextureOffset(22, 69).addBox(0.1F, -9.0F, -2.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
+        LeftFrontLeg = new ModelRenderer(this);
+        LeftFrontLeg.setRotationPoint(5.0F, 6.0F, -7.0F);
+        LeftFrontLeg.setTextureOffset(91, 42).addBox(-3.75F, -2.0F, -2.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        LeftFrontLeg.setTextureOffset(22, 69).addBox(0.1F, -9.0F, -2.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
 
         Forearm1 = new ModelRenderer(this);
         Forearm1.setRotationPoint(-9.0F, 5.0F, 2.0F);
-        Leg1.addChild(Forearm1);
+        LeftFrontLeg.addChild(Forearm1);
         setRotationAngle(Forearm1, 0.0873F, 0.0F, 0.0F);
         Forearm1.setTextureOffset(30, 97).addBox(5.79F, -0.3073F, -2.9429F, 3.0F, 6.0F, 3.0F, 0.0F, true);
 
@@ -89,14 +90,14 @@ public class DragonModel2 extends EntityModel<Entity> {
         hand1.setTextureOffset(78, 111).addBox(8.3F, -3.0F, -7.0F, 0.0F, 5.0F, 6.0F, 0.0F, false);
         hand1.setTextureOffset(78, 111).addBox(7.2F, -3.0F, -7.0F, 0.0F, 5.0F, 6.0F, 0.0F, false);
 
-        Leg2 = new ModelRenderer(this);
-        Leg2.setRotationPoint(-5.0F, 6.0F, -7.0F);
-        Leg2.setTextureOffset(0, 89).addBox(-0.25F, -2.0F, -2.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
-        Leg2.setTextureOffset(72, 73).addBox(0.0F, -9.0F, -2.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
+        RightFrontLeg = new ModelRenderer(this);
+        RightFrontLeg.setRotationPoint(-5.0F, 6.0F, -7.0F);
+        RightFrontLeg.setTextureOffset(0, 89).addBox(-0.25F, -2.0F, -2.75F, 4.0F, 9.0F, 6.0F, 0.0F, false);
+        RightFrontLeg.setTextureOffset(72, 73).addBox(0.0F, -9.0F, -2.0F, 0.0F, 11.0F, 9.0F, 0.0F, false);
 
         Forearm2 = new ModelRenderer(this);
         Forearm2.setRotationPoint(1.0F, 5.0F, 2.0F);
-        Leg2.addChild(Forearm2);
+        RightFrontLeg.addChild(Forearm2);
         setRotationAngle(Forearm2, 0.0873F, 0.0F, 0.0F);
         Forearm2.setTextureOffset(51, 95).addBox(-0.79F, -0.3073F, -2.9429F, 3.0F, 6.0F, 3.0F, 0.0F, false);
 
@@ -187,46 +188,46 @@ public class DragonModel2 extends EntityModel<Entity> {
         maim_pelvis.setTextureOffset(27, 28).addBox(-4.5F, -1.4F, 0.5F, 9.0F, 10.0F, 10.0F, -0.5F, false);
         maim_pelvis.setTextureOffset(90, 72).addBox(-0.02F, -7.9F, 2.0F, 0.0F, 7.0F, 8.0F, 0.0F, false);
 
-        Tail = new ModelRenderer(this);
-        Tail.setRotationPoint(0.0F, 2.0F, 7.0F);
-        maim_pelvis.addChild(Tail);
+        Tail1 = new ModelRenderer(this);
+        Tail1.setRotationPoint(0.0F, 2.0F, 7.0F);
+        maim_pelvis.addChild(Tail1);
 
 
         Tail_5 = new ModelRenderer(this);
         Tail_5.setRotationPoint(0.0F, 0.0F, 2.0F);
-        Tail.addChild(Tail_5);
+        Tail1.addChild(Tail_5);
         Tail_5.setTextureOffset(26, 61).addBox(-0.01F, -6.8F, -1.0F, 0.0F, 4.0F, 13.0F, 0.0F, false);
         Tail_5.setTextureOffset(22, 48).addBox(-3.0F, -2.8F, 0.0F, 6.0F, 6.0F, 12.0F, 0.0F, false);
 
-        Tail_4 = new ModelRenderer(this);
-        Tail_4.setRotationPoint(0.0F, -1.9074F, 11.1464F);
-        Tail_5.addChild(Tail_4);
-        Tail_4.setTextureOffset(50, 0).addBox(-2.0F, -0.7926F, -2.0F, 4.0F, 4.0F, 13.0F, 0.0F, false);
-        Tail_4.setTextureOffset(15, 53).addBox(0.0F, -4.7926F, -2.0F, 0.0F, 4.0F, 13.0F, 0.0F, false);
+        Tail2 = new ModelRenderer(this);
+        Tail2.setRotationPoint(0.0F, -1.9074F, 11.1464F);
+        Tail_5.addChild(Tail2);
+        Tail2.setTextureOffset(50, 0).addBox(-2.0F, -0.7926F, -2.0F, 4.0F, 4.0F, 13.0F, 0.0F, false);
+        Tail2.setTextureOffset(15, 53).addBox(0.0F, -4.7926F, -2.0F, 0.0F, 4.0F, 13.0F, 0.0F, false);
 
-        Tail_3 = new ModelRenderer(this);
-        Tail_3.setRotationPoint(0.0F, 1.2957F, 9.604F);
-        Tail_4.addChild(Tail_3);
-        Tail_3.setTextureOffset(26, 59).addBox(-0.01F, -5.9883F, -0.9397F, 0.0F, 4.0F, 11.0F, 0.0F, false);
-        Tail_3.setTextureOffset(74, 48).addBox(-1.0F, -1.9883F, -0.9397F, 2.0F, 3.0F, 11.0F, 0.0F, false);
+        Tail3 = new ModelRenderer(this);
+        Tail3.setRotationPoint(0.0F, 1.2957F, 9.604F);
+        Tail2.addChild(Tail3);
+        Tail3.setTextureOffset(26, 59).addBox(-0.01F, -5.9883F, -0.9397F, 0.0F, 4.0F, 11.0F, 0.0F, false);
+        Tail3.setTextureOffset(74, 48).addBox(-1.0F, -1.9883F, -0.9397F, 2.0F, 3.0F, 11.0F, 0.0F, false);
 
-        Tail_2 = new ModelRenderer(this);
-        Tail_2.setRotationPoint(0.0F, -0.2817F, 9.4023F);
-        Tail_3.addChild(Tail_2);
-        Tail_2.setTextureOffset(30, 79).addBox(-1.0F, -1.0603F, 0.658F, 2.0F, 2.0F, 10.0F, 0.0F, false);
-        Tail_2.setTextureOffset(86, 66).addBox(0.0F, -5.0603F, 0.658F, 0.0F, 4.0F, 10.0F, 0.0F, false);
-        Tail_2.setTextureOffset(84, 112).addBox(-5.0F, -0.0066F, 0.0F, 10.0F, 0.0F, 13.0F, 0.0F, false);
-        Tail_2.setTextureOffset(92, 114).addBox(0.0F, -0.1528F, 0.658F, 0.0F, 4.0F, 10.0F, 0.0F, false);
+        Tail4 = new ModelRenderer(this);
+        Tail4.setRotationPoint(0.0F, -0.2817F, 9.4023F);
+        Tail3.addChild(Tail4);
+        Tail4.setTextureOffset(30, 79).addBox(-1.0F, -1.0603F, 0.658F, 2.0F, 2.0F, 10.0F, 0.0F, false);
+        Tail4.setTextureOffset(86, 66).addBox(0.0F, -5.0603F, 0.658F, 0.0F, 4.0F, 10.0F, 0.0F, false);
+        Tail4.setTextureOffset(84, 112).addBox(-5.0F, -0.0066F, 0.0F, 10.0F, 0.0F, 13.0F, 0.0F, false);
+        Tail4.setTextureOffset(92, 114).addBox(0.0F, -0.1528F, 0.658F, 0.0F, 4.0F, 10.0F, 0.0F, false);
 
-        Tail_1 = new ModelRenderer(this);
-        Tail_1.setRotationPoint(0.0F, 0.0F, 10.0F);
-        Tail_2.addChild(Tail_1);
-        Tail_1.setTextureOffset(101, 18).addBox(-1.0F, -0.7709F, 0.6473F, 2.0F, 1.0F, 8.0F, 0.0F, false);
-        Tail_1.setTextureOffset(0, 25).addBox(-5.75F, -0.1066F, 1.0622F, 12.0F, 0.0F, 13.0F, 0.0F, false);
+        Tail5 = new ModelRenderer(this);
+        Tail5.setRotationPoint(0.0F, 0.0F, 10.0F);
+        Tail4.addChild(Tail5);
+        Tail5.setTextureOffset(101, 18).addBox(-1.0F, -0.7709F, 0.6473F, 2.0F, 1.0F, 8.0F, 0.0F, false);
+        Tail5.setTextureOffset(0, 25).addBox(-5.75F, -0.1066F, 1.0622F, 12.0F, 0.0F, 13.0F, 0.0F, false);
 
         Tail_0 = new ModelRenderer(this);
         Tail_0.setRotationPoint(0.0F, -1.0F, -1.0F);
-        Tail_1.addChild(Tail_0);
+        Tail5.addChild(Tail_0);
         setRotationAngle(Tail_0, 0.0F, 0.0F, -1.5708F);
         Tail_0.setTextureOffset(23, 0).addBox(-6.6F, 0.0359F, 1.6473F, 12.0F, 0.0F, 13.0F, 0.0F, false);
 
@@ -376,14 +377,25 @@ public class DragonModel2 extends EntityModel<Entity> {
         //previously the render function, render code was moved to a method below
 
         //left front
-        Leg1.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+        LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
         //right front
-        Leg2.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+        RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
         Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
         Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+
+        float speed = ageInTicks / 20;
+        //start
+        Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
+        Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
+        Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
+        //middle
+        Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
+        Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
+
+        lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
     }
 
     @Override
@@ -391,8 +403,8 @@ public class DragonModel2 extends EntityModel<Entity> {
         matrixStack.push();
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
-        Leg1.render(matrixStack, buffer, packedLight, packedOverlay);
-        Leg2.render(matrixStack, buffer, packedLight, packedOverlay);
+        LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+        RightFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         Leg3.render(matrixStack, buffer, packedLight, packedOverlay);
         Leg4.render(matrixStack, buffer, packedLight, packedOverlay);
         main.render(matrixStack, buffer, packedLight, packedOverlay);
