@@ -107,7 +107,12 @@ public class DragonAltarGUI extends Screen {
         );
 
         addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, "Human", b -> {
-            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.FOREST, 0));
+            PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
+                playerStateHandler.setIsDragon(false);
+                playerStateHandler.setIsHiding(false);
+                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.FOREST, 0));
+                minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
+            });
         }));
     }
 
@@ -120,7 +125,7 @@ public class DragonAltarGUI extends Screen {
                     DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, 0));
                     DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                     cap.setIsDragon(true);
-                    cap.setType(DragonType.SEA);
+                    cap.setType(type);
                     cap.setLevel(0);
                 });
     }
