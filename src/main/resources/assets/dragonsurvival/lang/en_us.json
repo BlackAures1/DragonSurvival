@@ -10,15 +10,13 @@
   "_comment": "Block",
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragon Altar",
-
   "_comment": "Tooltip",
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
-
   "ds.dragon_altar_warning1": "WARNING:",
   "ds.dragon_altar_warning2": " after choosing you will die, lose all progress and find yourself in an unknown place without your inventory.",
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
   "ds.forest_dragon_choice": "You have chosen to be a Forest dragon.",
-  "ds.sea_dragon_choice": "You have chosen to be a Sea dragon."
-
+  "ds.sea_dragon_choice": "You have chosen to be a Sea dragon.",
+  "ds.choice_human": "You have chosen to become a human."
 }
