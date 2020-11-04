@@ -14,7 +14,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * Sets a spawn point for a player
+ * Sets a spawn point for a player. Doesn't work in super-flat world properly
  */
 public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
     BlockPos position;
