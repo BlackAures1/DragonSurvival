@@ -139,4 +139,9 @@ public class EventHandler {
                     capNew.setType(capNew.getType());
                 }));
     }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
+        PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
+    }
 }

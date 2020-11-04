@@ -2,25 +2,30 @@ package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.network.ChooseRandomRespawnPosition;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class DragonAltarGUI extends Screen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar.png");
-    private int xSize = 852 / 2;
-    private int ySize = 500 / 2;
+    private final int xSize = 852 / 2;
+    private final int ySize = 500 / 2;
     private int guiLeft;
     private int guiTop;
     private HashMap<Integer, Integer> wtf = Maps.newHashMap();
@@ -117,9 +122,11 @@ public class DragonAltarGUI extends Screen {
     }
 
     private void initiateDragonForm(DragonType type) {
-        if (Minecraft.getInstance().player == null)
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player == null)
             return;
-        PlayerStateProvider.getCap(Minecraft.getInstance().player)
+        player.closeScreen();
+        PlayerStateProvider.getCap(player)
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
                     DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, 0));
@@ -127,6 +134,23 @@ public class DragonAltarGUI extends Screen {
                     cap.setIsDragon(true);
                     cap.setType(type);
                     cap.setLevel(0);
+
+                    Random random = player.world.rand;
+                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
+                    player.world.getChunkProvider().getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, true);
+
+                    int y = 200;
+                    pos.setY(y);
+                    //TODO get solid position
+                    while (player.world.isAirBlock(pos)) {
+                        pos.setY(pos.getY() - 1);
+                        if (pos.getY() < 10)
+                            break;
+                    }
+
+                    System.out.println(pos);
+                    player.setPosition(pos.getX(), pos.getY(), pos.getZ());
+                    DragonSurvivalMod.INSTANCE.sendToServer(new ChooseRandomRespawnPosition(pos));
                 });
     }
 }
