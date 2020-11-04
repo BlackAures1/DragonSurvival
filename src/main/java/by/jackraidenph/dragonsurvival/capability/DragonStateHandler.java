@@ -65,6 +65,11 @@ public class DragonStateHandler {
         this.type = type;
     }
 
+    /**
+     * Synchronizes dragon capability data
+     *
+     * @param isServer is server side currently?
+     */
     public void syncCapabilityData(boolean isServer) {
         if (isServer) {
             DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
