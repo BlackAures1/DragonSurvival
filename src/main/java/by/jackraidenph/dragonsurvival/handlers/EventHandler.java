@@ -72,6 +72,9 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Adds dragon avoidance goal
+     */
     @SubscribeEvent
     public static void onJoin(EntityJoinWorldEvent e) {
         if (!(e.getEntity() instanceof MonsterEntity || e.getEntity() instanceof VillagerEntity) & e.getEntity() instanceof CreatureEntity) {
@@ -79,20 +82,8 @@ public class EventHandler {
                     (CreatureEntity) e.getEntity(),
                     PlayerEntity.class,
                     livingEntity -> PlayerStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).getIsDragon(),
-                    20.0F,
-                    1.3F,
-                    1.5F,
-                    EntityPredicates.CAN_AI_TARGET));
+                    20.0F, 1.3F, 1.5F, EntityPredicates.CAN_AI_TARGET));
         }
-
-        /*if (e.getEntity() instanceof MagicalBeastEntity)
-            if (new Random().nextFloat() + 0.1F <= 0.3F) {
-                SkeletonEntity skeletonEntity = new SkeletonEntity(EntityType.SKELETON, e.getWorld());
-                e.getWorld().addEntity(skeletonEntity);
-                //skeletonEntity.setPositionAndUpdate(e.getEntity().getPosX(), e.getEntity().getPosY(), e.getEntity().getPosZ());
-                MagicalBeastEntity beastEntity = (MagicalBeastEntity) e.getEntity();
-                skeletonEntity.startRiding(beastEntity);
-            }*/
     }
 
     @SubscribeEvent
