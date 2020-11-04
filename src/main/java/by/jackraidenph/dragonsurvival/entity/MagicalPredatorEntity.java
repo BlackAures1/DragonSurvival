@@ -35,7 +35,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
 
     public int type;
     public float size;
-    private float scale;
+    private final float scale;
 
     public MagicalPredatorEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
@@ -130,9 +130,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(4, new devourXP(this.world, this));
+        this.goalSelector.addGoal(4, new DevourXP(this.world, this));
         this.targetSelector.addGoal(1, new FindPlayerGoal(this));
-        this.targetSelector.addGoal(2, new isNearestDragonTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new IsNearestDragonTargetGoal(this, true));
     }
 
     @Override
@@ -155,15 +155,15 @@ public class MagicalPredatorEntity extends MonsterEntity {
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).applyModifier(new AttributeModifier("attackBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
     }
 
-    private boolean teleportToEntity(Entity p_70816_1_) {
+    private void teleportToEntity(Entity p_70816_1_) {
         Vec3d vec = p_70816_1_.getPositionVec().subtract(p_70816_1_.getLookVec().mul(3, 1, 3));
         double d1 = vec.getX();
         double d2 = 256;
         double d3 = vec.getZ();
-        return this.teleportTo(d1, d2, d3);
+        this.teleportTo(d1, d2, d3);
     }
 
-    private boolean teleportTo(double x, double y, double z) {
+    private void teleportTo(double x, double y, double z) {
         BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable(x, y, z);
 
         while (blockpos$mutable.getY() > 0 && !this.world.getBlockState(blockpos$mutable).getMaterial().blocksMovement()) {
@@ -177,9 +177,6 @@ public class MagicalPredatorEntity extends MonsterEntity {
         if (flag && !flag1) {
             this.world.playSound(null, this.prevPosX, this.prevPosY, this.prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
             this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -221,20 +218,18 @@ public class MagicalPredatorEntity extends MonsterEntity {
                 world.setEntityState(this, (byte) 46);
             }
 
-            if (this instanceof CreatureEntity) {
-                this.getNavigator().clearPath();
-            }
+            this.getNavigator().clearPath();
 
             return true;
         }
     }
 
-    static class devourXP extends Goal {
+    static class DevourXP extends Goal {
 
         World world;
         MagicalPredatorEntity entity;
 
-        public devourXP(World worldIn, MagicalPredatorEntity entityIn) {
+        public DevourXP(World worldIn, MagicalPredatorEntity entityIn) {
             this.world = worldIn;
             this.entity = entityIn;
         }
@@ -255,9 +250,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
         }
     }
 
-    static class isNearestDragonTargetGoal extends NearestAttackableTargetGoal {
+    static class IsNearestDragonTargetGoal extends NearestAttackableTargetGoal<PlayerEntity> {
 
-        public isNearestDragonTargetGoal(MobEntity p_i50313_1_, boolean p_i50313_3_) {
+        public IsNearestDragonTargetGoal(MobEntity p_i50313_1_, boolean p_i50313_3_) {
             super(p_i50313_1_, PlayerEntity.class, p_i50313_3_);
         }
 
