@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.capability;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -14,7 +15,7 @@ public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-    private int level;
+    private DragonLevel level;
     private Optional<DragonMovementData> data = Optional.empty();
 
     public boolean getIsDragon() {
@@ -39,11 +40,11 @@ public class DragonStateHandler {
         this.data = Optional.of(data);
     }
 
-    public int getLevel() {
+    public DragonLevel getLevel() {
         return this.level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(DragonLevel level) {
         this.level = level;
     }
 

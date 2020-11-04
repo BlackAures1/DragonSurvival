@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.ClientProxy;
 import by.jackraidenph.dragonsurvival.ServerProxy;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -13,13 +14,13 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
 
     public boolean isDragon;
     public DragonType type;
-    public int level;
+    public DragonLevel level;
     public boolean isHiding;
 
     public PacketSyncCapability() {
     }
 
-    public PacketSyncCapability(boolean isDragon, boolean isHiding, DragonType type, int level) {
+    public PacketSyncCapability(boolean isDragon, boolean isHiding, DragonType type, DragonLevel level) {
         this.isDragon = isDragon;
         this.isHiding = isHiding;
         this.type = type;
@@ -31,7 +32,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
         b.writeBoolean(m.isDragon);
         b.writeBoolean(m.isHiding);
         b.writeEnumValue(m.type);
-        b.writeInt(m.level);
+        b.writeEnumValue(m.level);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
                 b.readBoolean(),
                 b.readBoolean(),
                 b.readEnumValue(DragonType.class),
-                b.readInt());
+                b.readEnumValue(DragonLevel.class));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.capability;
 
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -39,7 +40,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             );
             tag.putBoolean("isHiding", instance.getIsHiding());
             tag.putString("type", instance.getType().toString());
-            tag.putInt("level", instance.getLevel());
+            tag.putInt("level", instance.getLevel().ordinal());
         }
         instance.syncCapabilityData(true);
         instance.syncMovement(true);
@@ -61,7 +62,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
                     ), true);
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
-            instance.setLevel(tag.getInt("level"));
+            instance.setLevel(DragonLevel.values()[tag.getInt("level")]);
         }
         instance.syncCapabilityData(true);
         instance.syncMovement(true);

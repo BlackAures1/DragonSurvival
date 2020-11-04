@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.network.ChooseRandomRespawnPosition;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -117,7 +118,7 @@ public class DragonAltarGUI extends Screen {
             PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
-                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, 0));
+                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, DragonLevel.BABY));
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
             });
         }));
@@ -131,11 +132,11 @@ public class DragonAltarGUI extends Screen {
         PlayerStateProvider.getCap(player)
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
-                    DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, 0));
+                    DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));
                     DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                     cap.setIsDragon(true);
                     cap.setType(type);
-                    cap.setLevel(0);
+                    cap.setLevel(DragonLevel.BABY);
 
                     Random random = player.world.rand;
                     BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);

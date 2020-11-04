@@ -6,6 +6,7 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -407,12 +408,12 @@ public class DragonModel2 extends EntityModel<Entity> {
         matrixStack.push();
         PlayerEntity playerEntity = Minecraft.getInstance().player;
         if (Head.showModel) {
-            int stage = PlayerStateProvider.getCap(playerEntity).orElse(null).getLevel();
+            DragonLevel stage = PlayerStateProvider.getCap(playerEntity).orElse(null).getLevel();
             switch (stage) {
-                case 0:
+                case BABY:
                     matrixStack.scale(0.5f, 0.5f, 0.5f);
                     break;
-                case 1:
+                case YOUNG:
                     matrixStack.scale(0.75f, 0.75f, 0.75f);
                     break;
             }

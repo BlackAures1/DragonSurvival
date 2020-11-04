@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -113,8 +114,8 @@ public class ClientEvents {
                             player.ticksExisted,
                             player.getYaw(e.getPartialRenderTick()),
                             player.getPitch(e.getPartialRenderTick()));
-                    int level = cap.getLevel();
-                    String texture = constructTexture(cap.getType(), level);
+
+                    String texture = constructTexture(cap.getType(), cap.getLevel());
                     e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
                             e.getMatrixStack(),
@@ -130,7 +131,7 @@ public class ClientEvents {
         }
     }
 
-    private static String constructTexture(DragonType dragonType, int stage) {
+    private static String constructTexture(DragonType dragonType, DragonLevel stage) {
         String texture = "textures/dragon/";
         switch (dragonType) {
             case SEA:
@@ -144,13 +145,13 @@ public class ClientEvents {
                 break;
         }
         switch (stage) {
-            case 0:
+            case BABY:
                 texture += "_newborn";
                 break;
-            case 1:
+            case YOUNG:
                 texture += "_young";
                 break;
-            case 2:
+            case ADULT:
                 texture += "_adult";
                 break;
         }
