@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
@@ -55,7 +55,7 @@ public class DragonSurvivalMod {
     }
 
     public static boolean playerIsDragon(PlayerEntity player) {
-        return PlayerStateProvider.getCap(player).filter(PlayerStateHandler::getIsDragon).isPresent();
+        return PlayerStateProvider.getCap(player).filter(DragonStateHandler::getIsDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

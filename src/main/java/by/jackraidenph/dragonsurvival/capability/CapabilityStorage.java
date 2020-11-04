@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler> {
+public class CapabilityStorage implements Capability.IStorage<DragonStateHandler> {
     private static CompoundNBT writeVec3d(Vec3d vec) {
         CompoundNBT comp = new CompoundNBT();
         comp.putDouble("X", vec.x);
@@ -25,7 +25,7 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
     }
 
     @Override
-    public INBT writeNBT(Capability<PlayerStateHandler> capability, PlayerStateHandler instance, Direction side) {
+    public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
         tag.putBoolean("isDragon", instance.getIsDragon());
         if (instance.getIsDragon()) {
@@ -47,12 +47,12 @@ public class CapabilityStorage implements Capability.IStorage<PlayerStateHandler
     }
 
     @Override
-    public void readNBT(Capability<PlayerStateHandler> capability, PlayerStateHandler instance, Direction side, INBT base) {
+    public void readNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side, INBT base) {
         CompoundNBT tag = (CompoundNBT) base;
         instance.setIsDragon(tag.getBoolean("isDragon"));
         if (tag.getBoolean("isDragon")) {
             instance.setMovementData(
-                    new PlayerStateHandler.DragonMovementData(
+                    new DragonStateHandler.DragonMovementData(
                             tag.getDouble("bodyYaw"),
                             tag.getDouble("headYaw"),
                             tag.getDouble("headPitch"),

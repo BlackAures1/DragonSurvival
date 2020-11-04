@@ -10,11 +10,11 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class PlayerStateProvider implements ICapabilitySerializable {
 
-    @CapabilityInject(PlayerStateHandler.class)
-    public static Capability<PlayerStateHandler> PLAYER_STATE_HANDLER_CAPABILITY = null;
-    private LazyOptional<PlayerStateHandler> instance = LazyOptional.of(PLAYER_STATE_HANDLER_CAPABILITY::getDefaultInstance);
+    @CapabilityInject(DragonStateHandler.class)
+    public static Capability<DragonStateHandler> PLAYER_STATE_HANDLER_CAPABILITY = null;
+    private LazyOptional<DragonStateHandler> instance = LazyOptional.of(PLAYER_STATE_HANDLER_CAPABILITY::getDefaultInstance);
 
-    public static LazyOptional<PlayerStateHandler> getCap(PlayerEntity player) {
+    public static LazyOptional<DragonStateHandler> getCap(PlayerEntity player) {
         return player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
     }
 

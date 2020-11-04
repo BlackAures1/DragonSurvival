@@ -10,7 +10,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import java.util.Optional;
 
 
-public class PlayerStateHandler {
+public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;

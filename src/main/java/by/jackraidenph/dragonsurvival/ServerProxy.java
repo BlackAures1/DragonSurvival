@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
@@ -18,7 +18,7 @@ public class ServerProxy implements Proxy {
         return () -> {
             ServerPlayerEntity playerEntity = supplier.get().getSender();
             if (playerEntity != null) {
-                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new PlayerStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
+                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
             }
         };
     }

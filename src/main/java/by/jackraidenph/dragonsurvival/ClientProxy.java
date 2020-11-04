@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
@@ -24,7 +24,7 @@ public class ClientProxy implements Proxy {
     public DistExecutor.SafeRunnable syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
         return () -> {
             if (Minecraft.getInstance().player != null)
-                PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new PlayerStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
+                PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
         };
     }
 

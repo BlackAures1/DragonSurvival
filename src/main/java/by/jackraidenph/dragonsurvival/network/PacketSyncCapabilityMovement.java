@@ -2,7 +2,7 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.ClientProxy;
 import by.jackraidenph.dragonsurvival.ServerProxy;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +34,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         this.tailPos = tailPos;
     }
 
-    public PacketSyncCapabilityMovement(PlayerStateHandler.DragonMovementData data) {
+    public PacketSyncCapabilityMovement(DragonStateHandler.DragonMovementData data) {
         this.bodyYaw = data.bodyYaw;
         this.headYaw = data.headYaw;
         this.headPitch = data.headPitch;
