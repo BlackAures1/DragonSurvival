@@ -5,6 +5,7 @@ package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -407,7 +408,7 @@ public class DragonModel2 extends EntityModel<Entity> {
         PlayerEntity playerEntity = Minecraft.getInstance().player;
         if (Head.showModel) {
             float maxHealth = playerEntity.getMaxHealth();
-            float scale = maxHealth / 40;
+            float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
             matrixStack.scale(scale, scale, scale);
         }
         matrixStack.translate(0, 1.5, 0);
