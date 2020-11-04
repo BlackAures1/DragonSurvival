@@ -6,6 +6,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketType;
@@ -42,14 +43,16 @@ public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
         BlockPos.Mutable spawnPosition = new BlockPos.Mutable(message.position);
         ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
         serverWorld.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, new ChunkPos(spawnPosition), 1, serverPlayerEntity.getEntityId());
-        spawnPosition.setY(200);
+        spawnPosition.setY(250);
+        IChunk chunk = serverWorld.getChunk(spawnPosition);
         while (serverWorld.getBlockState(spawnPosition).isAir(serverWorld, spawnPosition)) {
             spawnPosition.setY(spawnPosition.getY() - 1);
         }
         //correct, do not change
         spawnPosition.add(0, 1, 0);
-        serverPlayerEntity.connection.setPlayerLocation(spawnPosition.getX() + 0.5, spawnPosition.getY(), spawnPosition.getZ() + 0.5, 0, 0);
-        serverPlayerEntity.setSpawnPoint(spawnPosition, true, false, DimensionType.OVERWORLD);
+        //TODO prevent damage
+        serverPlayerEntity.connection.setPlayerLocation(spawnPosition.getX() + 0.5, spawnPosition.getY() + 1, spawnPosition.getZ() + 0.5, 0, 0);
+        serverPlayerEntity.setSpawnPoint(spawnPosition.up(), true, false, DimensionType.OVERWORLD);
         serverPlayerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
     }
 }

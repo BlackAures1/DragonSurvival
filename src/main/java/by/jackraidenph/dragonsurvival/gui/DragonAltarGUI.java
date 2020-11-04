@@ -15,13 +15,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
@@ -144,14 +141,8 @@ public class DragonAltarGUI extends Screen {
                     cap.setType(type);
                     cap.setLevel(DragonLevel.BABY);
                     player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
-
                     Random random = player.world.rand;
                     BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
-                    player.world.getChunkProvider().getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, true);
-                    player.world.getChunkProvider().forceChunk(new ChunkPos(pos), true);
-                    int y = 200;
-                    pos.setY(player.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY());
-                    player.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
                     DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
                 });
     }
