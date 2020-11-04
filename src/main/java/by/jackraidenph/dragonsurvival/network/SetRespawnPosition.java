@@ -1,5 +1,7 @@
 package by.jackraidenph.dragonsurvival.network;
 
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -14,28 +16,28 @@ import java.util.function.Supplier;
 /**
  * Sets a spawn point for a player
  */
-public class ChooseRandomRespawnPosition implements IMessage<ChooseRandomRespawnPosition> {
+public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
     BlockPos position;
 
-    public ChooseRandomRespawnPosition() {
+    public SetRespawnPosition() {
     }
 
-    public ChooseRandomRespawnPosition(BlockPos position) {
+    public SetRespawnPosition(BlockPos position) {
         this.position = position;
     }
 
     @Override
-    public void encode(ChooseRandomRespawnPosition message, PacketBuffer buffer) {
+    public void encode(SetRespawnPosition message, PacketBuffer buffer) {
         buffer.writeBlockPos(message.position);
     }
 
     @Override
-    public ChooseRandomRespawnPosition decode(PacketBuffer buffer) {
-        return new ChooseRandomRespawnPosition(buffer.readBlockPos());
+    public SetRespawnPosition decode(PacketBuffer buffer) {
+        return new SetRespawnPosition(buffer.readBlockPos());
     }
 
     @Override
-    public void handle(ChooseRandomRespawnPosition message, Supplier<NetworkEvent.Context> supplier) {
+    public void handle(SetRespawnPosition message, Supplier<NetworkEvent.Context> supplier) {
         ServerPlayerEntity serverPlayerEntity = supplier.get().getSender();
         BlockPos.Mutable spawnPosition = new BlockPos.Mutable(message.position);
         ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
@@ -47,5 +49,6 @@ public class ChooseRandomRespawnPosition implements IMessage<ChooseRandomRespawn
         spawnPosition.add(0, 1, 0);
         serverPlayerEntity.connection.setPlayerLocation(spawnPosition.getX() + 0.5, spawnPosition.getY(), spawnPosition.getZ() + 0.5, 0, 0);
         serverPlayerEntity.setSpawnPoint(spawnPosition, true, false, DimensionType.OVERWORLD);
+        serverPlayerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
     }
 }

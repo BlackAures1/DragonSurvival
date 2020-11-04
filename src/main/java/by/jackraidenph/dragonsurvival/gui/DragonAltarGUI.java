@@ -2,9 +2,9 @@ package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.network.ChooseRandomRespawnPosition;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SetRespawnPosition;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
@@ -145,7 +145,7 @@ public class DragonAltarGUI extends Screen {
                     int y = 200;
                     pos.setY(player.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY());
                     player.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-                    DragonSurvivalMod.INSTANCE.sendToServer(new ChooseRandomRespawnPosition(pos));
+                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
                 });
     }
 }
