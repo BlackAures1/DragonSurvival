@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.items;
 
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class HeartElement extends Item {
     public HeartElement(Properties properties) {
@@ -18,20 +20,24 @@ public class HeartElement extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        PlayerStateProvider.getCap(playerIn).ifPresent(dragonStateHandler -> {
+        LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+        if (dragonStateHandlerLazyOptional.isPresent()) {
+            DragonStateHandler dragonStateHandler = dragonStateHandlerLazyOptional.orElseGet(() -> null);
             if (dragonStateHandler.getIsDragon()) {
                 float maxHealth = playerIn.getMaxHealth();
                 if (maxHealth < 40) {
                     IAttributeInstance currentHealth = playerIn.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
                     currentHealth.setBaseValue(currentHealth.getBaseValue() + 2);
                     playerIn.getHeldItem(handIn).shrink(1);
-                    if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth - 1)
-                        dragonStateHandler.setLevel(DragonLevel.YOUNG);
-                    else if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth - 1)
+
+                    if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth)
                         dragonStateHandler.setLevel(DragonLevel.ADULT);
+                    else if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth)
+                        dragonStateHandler.setLevel(DragonLevel.YOUNG);
+                    return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
                 }
             }
-        });
-        return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
+        }
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

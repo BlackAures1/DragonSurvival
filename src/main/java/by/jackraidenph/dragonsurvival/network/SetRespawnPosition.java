@@ -46,7 +46,8 @@ public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
         while (serverWorld.getBlockState(spawnPosition).isAir(serverWorld, spawnPosition)) {
             spawnPosition.setY(spawnPosition.getY() - 1);
         }
-        spawnPosition.add(0, 2, 0);
+        //correct, do not change
+        spawnPosition.add(0, 1, 0);
         serverPlayerEntity.connection.setPlayerLocation(spawnPosition.getX() + 0.5, spawnPosition.getY(), spawnPosition.getZ() + 0.5, 0, 0);
         serverPlayerEntity.setSpawnPoint(spawnPosition, true, false, DimensionType.OVERWORLD);
         serverPlayerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);

@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -129,6 +130,7 @@ public class EventHandler {
                         capNew.setMovementData(capOld.getMovementData().orElse(new DragonStateHandler.DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO)), false);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
+                        e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());
                     }
                 }));
     }
