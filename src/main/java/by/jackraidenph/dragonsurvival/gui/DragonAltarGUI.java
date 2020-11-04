@@ -12,11 +12,13 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
@@ -138,18 +140,10 @@ public class DragonAltarGUI extends Screen {
                     Random random = player.world.rand;
                     BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
                     player.world.getChunkProvider().getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, true);
-
+                    player.world.getChunkProvider().forceChunk(new ChunkPos(pos), true);
                     int y = 200;
-                    pos.setY(y);
-                    //TODO get solid position
-                    while (player.world.isAirBlock(pos)) {
-                        pos.setY(pos.getY() - 1);
-                        if (pos.getY() < 10)
-                            break;
-                    }
-
-                    System.out.println(pos);
-                    player.setPosition(pos.getX(), pos.getY(), pos.getZ());
+                    pos.setY(player.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY());
+                    player.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
                     DragonSurvivalMod.INSTANCE.sendToServer(new ChooseRandomRespawnPosition(pos));
                 });
     }
