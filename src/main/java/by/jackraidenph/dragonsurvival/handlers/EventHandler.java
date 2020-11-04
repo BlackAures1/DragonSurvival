@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -97,7 +99,7 @@ public class EventHandler {
     public static void onCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new PlayerStateProvider());
-            DragonSurvivalMod.LOGGER.info("Successfully attached capability to the PlayerEntity!");
+            DragonSurvivalMod.LOGGER.info("Successfully attached capability to the " + event.getObject().getClass().getSimpleName());
         }
     }
 
@@ -131,17 +133,22 @@ public class EventHandler {
     public static void onClone(PlayerEvent.Clone e) {
         PlayerStateProvider.getCap(e.getPlayer()).ifPresent(capNew ->
                 PlayerStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
-                    if (!capNew.getIsDragon())
-                        return;
-
-                    capNew.setMovementData(capOld.getMovementData().orElse(null), true);
-                    capNew.setLevel(capNew.getLevel());
-                    capNew.setType(capNew.getType());
+                    if (capOld.getIsDragon()) {
+                        capNew.setIsDragon(true);
+                        capNew.setMovementData(capOld.getMovementData().orElse(new DragonStateHandler.DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO)), false);
+                        capNew.setLevel(capOld.getLevel());
+                        capNew.setType(capOld.getType());
+                    }
                 }));
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
+        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getIsDragon()) {
+                dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
+            }
+        });
     }
 }
