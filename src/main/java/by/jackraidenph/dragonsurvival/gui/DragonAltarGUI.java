@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.ResetPlayer;
 import by.jackraidenph.dragonsurvival.network.SetRespawnPosition;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -11,6 +12,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -118,7 +120,11 @@ public class DragonAltarGUI extends Screen {
             PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
+                playerStateHandler.setLevel(DragonLevel.BABY);
+                playerStateHandler.setType(DragonType.NONE);
                 DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, DragonLevel.BABY));
+                DragonSurvivalMod.INSTANCE.sendToServer(new ResetPlayer());
+                minecraft.player.closeScreen();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
             });
         }));
@@ -137,6 +143,7 @@ public class DragonAltarGUI extends Screen {
                     cap.setIsDragon(true);
                     cap.setType(type);
                     cap.setLevel(DragonLevel.BABY);
+                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
 
                     Random random = player.world.rand;
                     BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
@@ -144,7 +151,7 @@ public class DragonAltarGUI extends Screen {
                     player.world.getChunkProvider().forceChunk(new ChunkPos(pos), true);
                     int y = 200;
                     pos.setY(player.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY());
-                    player.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                    player.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
                     DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
                 });
     }

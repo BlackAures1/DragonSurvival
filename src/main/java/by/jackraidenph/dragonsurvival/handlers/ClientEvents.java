@@ -31,23 +31,16 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
 
-//    public static DragonModel<PlayerEntity> bodyAndLimbs = new DragonModel<>();
-//    public static DragonModel<PlayerEntity> neckAndHead = new DragonModel<>();
-
     public static float bodyYaw;
     public static float neckYaw;
 
-    //    public static DragonModel<PlayerEntity> dragonModel = new DragonModel<>();
     public static DragonModel2 thirdPersonModel = new DragonModel2();
     public static DragonModel2 firstPersonModel = new DragonModel2();
 
     static {
-//        neckAndHead.renderBody = false;
-//        bodyAndLimbs.renderHead = false;
-//        neckAndHead.Head.showModel = false;
-
         firstPersonModel.Head.showModel = false;
         firstPersonModel.Neckand_1.showModel = false;
+        firstPersonModel.NeckandMain.showModel = false;
     }
 
     @SubscribeEvent
@@ -62,7 +55,6 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-
         PlayerStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.getIsDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())

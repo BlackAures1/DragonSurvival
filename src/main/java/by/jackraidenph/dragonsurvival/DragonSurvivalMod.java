@@ -66,6 +66,7 @@ public class DragonSurvivalMod {
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SetRespawnPosition.class, new SetRespawnPosition());
+        register(ResetPlayer.class, new ResetPlayer());
         LOGGER.info("Successfully registered Messages!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered Entity Spawns!");

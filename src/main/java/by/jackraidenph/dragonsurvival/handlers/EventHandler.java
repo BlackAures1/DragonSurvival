@@ -34,7 +34,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;
-        if (playerEntity.isCreative() && playerEntity.container instanceof DragonInventoryContainer) {
+        if (!DragonSurvivalMod.playerIsDragon(playerEntity) && playerEntity.container instanceof DragonInventoryContainer) {
             setPlayerContainer(playerEntity);
         } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
             PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {

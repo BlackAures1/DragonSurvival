@@ -1,12 +1,10 @@
 {
-
   "itemGroup.dragon.survival.blocks": "Dragon Survival - blocks",
   "block.dragonsurvival.dragon_gate": "Dragon Gate",
-
   "_comment": "Entity",
   "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Magical Predator Spawn Egg",
-
+  "item.dragonsurvival.heart_element": "Heart Element",
   "_comment": "Block",
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragon Altar",

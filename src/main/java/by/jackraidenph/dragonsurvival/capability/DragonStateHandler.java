@@ -15,7 +15,7 @@ public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-    private DragonLevel level;
+    private DragonLevel level = DragonLevel.BABY;
     private Optional<DragonMovementData> data = Optional.empty();
 
     public boolean getIsDragon() {
