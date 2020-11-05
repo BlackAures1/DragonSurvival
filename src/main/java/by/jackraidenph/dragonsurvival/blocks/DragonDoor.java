@@ -237,8 +237,9 @@ public class DragonDoor extends Block {
 
             worldIn.setBlockState(pos, state.with(POWERED, flag).with(OPEN, flag), 2);
         }
-        if (state.get(PART) == Part.TOP) {
-            worldIn.setBlockState(pos.down(), worldIn.getBlockState(pos.down()).with(OPEN, flag), 2);
+        BlockState blockStateDown = worldIn.getBlockState(pos.down());
+        if (state.get(PART) == Part.TOP && blockStateDown.getBlock() == this) {
+            worldIn.setBlockState(pos.down(), blockStateDown.with(OPEN, flag), 2);
         }
     }
 
