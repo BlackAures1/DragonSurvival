@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "dragonsurvival:blocks/predator_star" }
+    "": {
+      "model": "dragonsurvival:block/predator_star"
+    }
   }
 }
