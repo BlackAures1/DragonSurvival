@@ -6,8 +6,8 @@
 		64
 	],
 	"textures": {
-		"1": "dragonsurvival:blocks/dragon_altar",
-		"particle": "dragonsurvival:blocks/dragon_altar"
+		"1": "dragonsurvival:block/dragon_altar",
+		"particle": "dragonsurvival:block/dragon_altar"
 	},
 	"elements": [
 		{
