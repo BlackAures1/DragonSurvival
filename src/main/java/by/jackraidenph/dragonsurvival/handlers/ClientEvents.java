@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -85,7 +86,11 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onKey(InputEvent.KeyInputEvent keyInputEvent) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player != null && (minecraft.gameSettings.keyBindForward.isPressed() || minecraft.gameSettings.keyBindLeft.isPressed() || minecraft.gameSettings.keyBindRight.isPressed() || minecraft.gameSettings.keyBindBack.isPressed())) {
+        GameSettings gameSettings = minecraft.gameSettings;
+        if (minecraft.player != null && (gameSettings.keyBindForward.isPressed() ||
+                gameSettings.keyBindLeft.isPressed() ||
+                gameSettings.keyBindRight.isPressed() ||
+                gameSettings.keyBindBack.isPressed() || gameSettings.keyBindJump.isPressed())) {
             bodyYaw = minecraft.player.rotationYaw;
             neckYaw = -minecraft.player.rotationYawHead;
         }
