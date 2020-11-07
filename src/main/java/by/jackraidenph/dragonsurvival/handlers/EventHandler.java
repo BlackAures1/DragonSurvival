@@ -88,7 +88,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onCapability(AttachCapabilitiesEvent<Entity> event) {
+    public static void onCapabilityAttachment(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new PlayerStateProvider());
             DragonSurvivalMod.LOGGER.info("Successfully attached capability to the " + event.getObject().getClass().getSimpleName());
@@ -135,6 +135,9 @@ public class EventHandler {
                 }));
     }
 
+    /**
+     * Synchronizes the capability after death
+     */
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
