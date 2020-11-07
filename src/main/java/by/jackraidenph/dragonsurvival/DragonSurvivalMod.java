@@ -16,7 +16,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -94,9 +93,8 @@ public class DragonSurvivalMod {
             serverPlayerEntity.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
                 dragonStateHandler.setType(DragonType.valueOf(type.toUpperCase()));
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setLevel(dragonLevel);
+                dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
-                serverPlayerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dragonLevel.initialHealth);
                 PlayerStateProvider.getCap(serverPlayerEntity).orElse(null).syncCapabilityData(true);
             });
             return 1;
