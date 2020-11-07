@@ -27,6 +27,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -92,12 +93,18 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (minecraft.player != null && (gameSettings.keyBindForward.isActiveAndMatches(input) ||
-                gameSettings.keyBindLeft.isActiveAndMatches(input) ||
-                gameSettings.keyBindRight.isActiveAndMatches(input) ||
-                gameSettings.keyBindBack.isActiveAndMatches(input) || gameSettings.keyBindSprint.isActiveAndMatches(input))) {
-            bodyYaw = minecraft.player.rotationYaw;
-            neckYaw = -minecraft.player.rotationYawHead;
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent clientTickEvent) {
+        if (clientTickEvent.phase == TickEvent.Phase.START) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+            if (player != null) {
+                if (player.getMotion().x != 0 && player.getMotion().z != 0) {
+                    bodyYaw = player.rotationYaw;
+                    neckYaw = -player.rotationYawHead;
+                }
+            }
         }
     }
 
