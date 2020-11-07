@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -83,14 +84,18 @@ public class ClientEvents {
         });
     }
 
+    /**
+     * The event stops being fired if jump key is pressed during movement
+     */
     @SubscribeEvent
     public static void onKey(InputEvent.KeyInputEvent keyInputEvent) {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
-        if (minecraft.player != null && (gameSettings.keyBindForward.isPressed() ||
-                gameSettings.keyBindLeft.isPressed() ||
-                gameSettings.keyBindRight.isPressed() ||
-                gameSettings.keyBindBack.isPressed() || gameSettings.keyBindJump.isPressed())) {
+        InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
+        if (minecraft.player != null && (gameSettings.keyBindForward.isActiveAndMatches(input) ||
+                gameSettings.keyBindLeft.isActiveAndMatches(input) ||
+                gameSettings.keyBindRight.isActiveAndMatches(input) ||
+                gameSettings.keyBindBack.isActiveAndMatches(input) || gameSettings.keyBindSprint.isActiveAndMatches(input))) {
             bodyYaw = minecraft.player.rotationYaw;
             neckYaw = -minecraft.player.rotationYawHead;
         }
