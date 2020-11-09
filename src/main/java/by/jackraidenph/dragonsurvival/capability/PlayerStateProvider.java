@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.capability;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,8 +14,8 @@ public class PlayerStateProvider implements ICapabilitySerializable {
     public static Capability<DragonStateHandler> PLAYER_STATE_HANDLER_CAPABILITY = null;
     private LazyOptional<DragonStateHandler> instance = LazyOptional.of(PLAYER_STATE_HANDLER_CAPABILITY::getDefaultInstance);
 
-    public static LazyOptional<DragonStateHandler> getCap(PlayerEntity player) {
-        return player.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+    public static LazyOptional<DragonStateHandler> getCap(Entity entity) {
+        return entity.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
     }
 
     @Override

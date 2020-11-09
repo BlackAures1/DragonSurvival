@@ -13,6 +13,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -174,6 +176,17 @@ public class EventHandler {
                 if (item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) {
                     breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
                 }
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void disableMounts(EntityMountEvent mountEvent) {
+        Entity mounting = mountEvent.getEntityMounting();
+        PlayerStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getIsDragon()) {
+                if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity)
+                    mountEvent.setCanceled(true);
             }
         });
     }
