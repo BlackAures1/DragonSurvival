@@ -29,18 +29,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
-
-    static HashSet<Item> itemsForbiddenForDragon = new HashSet<>();
-
-    static {
-        itemsForbiddenForDragon.add(Items.CROSSBOW);
-        itemsForbiddenForDragon.add(Items.BOW);
-        itemsForbiddenForDragon.add(Items.SHIELD);
-    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
