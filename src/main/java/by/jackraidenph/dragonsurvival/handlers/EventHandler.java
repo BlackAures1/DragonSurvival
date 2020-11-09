@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -246,6 +247,24 @@ public class EventHandler {
                     }
                 }
             }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent jumpEvent) {
+        PlayerStateProvider.getCap(jumpEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon())
+                switch (dragonStateHandler.getLevel()) {
+                    case BABY:
+                        jumpEvent.getEntityLiving().addVelocity(0, 0.025, 0); //1+ block
+                        break;
+                    case YOUNG:
+                        jumpEvent.getEntityLiving().addVelocity(0, 0.1, 0); //1.5+ block
+                        break;
+                    case ADULT:
+                        jumpEvent.getEntityLiving().addVelocity(0, 0.15, 0); //2+ blocks
+                        break;
+                }
         });
     }
 }
