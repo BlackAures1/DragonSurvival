@@ -46,13 +46,13 @@ public class EventHandler {
                 setPlayerContainer(playerEntity);
             } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
                 PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {
-                    if (playerStateHandler.getIsDragon())
+                    if (playerStateHandler.isDragon())
                         setDragonContainer(playerEntity);
                 });
             }
 
             PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-                if (dragonStateHandler.getIsDragon()) {
+                if (dragonStateHandler.isDragon()) {
                     for (int i = 0; i < playerEntity.inventory.getSizeInventory(); i++) {
                         ItemStack stack = playerEntity.inventory.getStackInSlot(i);
                         Item item = stack.getItem();
@@ -103,7 +103,7 @@ public class EventHandler {
             ((MobEntity) e.getEntity()).goalSelector.addGoal(2, new AvoidEntityGoal(
                     (CreatureEntity) e.getEntity(),
                     PlayerEntity.class,
-                    livingEntity -> PlayerStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).getIsDragon(),
+                    livingEntity -> PlayerStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).isDragon(),
                     20.0F, 1.3F, 1.5F, EntityPredicates.CAN_AI_TARGET));
         }
     }
@@ -146,7 +146,7 @@ public class EventHandler {
     public static void onClone(PlayerEvent.Clone e) {
         PlayerStateProvider.getCap(e.getPlayer()).ifPresent(capNew ->
                 PlayerStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
-                    if (capOld.getIsDragon()) {
+                    if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
                         capNew.setMovementData(capOld.getMovementData().orElse(new DragonStateHandler.DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO)), false);
                         capNew.setLevel(capOld.getLevel());
@@ -163,7 +163,7 @@ public class EventHandler {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
         PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.getIsDragon()) {
+            if (dragonStateHandler.isDragon()) {
                 dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
             }
         });
@@ -173,7 +173,7 @@ public class EventHandler {
     public static void modifyBreakSpeed(PlayerEvent.BreakSpeed breakSpeedEvent) {
         PlayerEntity playerEntity = breakSpeedEvent.getPlayer();
         PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.getIsDragon()) {
+            if (dragonStateHandler.isDragon()) {
                 ItemStack mainStack = playerEntity.getHeldItemMainhand();
                 Item item = mainStack.getItem();
                 if (item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) {
@@ -187,7 +187,7 @@ public class EventHandler {
     public static void disableMounts(EntityMountEvent mountEvent) {
         Entity mounting = mountEvent.getEntityMounting();
         PlayerStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.getIsDragon()) {
+            if (dragonStateHandler.isDragon()) {
                 if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity)
                     mountEvent.setCanceled(true);
             }
@@ -200,7 +200,7 @@ public class EventHandler {
         Item item = itemStack.getItem();
         LivingEntity livingEntity = destroyItemEvent.getEntityLiving();
         PlayerStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.getIsDragon()) {
+            if (dragonStateHandler.isDragon()) {
                 if (item.isFood()) {
                     Food food = item.getFood();
                     assert food != null;
@@ -231,7 +231,7 @@ public class EventHandler {
     public static void consumeSpecialFood(PlayerInteractEvent.RightClickItem rightClickItem) {
         PlayerEntity playerEntity = rightClickItem.getPlayer();
         PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.getIsDragon() && playerEntity.getFoodStats().needFood()) {
+            if (dragonStateHandler.isDragon() && playerEntity.getFoodStats().needFood()) {
                 ItemStack itemStack = rightClickItem.getItemStack();
                 Item item = itemStack.getItem();
                 if (dragonStateHandler.getType() == DragonType.CAVE) {

@@ -20,7 +20,7 @@ public class DragonStateHandler {
     private DragonLevel level = DragonLevel.BABY;
     private Optional<DragonMovementData> data = Optional.empty();
 
-    public boolean getIsDragon() {
+    public boolean isDragon() {
         return this.isDragon;
     }
 
@@ -28,7 +28,7 @@ public class DragonStateHandler {
         this.isDragon = isDragon;
     }
 
-    public boolean getIsHiding() {
+    public boolean isHiding() {
         return isHiding;
     }
 

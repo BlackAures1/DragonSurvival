@@ -62,7 +62,7 @@ public class DragonSurvivalMod {
     }
 
     public static boolean playerIsDragon(PlayerEntity player) {
-        return PlayerStateProvider.getCap(player).filter(DragonStateHandler::getIsDragon).isPresent();
+        return PlayerStateProvider.getCap(player).filter(DragonStateHandler::isDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

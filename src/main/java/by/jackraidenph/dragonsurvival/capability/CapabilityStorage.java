@@ -28,8 +28,8 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
     @Override
     public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
-        tag.putBoolean("isDragon", instance.getIsDragon());
-        if (instance.getIsDragon()) {
+        tag.putBoolean("isDragon", instance.isDragon());
+        if (instance.isDragon()) {
             instance.getMovementData().ifPresent(data -> {
                         tag.putDouble("bodyYaw", data.bodyYaw);
                         tag.putDouble("headYaw", data.headYaw);
@@ -38,7 +38,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
                         tag.put("tailPos", writeVec3d(data.tailPos));
                     }
             );
-            tag.putBoolean("isHiding", instance.getIsHiding());
+            tag.putBoolean("isHiding", instance.isHiding());
             tag.putString("type", instance.getType().toString());
             tag.putInt("level", instance.getLevel().ordinal());
         }

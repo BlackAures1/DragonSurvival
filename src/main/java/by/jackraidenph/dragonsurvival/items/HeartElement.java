@@ -23,7 +23,7 @@ public class HeartElement extends Item {
         LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
         if (dragonStateHandlerLazyOptional.isPresent()) {
             DragonStateHandler dragonStateHandler = dragonStateHandlerLazyOptional.orElseGet(() -> null);
-            if (dragonStateHandler.getIsDragon()) {
+            if (dragonStateHandler.isDragon()) {
                 float maxHealth = playerIn.getMaxHealth();
                 if (maxHealth < 40) {
                     IAttributeInstance currentHealth = playerIn.getAttribute(SharedMonsterAttributes.MAX_HEALTH);

@@ -59,7 +59,7 @@ public class ClientEvents {
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         PlayerStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-            if (playerStateHandler.getIsDragon()) {
+            if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
                     renderHandEvent.setCanceled(true);
                 MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
@@ -113,7 +113,7 @@ public class ClientEvents {
         if (e.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) e.getEntity();
             PlayerStateProvider.getCap(player).ifPresent(cap -> {
-                if (cap.getIsDragon()) {
+                if (cap.isDragon()) {
                     e.setCanceled(true);
 
                     thirdPersonModel.setRotationAngles(

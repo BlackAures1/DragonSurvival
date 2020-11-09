@@ -50,9 +50,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
 
         if (player != null) {
             PlayerStateProvider.getCap(player).ifPresent(cap -> {
-                if (cap.getIsDragon() && !cap.getIsHiding())
+                if (cap.isDragon() && !cap.isHiding())
                     distance.set(30);
-                else if (cap.getIsDragon())
+                else if (cap.isDragon())
                     distance.set(18);
                 else
                     distance.set(10);
