@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
@@ -8,8 +9,10 @@ import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.GameSettings;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,10 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -166,6 +166,29 @@ public class ClientEvents {
         }
         texture += ".png";
         return texture;
+    }
+
+    static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
+
+    @SubscribeEvent
+    public static void onHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
+        ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
+        MainWindow mainWindow = renderGameOverlayEvent.getWindow();
+        float partialTicks = renderGameOverlayEvent.getPartialTicks();
+        if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+            Minecraft minecraft = Minecraft.getInstance();
+            Screen screen = minecraft.currentScreen;
+            RenderSystem.pushMatrix();
+            minecraft.getTextureManager().bindTexture(HUDTextures);
+            //heart background
+            Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
+            minecraft.getTextureManager().bindTexture(HUDTextures);
+            //health heart
+            Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
+            //health int
+            minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
+            RenderSystem.popMatrix();
+        }
     }
 
 //    @SubscribeEvent
