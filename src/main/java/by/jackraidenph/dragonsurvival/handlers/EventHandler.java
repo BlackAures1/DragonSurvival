@@ -17,7 +17,6 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -210,12 +209,12 @@ public class EventHandler {
                     }
                     switch (dragonStateHandler.getType()) {
                         case FOREST:
-                            if (food.isMeat()) {
+                            if (food == Foods.RABBIT || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
                                 bad = false;
                             }
                             break;
                         case SEA:
-                            if (item.isIn(ItemTags.FISHES) || food == Foods.DRIED_KELP) {
+                            if (food == Foods.SALMON || food == Foods.COD || food == Foods.PUFFERFISH || food == Foods.DRIED_KELP) {
                                 bad = false;
                             }
                             break;
