@@ -59,7 +59,8 @@ public class EventHandler {
                 if (dragonStateHandler.getIsDragon()) {
                     for (int i = 0; i < playerEntity.inventory.getSizeInventory(); i++) {
                         ItemStack stack = playerEntity.inventory.getStackInSlot(i);
-                        if (itemsForbiddenForDragon.contains(stack.getItem())) {
+                        Item item = stack.getItem();
+                        if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                             break;
                         }
