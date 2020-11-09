@@ -167,4 +167,34 @@ public class ClientEvents {
         texture += ".png";
         return texture;
     }
+
+//    @SubscribeEvent
+//    public static void onMouseClickInScreen(GuiScreenEvent.MouseClickedEvent.Pre pre)
+//    {
+//        Screen screen=pre.getGui();
+//        if(screen instanceof ContainerScreen)
+//        {
+//            ContainerScreen<?> containerScreen= (ContainerScreen<?>) screen;
+//            Container container= containerScreen.getContainer();
+//            double mouseX= pre.getMouseX();
+//            double mouseY= pre.getMouseY();
+//            for (Slot inventorySlot : container.inventorySlots) {
+//                int slotX=inventorySlot.xPos+ containerScreen.getGuiLeft();
+//                int slotY=inventorySlot.yPos+containerScreen.getGuiTop();
+//                if (slotX<mouseX && slotX+16>mouseX && slotY<mouseY && slotY+16>mouseY)
+//                {
+//                    ItemStack itemStack=inventorySlot.getStack();
+//                    Item item=itemStack.getItem();
+//                    if(item instanceof ToolItem && inventorySlot.getSlotIndex()<10)
+//                    {
+//                        Minecraft.getInstance().player.sendMessage(new StringTextComponent("A dragon can't use "+itemStack.getDisplayName().getString()));
+//                        pre.setCanceled(true);
+//                    }
+//                    System.out.println(inventorySlot.getSlotIndex());
+//                    break;
+//                }
+//
+//            }
+//        }
+//    }
 }
