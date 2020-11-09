@@ -15,6 +15,9 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -28,19 +31,42 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
 
+    static HashSet<Item> itemsForbiddenForDragon = new HashSet<>();
+
+    static {
+        itemsForbiddenForDragon.add(Items.CROSSBOW);
+        itemsForbiddenForDragon.add(Items.BOW);
+        itemsForbiddenForDragon.add(Items.SHIELD);
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        PlayerEntity playerEntity = playerTickEvent.player;
-        if ((!DragonSurvivalMod.playerIsDragon(playerEntity) || playerEntity.isCreative()) && playerEntity.container instanceof DragonInventoryContainer) {
-            setPlayerContainer(playerEntity);
-        } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
-            PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {
-                if (playerStateHandler.getIsDragon())
-                    setDragonContainer(playerEntity);
+        if (playerTickEvent.phase == TickEvent.Phase.START) {
+            PlayerEntity playerEntity = playerTickEvent.player;
+            if ((!DragonSurvivalMod.playerIsDragon(playerEntity) || playerEntity.isCreative()) && playerEntity.container instanceof DragonInventoryContainer) {
+                setPlayerContainer(playerEntity);
+            } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
+                PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {
+                    if (playerStateHandler.getIsDragon())
+                        setDragonContainer(playerEntity);
+                });
+            }
+
+            PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+                if (dragonStateHandler.getIsDragon()) {
+                    for (int i = 0; i < playerEntity.inventory.getSizeInventory(); i++) {
+                        ItemStack stack = playerEntity.inventory.getStackInSlot(i);
+                        if (itemsForbiddenForDragon.contains(stack.getItem())) {
+                            playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
+                            break;
+                        }
+                    }
+                }
             });
         }
     }
