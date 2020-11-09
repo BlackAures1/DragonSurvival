@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -220,6 +222,29 @@ public class EventHandler {
                     }
                     if (bad)
                         livingEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 20 * 60, 0));
+                }
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void consumeSpecialFood(PlayerInteractEvent.RightClickItem rightClickItem) {
+        PlayerEntity playerEntity = rightClickItem.getPlayer();
+        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getIsDragon() && playerEntity.getFoodStats().needFood()) {
+                ItemStack itemStack = rightClickItem.getItemStack();
+                Item item = itemStack.getItem();
+                if (dragonStateHandler.getType() == DragonType.CAVE) {
+                    if (item == Items.COAL) {
+                        itemStack.shrink(1);
+                        playerEntity.getFoodStats().addStats(2, 7);
+                    } else if (item == Items.CHARCOAL) {
+                        itemStack.shrink(1);
+                        playerEntity.getFoodStats().addStats(2, 3);
+                    } else if (item == Items.REDSTONE) {
+                        itemStack.shrink(1);
+                        playerEntity.getFoodStats().addStats(5, 13);
+                    }
                 }
             }
         });
