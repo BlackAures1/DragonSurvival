@@ -15,9 +15,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -170,6 +168,20 @@ public class EventHandler {
         PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.getIsDragon()) {
                 dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void modifyBreakSpeed(PlayerEvent.BreakSpeed breakSpeedEvent) {
+        PlayerEntity playerEntity = breakSpeedEvent.getPlayer();
+        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getIsDragon()) {
+                ItemStack mainStack = playerEntity.getHeldItemMainhand();
+                Item item = mainStack.getItem();
+                if (item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) {
+                    breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
+                }
             }
         });
     }
