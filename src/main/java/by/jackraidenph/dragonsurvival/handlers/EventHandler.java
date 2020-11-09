@@ -6,10 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -17,6 +14,9 @@ import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -25,6 +25,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -187,6 +188,39 @@ public class EventHandler {
             if (dragonStateHandler.getIsDragon()) {
                 if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity)
                     mountEvent.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onItemDestroyed(LivingEntityUseItemEvent.Finish destroyItemEvent) {
+        ItemStack itemStack = destroyItemEvent.getItem();
+        Item item = itemStack.getItem();
+        LivingEntity livingEntity = destroyItemEvent.getEntityLiving();
+        PlayerStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getIsDragon()) {
+                if (item.isFood()) {
+                    Food food = item.getFood();
+                    assert food != null;
+                    boolean bad = false;
+                    if (item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE) {
+                        bad = true;
+                    }
+                    switch (dragonStateHandler.getType()) {
+                        case FOREST:
+                            if (food.isMeat()) {
+                                bad = false;
+                            }
+                            break;
+                        case SEA:
+                            if (item.isIn(ItemTags.FISHES) || food == Foods.DRIED_KELP) {
+                                bad = false;
+                            }
+                            break;
+                    }
+                    if (bad)
+                        livingEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 20 * 60, 0));
+                }
             }
         });
     }
