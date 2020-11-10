@@ -175,19 +175,21 @@ public class ClientEvents {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
         MainWindow mainWindow = renderGameOverlayEvent.getWindow();
         float partialTicks = renderGameOverlayEvent.getPartialTicks();
-        if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
-            Minecraft minecraft = Minecraft.getInstance();
-            Screen screen = minecraft.currentScreen;
-            RenderSystem.pushMatrix();
-            minecraft.getTextureManager().bindTexture(HUDTextures);
-            //heart background
-            Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
-            minecraft.getTextureManager().bindTexture(HUDTextures);
-            //health heart
-            Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
-            //health int
-            minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
-            RenderSystem.popMatrix();
+        if (DragonSurvivalMod.playerIsDragon(clientPlayerEntity)) {
+            if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+                Minecraft minecraft = Minecraft.getInstance();
+                Screen screen = minecraft.currentScreen;
+                RenderSystem.pushMatrix();
+                minecraft.getTextureManager().bindTexture(HUDTextures);
+                //heart background
+                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
+                minecraft.getTextureManager().bindTexture(HUDTextures);
+                //health heart
+                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
+                //health int
+                minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
+                RenderSystem.popMatrix();
+            }
         }
     }
 
