@@ -1,7 +1,4 @@
-package by.jackraidenph.dragonsurvival.models;// Made with Blockbench 3.7.2
-// Exported for Minecraft version 1.15
-// Paste this class into your mod and generate all required imports
-
+package by.jackraidenph.dragonsurvival.models;
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
@@ -17,32 +14,32 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class DragonModel2 extends EntityModel<Entity> {
-    private final ModelRenderer LeftFrontLeg;
+    public final ModelRenderer LeftFrontLeg;
     private final ModelRenderer Forearm1;
     private final ModelRenderer Elbow1;
-    private final ModelRenderer hand1;
-    private final ModelRenderer RightFrontLeg;
+    public final ModelRenderer hand1;
+    public final ModelRenderer RightFrontLeg;
     private final ModelRenderer Forearm2;
     private final ModelRenderer Elbow2;
-    private final ModelRenderer hand2;
-    private final ModelRenderer Leg3;
+    public final ModelRenderer hand2;
+    public final ModelRenderer Leg3;
     private final ModelRenderer Forearm3;
     private final ModelRenderer Elbow3;
-    private final ModelRenderer hand3;
-    private final ModelRenderer Leg4;
+    public final ModelRenderer hand3;
+    public final ModelRenderer Leg4;
     private final ModelRenderer Forearm4;
     private final ModelRenderer Elbow4;
-    private final ModelRenderer hand4;
+    public final ModelRenderer hand4;
     private final ModelRenderer main;
-    private final ModelRenderer main_body;
-    private final ModelRenderer maim_pelvis;
+    public final ModelRenderer main_body;
+    private final ModelRenderer main_pelvis;
     private final ModelRenderer Tail1;
     private final ModelRenderer Tail_5;
     private final ModelRenderer Tail2;
     private final ModelRenderer Tail3;
     private final ModelRenderer Tail4;
     private final ModelRenderer Tail5;
-    private final ModelRenderer Tail_0;
+    public final ModelRenderer Tail_0;
     public final ModelRenderer NeckandHead;
     public final ModelRenderer NeckandMain;
     public final ModelRenderer Neckand_3;
@@ -186,15 +183,15 @@ public class DragonModel2 extends EntityModel<Entity> {
         main_body.setTextureOffset(0, 74).addBox(0.0F, 5.0F, -10.0F, 0.0F, 4.0F, 11.0F, 0.0F, false);
         main_body.setTextureOffset(46, 35).addBox(0.0F, -12.0F, -11.0F, 0.0F, 7.0F, 13.0F, 0.0F, false);
 
-        maim_pelvis = new ModelRenderer(this);
-        maim_pelvis.setRotationPoint(0.0F, -21.0F, 1.0F);
-        main.addChild(maim_pelvis);
-        maim_pelvis.setTextureOffset(27, 28).addBox(-4.5F, -1.4F, 0.5F, 9.0F, 10.0F, 10.0F, -0.5F, false);
-        maim_pelvis.setTextureOffset(90, 72).addBox(-0.02F, -7.9F, 2.0F, 0.0F, 7.0F, 8.0F, 0.0F, false);
+        main_pelvis = new ModelRenderer(this);
+        main_pelvis.setRotationPoint(0.0F, -21.0F, 1.0F);
+        main.addChild(main_pelvis);
+        main_pelvis.setTextureOffset(27, 28).addBox(-4.5F, -1.4F, 0.5F, 9.0F, 10.0F, 10.0F, -0.5F, false);
+        main_pelvis.setTextureOffset(90, 72).addBox(-0.02F, -7.9F, 2.0F, 0.0F, 7.0F, 8.0F, 0.0F, false);
 
         Tail1 = new ModelRenderer(this);
         Tail1.setRotationPoint(0.0F, 2.0F, 7.0F);
-        maim_pelvis.addChild(Tail1);
+        main_pelvis.addChild(Tail1);
 
 
         Tail_5 = new ModelRenderer(this);

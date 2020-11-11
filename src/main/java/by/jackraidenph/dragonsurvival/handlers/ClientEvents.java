@@ -22,6 +22,11 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +43,7 @@ public class ClientEvents {
 
     public static DragonModel2 thirdPersonModel = new DragonModel2();
     public static DragonModel2 firstPersonModel = new DragonModel2();
+    public static DragonModel2 thirdPersonArmor = new DragonModel2();
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -119,25 +125,32 @@ public class ClientEvents {
                 if (cap.isDragon()) {
                     e.setCanceled(true);
 
-                    thirdPersonModel.setRotationAngles(
-                            player,
-                            player.limbSwing,
-                            MathHelper.lerp(e.getPartialRenderTick(), player.prevLimbSwingAmount, player.limbSwingAmount),
-                            player.ticksExisted,
-                            player.getYaw(e.getPartialRenderTick()),
-                            player.getPitch(e.getPartialRenderTick()));
+                    float partialRenderTick = e.getPartialRenderTick();
+                    thirdPersonModel.setRotationAngles(player, player.limbSwing,
+                            MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount),
+                            player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
 
                     String texture = constructTexture(cap.getType(), cap.getLevel());
-                    e.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                    MatrixStack matrixStack = e.getMatrixStack();
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
-                            e.getMatrixStack(),
+                            matrixStack,
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
-                            e.getLight(),
-                            LivingRenderer.getPackedOverlay(player, 0.0f),
-                            e.getPartialRenderTick(),
-                            player.getYaw(e.getPartialRenderTick()),
-                            player.getPitch(e.getPartialRenderTick()),
-                            1.0f);
+                            e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f),
+                            partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+
+                    thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
+                    thirdPersonArmor.setRotationAngles(player, player.limbSwing, MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount), player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
+
+                    setArmorVisibility(thirdPersonArmor, player);
+                    String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
+                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                    String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
+                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                    String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
+                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                    String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
                 }
             });
         }
@@ -169,6 +182,61 @@ public class ClientEvents {
         }
         texture += ".png";
         return texture;
+    }
+
+    private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
+        String texture = "textures/armor/";
+        Item item = playerEntity.getItemStackFromSlot(equipmentSlot).getItem();
+        if (item instanceof ArmorItem) {
+            ArmorItem armorItem = (ArmorItem) item;
+            IArmorMaterial armorMaterial = armorItem.getArmorMaterial();
+            if (armorMaterial == ArmorMaterial.DIAMOND) {
+                texture += "diamond_";
+            } else if (armorMaterial == ArmorMaterial.IRON) {
+                texture += "iron_";
+            } else if (armorMaterial == ArmorMaterial.LEATHER) {
+                texture += "leather_";
+            } else if (armorMaterial == ArmorMaterial.GOLD) {
+                texture += "gold_";
+            } else if (armorMaterial == ArmorMaterial.CHAIN) {
+                texture += "chainmail_";
+            }
+            texture += "dragon_";
+            switch (equipmentSlot) {
+                case HEAD:
+                    texture += "helmet";
+                    break;
+                case CHEST:
+                    texture += "chestplate";
+                    break;
+                case LEGS:
+                    texture += "leggings";
+                    break;
+                case FEET:
+                    texture += "boots";
+            }
+            texture += ".png";
+            return texture;
+        }
+
+        return texture + "empty_armor.png";
+    }
+
+    private static void setArmorVisibility(DragonModel2 dragonModel2, PlayerEntity player) {
+        dragonModel2.NeckandHead.showModel = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof ArmorItem;
+
+        dragonModel2.main_body.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
+        dragonModel2.Tail_0.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
+
+        dragonModel2.Leg4.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
+        dragonModel2.Leg3.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
+        dragonModel2.LeftFrontLeg.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
+        dragonModel2.RightFrontLeg.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
+
+        dragonModel2.hand1.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.hand2.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.hand3.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.hand4.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
     }
 
     static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
