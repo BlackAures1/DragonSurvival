@@ -2,28 +2,33 @@ package by.jackraidenph.dragonsurvival.containers;
 
 import by.jackraidenph.dragonsurvival.handlers.Containers;
 import com.mojang.datafixers.util.Pair;
-import io.netty.buffer.Unpooled;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.*;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.CraftingResultSlot;
+import net.minecraft.inventory.container.RecipeBookContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class DragonContainer extends RecipeBookContainer<CraftingInventory> implements INamedContainerProvider {
+public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftMatrix;
     private final CraftResultInventory craftResult = new CraftResultInventory();
     public final boolean isLocalWorld;
@@ -143,20 +148,98 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> impl
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        //TODO
-        return super.transferStackInSlot(playerIn, index);
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstack);
+            if (index == 0) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onSlotChange(itemstack1, itemstack);
+
+            } else if (index >= 1 + 5 && index < 5 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 5 + 5 && index < 9 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (equipmentslottype.getSlotType() == EquipmentSlotType.Group.ARMOR && !this.inventorySlots.get(8 - equipmentslottype.getIndex()).getHasStack()) {
+                int i = 8 - equipmentslottype.getIndex() + 5;
+                if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+//            } else if (equipmentslottype == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(45).getHasStack()) {
+//                if (!this.mergeItemStack(itemstack1, 45, 46, false)) {
+//                    return ItemStack.EMPTY;
+//                }
+            } else if (index >= 9 + 5 && index < 36 + 5) {
+                if (!this.mergeItemStack(itemstack1, 36 + 5, 45 + 5, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 36 + 5 && index < 45 + 5) {
+                if (!this.mergeItemStack(itemstack1, 9 + 5, 36 + 5, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
+            if (index == 0) {
+                playerIn.dropItem(itemstack2, false);
+            }
+        }
+
+        return itemstack;
     }
 
-    @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("draong_container");
+    /**
+     * Callback for when the crafting matrix is changed.
+     */
+    public void onCraftMatrixChanged(IInventory inventoryIn) {
+        func_217066_a(this.windowId, this.player.world, this.player, this.craftMatrix, this.craftResult);
     }
 
-    @Nullable
-    @Override
-    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
-        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer());
-        packetBuffer.writeInt(player.getEntityId());
-        return new DragonContainer(p_createMenu_1_, p_createMenu_2_, false);
+    protected static void func_217066_a(int windowId, World world, PlayerEntity p_217066_2_, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
+        if (!world.isRemote) {
+            ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) p_217066_2_;
+            ItemStack itemstack = ItemStack.EMPTY;
+            Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
+            if (optional.isPresent()) {
+                ICraftingRecipe icraftingrecipe = optional.get();
+                if (resultInventory.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
+                    itemstack = icraftingrecipe.getCraftingResult(craftingInventory);
+                }
+            }
+
+            resultInventory.setInventorySlotContents(0, itemstack);
+            serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemstack));
+        }
+    }
+
+    /**
+     * Called when the container is closed.
+     */
+    public void onContainerClosed(PlayerEntity playerIn) {
+        super.onContainerClosed(playerIn);
+        this.craftResult.clear();
+        if (!playerIn.world.isRemote) {
+            this.clearContainer(playerIn, playerIn.world, this.craftMatrix);
+        }
     }
 }
