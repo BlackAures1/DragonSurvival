@@ -2,11 +2,21 @@ package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.containers.DragonContainer;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
+import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -15,9 +25,26 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
     static final ResourceLocation BACKGROUND = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/dragon_inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
     private boolean widthTooNarrow;
+    /**
+     * The old x position of the mouse pointer
+     */
+    private float oldMouseX;
+    /**
+     * The old y position of the mouse pointer
+     */
+    private float oldMouseY;
+    private boolean removeRecipeBookGui;
+    private boolean buttonClicked;
 
     public DragonScreen(DragonContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
+        passEvents = true;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        recipeBookGui.tick();
     }
 
     @Override
@@ -41,6 +68,46 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
             blit(i + 86, j - 26, 144, 198, 30, 40);
         else
             blit(i + 86, j - 26, 173, 198, 30, 40);
+//        drawEntityOnScreen(i + 51, j + 75, 20, (float) (i + 51) - this.oldMouseX, (float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
+    }
+
+    private static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity) {
+        float atanX = (float) Math.atan(mouseX / 40.0F);
+        float atanY = (float) Math.atan(mouseY / 40.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float) posX, (float) posY, 1050.0F);
+        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+        MatrixStack matrixstack = new MatrixStack();
+        matrixstack.translate(10.0D, -2.0D, 1000.0D);
+        matrixstack.scale((float) scale, (float) scale, (float) scale);
+        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
+        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(atanY * 20.0F);
+        quaternion.multiply(quaternion1);
+        matrixstack.rotate(quaternion);
+        float f2 = livingEntity.renderYawOffset;
+        float f3 = livingEntity.rotationYaw;
+        float f4 = livingEntity.rotationPitch;
+        float f5 = livingEntity.prevRotationYawHead;
+        float f6 = livingEntity.rotationYawHead;
+        livingEntity.renderYawOffset = 180.0F + atanX * 20.0F;
+        livingEntity.rotationYaw = 180.0F + atanX * 40.0F;
+        livingEntity.rotationPitch = -atanY * 20.0F;
+        livingEntity.rotationYawHead = livingEntity.rotationYaw;
+        livingEntity.prevRotationYawHead = livingEntity.rotationYaw;
+        EntityRendererManager entityrenderermanager = Minecraft.getInstance().getRenderManager();
+        quaternion1.conjugate();
+        entityrenderermanager.setCameraOrientation(quaternion1);
+        entityrenderermanager.setRenderShadow(false);
+        IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        entityrenderermanager.renderEntityStatic(livingEntity, 0.0D, 0.0D, 0.0D, 0, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
+        irendertypebuffer$impl.finish();
+        entityrenderermanager.setRenderShadow(true);
+        livingEntity.renderYawOffset = f2;
+        livingEntity.rotationYaw = f3;
+        livingEntity.rotationPitch = f4;
+        livingEntity.prevRotationYawHead = f5;
+        livingEntity.rotationYawHead = f6;
+        RenderSystem.popMatrix();
     }
 
     @Override
@@ -64,5 +131,75 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         ySize = 166;
         super.init();
         widthTooNarrow = width < 379;
+        this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
+        this.removeRecipeBookGui = true;
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+        this.children.add(this.recipeBookGui);
+        this.setFocusedDefault(this.recipeBookGui);
+        this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
+            //FIXME crash
+            this.recipeBookGui.initSearchBar(this.widthTooNarrow);
+            this.recipeBookGui.toggleVisibility();
+            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+            ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - 30, guiTop + ySize - 26);
+            this.buttonClicked = true;
+        }));
+    }
+
+    public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
+        this.renderBackground();
+        this.hasActivePotionEffects = !this.recipeBookGui.isVisible();
+        if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
+            this.drawGuiContainerBackgroundLayer(p_render_3_, p_render_1_, p_render_2_);
+            this.recipeBookGui.render(p_render_1_, p_render_2_, p_render_3_);
+        } else {
+            this.recipeBookGui.render(p_render_1_, p_render_2_, p_render_3_);
+            super.render(p_render_1_, p_render_2_, p_render_3_);
+            this.recipeBookGui.renderGhostRecipe(this.guiLeft, this.guiTop, false, p_render_3_);
+        }
+
+        this.renderHoveredToolTip(p_render_1_, p_render_2_);
+        this.recipeBookGui.renderTooltip(this.guiLeft, this.guiTop, p_render_1_, p_render_2_);
+        this.oldMouseX = (float) p_render_1_;
+        this.oldMouseY = (float) p_render_2_;
+        this.func_212932_b(this.recipeBookGui);
+    }
+
+    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+        if (this.recipeBookGui.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_)) {
+            return true;
+        } else {
+            return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
+        }
+    }
+
+    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
+        if (this.buttonClicked) {
+            this.buttonClicked = false;
+            return true;
+        } else {
+            return super.mouseReleased(p_mouseReleased_1_, p_mouseReleased_3_, p_mouseReleased_5_);
+        }
+    }
+
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+        boolean flag = mouseX < (double) guiLeftIn || mouseY < (double) guiTopIn || mouseX >= (double) (guiLeftIn + this.xSize) || mouseY >= (double) (guiTopIn + this.ySize);
+        return this.recipeBookGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
+    }
+
+    /**
+     * Called when the mouse is clicked over a slot or outside the gui.
+     */
+    protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
+        super.handleMouseClick(slotIn, slotId, mouseButton, type);
+        this.recipeBookGui.slotClicked(slotIn);
+    }
+
+    public void removed() {
+        if (this.removeRecipeBookGui) {
+            this.recipeBookGui.removed();
+        }
+
+        super.removed();
     }
 }
