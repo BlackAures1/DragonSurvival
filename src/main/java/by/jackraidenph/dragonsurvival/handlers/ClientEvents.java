@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -44,11 +45,14 @@ public class ClientEvents {
     public static DragonModel2 thirdPersonModel = new DragonModel2();
     public static DragonModel2 firstPersonModel = new DragonModel2();
     public static DragonModel2 thirdPersonArmor = new DragonModel2();
+    public static DragonModel2 firstPersonArmor = new DragonModel2();
 
     static {
         firstPersonModel.Head.showModel = false;
         firstPersonModel.Neckand_1.showModel = false;
         firstPersonModel.NeckandMain.showModel = false;
+
+        firstPersonArmor.NeckandHead.showModel = false;
     }
 
     @SubscribeEvent
@@ -80,10 +84,27 @@ public class ClientEvents {
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 eventMatrixStack.translate(0, -2, -1);
                 ResourceLocation resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, texture);
-                IVertexBuilder buffer = renderHandEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
+                IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
+                IVertexBuilder buffer = buffers.getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
                 firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+
+
+                firstPersonModel.copyModelAttributesTo(firstPersonArmor);
+                firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
+
+                setArmorVisibility(firstPersonModel, player);
+                eventMatrixStack.translate(0, -0.06, 0.07);
+                eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
+                ResourceLocation helmetTexture = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.HEAD));
+                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(helmetTexture)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
+                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(chestplate)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
+                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(legs)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
+                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(boots)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
                 eventMatrixStack.translate(0, 0, 0.15);
                 eventMatrixStack.pop();
             }
