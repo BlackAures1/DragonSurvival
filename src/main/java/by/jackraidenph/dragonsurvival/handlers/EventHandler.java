@@ -58,7 +58,6 @@ public class EventHandler {
                         Item item = stack.getItem();
                         if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
-                            break;
                         }
                     }
                 }
