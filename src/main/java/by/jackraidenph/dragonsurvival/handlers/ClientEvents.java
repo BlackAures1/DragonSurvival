@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
@@ -10,7 +9,6 @@ import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
@@ -175,27 +173,30 @@ public class ClientEvents {
 
     static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
 
+    /**
+     * Render nest health
+     */
     @SubscribeEvent
     public static void onHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
         MainWindow mainWindow = renderGameOverlayEvent.getWindow();
         float partialTicks = renderGameOverlayEvent.getPartialTicks();
-        if (DragonSurvivalMod.playerIsDragon(clientPlayerEntity)) {
-            if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
-                Minecraft minecraft = Minecraft.getInstance();
-                Screen screen = minecraft.currentScreen;
-                RenderSystem.pushMatrix();
-                minecraft.getTextureManager().bindTexture(HUDTextures);
-                //heart background
-                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
-                minecraft.getTextureManager().bindTexture(HUDTextures);
-                //health heart
-                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
-                //health int
-                minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
-                RenderSystem.popMatrix();
-            }
-        }
+//        if (DragonSurvivalMod.playerIsDragon(clientPlayerEntity)) {
+//            if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+//                Minecraft minecraft = Minecraft.getInstance();
+//                Screen screen = minecraft.currentScreen;
+//                RenderSystem.pushMatrix();
+//                minecraft.getTextureManager().bindTexture(HUDTextures);
+//                //heart background
+//                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
+//                minecraft.getTextureManager().bindTexture(HUDTextures);
+//                //health heart
+//                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
+//                //health int
+//                minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
+//                RenderSystem.popMatrix();
+//            }
+//        }
     }
 
 //    @SubscribeEvent
