@@ -75,6 +75,7 @@ public class DragonSurvivalMod {
         register(SetRespawnPosition.class, new SetRespawnPosition());
         register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
+        register(OpenDragonInventory.class, new OpenDragonInventory());
         LOGGER.info("Successfully registered Messages!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered Entity Spawns!");

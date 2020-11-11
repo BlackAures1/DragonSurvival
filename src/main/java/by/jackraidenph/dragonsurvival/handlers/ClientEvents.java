@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
+import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -93,6 +94,10 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
+        if (DragonSurvivalMod.playerIsDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input)) {
+            if (minecraft.currentScreen instanceof InventoryScreen)
+                DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
+        }
     }
 
     @SubscribeEvent

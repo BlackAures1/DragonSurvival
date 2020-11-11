@@ -1,27 +1,29 @@
 package by.jackraidenph.dragonsurvival.containers;
 
+import by.jackraidenph.dragonsurvival.handlers.Containers;
 import com.mojang.datafixers.util.Pair;
+import io.netty.buffer.Unpooled;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.RecipeBookContainer;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.container.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
+public class DragonContainer extends RecipeBookContainer<CraftingInventory> implements INamedContainerProvider {
     private final CraftingInventory craftMatrix;
     private final CraftResultInventory craftResult = new CraftResultInventory();
     public final boolean isLocalWorld;
@@ -34,8 +36,8 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
     private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
 
-    protected DragonContainer(@Nullable ContainerType<?> type, int id, PlayerInventory playerInventory, boolean localWorld) {
-        super(type, id);
+    public DragonContainer(int id, PlayerInventory playerInventory, boolean localWorld) {
+        super(Containers.dragonContainer, id);
         this.isLocalWorld = localWorld;
         this.player = playerInventory.player;
         craftMatrix = new CraftingInventory(this, 3, 3);
@@ -143,5 +145,18 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         //TODO
         return super.transferStackInSlot(playerIn, index);
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return new StringTextComponent("draong_container");
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer());
+        packetBuffer.writeInt(player.getEntityId());
+        return new DragonContainer(p_createMenu_1_, p_createMenu_2_, false);
     }
 }

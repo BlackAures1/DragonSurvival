@@ -42,14 +42,6 @@ public class EventHandler {
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         if (playerTickEvent.phase == TickEvent.Phase.START) {
             PlayerEntity playerEntity = playerTickEvent.player;
-            if ((!DragonSurvivalMod.playerIsDragon(playerEntity) || playerEntity.isCreative()) && playerEntity.container instanceof DragonInventoryContainer) {
-                setPlayerContainer(playerEntity);
-            } else if (!playerEntity.isCreative() && !playerEntity.isSpectator() && playerEntity.container.getClass() == PlayerContainer.class) {
-                PlayerStateProvider.getCap(playerEntity).ifPresent(playerStateHandler -> {
-                    if (playerStateHandler.isDragon())
-                        setDragonContainer(playerEntity);
-                });
-            }
 
             PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
@@ -65,6 +57,7 @@ public class EventHandler {
         }
     }
 
+    @Deprecated
     public static void setPlayerContainer(PlayerEntity playerEntity) {
         Field field = PlayerEntity.class.getDeclaredFields()[15];
         if (field.getType() == PlayerContainer.class) {
@@ -79,6 +72,7 @@ public class EventHandler {
         }
     }
 
+    @Deprecated
     public static void setDragonContainer(PlayerEntity playerEntity) {
         Field field = PlayerEntity.class.getDeclaredFields()[15];
         if (field.getType() == PlayerContainer.class) {

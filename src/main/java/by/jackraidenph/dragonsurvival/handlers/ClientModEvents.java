@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
@@ -35,5 +36,6 @@ public class ClientModEvents {
         ShaderHelper.initShaders();
 
         ScreenManager.registerFactory(Containers.nestContainer, NestScreen::new);
+        ScreenManager.registerFactory(Containers.dragonContainer, DragonScreen::new);
     }
 }
