@@ -89,13 +89,10 @@ public class ClientEvents {
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
                 firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-                eventMatrixStack.translate(0, 0, 0.15);
 
                 firstPersonModel.copyModelAttributesTo(firstPersonArmor);
                 firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-
                 setArmorVisibility(firstPersonArmor, player);
-                eventMatrixStack.translate(0, -0.02, 0.03);
                 eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
                 ResourceLocation helmetTexture = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.HEAD));
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(helmetTexture)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
@@ -105,7 +102,7 @@ public class ClientEvents {
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(legs)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
                 ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(boots)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-
+                eventMatrixStack.translate(0, 0, 0.15);
                 eventMatrixStack.pop();
 
             }
