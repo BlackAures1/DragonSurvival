@@ -18,6 +18,7 @@ public class DragonStateHandler {
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
     private DragonLevel level = DragonLevel.BABY;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<DragonMovementData> data = Optional.empty();
 
     public boolean isDragon() {
