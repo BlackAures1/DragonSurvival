@@ -39,11 +39,11 @@ public class DragonModel2 extends EntityModel<Entity> {
     private final ModelRenderer Tail3;
     private final ModelRenderer Tail4;
     private final ModelRenderer Tail5;
-    public final ModelRenderer Tail_0;
+    private final ModelRenderer Tail_0;
     public final ModelRenderer NeckandHead;
     public final ModelRenderer NeckandMain;
-    public final ModelRenderer Neckand_3;
-    public final ModelRenderer Neckand_2;
+    private final ModelRenderer Neckand_3;
+    private final ModelRenderer Neckand_2;
     public final ModelRenderer Neckand_1;
     public final ModelRenderer Head;
     private final ModelRenderer central_horn;
