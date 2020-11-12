@@ -194,6 +194,7 @@ public class EventHandler {
         LivingEntity livingEntity = destroyItemEvent.getEntityLiving();
         PlayerStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
+                PlayerEntity playerEntity = (PlayerEntity) livingEntity;
                 if (item.isFood()) {
                     Food food = item.getFood();
                     assert food != null;
@@ -203,9 +204,19 @@ public class EventHandler {
                     }
                     switch (dragonStateHandler.getType()) {
                         case FOREST:
-                            if (food == Foods.RABBIT || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
+                            if (food == Foods.RABBIT || food == Foods.ROTTEN_FLESH || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
                                 bad = false;
                                 livingEntity.removePotionEffect(Effects.HUNGER);
+                                if (food == Foods.CHICKEN) {
+                                    playerEntity.getFoodStats().addStats(0, 5.8f);
+                                } else if (food == Foods.PORKCHOP) {
+                                    playerEntity.getFoodStats().addStats(-1, 6.4f);
+                                } else if (food == Foods.ROTTEN_FLESH) {
+                                    playerEntity.getFoodStats().addStats(-2, 2.2f);
+                                } else if (food == Foods.RABBIT || food == Foods.BEEF) {
+                                    playerEntity.getFoodStats().addStats(2, 11.2f);
+                                }
+
                             }
                             break;
                         case SEA:
@@ -214,11 +225,22 @@ public class EventHandler {
                                 livingEntity.removePotionEffect(Effects.HUNGER);
                                 livingEntity.removePotionEffect(Effects.NAUSEA);
                                 livingEntity.removePotionEffect(Effects.POISON);
+                                if (food == Foods.TROPICAL_FISH) {
+                                    playerEntity.getFoodStats().addStats(1, 6.8f);
+                                } else if (food == Foods.SALMON) {
+                                    playerEntity.getFoodStats().addStats(0, 6.8f);
+                                } else if (food == Foods.COD) {
+                                    playerEntity.getFoodStats().addStats(0, 6.6f);
+                                } else if (food == Foods.PUFFERFISH) {
+                                    playerEntity.getFoodStats().addStats(4, 12.8f);
+                                } else {
+                                    playerEntity.getFoodStats().addStats(1, 2.4f);
+                                }
                             }
                             break;
                     }
                     if (bad)
-                        livingEntity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 20 * 60, 0));
+                        livingEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, 20 * 60, 0));
                 }
             }
         });
