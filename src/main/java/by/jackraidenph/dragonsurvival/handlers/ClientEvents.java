@@ -89,13 +89,13 @@ public class ClientEvents {
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
                 firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-
+                eventMatrixStack.translate(0, 0, 0.15);
 
                 firstPersonModel.copyModelAttributesTo(firstPersonArmor);
                 firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
 
-                setArmorVisibility(firstPersonModel, player);
-                eventMatrixStack.translate(0, -0.06, 0.07);
+                setArmorVisibility(firstPersonArmor, player);
+                eventMatrixStack.translate(0, -0.02, 0.03);
                 eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
                 ResourceLocation helmetTexture = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.HEAD));
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(helmetTexture)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
@@ -105,8 +105,9 @@ public class ClientEvents {
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(legs)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
                 ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(boots)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
-                eventMatrixStack.translate(0, 0, 0.15);
+
                 eventMatrixStack.pop();
+
             }
         });
     }
@@ -249,15 +250,10 @@ public class ClientEvents {
         dragonModel2.main_body.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
         dragonModel2.Tail_0.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
 
-        dragonModel2.Leg4.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
-        dragonModel2.Leg3.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
-        dragonModel2.LeftFrontLeg.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
-        dragonModel2.RightFrontLeg.showModel = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() instanceof ArmorItem;
-
-        dragonModel2.hand1.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.hand2.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.hand3.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.hand4.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.Elbow1.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.Elbow2.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.Elbow3.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
+        dragonModel2.Elbow4.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
     }
 
     static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
