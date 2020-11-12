@@ -205,11 +205,15 @@ public class EventHandler {
                         case FOREST:
                             if (food == Foods.RABBIT || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
                                 bad = false;
+                                livingEntity.removePotionEffect(Effects.HUNGER);
                             }
                             break;
                         case SEA:
-                            if (food == Foods.SALMON || food == Foods.COD || food == Foods.PUFFERFISH || food == Foods.DRIED_KELP) {
+                            if (food == Foods.SALMON || food == Foods.TROPICAL_FISH || food == Foods.COD || food == Foods.PUFFERFISH || food == Foods.DRIED_KELP) {
                                 bad = false;
+                                livingEntity.removePotionEffect(Effects.HUNGER);
+                                livingEntity.removePotionEffect(Effects.NAUSEA);
+                                livingEntity.removePotionEffect(Effects.POISON);
                             }
                             break;
                     }
