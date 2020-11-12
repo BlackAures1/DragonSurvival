@@ -56,6 +56,7 @@ public class DragonStateHandler {
     public void setLevel(DragonLevel level, PlayerEntity playerEntity) {
         setLevel(level);
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(level.initialHealth);
+        playerEntity.heal(playerEntity.getMaxHealth());
     }
 
 
