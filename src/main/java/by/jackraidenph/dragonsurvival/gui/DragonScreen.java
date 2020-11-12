@@ -136,7 +136,6 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         this.children.add(this.recipeBookGui);
         this.setFocusedDefault(this.recipeBookGui);
         this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
-            //FIXME crash
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
             this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);

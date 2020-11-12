@@ -1,7 +1,9 @@
 package by.jackraidenph.dragonsurvival.containers;
 
 import by.jackraidenph.dragonsurvival.handlers.Containers;
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,6 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 
 public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
@@ -241,5 +244,10 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
         if (!playerIn.world.isRemote) {
             this.clearContainer(playerIn, playerIn.world, this.craftMatrix);
         }
+    }
+
+    @Override
+    public List<RecipeBookCategories> getRecipeBookCategories() {
+        return Lists.newArrayList(RecipeBookCategories.SEARCH, RecipeBookCategories.EQUIPMENT, RecipeBookCategories.BUILDING_BLOCKS, RecipeBookCategories.MISC, RecipeBookCategories.REDSTONE);
     }
 }
