@@ -30,7 +30,7 @@ public class DragonModel2 extends EntityModel<Entity> {
     public final ModelRenderer Forearm4;
     public final ModelRenderer Elbow4;
     private final ModelRenderer hand4;
-    private final ModelRenderer main;
+    public final ModelRenderer main;
     public final ModelRenderer main_body;
     private final ModelRenderer main_pelvis;
     private final ModelRenderer Tail1;
@@ -237,7 +237,6 @@ public class DragonModel2 extends EntityModel<Entity> {
         main.addChild(NeckandHead);
         setRotationAngle(NeckandHead, 2.0071F, 0.0F, 0.0F);
 
-
         NeckandMain = new ModelRenderer(this);
         NeckandMain.setRotationPoint(0.0F, -2.0F, 1.0F);
         NeckandHead.addChild(NeckandMain);
@@ -376,10 +375,8 @@ public class DragonModel2 extends EntityModel<Entity> {
     @Override
     public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
-        //left front
         LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        //right front
         RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
         Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
