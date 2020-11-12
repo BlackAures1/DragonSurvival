@@ -83,11 +83,11 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(atanY * 20.0F);
         quaternion.multiply(quaternion1);
         matrixstack.rotate(quaternion);
-        float f2 = livingEntity.renderYawOffset;
-        float f3 = livingEntity.rotationYaw;
-        float f4 = livingEntity.rotationPitch;
-        float f5 = livingEntity.prevRotationYawHead;
-        float f6 = livingEntity.rotationYawHead;
+        float renderYawOffset = livingEntity.renderYawOffset;
+        float rotationYaw = livingEntity.rotationYaw;
+        float rotationPitch = livingEntity.rotationPitch;
+        float prevRotationYawHead = livingEntity.prevRotationYawHead;
+        float rotationYawHead = livingEntity.rotationYawHead;
         livingEntity.renderYawOffset = 180.0F + atanX * 20.0F;
         livingEntity.rotationYaw = 180.0F + atanX * 40.0F;
         livingEntity.rotationPitch = -atanY * 20.0F;
@@ -101,11 +101,11 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         entityrenderermanager.renderEntityStatic(livingEntity, 0.0D, 0.0D, 0.0D, 0, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
         irendertypebuffer$impl.finish();
         entityrenderermanager.setRenderShadow(true);
-        livingEntity.renderYawOffset = f2;
-        livingEntity.rotationYaw = f3;
-        livingEntity.rotationPitch = f4;
-        livingEntity.prevRotationYawHead = f5;
-        livingEntity.rotationYawHead = f6;
+        livingEntity.renderYawOffset = renderYawOffset;
+        livingEntity.rotationYaw = rotationYaw;
+        livingEntity.rotationPitch = rotationPitch;
+        livingEntity.prevRotationYawHead = prevRotationYawHead;
+        livingEntity.rotationYawHead = rotationYawHead;
         RenderSystem.popMatrix();
     }
 
