@@ -2,8 +2,6 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
-import by.jackraidenph.dragonsurvival.gui.DragonInventoryScreen;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -14,7 +12,6 @@ import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +28,10 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -54,15 +54,6 @@ public class ClientEvents {
 
         firstPersonArmor.NeckandMain.showModel = false;
         firstPersonArmor.NeckandHead.showModel = false;
-    }
-
-    @SubscribeEvent
-    public static void openPlayerInventory(GuiOpenEvent guiOpenEvent) {
-        Screen screen = guiOpenEvent.getGui();
-        PlayerEntity playerEntity = Minecraft.getInstance().player;
-        if (screen instanceof InventoryScreen && playerEntity.container instanceof DragonInventoryContainer) {
-            guiOpenEvent.setGui(new DragonInventoryScreen(Minecraft.getInstance().player));
-        }
     }
 
     @SubscribeEvent

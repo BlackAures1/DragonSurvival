@@ -46,11 +46,7 @@ public class DragonInventoryScreen extends DisplayEffectsScreen<PlayerContainer>
     }
 
     public void tick() {
-//        if (this.minecraft.playerController.isInCreativeMode()) {
-//            this.minecraft.displayGuiScreen(new CreativeScreen(this.minecraft.player));
-//        } else {
         this.recipeBookGui.tick();
-//        }
     }
 
     protected void init() {

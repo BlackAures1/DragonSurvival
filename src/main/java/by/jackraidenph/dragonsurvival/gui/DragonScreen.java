@@ -43,7 +43,6 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
 
     @Override
     public void tick() {
-        super.tick();
         recipeBookGui.tick();
     }
 
@@ -202,4 +201,6 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
 
         super.removed();
     }
+
+
 }
