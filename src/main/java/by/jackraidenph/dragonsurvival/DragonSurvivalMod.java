@@ -16,7 +16,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,7 +47,7 @@ public class DragonSurvivalMod {
             PROTOCOL_VERSION::equals
     );
 
-    private static int nextId = 0;
+    private static int nextPacketId = 0;
 
     public DragonSurvivalMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -58,11 +58,11 @@ public class DragonSurvivalMod {
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
-        INSTANCE.registerMessage(nextId++, clazz, message::encode, message::decode, message::handle);
+        INSTANCE.registerMessage(nextPacketId++, clazz, message::encode, message::decode, message::handle);
     }
 
-    public static boolean playerIsDragon(PlayerEntity player) {
-        return PlayerStateProvider.getCap(player).filter(DragonStateHandler::isDragon).isPresent();
+    public static boolean isDragon(Entity entity) {
+        return PlayerStateProvider.getCap(entity).filter(DragonStateHandler::isDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

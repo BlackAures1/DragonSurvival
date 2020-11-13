@@ -108,7 +108,7 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (DragonSurvivalMod.playerIsDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input)) {
+        if (DragonSurvivalMod.isDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input)) {
             if (minecraft.currentScreen instanceof InventoryScreen)
                 DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
         }
