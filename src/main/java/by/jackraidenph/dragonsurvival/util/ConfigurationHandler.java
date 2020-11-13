@@ -34,8 +34,8 @@ public class ConfigurationHandler {
         Spawn(ForgeConfigSpec.Builder builder) {
             builder.push("Predator spawn chances");
             builder.comment("Configure predator spawn weight & min/max group size. Set weight to 0 to disable.");
-            min = builder.defineInRange("min", 1, 0, 64);
-            max = builder.defineInRange("max", 3, 0, 64);
+            min = builder.defineInRange("minimum", 1, 0, 64);
+            max = builder.defineInRange("maximum", 3, 0, 64);
             weight = builder.defineInRange("weight", 4, 0, 100);
             builder.pop();
             builder.push("Predator spawn biomes");
