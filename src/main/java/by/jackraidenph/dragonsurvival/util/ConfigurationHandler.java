@@ -39,7 +39,7 @@ public class ConfigurationHandler {
             weight = builder.defineInRange("weight", 4, 0, 100);
             builder.pop();
             builder.push("Predator spawn biomes");
-            builder.comment("BiomeDictionary types to include & exclude.");
+            builder.comment("Biome types to include & exclude.");
             include = builder.defineList("include", Collections.singletonList(FOREST.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
             exclude = builder.defineList("exclude", Arrays.asList(MOUNTAIN.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
             builder.pop();

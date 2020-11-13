@@ -41,11 +41,8 @@ public class DragonSurvivalMod {
     public static final Logger LOGGER = LogManager.getLogger();
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(MODID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+            new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     private static int nextPacketId = 0;
 
@@ -67,7 +64,7 @@ public class DragonSurvivalMod {
 
     private void setup(final FMLCommonSetupEvent event) {
         PlayerStateCapability.register();
-        LOGGER.info("Successfully registered PlayerStateCapabilityHandler!");
+        LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncCapability.class, new PacketSyncCapability());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
@@ -76,9 +73,9 @@ public class DragonSurvivalMod {
         register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
-        LOGGER.info("Successfully registered Messages!");
+        LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
-        LOGGER.info("Successfully registered Entity Spawns!");
+        LOGGER.info("Successfully registered entity spawns!");
     }
 
     private void onServerStart(FMLServerStartingEvent serverStartingEvent) {
