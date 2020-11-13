@@ -11,6 +11,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -125,13 +126,14 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof PlayerEntity || e.getEntityLiving() instanceof MagicalPredatorEntity)
+        LivingEntity livingEntity = e.getEntityLiving();
+        if (livingEntity instanceof PlayerEntity || livingEntity instanceof MagicalPredatorEntity)
             return;
 
-        if (e.getEntityLiving().world.getRandom().nextInt(30) == 0) {
-            MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(e.getEntityLiving().world);
-            e.getEntityLiving().world.addEntity(beast);
-            beast.setPositionAndUpdate(e.getEntityLiving().getPosX(), e.getEntityLiving().getPosY(), e.getEntityLiving().getPosZ());
+        if (livingEntity instanceof AnimalEntity && livingEntity.world.getRandom().nextInt(30) == 0) {
+            MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.world);
+            livingEntity.world.addEntity(beast);
+            beast.setPositionAndUpdate(livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ());
         }
     }
 
