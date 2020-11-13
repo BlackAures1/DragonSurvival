@@ -132,14 +132,15 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         widthTooNarrow = width < 379;
         this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
         this.removeRecipeBookGui = true;
-        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+        int offSet = 30;
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width + offSet, this.xSize);
         this.children.add(this.recipeBookGui);
         this.setFocusedDefault(this.recipeBookGui);
-        this.addButton(new ImageButton(guiLeft + this.xSize - 30, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
+        this.addButton(new ImageButton(guiLeft + this.xSize - offSet, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
-            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
-            ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - 30, guiTop + ySize - 26);
+            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width + offSet, this.xSize);
+            ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - offSet, guiTop + ySize - 26);
             this.buttonClicked = true;
         }));
     }
