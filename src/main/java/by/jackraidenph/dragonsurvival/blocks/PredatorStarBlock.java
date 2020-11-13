@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.blocks;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -11,7 +12,9 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -42,12 +45,17 @@ public class PredatorStarBlock extends Block {
 
     public void blockBehaviour(Entity entity, World worldIn, BlockPos pos) {
         if (entity instanceof LivingEntity) {
-            entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth()+1);
+            entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth() + 1);
             worldIn.destroyBlock(pos, false);
             if (new Random().nextInt(3) == 0) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addEntity(beast);
                 beast.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+            }
+        } else if (entity instanceof ItemEntity) {
+            ItemEntity itemEntity = (ItemEntity) entity;
+            if (itemEntity.getItem().getItem() == ItemsInit.elderDragonBone) {
+                itemEntity.setItem(new ItemStack(ItemsInit.starBone));
             }
         }
     }

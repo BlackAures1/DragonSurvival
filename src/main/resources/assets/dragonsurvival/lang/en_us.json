@@ -5,6 +5,8 @@
   "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Magical Predator Spawn Egg",
   "item.dragonsurvival.heart_element": "Heart Element",
+  "item.dragonsurvival.star_bone": "Star Bone",
+  "item.dragonsurvival.elder_dragon_bone": "Elder Dragon Bone",
   "_comment": "Block",
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragon Altar",
