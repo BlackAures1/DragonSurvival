@@ -29,12 +29,13 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityTypesInit {
 
-    private static List<EntityType> entities = Lists.newArrayList();
-    private static List<Item> spawnEggs = Lists.newArrayList();
+    private static final List<EntityType<?>> entities = Lists.newArrayList();
+    private static final List<Item> spawnEggs = Lists.newArrayList();
 
-    public static final EntityType<MagicalPredatorEntity> MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
+    public static EntityType<MagicalPredatorEntity> MAGICAL_BEAST;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
+
         ResourceLocation location = new ResourceLocation(DragonSurvivalMod.MODID, classToString(entityClass));
         EntityType<T> entity = EntityType.Builder.create(factory, EntityClassification.MONSTER).size(width, height).setTrackingRange(64).setUpdateInterval(1).build(location.toString());
         entity.setRegistryName(location);
@@ -52,6 +53,7 @@ public class EntityTypesInit {
 
     @SubscribeEvent
     public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
+        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
         for (EntityType entity : entities) {
             Preconditions.checkNotNull(entity.getRegistryName(), "registryName");
             event.getRegistry().register(entity);
@@ -62,7 +64,7 @@ public class EntityTypesInit {
     @SubscribeEvent
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
         for (Item spawnEgg : spawnEggs) {
-            Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registryName");
+            Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
             event.getRegistry().register(spawnEgg);
         }
     }
