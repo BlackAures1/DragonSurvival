@@ -214,7 +214,7 @@ public class EventHandler {
                                 } else if (food == Foods.PORKCHOP) {
                                     playerEntity.getFoodStats().addStats(-1, 6.4f);
                                 } else if (food == Foods.ROTTEN_FLESH) {
-                                    playerEntity.getFoodStats().addStats(-2, 2.2f);
+                                    playerEntity.getFoodStats().addStats(-1, 2.2f);
                                 } else if (food == Foods.RABBIT || food == Foods.BEEF) {
                                     playerEntity.getFoodStats().addStats(2, 11.2f);
                                 }
