@@ -282,7 +282,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
             if (this.nearestTarget != null) {
                 if (this.nearestTarget instanceof PlayerEntity) {
                     float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
-                    if (diff <= 3 & diff >= -2) {
+                    if (diff <= 16 & diff >= -2) {
                         beast.teleportToEntity(this.nearestTarget);
                     }
                 }
