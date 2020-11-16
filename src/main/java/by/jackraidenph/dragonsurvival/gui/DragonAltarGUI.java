@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.ResetPlayer;
-import by.jackraidenph.dragonsurvival.network.SetRespawnPosition;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
@@ -14,7 +13,6 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -22,7 +20,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
-import java.util.Random;
 
 public class DragonAltarGUI extends Screen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar.png");
@@ -141,9 +138,9 @@ public class DragonAltarGUI extends Screen {
                     cap.setType(type);
                     cap.setLevel(DragonLevel.BABY);
                     player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
-                    Random random = player.world.rand;
-                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
-                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
+//                    Random random = player.world.rand;
+//                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
+//                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
                 });
     }
 }
