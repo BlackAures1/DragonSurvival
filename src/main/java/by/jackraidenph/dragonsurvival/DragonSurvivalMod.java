@@ -95,6 +95,8 @@ public class DragonSurvivalMod {
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 PlayerStateProvider.getCap(serverPlayerEntity).orElse(null).syncCapabilityData(true);
+                //a trick to update the eye height
+                serverPlayerEntity.setSneaking(!serverPlayerEntity.isSneaking());
             });
             return 1;
         }).build();

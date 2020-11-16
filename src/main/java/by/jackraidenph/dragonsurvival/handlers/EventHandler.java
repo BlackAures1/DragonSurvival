@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -286,6 +287,16 @@ public class EventHandler {
                         jumpEvent.getEntityLiving().addVelocity(0, 0.15, 0); //2+ blocks
                         break;
                 }
+        });
+    }
+
+    @SubscribeEvent
+    public static void changeSizeEvent(EntityEvent.EyeHeight eyeHeight) {
+        Entity entity = eyeHeight.getEntity();
+        PlayerStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                eyeHeight.setNewHeight(dragonStateHandler.getLevel().maxHeight);
+            }
         });
     }
 }
