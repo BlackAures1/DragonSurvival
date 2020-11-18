@@ -42,10 +42,10 @@ public class ClientEvents {
     public static float bodyYaw;
     public static float neckYaw;
 
-    public static DragonModel2 thirdPersonModel = new DragonModel2();
-    public static DragonModel2 firstPersonModel = new DragonModel2();
-    public static DragonModel2 thirdPersonArmor = new DragonModel2();
-    public static DragonModel2 firstPersonArmor = new DragonModel2();
+    public static DragonModel2 thirdPersonModel = new DragonModel2(false);
+    public static DragonModel2 firstPersonModel = new DragonModel2(true);
+    public static DragonModel2 thirdPersonArmor = new DragonModel2(false);
+    public static DragonModel2 firstPersonArmor = new DragonModel2(true);
 
     static {
         firstPersonModel.Head.showModel = false;

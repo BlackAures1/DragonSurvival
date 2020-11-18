@@ -59,8 +59,10 @@ public class DragonModel2 extends EntityModel<Entity> {
     private final ModelRenderer lower_jaw1;
     private final ModelRenderer teeth2;
     private final ModelRenderer muscles;
+    public boolean firstPerson;
 
-    public DragonModel2() {
+    public DragonModel2(boolean firstPerson) {
+        this.firstPerson = firstPerson;
         textureWidth = 128;
         textureHeight = 128;
 
@@ -399,10 +401,12 @@ public class DragonModel2 extends EntityModel<Entity> {
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
-        PlayerEntity playerEntity = Minecraft.getInstance().player;
-        float maxHealth = playerEntity.getMaxHealth();
-        float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
-        matrixStack.scale(scale, scale, scale);
+        if (!firstPerson) {
+            PlayerEntity playerEntity = Minecraft.getInstance().player;
+            float maxHealth = playerEntity.getMaxHealth();
+            float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+            matrixStack.scale(scale, scale, scale);
+        }
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
         LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
