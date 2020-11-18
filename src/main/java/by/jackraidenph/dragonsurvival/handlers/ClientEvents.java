@@ -86,7 +86,7 @@ public class ClientEvents {
                 firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
                 setArmorVisibility(firstPersonArmor, player);
 
-                eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
+//                eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
                 ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
                 firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(chestplate)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
                 ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
@@ -142,6 +142,7 @@ public class ClientEvents {
 
                     String texture = constructTexture(cap.getType(), cap.getLevel());
                     MatrixStack matrixStack = e.getMatrixStack();
+                    matrixStack.push();
                     matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
                             matrixStack,
@@ -161,6 +162,7 @@ public class ClientEvents {
                     thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
                     thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                    matrixStack.pop();
                 }
             });
         }
@@ -234,7 +236,7 @@ public class ClientEvents {
     }
 
     private static void setArmorVisibility(DragonModel2 dragonModel2, PlayerEntity player) {
-        dragonModel2.NeckandHead.showModel = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof ArmorItem;
+        dragonModel2.Head.showModel = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof ArmorItem;
         dragonModel2.main_body.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
 
         dragonModel2.Elbow1.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;

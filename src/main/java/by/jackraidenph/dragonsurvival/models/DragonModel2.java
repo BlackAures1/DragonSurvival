@@ -42,8 +42,8 @@ public class DragonModel2 extends EntityModel<Entity> {
     private final ModelRenderer Tail_0;
     public final ModelRenderer NeckandHead;
     public final ModelRenderer NeckandMain;
-    private final ModelRenderer Neckand_3;
-    private final ModelRenderer Neckand_2;
+    public final ModelRenderer Neckand_3;
+    public final ModelRenderer Neckand_2;
     public final ModelRenderer Neckand_1;
     public final ModelRenderer Head;
     private final ModelRenderer central_horn;
@@ -400,11 +400,9 @@ public class DragonModel2 extends EntityModel<Entity> {
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
         PlayerEntity playerEntity = Minecraft.getInstance().player;
-        if (Head.showModel) {
-            float maxHealth = playerEntity.getMaxHealth();
-            float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
-            matrixStack.scale(scale, scale, scale);
-        }
+        float maxHealth = playerEntity.getMaxHealth();
+        float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+        matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
         LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);
