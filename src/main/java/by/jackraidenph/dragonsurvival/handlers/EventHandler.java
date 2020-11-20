@@ -292,11 +292,11 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void changeEyeHeight(EntityEvent.EyeHeight eyeHeight) {
-        Entity entity = eyeHeight.getEntity();
-        PlayerStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon()) {
-                eyeHeight.setNewHeight(dragonStateHandler.getLevel().maxHeight);
-            }
-        });
+//        Entity entity = eyeHeight.getEntity();
+//        PlayerStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+//            if (dragonStateHandler.isDragon()) {
+//                eyeHeight.setNewHeight(dragonStateHandler.getLevel().maxHeight);
+//            }
+//        });
     }
 }
