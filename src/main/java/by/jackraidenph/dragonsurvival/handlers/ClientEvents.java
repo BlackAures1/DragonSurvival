@@ -143,7 +143,9 @@ public class ClientEvents {
                     String texture = constructTexture(cap.getType(), cap.getLevel());
                     MatrixStack matrixStack = e.getMatrixStack();
                     matrixStack.push();
-                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                    //don't rotate if viewing a screen
+                    if (Minecraft.getInstance().currentScreen == null)
+                        matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
                             matrixStack,
                             e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),

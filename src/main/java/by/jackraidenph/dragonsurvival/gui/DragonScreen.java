@@ -67,7 +67,7 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
             blit(i + 86, j - 26, 144, 198, 30, 40);
         else
             blit(i + 86, j - 26, 173, 198, 30, 40);
-//        drawEntityOnScreen(i + 51, j + 75, 20, (float) (i + 51) - this.oldMouseX, (float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
+        drawEntityOnScreen(i + 51, j + 75, 30, (float) (i + 51) - this.oldMouseX, (float) (j + 75 - 50) - this.oldMouseY, this.minecraft.player);
     }
 
     private static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity) {
@@ -77,7 +77,7 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         RenderSystem.translatef((float) posX, (float) posY, 1050.0F);
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         MatrixStack matrixstack = new MatrixStack();
-        matrixstack.translate(10.0D, -2.0D, 1000.0D);
+        matrixstack.translate(10.0D, -5.0D, 1000.0D);
         matrixstack.scale((float) scale, (float) scale, (float) scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(atanY * 20.0F);
@@ -89,7 +89,7 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         float prevRotationYawHead = livingEntity.prevRotationYawHead;
         float rotationYawHead = livingEntity.rotationYawHead;
         livingEntity.renderYawOffset = 180.0F + atanX * 20.0F;
-        livingEntity.rotationYaw = 180.0F + atanX * 40.0F;
+        livingEntity.rotationYaw = atanX * 40.0F;
         livingEntity.rotationPitch = -atanY * 20.0F;
         livingEntity.rotationYawHead = livingEntity.rotationYaw;
         livingEntity.prevRotationYawHead = livingEntity.rotationYaw;
@@ -98,6 +98,7 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         entityrenderermanager.setCameraOrientation(quaternion1);
         entityrenderermanager.setRenderShadow(false);
         IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        matrixstack.rotate(Vector3f.YN.rotationDegrees(180));
         entityrenderermanager.renderEntityStatic(livingEntity, 0.0D, 0.0D, 0.0D, 0, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
         irendertypebuffer$impl.finish();
         entityrenderermanager.setRenderShadow(true);
