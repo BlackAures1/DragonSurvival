@@ -28,10 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +38,7 @@ public class ClientEvents {
 
     public static float bodyYaw;
     public static float neckYaw;
+    static boolean showingInventory;
 
     public static DragonModel2 thirdPersonModel = new DragonModel2(false);
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
@@ -100,6 +98,15 @@ public class ClientEvents {
         });
     }
 
+    @SubscribeEvent
+    public static void onOpenScreen(GuiOpenEvent openEvent) {
+        if (openEvent.getGui() instanceof InventoryScreen && DragonSurvivalMod.isDragon(Minecraft.getInstance().player)) {
+            openEvent.setCanceled(true);
+            showingInventory = false;
+        }
+
+    }
+
     /**
      * The event stops being fired if jump key is pressed during movement
      */
@@ -108,9 +115,9 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (DragonSurvivalMod.isDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input)) {
-            if (minecraft.currentScreen instanceof InventoryScreen)
-                DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
+        if (DragonSurvivalMod.isDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input) && !showingInventory) {
+            DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
+            showingInventory = true;
         }
     }
 
