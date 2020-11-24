@@ -126,7 +126,8 @@ public class ClientEvents {
         if (clientTickEvent.phase == TickEvent.Phase.START) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (player != null) {
-                if (player.getMotion().x != 0 && player.getMotion().z != 0) {
+                float bodyAndHeadYawDiff = Math.abs(bodyYaw - player.rotationYawHead);
+                if (bodyAndHeadYawDiff > 120 || (player.getMotion().x != 0 && player.getMotion().z != 0)) {
                     bodyYaw = player.rotationYaw;
                     neckYaw = -player.rotationYawHead;
                 }
