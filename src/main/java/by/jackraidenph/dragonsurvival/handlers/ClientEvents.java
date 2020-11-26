@@ -100,7 +100,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onOpenScreen(GuiOpenEvent openEvent) {
-        if (openEvent.getGui() instanceof InventoryScreen && DragonSurvivalMod.isDragon(Minecraft.getInstance().player)) {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (openEvent.getGui() instanceof InventoryScreen && !player.isCreative() && DragonSurvivalMod.isDragon(player)) {
             openEvent.setCanceled(true);
             showingInventory = false;
         }
@@ -115,7 +116,7 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (DragonSurvivalMod.isDragon(minecraft.player) && gameSettings.keyBindInventory.isActiveAndMatches(input) && !showingInventory) {
+        if (DragonSurvivalMod.isDragon(minecraft.player) && !minecraft.player.isCreative() && gameSettings.keyBindInventory.isActiveAndMatches(input) && !showingInventory) {
             DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
             showingInventory = true;
         }
