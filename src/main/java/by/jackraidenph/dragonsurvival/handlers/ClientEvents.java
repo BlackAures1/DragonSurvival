@@ -125,13 +125,21 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent clientTickEvent) {
         if (clientTickEvent.phase == TickEvent.Phase.START) {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPlayerEntity player = minecraft.player;
             if (player != null) {
-                float bodyAndHeadYawDiff = Math.abs(bodyYaw - player.rotationYawHead);
-                if (bodyAndHeadYawDiff > 120 || (player.getMotion().x != 0 && player.getMotion().z != 0)) {
+                float bodyAndHeadYawDiff = bodyYaw - player.rotationYawHead;
+                if (minecraft.gameSettings.thirdPersonView == 0) {
+                    if (Math.abs(bodyAndHeadYawDiff) > 170) {
+                        bodyYaw -= Math.signum(bodyAndHeadYawDiff) * 2;
+                    }
+                }
+                if ((player.getMotion().x != 0 && player.getMotion().z != 0)) {
                     bodyYaw = player.rotationYaw;
                     neckYaw = -player.rotationYawHead;
                 }
+
+
             }
         }
     }
