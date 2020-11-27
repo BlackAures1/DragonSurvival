@@ -67,15 +67,14 @@ public class ClientEvents {
                 float playerYaw = player.getYaw(partialTicks);
                 float playerPitch = player.getPitch(partialTicks);
                 firstPersonModel.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                String texture = constructTexture(playerStateHandler.getType(), playerStateHandler.getLevel());
+                ResourceLocation texture = constructTexture(playerStateHandler.getType(), playerStateHandler.getLevel());
                 eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 eventMatrixStack.translate(0, -2, -1);
-                ResourceLocation resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, texture);
                 IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-                IVertexBuilder buffer = buffers.getBuffer(RenderType.getEntityTranslucentCull(resourceLocation));
+                IVertexBuilder buffer = buffers.getBuffer(RenderType.getEntityTranslucentCull(texture));
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
                 firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
@@ -157,7 +156,7 @@ public class ClientEvents {
                             MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount),
                             player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
 
-                    String texture = constructTexture(cap.getType(), cap.getLevel());
+                    ResourceLocation texture = constructTexture(cap.getType(), cap.getLevel());
                     MatrixStack matrixStack = e.getMatrixStack();
                     matrixStack.push();
                     //don't rotate if viewing a screen
@@ -165,7 +164,7 @@ public class ClientEvents {
                         matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
                     thirdPersonModel.render(
                             matrixStack,
-                            e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, texture))),
+                            e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
                             e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f),
                             partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
 
@@ -187,32 +186,47 @@ public class ClientEvents {
         }
     }
 
-    private static String constructTexture(DragonType dragonType, DragonLevel stage) {
-        String texture = "textures/dragon/";
-        switch (dragonType) {
-            case SEA:
-                texture += "sea";
-                break;
-            case CAVE:
-                texture += "cave";
-                break;
-            case FOREST:
-                texture += "forest";
-                break;
+    private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
+        if (ClientModEvents.customSkinPresence) {
+            switch (stage) {
+                case BABY:
+                    return ClientModEvents.customNewbornSkin;
+                case YOUNG:
+                    return ClientModEvents.customYoungSkin;
+                case ADULT:
+                    return ClientModEvents.customAdultSkin;
+            }
+        } else {
+            String texture;
+            texture = "textures/dragon/";
+            switch (dragonType) {
+                case SEA:
+                    texture += "sea";
+                    break;
+                case CAVE:
+                    texture += "cave";
+                    break;
+                case FOREST:
+                    texture += "forest";
+                    break;
+            }
+
+            switch (stage) {
+                case BABY:
+                    texture += "_newborn";
+                    break;
+                case YOUNG:
+                    texture += "_young";
+                    break;
+                case ADULT:
+                    texture += "_adult";
+                    break;
+            }
+            texture += ".png";
+
+            return new ResourceLocation(DragonSurvivalMod.MODID, texture);
         }
-        switch (stage) {
-            case BABY:
-                texture += "_newborn";
-                break;
-            case YOUNG:
-                texture += "_young";
-                break;
-            case ADULT:
-                texture += "_adult";
-                break;
-        }
-        texture += ".png";
-        return texture;
+        return null;
     }
 
     private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
