@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,6 +26,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
@@ -35,6 +40,8 @@ public class ClientModEvents {
     public static ResourceLocation customYoungSkin;
     public static ResourceLocation customAdultSkin;
 
+    public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
+
     @SubscribeEvent
     public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
         event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
@@ -45,7 +52,7 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void setupClient(final FMLClientSetupEvent event) throws IOException {
+    public static void setupClient(final FMLClientSetupEvent event) {
         RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar, RenderType.getCutout());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
@@ -53,16 +60,32 @@ public class ClientModEvents {
 
         ScreenManager.registerFactory(Containers.nestContainer, NestScreen::new);
         ScreenManager.registerFactory(Containers.dragonContainer, DragonScreen::new);
-        //TODO download other textures
-        Minecraft minecraft = event.getMinecraftSupplier().get();
-        customNewbornSkin = loadCustomSkin(minecraft, "newborn");
-        customYoungSkin = loadCustomSkin(minecraft, "young");
-        customAdultSkin = loadCustomSkin(minecraft, "adult");
-        customSkinPresence = customAdultSkin != null && customYoungSkin != null && customNewbornSkin != null;
-        if (customSkinPresence)
-            DragonSurvivalMod.LOGGER.info("Detected and loaded custom skin set");
-        else
-            DragonSurvivalMod.LOGGER.info("No custom skin set loaded");
+    }
+
+    /**
+     * Loads a custom image for skin from the repository. The image name must be [player's UUID]_[stage].png
+     */
+    public static ResourceLocation loadCustomSkin(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
+        UUID uuid = playerEntity.getUniqueID();
+        URL url;
+        switch (dragonStage) {
+            case BABY:
+                url = new URL(SKINS + uuid + "_newborn.png");
+                break;
+            case YOUNG:
+                url = new URL(SKINS + uuid + "_young.png");
+                break;
+            case ADULT:
+                url = new URL(SKINS + uuid + "_adult.png");
+                break;
+            default:
+                url = null;
+        }
+        InputStream inputStream = url.openConnection().getInputStream();
+        NativeImage customTexture = NativeImage.read(inputStream);
+        ResourceLocation resourceLocation;
+        Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
+        return resourceLocation;
     }
 
     /**
@@ -71,22 +94,23 @@ public class ClientModEvents {
      * @param dragonStage <b>newborn</b>, <b>young</b> or <b>adult</b>
      * @return usable resourceLocation of the image
      */
+    @SuppressWarnings("unused")
     private static ResourceLocation loadCustomSkin(Minecraft minecraft, String dragonStage) {
         GameProfile gameProfile = minecraft.getSession().getProfile();
         try {
             ResourceLocation skinLocation;
             String name = gameProfile.getName();
             String uuid = gameProfile.getId().toString();
-            NativeImage customNewbornTexture = null;
+            NativeImage customTexture = null;
             File fileNameA = new File(minecraft.gameDir, name + "_" + dragonStage + ".png");
             File fileNameB = new File(minecraft.gameDir, uuid + "_" + dragonStage + ".png");
             if (fileNameA.exists())
-                customNewbornTexture = NativeImage.read(new FileInputStream(fileNameA));
+                customTexture = NativeImage.read(new FileInputStream(fileNameA));
             else if (fileNameB.exists()) {
-                customNewbornTexture = NativeImage.read(new FileInputStream(fileNameB));
+                customTexture = NativeImage.read(new FileInputStream(fileNameB));
             }
-            if (customNewbornTexture != null) {
-                minecraft.getTextureManager().loadTexture(skinLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage), new DynamicTexture(customNewbornTexture));
+            if (customTexture != null) {
+                minecraft.getTextureManager().loadTexture(skinLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage), new DynamicTexture(customTexture));
                 return skinLocation;
             }
         } catch (IOException e) {

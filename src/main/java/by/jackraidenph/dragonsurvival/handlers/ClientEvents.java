@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.GameSettings;
@@ -33,13 +34,19 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
 
     public static float bodyYaw;
     public static float neckYaw;
     static boolean showingInventory;
-
+    static HashMap<UUID, Boolean> warnings = new HashMap<>();
+    static HashMultimap<UUID, ResourceLocation> skinCache = HashMultimap.create(1, 3);
     public static DragonModel2 thirdPersonModel = new DragonModel2(false);
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
     public static DragonModel2 thirdPersonArmor = new DragonModel2(false);
@@ -67,7 +74,7 @@ public class ClientEvents {
                 float playerYaw = player.getYaw(partialTicks);
                 float playerPitch = player.getPitch(partialTicks);
                 firstPersonModel.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                ResourceLocation texture = constructTexture(playerStateHandler.getType(), playerStateHandler.getLevel());
+                ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
                 eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
@@ -156,7 +163,8 @@ public class ClientEvents {
                             MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount),
                             player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
 
-                    ResourceLocation texture = constructTexture(cap.getType(), cap.getLevel());
+                    DragonLevel dragonStage = cap.getLevel();
+                    ResourceLocation texture = getSkin(player, cap, dragonStage);
                     MatrixStack matrixStack = e.getMatrixStack();
                     matrixStack.push();
                     //don't rotate if viewing a screen
@@ -186,24 +194,35 @@ public class ClientEvents {
         }
     }
 
-    private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
-        if (ClientModEvents.customSkinPresence) {
-            switch (stage) {
-                case BABY:
-                    return ClientModEvents.customNewbornSkin;
-                case YOUNG:
-                    return ClientModEvents.customYoungSkin;
-                case ADULT:
-                    return ClientModEvents.customAdultSkin;
+    private static ResourceLocation getSkin(PlayerEntity player, by.jackraidenph.dragonsurvival.capability.DragonStateHandler cap, DragonLevel dragonStage) {
+        ResourceLocation texture;
+        Optional<ResourceLocation> optionalResourceLocation = skinCache.get(player.getUniqueID()).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + ".png")).findFirst();
+        if (optionalResourceLocation.isPresent())
+            texture = optionalResourceLocation.get();
+        else {
+            try {
+                texture = ClientModEvents.loadCustomSkin(player, dragonStage);
+                skinCache.put(player.getUniqueID(), texture);
+            } catch (IOException ioException) {
+                texture = constructTexture(cap.getType(), dragonStage);
+                if (warnings.get(player.getUniqueID()) == null) {
+                    DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", player.getUniqueID());
+                    warnings.put(player.getUniqueID(), true);
+                }
             }
-        } else {
-            String texture;
-            texture = "textures/dragon/";
-            switch (dragonType) {
-                case SEA:
-                    texture += "sea";
-                    break;
-                case CAVE:
+        }
+        return texture;
+    }
+
+    private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
+
+        String texture;
+        texture = "textures/dragon/";
+        switch (dragonType) {
+            case SEA:
+                texture += "sea";
+                break;
+            case CAVE:
                     texture += "cave";
                     break;
                 case FOREST:
@@ -225,8 +244,7 @@ public class ClientEvents {
             texture += ".png";
 
             return new ResourceLocation(DragonSurvivalMod.MODID, texture);
-        }
-        return null;
+
     }
 
     private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
