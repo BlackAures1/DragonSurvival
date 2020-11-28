@@ -53,7 +53,7 @@ public class ClientModEvents {
 
         ScreenManager.registerFactory(Containers.nestContainer, NestScreen::new);
         ScreenManager.registerFactory(Containers.dragonContainer, DragonScreen::new);
-
+        //TODO download other textures
         Minecraft minecraft = event.getMinecraftSupplier().get();
         customNewbornSkin = loadCustomSkin(minecraft, "newborn");
         customYoungSkin = loadCustomSkin(minecraft, "young");
