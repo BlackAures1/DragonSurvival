@@ -1,25 +1,28 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.ClientProxy;
+import by.jackraidenph.dragonsurvival.ServerProxy;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
 
-    private boolean isDragon;
-    private DragonType type;
-    private int level;
+    public boolean isDragon;
+    public DragonType type;
+    public DragonLevel level;
+    public boolean isHiding;
 
     public PacketSyncCapability() {
     }
 
-    public PacketSyncCapability(boolean isDragon, DragonType type, int level) {
+    public PacketSyncCapability(boolean isDragon, boolean isHiding, DragonType type, DragonLevel level) {
         this.isDragon = isDragon;
+        this.isHiding = isHiding;
         this.type = type;
         this.level = level;
     }
@@ -27,31 +30,26 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
     @Override
     public void encode(PacketSyncCapability m, PacketBuffer b) {
         b.writeBoolean(m.isDragon);
+        b.writeBoolean(m.isHiding);
         b.writeEnumValue(m.type);
-        b.writeInt(m.level);
+        b.writeEnumValue(m.level);
     }
 
     @Override
     public PacketSyncCapability decode(PacketBuffer b) {
         return new PacketSyncCapability(
                 b.readBoolean(),
+                b.readBoolean(),
                 b.readEnumValue(DragonType.class),
-                b.readInt());
+                b.readEnumValue(DragonLevel.class));
     }
 
     @Override
-    public void handle(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier) {
-        PlayerEntity player = supplier.get().getDirection().getReceptionSide().isServer() ? supplier.get().getSender() : Minecraft.getInstance().player;
-
-        if (player == null)
-            return;
-        
-        PlayerStateProvider.getCap(player).ifPresent(cap -> {
-            cap.setIsDragon(m.isDragon);
-            cap.setType(m.type);
-            cap.setLevel(m.level);
-        });
-
+    public void handle(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
+        if (supplier.get().getDirection() == NetworkDirection.PLAY_TO_SERVER)
+            new ServerProxy().syncCapability(packetSyncCapability, supplier);
+        else
+            new ClientProxy().syncCapability(packetSyncCapability, supplier);
         supplier.get().setPacketHandled(true);
     }
 }

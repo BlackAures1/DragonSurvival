@@ -6,13 +6,13 @@ import java.util.concurrent.Callable;
 
 public class PlayerStateCapability {
     public static void register() {
-        CapabilityManager.INSTANCE.register(PlayerStateHandler.class, new CapabilityStorage(), new Factory());
+        CapabilityManager.INSTANCE.register(DragonStateHandler.class, new CapabilityStorage(), new Factory());
     }
 
-    private static class Factory implements Callable<PlayerStateHandler> {
+    private static class Factory implements Callable<DragonStateHandler> {
         @Override
-        public PlayerStateHandler call() {
-            return new PlayerStateHandler();
+        public DragonStateHandler call() {
+            return new DragonStateHandler();
         }
     }
 }

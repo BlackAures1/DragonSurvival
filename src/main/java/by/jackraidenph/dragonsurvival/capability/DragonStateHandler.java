@@ -3,25 +3,38 @@ package by.jackraidenph.dragonsurvival.capability;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Optional;
 
 
-public class PlayerStateHandler {
+public class DragonStateHandler {
     private boolean isDragon;
-    private DragonType type = DragonType.SEA;
-    private int level;
-    private Optional<DragonMovementData> data = Optional.ofNullable(null);
+    private boolean isHiding;
+    private DragonType type = DragonType.NONE;
+    private DragonLevel level = DragonLevel.BABY;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Optional<DragonMovementData> data = Optional.empty();
 
-    public boolean getIsDragon() {
+    public boolean isDragon() {
         return this.isDragon;
     }
 
     public void setIsDragon(boolean isDragon) {
         this.isDragon = isDragon;
+    }
+
+    public boolean isHiding() {
+        return isHiding;
+    }
+
+    public void setIsHiding(boolean hiding) {
+        isHiding = hiding;
     }
 
     public void setMovementData(DragonMovementData data, boolean doSync) {
@@ -30,13 +43,23 @@ public class PlayerStateHandler {
         this.data = Optional.of(data);
     }
 
-    public int getLevel() {
+    public DragonLevel getLevel() {
         return this.level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(DragonLevel level) {
         this.level = level;
     }
+
+    /**
+     * Sets the level and initial health
+     */
+    public void setLevel(DragonLevel level, PlayerEntity playerEntity) {
+        setLevel(level);
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(level.initialHealth);
+        playerEntity.heal(playerEntity.getMaxHealth());
+    }
+
 
     public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos) {
         this.data.ifPresent(dat -> {
@@ -56,11 +79,16 @@ public class PlayerStateHandler {
         this.type = type;
     }
 
-    public void syncData(boolean isServer) {
+    /**
+     * Synchronizes dragon capability data
+     *
+     * @param isServer is server side currently?
+     */
+    public void syncCapabilityData(boolean isServer) {
         if (isServer) {
-            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.getType(), this.level));
+            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         } else {
-            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(this.isDragon, this.getType(), this.level));
+            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         }
     }
 

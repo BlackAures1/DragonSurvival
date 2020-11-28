@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "dragonsurvival:block/dragon_nest"
+  }
+}

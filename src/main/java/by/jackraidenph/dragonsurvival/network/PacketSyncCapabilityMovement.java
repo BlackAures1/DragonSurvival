@@ -1,22 +1,23 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.capability.PlayerStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import by.jackraidenph.dragonsurvival.ClientProxy;
+import by.jackraidenph.dragonsurvival.ServerProxy;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabilityMovement> {
 
-    double bodyYaw;
-    double headYaw;
-    double headPitch;
-    Vec3d headPos;
-    Vec3d tailPos;
+    public double bodyYaw;
+    public double headYaw;
+    public double headPitch;
+    public Vec3d headPos;
+    public Vec3d tailPos;
 
     public PacketSyncCapabilityMovement() {
     }
@@ -33,7 +34,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         this.tailPos = tailPos;
     }
 
-    public PacketSyncCapabilityMovement(PlayerStateHandler.DragonMovementData data) {
+    public PacketSyncCapabilityMovement(DragonStateHandler.DragonMovementData data) {
         this.bodyYaw = data.bodyYaw;
         this.headYaw = data.headYaw;
         this.headPitch = data.headPitch;
@@ -70,17 +71,13 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         double x = buffer.readDouble();
         double y = buffer.readDouble();
         double z = buffer.readDouble();
-        Vec3d vec = new Vec3d(x, y, z);
-        return vec;
+        return new Vec3d(x, y, z);
     }
 
     @Override
     public void handle(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
-        PlayerEntity player = supplier.get().getDirection().getReceptionSide().isServer() ? supplier.get().getSender() : Minecraft.getInstance().player;
-
-        PlayerStateProvider.getCap(player).ifPresent(cap ->
-                cap.setMovementData(new PlayerStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
-
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new ClientProxy().syncMovement(m, supplier));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> new ServerProxy().syncMovement(m, supplier));
         supplier.get().setPacketHandled(true);
     }
 }
