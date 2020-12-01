@@ -3,14 +3,17 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
-import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.nest.NestEntity;
+import by.jackraidenph.dragonsurvival.network.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.DistExecutor;
@@ -69,5 +72,25 @@ public class ClientProxy implements Proxy {
                 }
             }
         };
+    }
+
+    @Override
+    public DistExecutor.SafeRunnable syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
+        PlayerEntity player = Minecraft.getInstance().player;
+        ClientWorld world = Minecraft.getInstance().world;
+        TileEntity entity = world.getTileEntity(synchronizeNest.pos);
+        if (entity instanceof NestEntity) {
+            NestEntity nestEntity = (NestEntity) entity;
+            nestEntity.health = synchronizeNest.health;
+            nestEntity.damageCooldown = synchronizeNest.cooldown;
+            nestEntity.markDirty();
+            if (nestEntity.health <= 0) {
+                world.playSound(player, synchronizeNest.pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1, 1);
+            } else {
+                world.playSound(player, synchronizeNest.pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
+            }
+        }
+        contextSupplier.get().setPacketHandled(true);
+        return null;
     }
 }
