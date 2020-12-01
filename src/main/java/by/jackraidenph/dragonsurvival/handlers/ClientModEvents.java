@@ -90,6 +90,32 @@ public class ClientModEvents {
     }
 
     /**
+     * Loads a custom image for skin based on profile name
+     */
+    public static ResourceLocation loadCustomSkinForName(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
+        String name = playerEntity.getGameProfile().getName();
+        URL url;
+        switch (dragonStage) {
+            case BABY:
+                url = new URL(SKINS + name + "_newborn.png");
+                break;
+            case YOUNG:
+                url = new URL(SKINS + name + "_young.png");
+                break;
+            case ADULT:
+                url = new URL(SKINS + name + "_adult.png");
+                break;
+            default:
+                url = null;
+        }
+        InputStream inputStream = url.openConnection().getInputStream();
+        NativeImage customTexture = NativeImage.read(inputStream);
+        ResourceLocation resourceLocation;
+        Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
+        return resourceLocation;
+    }
+
+    /**
      * Loads a custom image for skin from the root directory. The image name must be [player's name]_[stage].png or [player's UUID]_[stage].png
      *
      * @param dragonStage <b>newborn</b>, <b>young</b> or <b>adult</b>
