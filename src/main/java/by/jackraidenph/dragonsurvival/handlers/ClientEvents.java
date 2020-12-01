@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -153,47 +152,47 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRender(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> e) {
-        if (e.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) e.getEntity();
-            PlayerStateProvider.getCap(player).ifPresent(cap -> {
-                if (cap.isDragon()) {
-                    e.setCanceled(true);
+    public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
-                    float partialRenderTick = e.getPartialRenderTick();
-                    thirdPersonModel.setRotationAngles(player, player.limbSwing,
-                            MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount),
-                            player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
+        PlayerEntity player = renderPlayerEvent.getPlayer();
+        PlayerStateProvider.getCap(player).ifPresent(cap -> {
+            if (cap.isDragon()) {
+                renderPlayerEvent.setCanceled(true);
 
-                    DragonLevel dragonStage = cap.getLevel();
-                    ResourceLocation texture = getSkin(player, cap, dragonStage);
-                    MatrixStack matrixStack = e.getMatrixStack();
-                    matrixStack.push();
-                    //don't rotate if viewing a screen
-                    if (Minecraft.getInstance().currentScreen == null)
-                        matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
-                    thirdPersonModel.render(
-                            matrixStack,
-                            e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
-                            e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f),
-                            partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
+                thirdPersonModel.setRotationAngles(player, player.limbSwing,
+                        MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount),
+                        player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
 
-                    thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
-                    thirdPersonArmor.setRotationAngles(player, player.limbSwing, MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount), player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
+                DragonLevel dragonStage = cap.getLevel();
+                ResourceLocation texture = getSkin(player, cap, dragonStage);
+                MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
+                matrixStack.push();
+                //don't rotate if viewing a screen
+                if (Minecraft.getInstance().currentScreen == null)
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                thirdPersonModel.render(
+                        matrixStack,
+                        renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
+                        renderPlayerEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f),
+                        partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
 
-                    setArmorVisibility(thirdPersonArmor, player);
-                    String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
-                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
-                    String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
-                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
-                    String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
-                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
-                    String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
-                    thirdPersonArmor.render(matrixStack, e.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), e.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
-                    matrixStack.pop();
-                }
-            });
-        }
+                thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
+                thirdPersonArmor.setRotationAngles(player, player.limbSwing, MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount), player.ticksExisted, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick));
+
+                setArmorVisibility(thirdPersonArmor, player);
+                String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), renderPlayerEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
+                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), renderPlayerEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
+                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), renderPlayerEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
+                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), renderPlayerEvent.getLight(), LivingRenderer.getPackedOverlay(player, 0.0f), partialRenderTick, player.getYaw(partialRenderTick), player.getPitch(partialRenderTick), 1.0f);
+                matrixStack.pop();
+            }
+        });
+
     }
 
     private static ResourceLocation getSkin(PlayerEntity player, by.jackraidenph.dragonsurvival.capability.DragonStateHandler cap, DragonLevel dragonStage) {
@@ -251,27 +250,27 @@ public class ClientEvents {
                 texture += "sea";
                 break;
             case CAVE:
-                    texture += "cave";
-                    break;
-                case FOREST:
-                    texture += "forest";
-                    break;
-            }
+                texture += "cave";
+                break;
+            case FOREST:
+                texture += "forest";
+                break;
+        }
 
-            switch (stage) {
-                case BABY:
-                    texture += "_newborn";
-                    break;
-                case YOUNG:
-                    texture += "_young";
-                    break;
-                case ADULT:
-                    texture += "_adult";
-                    break;
-            }
-            texture += ".png";
+        switch (stage) {
+            case BABY:
+                texture += "_newborn";
+                break;
+            case YOUNG:
+                texture += "_young";
+                break;
+            case ADULT:
+                texture += "_adult";
+                break;
+        }
+        texture += ".png";
 
-            return new ResourceLocation(DragonSurvivalMod.MODID, texture);
+        return new ResourceLocation(DragonSurvivalMod.MODID, texture);
 
     }
 
