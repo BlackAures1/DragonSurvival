@@ -122,7 +122,7 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         GameSettings gameSettings = minecraft.gameSettings;
         InputMappings.Input input = InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (DragonSurvivalMod.isDragon(minecraft.player) && !minecraft.player.isCreative() && gameSettings.keyBindInventory.isActiveAndMatches(input) && !showingInventory) {
+        if (minecraft.currentScreen == null && DragonSurvivalMod.isDragon(minecraft.player) && !minecraft.player.isCreative() && gameSettings.keyBindInventory.isActiveAndMatches(input) && !showingInventory) {
             DragonSurvivalMod.INSTANCE.sendToServer(new OpenDragonInventory());
             showingInventory = true;
         }
