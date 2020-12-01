@@ -198,7 +198,8 @@ public class ClientEvents {
 
     private static ResourceLocation getSkin(PlayerEntity player, by.jackraidenph.dragonsurvival.capability.DragonStateHandler cap, DragonLevel dragonStage) {
         ResourceLocation texture;
-        Optional<ResourceLocation> optionalResourceLocation = skinCache.get(player.getUniqueID()).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
+        UUID playerUniqueID = player.getUniqueID();
+        Optional<ResourceLocation> optionalResourceLocation = skinCache.get(playerUniqueID).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
         if (optionalResourceLocation.isPresent()) {
             texture = optionalResourceLocation.get();
             return texture;
@@ -210,9 +211,14 @@ public class ClientEvents {
                     return texture;
                 }
             } else {
+                Optional<ResourceLocation> defSkin = skinCache.get(playerUniqueID).stream().filter(location -> location.toString().endsWith(dragonStage.name + ".png")).findFirst();
+                if (defSkin.isPresent()) {
+                    texture = defSkin.get();
+                    return texture;
+                }
                 try {
                     texture = ClientModEvents.loadCustomSkin(player, dragonStage);
-                    skinCache.put(player.getUniqueID(), texture);
+                    skinCache.put(playerUniqueID, texture);
                 } catch (IOException ioException) {
                     try {
                         texture = ClientModEvents.loadCustomSkinForName(player, dragonStage);
@@ -222,12 +228,13 @@ public class ClientEvents {
                             warningsForName.put(player.getGameProfile().getName(), true);
                         }
                     } catch (IOException e) {
-                        if (warnings.get(player.getUniqueID()) == null) {
-                            DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", player.getUniqueID());
-                            warnings.put(player.getUniqueID(), true);
+                        if (warnings.get(playerUniqueID) == null) {
+                            DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", playerUniqueID);
+                            warnings.put(playerUniqueID, true);
                         }
                     } finally {
                         texture = constructTexture(cap.getType(), dragonStage);
+                        skinCache.put(playerUniqueID, texture);
                     }
                 }
             }
