@@ -113,9 +113,13 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
-        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->
-                cap.getMovementData().ifPresent(data ->
-                        DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
+        PlayerEntity player = e.getPlayer();
+        PlayerStateProvider.getCap(player).ifPresent(cap -> {
+            cap.syncCapabilityData(!player.world.isRemote);
+            cap.syncMovement(!player.world.isRemote);
+//            cap.getMovementData().ifPresent(data ->
+//                    DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data)));
+        });
     }
 
     @SubscribeEvent

@@ -15,7 +15,7 @@ public class ServerProxy implements Proxy {
         return () -> {
             ServerPlayerEntity playerEntity = supplier.get().getSender();
             if (playerEntity != null) {
-                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos), false));
+                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos), true));
             }
         };
     }
