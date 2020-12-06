@@ -126,7 +126,7 @@ public class EventHandler {
     public static void onLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
         PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->
                 cap.getMovementData().ifPresent(data ->
-                        DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
     }
 
     @SubscribeEvent

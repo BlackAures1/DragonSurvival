@@ -40,7 +40,7 @@ public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
     public static final Logger LOGGER = LogManager.getLogger();
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
@@ -55,7 +55,7 @@ public class DragonSurvivalMod {
     }
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
-        INSTANCE.registerMessage(nextPacketId++, clazz, message::encode, message::decode, message::handle);
+        CHANNEL.registerMessage(nextPacketId++, clazz, message::encode, message::decode, message::handle);
     }
 
     public static boolean isDragon(Entity entity) {
