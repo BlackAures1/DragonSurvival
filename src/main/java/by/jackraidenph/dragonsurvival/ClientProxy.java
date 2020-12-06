@@ -16,7 +16,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -24,15 +23,13 @@ import java.util.function.Supplier;
 public class ClientProxy implements Proxy {
 
     @Override
-    public DistExecutor.SafeRunnable syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            if (Minecraft.getInstance().player != null)
-                PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
-        };
+    public void syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
+        if (Minecraft.getInstance().player != null)
+            PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
+    public void syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
         if (Minecraft.getInstance().player != null) {
             PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
                 cap.setIsDragon(packetSyncCapability.isDragon);
@@ -40,42 +37,39 @@ public class ClientProxy implements Proxy {
                 cap.setLevel(packetSyncCapability.level);
             });
         }
-        return null;
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            World world = Minecraft.getInstance().world;
-            if (world != null) {
-                ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntityByID(m.xp));
-                MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntityByID(m.entity);
-                if (xpOrb != null && entity != null) {
-                    entity.size += xpOrb.getXpValue() / 100.0F;
-                    entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
-                    world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
-                    xpOrb.remove();
-                }
+    public void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
+
+        World world = Minecraft.getInstance().world;
+        if (world != null) {
+            ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntityByID(m.xp));
+            MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntityByID(m.entity);
+            if (xpOrb != null && entity != null) {
+                entity.size += xpOrb.getXpValue() / 100.0F;
+                entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
+                world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
+                xpOrb.remove();
             }
-        };
+        }
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            World world = Minecraft.getInstance().world;
-            if (world != null) {
-                Entity entity = world.getEntityByID(m.id);
-                if (entity != null) {
-                    ((MagicalPredatorEntity) entity).size = m.size;
-                    ((MagicalPredatorEntity) entity).type = m.type;
-                }
+    public void syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
+
+        World world = Minecraft.getInstance().world;
+        if (world != null) {
+            Entity entity = world.getEntityByID(m.id);
+            if (entity != null) {
+                ((MagicalPredatorEntity) entity).size = m.size;
+                ((MagicalPredatorEntity) entity).type = m.type;
             }
-        };
+        }
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
+    public void syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
         PlayerEntity player = Minecraft.getInstance().player;
         ClientWorld world = Minecraft.getInstance().world;
         TileEntity entity = world.getTileEntity(synchronizeNest.pos);
@@ -91,6 +85,5 @@ public class ClientProxy implements Proxy {
             }
         }
         contextSupplier.get().setPacketHandled(true);
-        return null;
     }
 }
