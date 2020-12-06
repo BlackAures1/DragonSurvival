@@ -42,8 +42,6 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             tag.putString("type", instance.getType().toString());
             tag.putInt("level", instance.getLevel().ordinal());
         }
-        instance.syncCapabilityData(true);
-        instance.syncMovement(true);
         return tag;
     }
 
@@ -64,7 +62,5 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             instance.setType(DragonType.valueOf(tag.getString("type")));
             instance.setLevel(DragonLevel.values()[tag.getInt("level")]);
         }
-        instance.syncCapabilityData(true);
-        instance.syncMovement(true);
     }
 }

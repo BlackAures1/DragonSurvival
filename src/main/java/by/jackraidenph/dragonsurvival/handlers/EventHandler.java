@@ -5,8 +5,8 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SynhronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -15,7 +15,6 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
@@ -25,7 +24,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -117,9 +115,10 @@ public class EventHandler {
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         PlayerEntity player = e.getPlayer();
         PlayerStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new PacketSyncCapability(cap.isDragon(), cap.isHiding(), cap.getType(), cap.getLevel()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynhronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon()));
+//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new PacketSyncCapability(cap.isDragon(), cap.isHiding(), cap.getType(), cap.getLevel()));
 //            cap.syncCapabilityData(!player.world.isRemote);
-            cap.syncMovement(!player.world.isRemote);
+//            cap.syncMovement(!player.world.isRemote);
 //            cap.getMovementData().ifPresent(data ->
 //                    DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data)));
         });
@@ -297,13 +296,4 @@ public class EventHandler {
         });
     }
 
-    @SubscribeEvent
-    public static void changeEyeHeight(EntityEvent.EyeHeight eyeHeight) {
-//        Entity entity = eyeHeight.getEntity();
-//        PlayerStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-//            if (dragonStateHandler.isDragon()) {
-//                eyeHeight.setNewHeight(dragonStateHandler.getLevel().maxHeight);
-//            }
-//        });
-    }
 }

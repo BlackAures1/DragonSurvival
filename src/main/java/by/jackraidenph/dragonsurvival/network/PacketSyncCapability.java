@@ -8,6 +8,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@Deprecated
 public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
 
     public boolean isDragon;
@@ -44,8 +45,6 @@ public class PacketSyncCapability implements IMessage<PacketSyncCapability> {
 
     @Override
     public void handle(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
-        System.out.println(supplier.get().getDirection());
-        System.out.println(supplier.get().getSender());
         new ClientProxy().syncCapability(packetSyncCapability, supplier);
         supplier.get().setPacketHandled(true);
     }

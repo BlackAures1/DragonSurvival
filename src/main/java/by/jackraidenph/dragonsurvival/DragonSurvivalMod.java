@@ -92,6 +92,7 @@ public class DragonSurvivalMod {
             boolean isDragon = packetBuffer.readBoolean();
             return new SynhronizeDragonCap(id, hiding, type, level, isDragon);
         }, (synhronizeDragonCap, contextSupplier) -> {
+            //TODO proxy
             World world = Minecraft.getInstance().player.world;
             PlayerEntity playerEntity = (PlayerEntity) world.getEntityByID(synhronizeDragonCap.playerId);
             PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
