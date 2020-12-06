@@ -6,7 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.SynhronizeDragonCap;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -115,7 +115,7 @@ public class EventHandler {
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         PlayerEntity player = e.getPlayer();
         PlayerStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynhronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon()));
 //            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new PacketSyncCapability(cap.isDragon(), cap.isHiding(), cap.getType(), cap.getLevel()));
 //            cap.syncCapabilityData(!player.world.isRemote);
 //            cap.syncMovement(!player.world.isRemote);

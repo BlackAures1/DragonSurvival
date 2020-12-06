@@ -77,12 +77,12 @@ public class DragonSurvivalMod {
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
 
-        CHANNEL.registerMessage(10, SynhronizeDragonCap.class, (synhronizeDragonCap, packetBuffer) -> {
-            packetBuffer.writeInt(synhronizeDragonCap.playerId);
-            packetBuffer.writeByte(synhronizeDragonCap.dragonLevel.ordinal());
-            packetBuffer.writeByte(synhronizeDragonCap.dragonType.ordinal());
-            packetBuffer.writeBoolean(synhronizeDragonCap.hiding);
-            packetBuffer.writeBoolean(synhronizeDragonCap.isDragon);
+        CHANNEL.registerMessage(10, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
+            packetBuffer.writeInt(synchronizeDragonCap.playerId);
+            packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
+            packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
+            packetBuffer.writeBoolean(synchronizeDragonCap.hiding);
+            packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
 
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
@@ -90,16 +90,16 @@ public class DragonSurvivalMod {
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
-            return new SynhronizeDragonCap(id, hiding, type, level, isDragon);
-        }, (synhronizeDragonCap, contextSupplier) -> {
+            return new SynchronizeDragonCap(id, hiding, type, level, isDragon);
+        }, (synchronizeDragonCap, contextSupplier) -> {
             //TODO proxy
             World world = Minecraft.getInstance().player.world;
-            PlayerEntity playerEntity = (PlayerEntity) world.getEntityByID(synhronizeDragonCap.playerId);
+            PlayerEntity playerEntity = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
             PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-                dragonStateHandler.setIsDragon(synhronizeDragonCap.isDragon);
-                dragonStateHandler.setLevel(synhronizeDragonCap.dragonLevel);
-                dragonStateHandler.setType(synhronizeDragonCap.dragonType);
-                dragonStateHandler.setIsHiding(synhronizeDragonCap.hiding);
+                dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
+                dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
+                dragonStateHandler.setType(synchronizeDragonCap.dragonType);
+                dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
             });
 
         });
