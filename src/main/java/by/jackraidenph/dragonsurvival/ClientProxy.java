@@ -30,6 +30,8 @@ public class ClientProxy implements Proxy {
 
     @Override
     public void syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
+//        System.out.println(supplier.get().getSender());
+//        System.out.println(Minecraft.getInstance().player);
         if (Minecraft.getInstance().player != null) {
             PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
                 cap.setIsDragon(packetSyncCapability.isDragon);

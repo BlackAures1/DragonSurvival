@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
@@ -14,6 +15,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
@@ -115,7 +117,8 @@ public class EventHandler {
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         PlayerEntity player = e.getPlayer();
         PlayerStateProvider.getCap(player).ifPresent(cap -> {
-            cap.syncCapabilityData(!player.world.isRemote);
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new PacketSyncCapability(cap.isDragon(), cap.isHiding(), cap.getType(), cap.getLevel()));
+//            cap.syncCapabilityData(!player.world.isRemote);
             cap.syncMovement(!player.world.isRemote);
 //            cap.getMovementData().ifPresent(data ->
 //                    DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data)));

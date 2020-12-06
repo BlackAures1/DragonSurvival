@@ -14,11 +14,14 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -73,6 +76,32 @@ public class DragonSurvivalMod {
         register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
+
+        CHANNEL.registerMessage(10, SynhronizeDragonCap.class, (synhronizeDragonCap, packetBuffer) -> {
+            packetBuffer.writeInt(synhronizeDragonCap.playerId);
+            packetBuffer.writeByte(synhronizeDragonCap.dragonLevel.ordinal());
+            packetBuffer.writeByte(synhronizeDragonCap.dragonType.ordinal());
+            packetBuffer.writeBoolean(synhronizeDragonCap.hiding);
+            packetBuffer.writeBoolean(synhronizeDragonCap.isDragon);
+
+        }, packetBuffer -> {
+            int id = packetBuffer.readInt();
+            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
+            DragonType type = DragonType.values()[packetBuffer.readByte()];
+            boolean hiding = packetBuffer.readBoolean();
+            boolean isDragon = packetBuffer.readBoolean();
+            return new SynhronizeDragonCap(id, hiding, type, level, isDragon);
+        }, (synhronizeDragonCap, contextSupplier) -> {
+            World world = Minecraft.getInstance().player.world;
+            PlayerEntity playerEntity = (PlayerEntity) world.getEntityByID(synhronizeDragonCap.playerId);
+            PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+                dragonStateHandler.setIsDragon(synhronizeDragonCap.isDragon);
+                dragonStateHandler.setLevel(synhronizeDragonCap.dragonLevel);
+                dragonStateHandler.setType(synhronizeDragonCap.dragonType);
+                dragonStateHandler.setIsHiding(synhronizeDragonCap.hiding);
+            });
+
+        });
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered entity spawns!");
@@ -94,7 +123,7 @@ public class DragonSurvivalMod {
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
-                PlayerStateProvider.getCap(serverPlayerEntity).orElse(null).syncCapabilityData(true);
+//                PlayerStateProvider.getCap(serverPlayerEntity).orElse(null).syncCapabilityData(true);
                 //a trick to update the eye height
 //                serverPlayerEntity.setSneaking(!serverPlayerEntity.isSneaking());
             });
