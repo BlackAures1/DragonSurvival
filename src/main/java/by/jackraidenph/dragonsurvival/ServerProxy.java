@@ -1,16 +1,16 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.network.*;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
+import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
+import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ServerProxy implements Proxy {
-    @Override
-    public void syncMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
-    }
 
     @Override
     public void syncCapability(PacketSyncCapability syncCapability, Supplier<NetworkEvent.Context> supplier) {

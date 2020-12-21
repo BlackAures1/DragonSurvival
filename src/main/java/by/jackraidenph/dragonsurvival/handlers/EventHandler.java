@@ -1,9 +1,11 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -12,12 +14,14 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -29,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 
@@ -47,6 +52,10 @@ public class EventHandler {
                         if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                         }
+                    }
+//                    dragonStateHandler.setMovementData(playerEntity.rotationYaw,playerEntity.rotationYawHead,playerEntity.rotationPitch, Vec3d.ZERO,Vec3d.ZERO);
+                    if (playerEntity instanceof ServerPlayerEntity) {
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
                     }
                 }
             });
@@ -125,9 +134,8 @@ public class EventHandler {
                 DragonStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
                     if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
-                        capOld.getMovementData().ifPresent(dragonMovementData -> {
-                            capNew.setMovementData(dragonMovementData.bodyYaw, dragonMovementData.headYaw, dragonMovementData.headPitch, dragonMovementData.headPos, dragonMovementData.tailPos);
-                        });
+                        DragonStateHandler.DragonMovementData movementData = capOld.getMovementData();
+                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.headPos, movementData.tailPos);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
                         e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());

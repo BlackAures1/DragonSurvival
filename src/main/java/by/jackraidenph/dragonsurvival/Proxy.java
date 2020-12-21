@@ -1,13 +1,14 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.network.*;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
+import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
+import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public interface Proxy {
-
-    void syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier);
 
     void syncCapability(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier);
 

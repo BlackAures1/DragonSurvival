@@ -6,16 +6,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Optional;
-
 
 public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
     private DragonLevel level = DragonLevel.BABY;
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private Optional<DragonMovementData> data = Optional.empty();
+    private final DragonMovementData data = new DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO);
 
     public boolean isDragon() {
         return this.isDragon;
@@ -58,12 +55,14 @@ public class DragonStateHandler {
 
 
     public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos) {
-        this.data.ifPresent(dat -> {
-            dat.setMovementData(bodyYaw, headYaw, headPitch, headPos, tailPos);
-        });
+        data.bodyYaw = bodyYaw;
+        data.headYaw = headYaw;
+        data.headPitch = headPitch;
+        data.headPos = headPos;
+        data.tailPos = tailPos;
     }
 
-    public Optional<DragonMovementData> getMovementData() {
+    public DragonMovementData getMovementData() {
         return this.data;
     }
 
@@ -91,13 +90,13 @@ public class DragonStateHandler {
     }
 
     public void syncMovement(boolean isServer) {
-        this.data.ifPresent(dat -> {
-            if (isServer) {
-//                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
-            } else {
-//                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
-            }
-        });
+//        this.data.ifPresent(dat -> {
+//            if (isServer) {
+////                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
+//            } else {
+////                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
+//            }
+//        });
     }
 
     public static class DragonMovementData {

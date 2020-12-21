@@ -3,7 +3,10 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
-import by.jackraidenph.dragonsurvival.network.*;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
+import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
+import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -20,12 +23,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ClientProxy implements Proxy {
-
-    @Override
-    public void syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
-        if (Minecraft.getInstance().player != null)
-            DragonStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos));
-    }
 
     @Override
     public void syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {

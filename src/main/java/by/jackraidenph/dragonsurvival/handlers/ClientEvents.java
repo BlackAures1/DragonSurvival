@@ -155,6 +155,7 @@ public class ClientEvents {
     public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
+        ClientPlayerEntity thisPlayer = Minecraft.getInstance().player;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -169,8 +170,11 @@ public class ClientEvents {
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 matrixStack.push();
                 //don't rotate if viewing a screen
-                if (Minecraft.getInstance().currentScreen == null)
-                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                if (Minecraft.getInstance().currentScreen == null) {
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees((float) cap.getMovementData().bodyYaw));
+
+//                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
+                }
                 thirdPersonModel.render(
                         matrixStack,
                         renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
