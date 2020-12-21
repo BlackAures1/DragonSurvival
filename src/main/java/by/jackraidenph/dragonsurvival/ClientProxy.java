@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.*;
@@ -25,13 +25,13 @@ public class ClientProxy implements Proxy {
     @Override
     public void syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
         if (Minecraft.getInstance().player != null)
-            PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
+            DragonStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
     }
 
     @Override
     public void syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
         if (Minecraft.getInstance().player != null) {
-            PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
+            DragonStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
                 cap.setIsDragon(packetSyncCapability.isDragon);
                 cap.setType(packetSyncCapability.type);
                 cap.setLevel(packetSyncCapability.level);

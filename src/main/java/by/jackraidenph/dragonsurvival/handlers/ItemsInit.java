@@ -2,7 +2,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.items.HeartElement;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -30,7 +30,7 @@ public class ItemsInit {
         starBone = new Item(new Item.Properties().group(BlockInit.blocks)) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                LazyOptional<DragonStateHandler> playerStateProvider = playerIn.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+                LazyOptional<DragonStateHandler> playerStateProvider = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
                 if (playerStateProvider.isPresent()) {
                     DragonStateHandler dragonStateHandler = playerStateProvider.orElse(null);
                     if (dragonStateHandler.isDragon()) {

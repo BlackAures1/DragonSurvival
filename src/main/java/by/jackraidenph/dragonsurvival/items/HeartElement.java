@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.items;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -20,7 +20,7 @@ public class HeartElement extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+        LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
         if (dragonStateHandlerLazyOptional.isPresent()) {
             DragonStateHandler dragonStateHandler = dragonStateHandlerLazyOptional.orElseGet(() -> null);
             if (dragonStateHandler.isDragon()) {

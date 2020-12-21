@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.ResetPlayer;
@@ -111,7 +111,7 @@ public class DragonAltarGUI extends Screen {
         );
 
         addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, "Human", b -> {
-            PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
+            DragonStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
                 playerStateHandler.setLevel(DragonLevel.BABY);
@@ -129,7 +129,7 @@ public class DragonAltarGUI extends Screen {
         if (player == null)
             return;
         player.closeScreen();
-        PlayerStateProvider.getCap(player)
+        DragonStateProvider.getCap(player)
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
                     DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));

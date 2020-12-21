@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,12 +20,12 @@ public class SynchronizationController {
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent loggedInEvent) {
         PlayerEntity player = loggedInEvent.getPlayer();
         //send the capability to everyone
-        PlayerStateProvider.getCap(player).ifPresent(cap -> {
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon()));
         });
         //receive capability from others
         loggedInEvent.getPlayer().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
-            PlayerStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
+            DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon()));
             });
         });
@@ -37,7 +37,7 @@ public class SynchronizationController {
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
-        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
             }

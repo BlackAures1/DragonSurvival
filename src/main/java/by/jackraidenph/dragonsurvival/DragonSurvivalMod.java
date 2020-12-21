@@ -2,7 +2,7 @@ package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.network.*;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
@@ -64,7 +64,7 @@ public class DragonSurvivalMod {
     }
 
     public static boolean isDragon(Entity entity) {
-        return PlayerStateProvider.getCap(entity).filter(DragonStateHandler::isDragon).isPresent();
+        return DragonStateProvider.getCap(entity).filter(DragonStateHandler::isDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -103,7 +103,7 @@ public class DragonSurvivalMod {
                     if (myPlayer == thatPlayer) {
                         System.out.println("Same player");
                     }
-                    PlayerStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
+                    DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
                         dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                         dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
@@ -147,7 +147,7 @@ public class DragonSurvivalMod {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().asPlayer();
-            serverPlayerEntity.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
+            serverPlayerEntity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
                 dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];

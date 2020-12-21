@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -16,7 +16,7 @@ public class ServerProxy implements Proxy {
     public void syncCapability(PacketSyncCapability syncCapability, Supplier<NetworkEvent.Context> supplier) {
         ServerPlayerEntity playerEntity = supplier.get().getSender();
         if (playerEntity != null) {
-            PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> {
+            DragonStateProvider.getCap(playerEntity).ifPresent(cap -> {
                 cap.setIsDragon(syncCapability.isDragon);
                 cap.setType(syncCapability.type);
                 cap.setLevel(syncCapability.level);
