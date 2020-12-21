@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
+import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateCapability;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.network.*;
@@ -68,7 +68,7 @@ public class DragonSurvivalMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        PlayerStateCapability.register();
+        Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncCapability.class, new PacketSyncCapability());
