@@ -86,11 +86,11 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
         if (entity instanceof PlayerEntity) {
             AbstractClientPlayerEntity otherPlayer = (AbstractClientPlayerEntity) entity;
-
-            DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
-                dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
-            });
-
+            if (otherPlayer.getMotion().x != 0 || otherPlayer.getMotion().z != 0) {
+                DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
+                });
+            }
             context.setPacketHandled(true);
         }
 
