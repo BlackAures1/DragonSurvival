@@ -143,9 +143,8 @@ public class ClientEvents {
                 }
                 if ((player.getMotion().x != 0 && player.getMotion().z != 0)) {
                     bodyYaw = player.rotationYaw;
-                    neckYaw = -player.rotationYawHead;
                 }
-
+                DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> neckYaw = (float) -dragonStateHandler.getMovementData().headYaw);
 
             }
         }
@@ -171,8 +170,7 @@ public class ClientEvents {
                 matrixStack.push();
                 //don't rotate if viewing a screen
                 if (Minecraft.getInstance().currentScreen == null) {
-                    matrixStack.rotate(Vector3f.YP.rotationDegrees((float) cap.getMovementData().bodyYaw));
-
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
 //                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 }
                 thirdPersonModel.render(

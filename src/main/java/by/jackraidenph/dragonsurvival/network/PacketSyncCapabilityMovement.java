@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -84,10 +85,12 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         World world = thisPlayer.world;
         Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
         if (entity instanceof PlayerEntity) {
-            PlayerEntity otherPlayer = (PlayerEntity) entity;
+            AbstractClientPlayerEntity otherPlayer = (AbstractClientPlayerEntity) entity;
+
             DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
                 dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
             });
+
             context.setPacketHandled(true);
         }
 

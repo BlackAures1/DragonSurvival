@@ -1,0 +1,48 @@
+[06Dec2020 17:05:21.092] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--gameDir, ., --launchTarget, fmluserdevserver, --fml.mcpVersion, 20200515.085601, --fml.mcVersion, 1.15.2, --fml.forgeGroup, net.minecraftforge, --fml.forgeVersion, 31.2.47]
+[06Dec2020 17:05:21.097] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 5.1.2+70+master.2845bb9 starting: java version 1.8.0_201 by Oracle Corporation
+[06Dec2020 17:05:21.340] [main/INFO] [net.minecraftforge.fml.loading.FixSSL/CORE]: Added Lets Encrypt root certificates as additional trust
+[06Dec2020 17:05:21.389] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.2 Source=file:/home/alexiy/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.2/1cf212283d26f706fd3074318870bebd14d2a9ed/mixin-0.8.2.jar Service=ModLauncher Env=SERVER
+[06Dec2020 17:05:22.514] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'fmluserdevserver' with arguments [--gameDir, .]
+[06Dec2020 17:05:37.651] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[06Dec2020 17:05:37.653] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:37.655] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:37.657] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[06Dec2020 17:05:37.659] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:39.055] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.15.2
+[06Dec2020 17:05:40.019] [modloading-worker-1/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 31.2.47, for MC 1.15.2 with MCP 20200515.085601
+[06Dec2020 17:05:40.028] [modloading-worker-1/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v31.2.47 Initialized
+[06Dec2020 17:05:40.529] [Server thread/WARN] [net.minecraft.entity.EntityType/]: No data fixer registered for entity dragonsurvival:magical_predator_entity
+[06Dec2020 17:05:40.967] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered DragonStateHandler!
+[06Dec2020 17:05:40.996] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered packets!
+[06Dec2020 17:05:41.064] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered entity spawns!
+[06Dec2020 17:05:41.124] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[06Dec2020 17:05:41.140] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[06Dec2020 17:05:41.142] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Generating keypair
+[06Dec2020 17:05:41.143] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+[06Dec2020 17:05:42.073] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[06Dec2020 17:05:42.096] [Server thread/INFO] [net.minecraft.network.NetworkSystem/]: Using epoll channel type
+[06Dec2020 17:05:42.649] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: AHEAD Current: 31.2.47 Target: null
+[06Dec2020 17:05:43.665] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[06Dec2020 17:05:44.350] [Server thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar, main
+[06Dec2020 17:05:48.389] [Server thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 6 recipes
+[06Dec2020 17:05:49.425] [Server thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 825 advancements
+[06Dec2020 17:05:49.852] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[06Dec2020 17:05:50.577] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:50.577] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.238] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.238] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.240] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.660] [Server-Worker-2/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 83%
+[06Dec2020 17:05:52.853] [Server-Worker-3/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 83%
+[06Dec2020 17:05:53.364] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 84%
+[06Dec2020 17:05:53.861] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Time elapsed: 4009 ms
+[06Dec2020 17:05:53.862] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (10.449s)! For help, type "help"
+[06Dec2020 17:05:53.887] [Server thread/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Registered commands
+[06Dec2020 17:05:53.971] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[06Dec2020 17:05:53.973] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[06Dec2020 17:06:00.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[06Dec2020 17:06:00.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[06Dec2020 17:06:00.090] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[06Dec2020 17:06:00.090] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'world'/minecraft:overworld
+[06Dec2020 17:06:00.296] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[06Dec2020 17:06:00.313] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (world): All chunks are saved

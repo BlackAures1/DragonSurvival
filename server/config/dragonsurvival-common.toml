@@ -1,0 +1,14 @@
+["Predator spawn chances"]
+#Range: 0 ~ 100
+weight = 4
+#Range: 0 ~ 64
+maximum = 3
+#Configure predator spawn weight & min/max group size. Set weight to 0 to disable.
+#Range: 0 ~ 64
+minimum = 1
+
+["Predator spawn biomes"]
+#Biome types to include & exclude.
+include = ["FOREST"]
+exclude = ["MOUNTAIN", "NETHER"]
+

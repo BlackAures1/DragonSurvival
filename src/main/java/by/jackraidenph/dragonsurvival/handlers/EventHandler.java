@@ -53,7 +53,6 @@ public class EventHandler {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                         }
                     }
-//                    dragonStateHandler.setMovementData(playerEntity.rotationYaw,playerEntity.rotationYawHead,playerEntity.rotationPitch, Vec3d.ZERO,Vec3d.ZERO);
                     if (playerEntity instanceof ServerPlayerEntity) {
                         DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
                     }

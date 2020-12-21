@@ -1,0 +1,601 @@
+[06Dec2020 17:05:21.092] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--gameDir, ., --launchTarget, fmluserdevserver, --fml.mcpVersion, 20200515.085601, --fml.mcVersion, 1.15.2, --fml.forgeGroup, net.minecraftforge, --fml.forgeVersion, 31.2.47]
+[06Dec2020 17:05:21.097] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 5.1.2+70+master.2845bb9 starting: java version 1.8.0_201 by Oracle Corporation
+[06Dec2020 17:05:21.114] [main/DEBUG] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Found launch services [minecraft,fmldevdata,fmldevclient,fmldevserver,fmluserdevserver,testharness,fmluserdevdata,fmlclient,fmluserdevclient,fmlserver]
+[06Dec2020 17:05:21.125] [main/DEBUG] [cpw.mods.modlauncher.NameMappingServiceHandler/MODLAUNCHER]: Found naming services : [srgtomcp]
+[06Dec2020 17:05:21.174] [main/DEBUG] [cpw.mods.modlauncher.LaunchPluginHandler/MODLAUNCHER]: Found launch plugins: [mixin,eventbus,object_holder_definalize,runtime_enum_extender,accesstransformer,capability_inject_definalize,runtimedistcleaner]
+[06Dec2020 17:05:21.183] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Discovering transformation services
+[06Dec2020 17:05:21.189] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Found additional transformation services from discovery services: []
+[06Dec2020 17:05:21.217] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Found transformer services : [mixin,fml]
+[06Dec2020 17:05:21.217] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Transformation services loading
+[06Dec2020 17:05:21.218] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Loading service mixin
+[06Dec2020 17:05:21.218] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Loaded service mixin
+[06Dec2020 17:05:21.219] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Loading service fml
+[06Dec2020 17:05:21.219] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/]: Injecting tracing printstreams for STDOUT/STDERR.
+[06Dec2020 17:05:21.221] [main/DEBUG] [net.minecraftforge.fml.loading.LauncherVersion/CORE]: Found FMLLauncher version 31.2
+[06Dec2020 17:05:21.222] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: FML 31.2 loading
+[06Dec2020 17:05:21.222] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: FML found ModLauncher version : 5.1.2+70+master.2845bb9
+[06Dec2020 17:05:21.222] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Initializing modjar URL handler
+[06Dec2020 17:05:21.223] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: FML found AccessTransformer version : 2.1.3+56+master.cd48380
+[06Dec2020 17:05:21.223] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: FML found EventBus version : 2.2.1+1+2.2.x.150ed6c
+[06Dec2020 17:05:21.224] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Found Runtime Dist Cleaner
+[06Dec2020 17:05:21.226] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: FML found CoreMod version : 2.0.3+8+master.ca72757
+[06Dec2020 17:05:21.227] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Found ForgeSPI package implementation version 3.0.0+10+master.d73b00c
+[06Dec2020 17:05:21.227] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Found ForgeSPI package specification 3
+[06Dec2020 17:05:21.340] [main/INFO] [net.minecraftforge.fml.loading.FixSSL/CORE]: Added Lets Encrypt root certificates as additional trust
+[06Dec2020 17:05:21.340] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Loaded service fml
+[06Dec2020 17:05:21.343] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Configuring option handling for services
+[06Dec2020 17:05:21.351] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Transformation services initializing
+[06Dec2020 17:05:21.352] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initializing transformation service mixin
+[06Dec2020 17:05:21.356] [main/DEBUG] [mixin/]: Mixin bootstrap service org.spongepowered.asm.service.mojang.MixinServiceLaunchWrapperBootstrap is not available: LaunchWrapper is not available
+[06Dec2020 17:05:21.364] [main/DEBUG] [mixin/]: MixinService [ModLauncher] was successfully booted in sun.misc.Launcher$AppClassLoader@18b4aac2
+[06Dec2020 17:05:21.389] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.2 Source=file:/home/alexiy/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.2/1cf212283d26f706fd3074318870bebd14d2a9ed/mixin-0.8.2.jar Service=ModLauncher Env=SERVER
+[06Dec2020 17:05:21.391] [main/DEBUG] [mixin/]: Initialising Mixin Platform Manager
+[06Dec2020 17:05:21.391] [main/DEBUG] [mixin/]: Adding mixin platform agents for container ModLauncher Root Container(4f56a0a2)
+[06Dec2020 17:05:21.392] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for ModLauncher Root Container(4f56a0a2)
+[06Dec2020 17:05:21.392] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container ModLauncher Root Container(4f56a0a2)
+[06Dec2020 17:05:21.399] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for ModLauncher Root Container(4f56a0a2)
+[06Dec2020 17:05:21.400] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container ModLauncher Root Container(4f56a0a2)
+[06Dec2020 17:05:21.403] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initialized transformation service mixin
+[06Dec2020 17:05:21.403] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initializing transformation service fml
+[06Dec2020 17:05:21.403] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Setting up basic FML game directories
+[06Dec2020 17:05:21.405] [main/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing GAMEDIR directory : /home/alexiy/Minecraft/DragonSurvivalMod/server
+[06Dec2020 17:05:21.405] [main/DEBUG] [net.minecraftforge.fml.loading.FMLPaths/CORE]: Path GAMEDIR is /home/alexiy/Minecraft/DragonSurvivalMod/server
+[06Dec2020 17:05:21.406] [main/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing MODSDIR directory : /home/alexiy/Minecraft/DragonSurvivalMod/server/mods
+[06Dec2020 17:05:21.406] [main/DEBUG] [net.minecraftforge.fml.loading.FMLPaths/CORE]: Path MODSDIR is /home/alexiy/Minecraft/DragonSurvivalMod/server/mods
+[06Dec2020 17:05:21.406] [main/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing CONFIGDIR directory : /home/alexiy/Minecraft/DragonSurvivalMod/server/config
+[06Dec2020 17:05:21.406] [main/DEBUG] [net.minecraftforge.fml.loading.FMLPaths/CORE]: Path CONFIGDIR is /home/alexiy/Minecraft/DragonSurvivalMod/server/config
+[06Dec2020 17:05:21.406] [main/DEBUG] [net.minecraftforge.fml.loading.FMLPaths/CORE]: Path FMLCONFIG is /home/alexiy/Minecraft/DragonSurvivalMod/server/config/fml.toml
+[06Dec2020 17:05:21.407] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Loading configuration
+[06Dec2020 17:05:21.484] [main/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing default config directory directory : /home/alexiy/Minecraft/DragonSurvivalMod/server/defaultconfigs
+[06Dec2020 17:05:21.485] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Preparing ModFile
+[06Dec2020 17:05:21.490] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Preparing launch handler
+[06Dec2020 17:05:21.492] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Using fmluserdevserver as launch service
+[06Dec2020 17:05:21.500] [main/DEBUG] [net.minecraftforge.fml.loading.FMLLoader/CORE]: Received command line version data  : MC Version: '1.15.2' MCP Version: '20200515.085601' Forge Version: '31.2.47' Forge group: 'net.minecraftforge'
+[06Dec2020 17:05:21.501] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR forge at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:21.501] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR mcdata at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar
+[06Dec2020 17:05:21.501] [main/DEBUG] [net.minecraftforge.userdev.FMLUserdevLaunchProvider/CORE]: Injecting maven path /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo
+[06Dec2020 17:05:21.502] [main/DEBUG] [net.minecraftforge.fml.loading.FMLCommonLaunchHandler/CORE]: Got mod coordinates dragonsurvival%%/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main:dragonsurvival%%/home/alexiy/Minecraft/DragonSurvivalMod/build/classes/java/main from env
+[06Dec2020 17:05:21.504] [main/DEBUG] [net.minecraftforge.fml.loading.FMLCommonLaunchHandler/CORE]: Found supplied mod coordinates [{dragonsurvival=[/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main, /home/alexiy/Minecraft/DragonSurvivalMod/build/classes/java/main]}]
+[06Dec2020 17:05:21.512] [main/DEBUG] [net.minecraftforge.fml.loading.LanguageLoadingProvider/CORE]: Found 2 language providers
+[06Dec2020 17:05:21.513] [main/DEBUG] [net.minecraftforge.fml.loading.LanguageLoadingProvider/CORE]: Found language provider javafml, version 31.2
+[06Dec2020 17:05:21.519] [main/DEBUG] [net.minecraftforge.fml.loading.LanguageLoadingProvider/CORE]: Found language provider minecraft, version 1
+[06Dec2020 17:05:21.520] [main/DEBUG] [net.minecraftforge.fml.loading.LanguageLoadingProvider/CORE]: Skipping adding forge jar - javafml is already present
+[06Dec2020 17:05:21.522] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initialized transformation service fml
+[06Dec2020 17:05:21.523] [main/DEBUG] [cpw.mods.modlauncher.NameMappingServiceHandler/MODLAUNCHER]: Current naming domain is 'mcp'
+[06Dec2020 17:05:21.524] [main/DEBUG] [cpw.mods.modlauncher.NameMappingServiceHandler/MODLAUNCHER]: Identified name mapping providers {srg=srgtomcp:1234}
+[06Dec2020 17:05:21.524] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Transformation services begin scanning
+[06Dec2020 17:05:21.525] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Beginning scan trigger - transformation service mixin
+[06Dec2020 17:05:21.525] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: End scan trigger - transformation service mixin
+[06Dec2020 17:05:21.525] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Beginning scan trigger - transformation service fml
+[06Dec2020 17:05:21.526] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Initiating mod scan
+[06Dec2020 17:05:21.556] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR classpath_mod at path /home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main
+[06Dec2020 17:05:21.557] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR classpath_mod at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:21.557] [main/DEBUG] [net.minecraftforge.userdev.ClasspathLocator/CORE]: Found classpath mod: /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:21.558] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar
+[06Dec2020 17:05:21.559] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/deploy.jar
+[06Dec2020 17:05:21.560] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/javaws.jar
+[06Dec2020 17:05:21.560] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
+[06Dec2020 17:05:21.560] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar
+[06Dec2020 17:05:21.561] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/jfxswt.jar
+[06Dec2020 17:05:21.561] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar
+[06Dec2020 17:05:21.561] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/management-agent.jar
+[06Dec2020 17:05:21.562] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/plugin.jar
+[06Dec2020 17:05:21.562] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/resources.jar
+[06Dec2020 17:05:21.562] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+[06Dec2020 17:05:21.563] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:21.566] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-launcher.jar
+[06Dec2020 17:05:21.566] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar
+[06Dec2020 17:05:21.603] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/2.1.3/addc10ee659e011004852c6cf1d036180f67a169/accesstransformers-2.1.3-shadowed.jar
+[06Dec2020 17:05:21.604] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/2.2.1/8b172a50270b3b7545f1696cbccf89cc38b15735/eventbus-2.2.1-service.jar
+[06Dec2020 17:05:21.604] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/2.0.3/9e3f5323f6a2c3ac04fa27481cbeeb48f89757bd/coremods-2.0.3.jar
+[06Dec2020 17:05:21.604] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/3.0.0/f950d208c9fa7a1d7700d8a222bd08d4baf90600/forgespi-3.0.0.jar
+[06Dec2020 17:05:21.605] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/5.1.2/42f764429585b8a12ba42d43a02c0c9018710052/modlauncher-5.1.2.jar
+[06Dec2020 17:05:21.605] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/5.1.2/63c817b0e96e6accbb602e7de7c938fc444025f3/modlauncher-5.1.2-api.jar
+[06Dec2020 17:05:21.605] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar
+[06Dec2020 17:05:21.606] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.0.9/d1e1ba354a40b5703340b5cb02fdca489cff3646/mergetool-1.0.9-api.jar
+[06Dec2020 17:05:21.606] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/7.2/ca2954e8d92a05bacc28ff465b25c70e0f512497/asm-commons-7.2.jar
+[06Dec2020 17:05:21.606] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/7.2/a3ae34e57fa8a4040e28247291d0cc3d6b8c7bcf/asm-util-7.2.jar
+[06Dec2020 17:05:21.606] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/7.2/b6e6abe057f23630113f4167c34bda7086691258/asm-analysis-7.2.jar
+[06Dec2020 17:05:21.607] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/7.2/3a23cc36edaf8fc5a89cb100182758ccb5991487/asm-tree-7.2.jar
+[06Dec2020 17:05:21.607] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/7.2/fa637eb67eb7628c915d73762b681ae7ff0b9731/asm-7.2.jar
+[06Dec2020 17:05:21.607] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/cpw.mods/grossjava9hacks/1.3.0/1a922de964d0c19d864fbcba2678c1a1c4602c35/grossjava9hacks-1.3.0.jar
+[06Dec2020 17:05:21.607] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar
+[06Dec2020 17:05:21.608] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.2/1cf212283d26f706fd3074318870bebd14d2a9ed/mixin-0.8.2.jar
+[06Dec2020 17:05:21.609] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.2/3ac4263d06433da39a5eee95e2679f1642d921f0/toml-3.6.2.jar
+[06Dec2020 17:05:21.609] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.2/56f6500038861d4a8832072676da7bf7916217d0/core-3.6.2.jar
+[06Dec2020 17:05:21.609] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.jline/jline/3.12.1/de2bd909cb9f8eaa741bd03df4a1bd3f6eb593c7/jline-3.12.1.jar
+[06Dec2020 17:05:21.609] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.6.3/f8ff8032903882376e8d000c51e3e16d20fc7df7/maven-artifact-3.6.3.jar
+[06Dec2020 17:05:21.609] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.8.3/98f84f353457629e81cc6827224871b1a8faa7af/typetools-0.8.3.jar
+[06Dec2020 17:05:21.610] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar
+[06Dec2020 17:05:21.610] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.2/6c2fb3f5b7cd27504726aef1b674b542a0c9cf53/log4j-core-2.11.2.jar
+[06Dec2020 17:05:21.610] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.2/f5e9a2ffca496057d6891a3de65128efc636e26e/log4j-api-2.11.2.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/1.1/aef610b34a1be37fa851825f12372b78424d8903/patchy-1.1.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/oshi-project/oshi-core/1.1/9ddf7b048a8d701be231c0f4f95fd986198fd2d8/oshi-core-1.1.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/4.4.0/cb208278274bf12ebdb56c61bd7407e6f774d65a/jna-4.4.0.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/platform/3.4.0/e3f70017be8100d3d6923f50b3d2ee17714e9c13/platform-3.4.0.jar
+[06Dec2020 17:05:21.611] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j-core-mojang/51.2/63d216a9311cca6be337c1e458e587f99d382b84/icu4j-core-mojang-51.2.jar
+[06Dec2020 17:05:21.612] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/javabridge/1.0.22/6aa6453aa99a52a5cd91749da1af6ab70e082ab3/javabridge-1.0.22.jar
+[06Dec2020 17:05:21.612] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.25.Final/d0626cd3108294d1d58c05859add27b4ef21f83b/netty-all-4.1.25.Final.jar
+[06Dec2020 17:05:21.612] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/21.0/3a3d111be1be1b745edfa7d91678a12d7ed38709/guava-21.0.jar
+[06Dec2020 17:05:21.612] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/6505a72a097d9270f7a9e7bf42c4238283247755/commons-lang3-3.8.1.jar
+[06Dec2020 17:05:21.612] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.5/2852e6e05fbb95076fc091f6d1780f1f8fe35e0f/commons-io-2.5.jar
+[06Dec2020 17:05:21.613] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.3.3/18f4247ff4572a074444572cee34647c43e7c9c7/httpclient-4.3.3.jar
+[06Dec2020 17:05:21.613] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar
+[06Dec2020 17:05:21.613] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.5/39c7796b469a600f72380316f6b1f11db6c2c7c4/jinput-2.0.5.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/e12fe1fda814bd348c1579329c86943d2cd3c6a6/jutils-1.0.0.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.0.17/c6b7dc51dd44379cc751b7504816006e9be4b1e6/brigadier-1.0.17.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/2.0.24/944c24a8519981847ffb36c6dcd059d96fcb4b0/datafixerupper-2.0.24.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/c4ba5371a29ac9b2ad6129b1d39ea38750043eff/gson-2.8.0.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.25/9834cdf236c22e84b946bba989e2f94ef5897c3c/authlib-1.5.25.jar
+[06Dec2020 17:05:21.614] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/a698750c16740fd5b3871425f4cb3bbaa87f529d/commons-compress-1.8.1.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.3/f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f/commons-logging-1.1.3.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.3.2/31fbbff1ddbf98f3aa7377c94d33b0447c646b6e/httpcore-4.3.2.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.2.1/5ad88f325e424f8dbc2be5459e21ea5cab3864e9/fastutil-8.2.1.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.2.2/ee8e57a79300f78294576d87c4a587f8c99402e2/lwjgl-jemalloc-3.2.2.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.2.2/268c08a150347e04e44ba56e359d62c9b78669df/lwjgl-jemalloc-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.615] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.2.2/2b772a102b0a11ee5f2109a5b136f4dc7c630827/lwjgl-openal-3.2.2.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.2.2/364f9f5c3947393083ab5f37a571f5603aadd0b/lwjgl-openal-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.2.2/6ac5bb88b44c43ea195a570aab059f63da004cd8/lwjgl-opengl-3.2.2.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.2.2/338d33387919cb3f4cdba143c2b738a71ccfda60/lwjgl-opengl-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.2.2/d3ad4df38e400b8afba1de63f84338809399df5b/lwjgl-glfw-3.2.2.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.2.2/957733f26a6661d4883da0335f7ef46d3bbbd7d/lwjgl-glfw-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.616] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.2/3b8e6ebc5851dd3d17e37e5cadce2eff2a429f0f/lwjgl-stb-3.2.2.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.2/172c52e586fecf43f759bc4f70a778c01f6fdcc1/lwjgl-stb-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.2.2/fcbe606c8f8da6f8f9a05e2c540eb1ee8632b0e9/lwjgl-tinyfd-3.2.2.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.2.2/39e35b161c130635d9c8918ce04e887a30c5b687/lwjgl-tinyfd-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.2.2/8ad6294407e15780b43e84929c40e4c5e997972e/lwjgl-3.2.2.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.2.2/ae7976827ca2a3741f6b9a843a89bacd637af350/lwjgl-3.2.2-natives-linux.jar
+[06Dec2020 17:05:21.617] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.11.3/f378f889797edd7df8d32272c06ca80a1b6b0f58/text2speech-1.11.3.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.11.3/ac641755a2a841d1fca9e660194f42523ee5cfe0/text2speech-1.11.3-natives-linux.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.7.2/e27d8ab4f984f9d186f54da984a6ab1cccac755e/antlr4-runtime-4.7.2.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.2.1/13b015768e0d04849d2794e4c47eb02d01a0de32/plexus-utils-3.2.1.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar
+[06Dec2020 17:05:21.618] [main/DEBUG] [net.minecraftforge.fml.loading.LibraryFinder/CORE]: Found JAR manifest_jar at path /home/alexiy/idea-IC-182.4892.20/lib/idea_rt.jar
+[06Dec2020 17:05:21.621] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModListHandler/CORE]: Found mod coordinates from lists: []
+[06Dec2020 17:05:21.643] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModDiscoverer/CORE]: Found Mod Locators : (userdev classpath:null),(mods folder:null),(maven libs:null),(exploded directory:null),(minecraft:null)
+[06Dec2020 17:05:21.667] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ExplodedDirectoryLocator/LOADING]: Found exploded directory mod manifest at /home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main/META-INF/mods.toml
+[06Dec2020 17:05:21.669] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:21.705] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar with {forge} mods - versions {31.2.47}
+[06Dec2020 17:05:21.705] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Loading mod file /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar with language javafml
+[06Dec2020 17:05:21.743] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Found coremod fieldtomethodtransformers with Javascript path META-INF/fieldtomethodtransformers.js
+[06Dec2020 17:05:21.745] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Found coremod META-INF/fieldtomethodtransformers.js
+[06Dec2020 17:05:21.745] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate /home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main
+[06Dec2020 17:05:21.825] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file main with {dragonsurvival} mods - versions {0.0.5}
+[06Dec2020 17:05:21.825] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Loading mod file /home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main with language javafml
+[06Dec2020 17:05:21.828] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate /home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar
+[06Dec2020 17:05:21.830] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file client-extra.jar with {minecraft} mods - versions {1.15.2}
+[06Dec2020 17:05:21.830] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Loading mod file /home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar with language minecraft
+[06Dec2020 17:05:21.840] [main/DEBUG] [net.minecraftforge.fml.loading.ModSorter/LOADING]: Found 1 mandatory requirements
+[06Dec2020 17:05:21.841] [main/DEBUG] [net.minecraftforge.fml.loading.ModSorter/LOADING]: Found 0 mandatory mod requirements missing
+[06Dec2020 17:05:22.267] [main/DEBUG] [net.minecraftforge.userdev.MCPNamingService/CORE]: Loaded 12295 method mappings from methods.csv
+[06Dec2020 17:05:22.298] [main/DEBUG] [net.minecraftforge.userdev.MCPNamingService/CORE]: Loaded 16430 field mappings from fields.csv
+[06Dec2020 17:05:22.316] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: End scan trigger - transformation service fml
+[06Dec2020 17:05:22.316] [main/DEBUG] [cpw.mods.modlauncher.TransformationServicesHandler/MODLAUNCHER]: Transformation services loading transformers
+[06Dec2020 17:05:22.317] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initializing transformers for transformation service mixin
+[06Dec2020 17:05:22.317] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initialized transformers for transformation service mixin
+[06Dec2020 17:05:22.318] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initializing transformers for transformation service fml
+[06Dec2020 17:05:22.318] [main/DEBUG] [net.minecraftforge.fml.loading.FMLServiceProvider/CORE]: Loading coremod transformers
+[06Dec2020 17:05:22.318] [main/DEBUG] [net.minecraftforge.coremod.CoreModEngine/COREMOD]: Loading CoreMod from META-INF/fieldtomethodtransformers.js
+[06Dec2020 17:05:22.448] [main/DEBUG] [net.minecraftforge.coremod.CoreModEngine/COREMOD]: CoreMod loaded successfully
+[06Dec2020 17:05:22.458] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@7544a1e4 to Target : CLASS {Lnet/minecraft/potion/EffectInstance;} {} {V}
+[06Dec2020 17:05:22.466] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@82c57b3 to Target : CLASS {Lnet/minecraft/block/FlowingFluidBlock;} {} {V}
+[06Dec2020 17:05:22.467] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@5be82d43 to Target : CLASS {Lnet/minecraft/item/BucketItem;} {} {V}
+[06Dec2020 17:05:22.467] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@600b0b7 to Target : CLASS {Lnet/minecraft/block/StairsBlock;} {} {V}
+[06Dec2020 17:05:22.467] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@345e5a17 to Target : CLASS {Lnet/minecraft/block/FlowerPotBlock;} {} {V}
+[06Dec2020 17:05:22.467] [main/DEBUG] [cpw.mods.modlauncher.TransformStore/MODLAUNCHER]: Adding transformer net.minecraftforge.coremod.transformer.CoreModClassTransformer@5ea502e0 to Target : CLASS {Lnet/minecraft/item/FishBucketItem;} {} {V}
+[06Dec2020 17:05:22.467] [main/DEBUG] [cpw.mods.modlauncher.TransformationServiceDecorator/MODLAUNCHER]: Initialized transformers for transformation service fml
+[06Dec2020 17:05:22.510] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:ModLauncher Root Container(4f56a0a2)]
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: Processing launch tasks for PlatformAgent[MixinPlatformAgentDefault:ModLauncher Root Container(4f56a0a2)]
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: Adding mixin platform agents for container ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)
+[06Dec2020 17:05:22.511] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)]
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Adding mixin platform agents for container ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)]
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Adding mixin platform agents for container ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)
+[06Dec2020 17:05:22.512] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)]
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: inject() running with 4 agents
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:ModLauncher Root Container(4f56a0a2)]
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar)]
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(main:/home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main)]
+[06Dec2020 17:05:22.513] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:ContainerHandleModLauncher.Resource(client-extra.jar:/home/alexiy/.gradle/caches/forge_gradle/minecraft_repo/versions/1.15.2/client-extra.jar)]
+[06Dec2020 17:05:22.514] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'fmluserdevserver' with arguments [--gameDir, .]
+[06Dec2020 17:05:22.515] [main/DEBUG] [net.minecraftforge.userdev.FMLUserdevServerLaunchProvider/CORE]: Launching minecraft in cpw.mods.modlauncher.TransformingClassLoader@329a1243 with arguments [--gameDir, .]
+[06Dec2020 17:05:22.568] [main/DEBUG] [mixin/]: Error cleaning class output directory: .mixin.out/class: failed to delete one or more files; see suppressed exceptions for details
+[06Dec2020 17:05:22.584] [main/DEBUG] [mixin/]: Preparing mixins for MixinEnvironment[DEFAULT]
+[06Dec2020 17:05:25.188] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/block/FlowingFluidBlock
+[06Dec2020 17:05:25.453] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/block/StairsBlock
+[06Dec2020 17:05:25.670] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/block/FlowerPotBlock
+[06Dec2020 17:05:31.440] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/item/BucketItem
+[06Dec2020 17:05:31.509] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/item/FishBucketItem
+[06Dec2020 17:05:32.148] [main/DEBUG] [net.minecraftforge.coremod.transformer.CoreModBaseTransformer/COREMOD]: Transforming net/minecraft/potion/EffectInstance
+[06Dec2020 17:05:37.651] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[06Dec2020 17:05:37.653] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:37.655] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:37.657] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[06Dec2020 17:05:37.659] [main/WARN] [net.minecraft.command.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[06Dec2020 17:05:39.055] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.15.2
+[06Dec2020 17:05:39.338] [Server thread/DEBUG] [net.minecraftforge.fml.ForgeI18n/CORE]: Loading I18N data entries: 4543
+[06Dec2020 17:05:39.776] [Server thread/DEBUG] [net.minecraftforge.fml.ModLoader/CORE]: Loading Network data for FML net version: FML2
+[06Dec2020 17:05:39.801] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Using 4 threads for parallel mod-loading
+[06Dec2020 17:05:39.808] [Server thread/DEBUG] [net.minecraftforge.fml.ModLoader/LOADING]: ModContainer is cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.822] [Server thread/DEBUG] [net.minecraftforge.fml.ModLoader/LOADING]: ModContainer is cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.897] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLJavaModLanguageProvider/LOADING]: Loading FMLModContainer from classloader cpw.mods.modlauncher.TransformingClassLoader@329a1243 - got cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.898] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Creating FMLModContainer instance for net.minecraftforge.common.ForgeMod with classLoader cpw.mods.modlauncher.TransformingClassLoader@329a1243 & cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.923] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loaded modclass net.minecraftforge.common.ForgeMod with cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.923] [Server thread/DEBUG] [net.minecraftforge.fml.ModLoader/LOADING]: ModContainer is cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.923] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLJavaModLanguageProvider/LOADING]: Loading FMLModContainer from classloader cpw.mods.modlauncher.TransformingClassLoader@329a1243 - got cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.923] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Creating FMLModContainer instance for by.jackraidenph.dragonsurvival.DragonSurvivalMod with classLoader cpw.mods.modlauncher.TransformingClassLoader@329a1243 & cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.929] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loaded modclass by.jackraidenph.dragonsurvival.DragonSurvivalMod with cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:39.947] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:CONSTRUCT
+[06Dec2020 17:05:39.994] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loading mod instance dragonsurvival of type by.jackraidenph.dragonsurvival.DragonSurvivalMod
+[06Dec2020 17:05:40.000] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loading mod instance forge of type net.minecraftforge.common.ForgeMod
+[06Dec2020 17:05:40.001] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Forge Version package package net.minecraftforge.versions.forge, Forge, version 31.2 from cpw.mods.modlauncher.TransformingClassLoader@329a1243
+[06Dec2020 17:05:40.015] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Found Forge version 31.2.47
+[06Dec2020 17:05:40.015] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Found Forge spec 31.2
+[06Dec2020 17:05:40.015] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Found Forge group net.minecraftforge
+[06Dec2020 17:05:40.019] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.mcp.MCPVersion/CORE]: Found MC version information 1.15.2
+[06Dec2020 17:05:40.019] [modloading-worker-1/DEBUG] [net.minecraftforge.versions.mcp.MCPVersion/CORE]: Found MCP version information 20200515.085601
+[06Dec2020 17:05:40.019] [modloading-worker-1/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 31.2.47, for MC 1.15.2 with MCP 20200515.085601
+[06Dec2020 17:05:40.028] [modloading-worker-1/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v31.2.47 Initialized
+[06Dec2020 17:05:40.133] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file dragonsurvival-common.toml for dragonsurvival tracking
+[06Dec2020 17:05:40.139] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loaded mod instance dragonsurvival of type by.jackraidenph.dragonsurvival.DragonSurvivalMod
+[06Dec2020 17:05:40.139] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Injecting Automatic event subscribers for dragonsurvival
+[06Dec2020 17:05:40.174] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for dragonsurvival
+[06Dec2020 17:05:40.188] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.BlockInit to MOD
+[06Dec2020 17:05:40.217] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file forge-client.toml for forge tracking
+[06Dec2020 17:05:40.239] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.Containers to MOD
+[06Dec2020 17:05:40.241] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit to MOD
+[06Dec2020 17:05:40.242] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.ItemsInit to MOD
+[06Dec2020 17:05:40.243] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.EntityTypesInit to MOD
+[06Dec2020 17:05:40.245] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.EventHandler to FORGE
+[06Dec2020 17:05:40.245] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file forge-server.toml for forge tracking
+[06Dec2020 17:05:40.262] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Loaded mod instance forge of type net.minecraftforge.common.ForgeMod
+[06Dec2020 17:05:40.262] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Injecting Automatic event subscribers for forge
+[06Dec2020 17:05:40.262] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for forge
+[06Dec2020 17:05:40.265] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Completed Automatic event subscribers for forge
+[06Dec2020 17:05:40.427] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.AutomaticEventSubscriber/LOADING]: Auto-subscribing by.jackraidenph.dragonsurvival.handlers.Enchantments to MOD
+[06Dec2020 17:05:40.428] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Completed Automatic event subscribers for dragonsurvival
+[06Dec2020 17:05:40.429] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:CREATE_REGISTRIES
+[06Dec2020 17:05:40.430] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.NewRegistry
+[06Dec2020 17:05:40.431] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.NewRegistry
+[06Dec2020 17:05:40.432] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.NewRegistry
+[06Dec2020 17:05:40.432] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.NewRegistry
+[06Dec2020 17:05:40.498] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.498] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:block>
+[06Dec2020 17:05:40.499] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:block>
+[06Dec2020 17:05:40.499] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:block>
+[06Dec2020 17:05:40.509] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:block>
+[06Dec2020 17:05:40.516] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.516] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:item>
+[06Dec2020 17:05:40.517] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:item>
+[06Dec2020 17:05:40.517] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:item>
+[06Dec2020 17:05:40.529] [Server thread/WARN] [net.minecraft.entity.EntityType/]: No data fixer registered for entity dragonsurvival:magical_predator_entity
+[06Dec2020 17:05:40.531] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:item>
+[06Dec2020 17:05:40.533] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.533] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<forge:loot_modifier_serializers>
+[06Dec2020 17:05:40.533] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<forge:loot_modifier_serializers>
+[06Dec2020 17:05:40.534] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<forge:loot_modifier_serializers>
+[06Dec2020 17:05:40.534] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<forge:loot_modifier_serializers>
+[06Dec2020 17:05:40.534] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.535] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<forge:moddimensions>
+[06Dec2020 17:05:40.535] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<forge:moddimensions>
+[06Dec2020 17:05:40.535] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<forge:moddimensions>
+[06Dec2020 17:05:40.535] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<forge:moddimensions>
+[06Dec2020 17:05:40.535] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.536] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:activities>
+[06Dec2020 17:05:40.536] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:activities>
+[06Dec2020 17:05:40.536] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:activities>
+[06Dec2020 17:05:40.536] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:activities>
+[06Dec2020 17:05:40.537] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.537] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:biome>
+[06Dec2020 17:05:40.537] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:biome>
+[06Dec2020 17:05:40.537] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:biome>
+[06Dec2020 17:05:40.537] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:biome>
+[06Dec2020 17:05:40.539] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.540] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:biome_source_type>
+[06Dec2020 17:05:40.541] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:biome_source_type>
+[06Dec2020 17:05:40.541] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:biome_source_type>
+[06Dec2020 17:05:40.542] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:biome_source_type>
+[06Dec2020 17:05:40.542] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.542] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:block_entity_type>
+[06Dec2020 17:05:40.542] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:block_entity_type>
+[06Dec2020 17:05:40.543] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_entity_type>
+[06Dec2020 17:05:40.547] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_entity_type>
+[06Dec2020 17:05:40.547] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.548] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:block_placer_type>
+[06Dec2020 17:05:40.548] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:block_placer_type>
+[06Dec2020 17:05:40.548] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_placer_type>
+[06Dec2020 17:05:40.555] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_placer_type>
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:block_state_provider_type>
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:block_state_provider_type>
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_state_provider_type>
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:block_state_provider_type>
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.556] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:carver>
+[06Dec2020 17:05:40.557] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:carver>
+[06Dec2020 17:05:40.557] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:carver>
+[06Dec2020 17:05:40.557] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:carver>
+[06Dec2020 17:05:40.558] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.559] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:chunk_generator_type>
+[06Dec2020 17:05:40.559] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:chunk_generator_type>
+[06Dec2020 17:05:40.560] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:chunk_generator_type>
+[06Dec2020 17:05:40.560] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:chunk_generator_type>
+[06Dec2020 17:05:40.560] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.561] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:chunk_status>
+[06Dec2020 17:05:40.561] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:chunk_status>
+[06Dec2020 17:05:40.561] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:chunk_status>
+[06Dec2020 17:05:40.561] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:chunk_status>
+[06Dec2020 17:05:40.562] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.566] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:dataserializers>
+[06Dec2020 17:05:40.566] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:dataserializers>
+[06Dec2020 17:05:40.566] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:dataserializers>
+[06Dec2020 17:05:40.566] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:dataserializers>
+[06Dec2020 17:05:40.567] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.567] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:decorator>
+[06Dec2020 17:05:40.567] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:decorator>
+[06Dec2020 17:05:40.567] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:decorator>
+[06Dec2020 17:05:40.567] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:decorator>
+[06Dec2020 17:05:40.568] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.568] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:enchantment>
+[06Dec2020 17:05:40.568] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:enchantment>
+[06Dec2020 17:05:40.568] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:enchantment>
+[06Dec2020 17:05:40.569] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:enchantment>
+[06Dec2020 17:05:40.570] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.570] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:entity_type>
+[06Dec2020 17:05:40.570] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:entity_type>
+[06Dec2020 17:05:40.570] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:entity_type>
+[06Dec2020 17:05:40.608] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:entity_type>
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:feature>
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:feature>
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:feature>
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:feature>
+[06Dec2020 17:05:40.609] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.610] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:fluid>
+[06Dec2020 17:05:40.610] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:fluid>
+[06Dec2020 17:05:40.610] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:fluid>
+[06Dec2020 17:05:40.616] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:fluid>
+[06Dec2020 17:05:40.617] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.617] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:foliage_placer_type>
+[06Dec2020 17:05:40.619] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:foliage_placer_type>
+[06Dec2020 17:05:40.619] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:foliage_placer_type>
+[06Dec2020 17:05:40.619] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:foliage_placer_type>
+[06Dec2020 17:05:40.620] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.621] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:memory_module_type>
+[06Dec2020 17:05:40.621] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:memory_module_type>
+[06Dec2020 17:05:40.621] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:memory_module_type>
+[06Dec2020 17:05:40.621] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:memory_module_type>
+[06Dec2020 17:05:40.622] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.622] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:menu>
+[06Dec2020 17:05:40.622] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:menu>
+[06Dec2020 17:05:40.623] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:menu>
+[06Dec2020 17:05:40.637] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:menu>
+[06Dec2020 17:05:40.639] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.640] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:mob_effect>
+[06Dec2020 17:05:40.640] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:mob_effect>
+[06Dec2020 17:05:40.640] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:mob_effect>
+[06Dec2020 17:05:40.640] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:mob_effect>
+[06Dec2020 17:05:40.641] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.642] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:motive>
+[06Dec2020 17:05:40.642] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:motive>
+[06Dec2020 17:05:40.642] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:motive>
+[06Dec2020 17:05:40.642] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:motive>
+[06Dec2020 17:05:40.643] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.644] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:particle_type>
+[06Dec2020 17:05:40.644] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:particle_type>
+[06Dec2020 17:05:40.644] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:particle_type>
+[06Dec2020 17:05:40.644] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:particle_type>
+[06Dec2020 17:05:40.646] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.646] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:point_of_interest_type>
+[06Dec2020 17:05:40.646] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:point_of_interest_type>
+[06Dec2020 17:05:40.647] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:point_of_interest_type>
+[06Dec2020 17:05:40.647] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:point_of_interest_type>
+[06Dec2020 17:05:40.649] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.649] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:potion>
+[06Dec2020 17:05:40.649] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:potion>
+[06Dec2020 17:05:40.650] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:potion>
+[06Dec2020 17:05:40.650] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:potion>
+[06Dec2020 17:05:40.650] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.651] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:recipe_serializer>
+[06Dec2020 17:05:40.893] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:recipe_serializer>
+[06Dec2020 17:05:40.893] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:recipe_serializer>
+[06Dec2020 17:05:40.894] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:recipe_serializer>
+[06Dec2020 17:05:40.894] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.894] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:schedule>
+[06Dec2020 17:05:40.894] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:schedule>
+[06Dec2020 17:05:40.894] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:schedule>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:schedule>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:sensor_type>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:sensor_type>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:sensor_type>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:sensor_type>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:sound_event>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:sound_event>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:sound_event>
+[06Dec2020 17:05:40.896] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:sound_event>
+[06Dec2020 17:05:40.897] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.897] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:stat_type>
+[06Dec2020 17:05:40.898] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:stat_type>
+[06Dec2020 17:05:40.898] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:stat_type>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:stat_type>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:surface_builder>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:surface_builder>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:surface_builder>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:surface_builder>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:tree_decorator_type>
+[06Dec2020 17:05:40.902] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:tree_decorator_type>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:tree_decorator_type>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:tree_decorator_type>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching synchronous event LifecycleEvent:LOAD_REGISTRIES
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : RegistryEvent.Register<minecraft:villager_profession>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : RegistryEvent.Register<minecraft:villager_profession>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : RegistryEvent.Register<minecraft:villager_profession>
+[06Dec2020 17:05:40.903] [Server thread/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : RegistryEvent.Register<minecraft:villager_profession>
+[06Dec2020 17:05:40.915] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Loading configs type COMMON
+[06Dec2020 17:05:40.917] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Built TOML config for /home/alexiy/Minecraft/DragonSurvivalMod/server/config/dragonsurvival-common.toml
+[06Dec2020 17:05:40.936] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Loaded TOML config file /home/alexiy/Minecraft/DragonSurvivalMod/server/config/dragonsurvival-common.toml
+[06Dec2020 17:05:40.940] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Watching TOML config file /home/alexiy/Minecraft/DragonSurvivalMod/server/config/dragonsurvival-common.toml for changes
+[06Dec2020 17:05:40.948] [Thread-1/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Config file dragonsurvival-common.toml changed, sending notifies
+[06Dec2020 17:05:40.949] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:COMMON_SETUP
+[06Dec2020 17:05:40.949] [Thread-1/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Config file dragonsurvival-common.toml changed, sending notifies
+[06Dec2020 17:05:40.950] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : FMLCommonSetupEvent
+[06Dec2020 17:05:40.954] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : FMLCommonSetupEvent
+[06Dec2020 17:05:40.967] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered DragonStateHandler!
+[06Dec2020 17:05:40.996] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered packets!
+[06Dec2020 17:05:41.064] [modloading-worker-2/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Successfully registered entity spawns!
+[06Dec2020 17:05:41.067] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : FMLCommonSetupEvent
+[06Dec2020 17:05:41.122] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : FMLCommonSetupEvent
+[06Dec2020 17:05:41.123] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:SIDED_SETUP
+[06Dec2020 17:05:41.123] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : FMLDedicatedServerSetupEvent
+[06Dec2020 17:05:41.123] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : FMLDedicatedServerSetupEvent
+[06Dec2020 17:05:41.124] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : FMLDedicatedServerSetupEvent
+[06Dec2020 17:05:41.124] [modloading-worker-2/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : FMLDedicatedServerSetupEvent
+[06Dec2020 17:05:41.124] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[06Dec2020 17:05:41.140] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[06Dec2020 17:05:41.142] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Generating keypair
+[06Dec2020 17:05:41.143] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+[06Dec2020 17:05:42.073] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[06Dec2020 17:05:42.096] [Server thread/INFO] [net.minecraft.network.NetworkSystem/]: Using epoll channel type
+[06Dec2020 17:05:42.342] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:ENQUEUE_IMC
+[06Dec2020 17:05:42.347] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : InterModEnqueueEvent
+[06Dec2020 17:05:42.347] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : InterModEnqueueEvent
+[06Dec2020 17:05:42.347] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : InterModEnqueueEvent
+[06Dec2020 17:05:42.348] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : InterModEnqueueEvent
+[06Dec2020 17:05:42.348] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:PROCESS_IMC
+[06Dec2020 17:05:42.353] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : InterModProcessEvent
+[06Dec2020 17:05:42.354] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : InterModProcessEvent
+[06Dec2020 17:05:42.354] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : InterModProcessEvent
+[06Dec2020 17:05:42.354] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : InterModProcessEvent
+[06Dec2020 17:05:42.354] [Server thread/DEBUG] [net.minecraftforge.fml.ModList/LOADING]: Dispatching parallel event LifecycleEvent:COMPLETE
+[06Dec2020 17:05:42.358] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid dragonsurvival : FMLLoadCompleteEvent
+[06Dec2020 17:05:42.359] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid dragonsurvival : FMLLoadCompleteEvent
+[06Dec2020 17:05:42.359] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Firing event for modid forge : FMLLoadCompleteEvent
+[06Dec2020 17:05:42.359] [modloading-worker-1/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Fired event for modid forge : FMLLoadCompleteEvent
+[06Dec2020 17:05:42.408] [Server thread/DEBUG] [net.minecraftforge.registries.ClearableRegistry/REGISTRY]: minecraft:feature: Clearing registry
+[06Dec2020 17:05:42.647] [Forge Version Check/DEBUG] [net.minecraftforge.fml.VersionChecker/]: [forge] Received version check data:
+{
+  "homepage": "http://files.minecraftforge.net/maven/net/minecraftforge/forge/",
+  "promos": {
+    "1.1-latest": "1.3.2.6",
+    "1.10-latest": "12.18.0.2000",
+    "1.10.2-latest": "12.18.3.2511",
+    "1.10.2-recommended": "12.18.3.2185",
+    "1.11-latest": "13.19.1.2199",
+    "1.11-recommended": "13.19.1.2189",
+    "1.11.2-latest": "13.20.1.2588",
+    "1.11.2-recommended": "13.20.1.2386",
+    "1.12-latest": "14.21.1.2443",
+    "1.12-recommended": "14.21.1.2387",
+    "1.12.1-latest": "14.22.1.2485",
+    "1.12.1-recommended": "14.22.1.2478",
+    "1.12.2-latest": "14.23.5.2854",
+    "1.12.2-recommended": "14.23.5.2854",
+    "1.13.2-latest": "25.0.219",
+    "1.14.2-latest": "26.0.63",
+    "1.14.3-latest": "27.0.60",
+    "1.14.4-latest": "28.2.23",
+    "1.14.4-recommended": "28.2.0",
+    "1.15-latest": "29.0.4",
+    "1.15.1-latest": "30.0.51",
+    "1.15.2-latest": "31.2.47",
+    "1.15.2-recommended": "31.2.0",
+    "1.16.1-latest": "32.0.108",
+    "1.16.2-latest": "33.0.61",
+    "1.16.3-latest": "34.1.42",
+    "1.16.3-recommended": "34.1.0",
+    "1.16.4-latest": "35.1.10",
+    "1.16.4-recommended": "35.1.0",
+    "1.5.2-latest": "7.8.1.738",
+    "1.5.2-recommended": "7.8.1.737",
+    "1.6.1-latest": "8.9.0.775",
+    "1.6.2-latest": "9.10.1.871",
+    "1.6.2-recommended": "9.10.1.871",
+    "1.6.3-latest": "9.11.0.878",
+    "1.6.4-latest": "9.11.1.1345",
+    "1.6.4-recommended": "9.11.1.1345",
+    "1.7.10-latest": "10.13.4.1614",
+    "1.7.10-latest-1.7.10": "10.13.2.1343",
+    "1.7.10-recommended": "10.13.4.1558",
+    "1.7.2-latest": "10.12.2.1147",
+    "1.7.2-recommended": "10.12.2.1121",
+    "1.8-latest": "11.14.4.1577",
+    "1.8-recommended": "11.14.4.1563",
+    "1.8.8-latest": "11.15.0.1655",
+    "1.8.9-latest": "11.15.1.2318",
+    "1.8.9-recommended": "11.15.1.1722",
+    "1.9-latest": "12.16.0.1942",
+    "1.9-recommended": "12.16.1.1887",
+    "1.9.4-latest": "12.17.0.2051",
+    "1.9.4-recommended": "12.17.0.1976",
+    "latest-1.7.10": "10.13.2.1343"
+  }
+}
+[06Dec2020 17:05:42.649] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: AHEAD Current: 31.2.47 Target: null
+[06Dec2020 17:05:43.436] [Server thread/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing serverconfig directory : ./world/serverconfig
+[06Dec2020 17:05:43.437] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Loading configs type SERVER
+[06Dec2020 17:05:43.437] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Built TOML config for ./world/serverconfig/forge-server.toml
+[06Dec2020 17:05:43.451] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Loaded TOML config file ./world/serverconfig/forge-server.toml
+[06Dec2020 17:05:43.467] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Watching TOML config file ./world/serverconfig/forge-server.toml for changes
+[06Dec2020 17:05:43.467] [Server thread/DEBUG] [net.minecraftforge.common.ForgeConfig/FORGEMOD]: Loaded forge config file forge-server.toml
+[06Dec2020 17:05:43.665] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[06Dec2020 17:05:43.985] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Reading Dimension Entries.
+[06Dec2020 17:05:43.990] [Server thread/DEBUG] [net.minecraftforge.registries.ClearableRegistry/REGISTRY]: minecraft:dimension_type: Clearing registry
+[06Dec2020 17:05:43.990] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Registering vanilla entry ID: 1 Name: minecraft:overworld Value: DimensionType{null}
+[06Dec2020 17:05:43.991] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Registering vanilla entry ID: 2 Name: minecraft:the_end Value: DimensionType{null}
+[06Dec2020 17:05:43.991] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Registering vanilla entry ID: 0 Name: minecraft:the_nether Value: DimensionType{null}
+[06Dec2020 17:05:44.177] [Server thread/DEBUG] [net.minecraftforge.registries.ClearableRegistry/REGISTRY]: minecraft:feature: Clearing registry
+[06Dec2020 17:05:44.327] [Server thread/DEBUG] [net.minecraftforge.fml.server.ServerLifecycleHooks/CORE]: Generating PackInfo named mod:forge for mod file /home/alexiy/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1/forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar
+[06Dec2020 17:05:44.343] [Server thread/DEBUG] [net.minecraftforge.fml.server.ServerLifecycleHooks/CORE]: Generating PackInfo named mod:dragonsurvival for mod file /home/alexiy/Minecraft/DragonSurvivalMod/build/resources/main
+[06Dec2020 17:05:44.350] [Server thread/INFO] [net.minecraft.resources.SimpleReloadableResourceManager/]: Reloading ResourceManager: Default, forge-1.15.2-31.2.47_mapped_snapshot_20200514-1.15.1-recomp.jar, main
+[06Dec2020 17:05:48.389] [Server thread/INFO] [net.minecraft.item.crafting.RecipeManager/]: Loaded 6 recipes
+[06Dec2020 17:05:49.425] [Server thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 825 advancements
+[06Dec2020 17:05:49.852] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[06Dec2020 17:05:50.577] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:50.577] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.238] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.238] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.240] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 0%
+[06Dec2020 17:05:52.660] [Server-Worker-2/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 83%
+[06Dec2020 17:05:52.853] [Server-Worker-3/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 83%
+[06Dec2020 17:05:53.364] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Preparing spawn area: 84%
+[06Dec2020 17:05:53.861] [Server thread/INFO] [net.minecraft.world.chunk.listener.LoggingChunkStatusListener/]: Time elapsed: 4009 ms
+[06Dec2020 17:05:53.862] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (10.449s)! For help, type "help"
+[06Dec2020 17:05:53.887] [Server thread/DEBUG] [net.minecraftforge.fml.ForgeI18n/CORE]: Loading I18N data entries: 174
+[06Dec2020 17:05:53.887] [Server thread/INFO] [by.jackraidenph.dragonsurvival.DragonSurvivalMod/]: Registered commands
+[06Dec2020 17:05:53.953] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Queueing dimension -1 to unload
+[06Dec2020 17:05:53.954] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Queueing dimension 1 to unload
+[06Dec2020 17:05:53.967] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Unloading dimension -1
+[06Dec2020 17:05:53.971] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[06Dec2020 17:05:53.973] [Server thread/DEBUG] [net.minecraftforge.common.DimensionManager/DIMS]: Unloading dimension 1
+[06Dec2020 17:05:53.973] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[06Dec2020 17:06:00.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[06Dec2020 17:06:00.089] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[06Dec2020 17:06:00.090] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[06Dec2020 17:06:00.090] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'world'/minecraft:overworld
+[06Dec2020 17:06:00.296] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[06Dec2020 17:06:00.300] [Server thread/DEBUG] [net.minecraftforge.fml.FMLWorldPersistenceHook/WP]: Gathering id map for writing to world save world
+[06Dec2020 17:06:00.313] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[06Dec2020 17:06:00.765] [Server thread/DEBUG] [net.minecraftforge.fml.loading.FileUtils/CORE]: Found existing serverconfig directory : ./world/serverconfig
+[06Dec2020 17:06:00.765] [Server thread/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Unloading configs type SERVER
+[06Dec2020 17:06:00.765] [Thread-1/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Config file forge-server.toml changed, sending notifies
+[06Dec2020 17:06:00.766] [Thread-1/DEBUG] [net.minecraftforge.common.ForgeConfig/FORGEMOD]: Forge config just got changed on the file system!
+[06Dec2020 17:06:00.767] [Thread-1/DEBUG] [net.minecraftforge.fml.config.ConfigFileTypeHandler/CONFIG]: Config file forge-server.toml changed, sending notifies
+[06Dec2020 17:06:00.767] [Thread-1/DEBUG] [net.minecraftforge.common.ForgeConfig/FORGEMOD]: Forge config just got changed on the file system!
