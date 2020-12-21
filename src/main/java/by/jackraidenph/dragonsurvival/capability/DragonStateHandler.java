@@ -1,14 +1,10 @@
 package by.jackraidenph.dragonsurvival.capability;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Optional;
 
@@ -39,7 +35,7 @@ public class DragonStateHandler {
 
     public void setMovementData(DragonMovementData data, boolean doSync) {
         if (doSync)
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
+//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
         this.data = Optional.of(data);
     }
 
@@ -80,24 +76,26 @@ public class DragonStateHandler {
     }
 
     /**
+     * TODO remove
      * Synchronizes dragon capability data
      *
      * @param isServer is server side currently?
      */
+    @Deprecated
     public void syncCapabilityData(boolean isServer) {
         if (isServer) {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         } else {
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+//            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         }
     }
 
     public void syncMovement(boolean isServer) {
         this.data.ifPresent(dat -> {
             if (isServer) {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
+//                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
             } else {
-                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
+//                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
             }
         });
     }

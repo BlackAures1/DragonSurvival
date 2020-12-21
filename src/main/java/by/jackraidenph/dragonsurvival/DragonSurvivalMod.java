@@ -153,6 +153,7 @@ public class DragonSurvivalMod {
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
+                //works
                 CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true));
             });
             return 1;
