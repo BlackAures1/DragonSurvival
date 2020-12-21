@@ -50,18 +50,11 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
         CompoundNBT tag = (CompoundNBT) base;
         instance.setIsDragon(tag.getBoolean("isDragon"));
         if (tag.getBoolean("isDragon")) {
-            instance.setMovementData(
-                    new DragonStateHandler.DragonMovementData(
-                            tag.getDouble("bodyYaw"),
-                            tag.getDouble("headYaw"),
-                            tag.getDouble("headPitch"),
-                            getVec3d(tag.get("headPos")),
-                            getVec3d(tag.get("tailPos"))
-                    ), false);
+            instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"),
+                    tag.getDouble("headPitch"), getVec3d(tag.get("headPos")), getVec3d(tag.get("tailPos")));
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
             instance.setLevel(DragonLevel.values()[tag.getInt("level")]);
         }
-        ;
     }
 }

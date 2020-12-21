@@ -100,9 +100,6 @@ public class DragonSurvivalMod {
                 World world = myPlayer.world;
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
                 if (thatPlayer != null) {
-                    if (myPlayer == thatPlayer) {
-                        System.out.println("Same player");
-                    }
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
                         dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                         dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);

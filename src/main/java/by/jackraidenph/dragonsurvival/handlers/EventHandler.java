@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
@@ -19,7 +18,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -127,7 +125,9 @@ public class EventHandler {
                 DragonStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
                     if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
-                        capNew.setMovementData(capOld.getMovementData().orElse(new DragonStateHandler.DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO)), false);
+                        capOld.getMovementData().ifPresent(dragonMovementData -> {
+                            capNew.setMovementData(dragonMovementData.bodyYaw, dragonMovementData.headYaw, dragonMovementData.headPitch, dragonMovementData.headPos, dragonMovementData.tailPos);
+                        });
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
                         e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());

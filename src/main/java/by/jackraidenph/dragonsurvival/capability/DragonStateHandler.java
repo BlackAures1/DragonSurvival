@@ -33,11 +33,11 @@ public class DragonStateHandler {
         isHiding = hiding;
     }
 
-    public void setMovementData(DragonMovementData data, boolean doSync) {
-        if (doSync)
-//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
-        this.data = Optional.of(data);
-    }
+//    public void setMovementData(DragonMovementData data, boolean doSync) {
+//        if (doSync)
+////            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
+//        this.data = Optional.of(data);
+//    }
 
     public DragonLevel getLevel() {
         return this.level;
