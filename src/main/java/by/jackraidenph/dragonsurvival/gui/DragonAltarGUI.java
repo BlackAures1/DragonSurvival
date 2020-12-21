@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.ResetPlayer;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
@@ -132,8 +133,8 @@ public class DragonAltarGUI extends Screen {
         DragonStateProvider.getCap(player)
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
-                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));
-                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
+                    DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true));
+                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, placeHolder, placeHolder));
                     cap.setIsDragon(true);
                     cap.setType(type);
                     cap.setLevel(DragonLevel.BABY);
