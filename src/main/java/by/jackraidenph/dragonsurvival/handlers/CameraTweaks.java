@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
-@Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class CameraTweaks {
 
     private static Method movePosition;

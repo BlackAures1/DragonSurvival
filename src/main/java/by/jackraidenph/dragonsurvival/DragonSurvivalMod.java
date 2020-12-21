@@ -15,6 +15,7 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,14 +95,40 @@ public class DragonSurvivalMod {
             return new SynchronizeDragonCap(id, hiding, type, level, isDragon);
         }, (synchronizeDragonCap, contextSupplier) -> {
             //TODO proxy
-            World world = Minecraft.getInstance().player.world;
-            PlayerEntity playerEntity = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-            PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-                dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+            contextSupplier.get().enqueueWork(() -> {
+                ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
+                World world = myPlayer.world;
+                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+                if (thatPlayer != null) {
+                    if (myPlayer == thatPlayer) {
+                        System.out.println("Same player");
+                    }
+                    PlayerStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
+                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
+                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
+                        dragonStateHandler.setType(synchronizeDragonCap.dragonType);
+                        dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                    });
+
+                }
             });
+        });
+
+        CHANNEL.registerMessage(11, SyncCapBounceBack.class, (syncCapBounceBack, packetBuffer) -> {
+            packetBuffer.writeInt(syncCapBounceBack.playerId);
+            packetBuffer.writeByte(syncCapBounceBack.dragonLevel.ordinal());
+            packetBuffer.writeByte(syncCapBounceBack.dragonType.ordinal());
+            packetBuffer.writeBoolean(syncCapBounceBack.hiding);
+            packetBuffer.writeBoolean(syncCapBounceBack.isDragon);
+        }, packetBuffer -> {
+            int id = packetBuffer.readInt();
+            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
+            DragonType type = DragonType.values()[packetBuffer.readByte()];
+            boolean hiding = packetBuffer.readBoolean();
+            boolean isDragon = packetBuffer.readBoolean();
+            return new SyncCapBounceBack(id, hiding, type, level, isDragon);
+        }, (syncCapBounceBack, contextSupplier) -> {
+            ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
 
         });
         LOGGER.info("Successfully registered packets!");
@@ -120,13 +148,12 @@ public class DragonSurvivalMod {
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().asPlayer();
             serverPlayerEntity.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
-                dragonStateHandler.setType(DragonType.valueOf(type.toUpperCase()));
+                DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
+                dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
-//                PlayerStateProvider.getCap(serverPlayerEntity).orElse(null).syncCapabilityData(true);
-                //a trick to update the eye height
-//                serverPlayerEntity.setSneaking(!serverPlayerEntity.isSneaking());
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true));
             });
             return 1;
         }).build();
