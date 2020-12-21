@@ -32,12 +32,15 @@ public class SynchronizationController {
         Entity tracked = startTracking.getTarget();
         if (tracked instanceof ServerPlayerEntity) {
             PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> tracked), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon()));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon()));
             });
             System.out.println(startTracking);
         }
     }
 
+    /**
+     * Fires after {@link EntityJoinWorldEvent}
+     */
     @SubscribeEvent
     public static void onLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
         PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->

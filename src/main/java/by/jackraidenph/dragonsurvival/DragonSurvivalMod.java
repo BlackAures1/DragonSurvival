@@ -109,28 +109,28 @@ public class DragonSurvivalMod {
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                     });
-
+                    contextSupplier.get().setPacketHandled(true);
                 }
             });
         });
 
-        CHANNEL.registerMessage(11, SyncCapBounceBack.class, (syncCapBounceBack, packetBuffer) -> {
-            packetBuffer.writeInt(syncCapBounceBack.playerId);
-            packetBuffer.writeByte(syncCapBounceBack.dragonLevel.ordinal());
-            packetBuffer.writeByte(syncCapBounceBack.dragonType.ordinal());
-            packetBuffer.writeBoolean(syncCapBounceBack.hiding);
-            packetBuffer.writeBoolean(syncCapBounceBack.isDragon);
-        }, packetBuffer -> {
-            int id = packetBuffer.readInt();
-            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
-            DragonType type = DragonType.values()[packetBuffer.readByte()];
-            boolean hiding = packetBuffer.readBoolean();
-            boolean isDragon = packetBuffer.readBoolean();
-            return new SyncCapBounceBack(id, hiding, type, level, isDragon);
-        }, (syncCapBounceBack, contextSupplier) -> {
-            ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
-
-        });
+//        CHANNEL.registerMessage(11, SyncCapBounceBack.class, (syncCapBounceBack, packetBuffer) -> {
+//            packetBuffer.writeInt(syncCapBounceBack.playerId);
+//            packetBuffer.writeByte(syncCapBounceBack.dragonLevel.ordinal());
+//            packetBuffer.writeByte(syncCapBounceBack.dragonType.ordinal());
+//            packetBuffer.writeBoolean(syncCapBounceBack.hiding);
+//            packetBuffer.writeBoolean(syncCapBounceBack.isDragon);
+//        }, packetBuffer -> {
+//            int id = packetBuffer.readInt();
+//            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
+//            DragonType type = DragonType.values()[packetBuffer.readByte()];
+//            boolean hiding = packetBuffer.readBoolean();
+//            boolean isDragon = packetBuffer.readBoolean();
+//            return new SyncCapBounceBack(id, hiding, type, level, isDragon);
+//        }, (syncCapBounceBack, contextSupplier) -> {
+//            ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
+//
+//        });
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered entity spawns!");
