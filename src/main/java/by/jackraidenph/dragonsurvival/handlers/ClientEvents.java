@@ -169,11 +169,7 @@ public class ClientEvents {
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 matrixStack.push();
-                //don't rotate if viewing a screen
-                if (Minecraft.getInstance().currentScreen == null) {
-                    matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
-//                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
-                }
+                matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
 
                 float maxHealth = player.getMaxHealth();
                 float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
