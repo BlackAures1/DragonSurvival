@@ -241,9 +241,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         @Override
         public void tick() {
             this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(4), Objects::nonNull).forEach(
-                    xpOrb -> {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()));
-                    }
+                    xpOrb -> DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()))
             );
             super.tick();
         }

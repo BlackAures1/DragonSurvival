@@ -82,17 +82,20 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         ClientPlayerEntity thisPlayer = Minecraft.getInstance().player;
-        World world = thisPlayer.world;
-        Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
-        if (entity instanceof PlayerEntity) {
-            AbstractClientPlayerEntity otherPlayer = (AbstractClientPlayerEntity) entity;
-            if (otherPlayer.getMotion().x != 0 || otherPlayer.getMotion().z != 0) {
-                DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
-                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
-                });
+        if (thisPlayer != null) {
+            World world = thisPlayer.world;
+            Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
+            if (entity instanceof PlayerEntity) {
+                AbstractClientPlayerEntity otherPlayer = (AbstractClientPlayerEntity) entity;
+                if (otherPlayer.getMotion().x != 0 || otherPlayer.getMotion().z != 0) {
+                    DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
+                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
+                    });
+                }
+                context.setPacketHandled(true);
             }
-            context.setPacketHandled(true);
         }
+
 
     }
 }

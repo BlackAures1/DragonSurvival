@@ -97,16 +97,18 @@ public class DragonSurvivalMod {
             //TODO proxy
             contextSupplier.get().enqueueWork(() -> {
                 ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                World world = myPlayer.world;
-                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-                if (thatPlayer != null) {
-                    DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                        dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                        dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                    });
-                    contextSupplier.get().setPacketHandled(true);
+                if (myPlayer != null) {
+                    World world = myPlayer.world;
+                    PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+                    if (thatPlayer != null) {
+                        DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
+                            dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
+                            dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
+                            dragonStateHandler.setType(synchronizeDragonCap.dragonType);
+                            dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                        });
+                        contextSupplier.get().setPacketHandled(true);
+                    }
                 }
             });
         });
