@@ -1,16 +1,12 @@
 package by.jackraidenph.dragonsurvival.models;
 
 import by.jackraidenph.dragonsurvival.Functions;
-import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
-import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class DragonModel2 extends EntityModel<Entity> {
@@ -403,12 +399,6 @@ public class DragonModel2 extends EntityModel<Entity> {
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
-        if (!firstPerson) {
-            PlayerEntity playerEntity = Minecraft.getInstance().player;
-            float maxHealth = playerEntity.getMaxHealth();
-            float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
-            matrixStack.scale(scale, scale, scale);
-        }
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
         LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);

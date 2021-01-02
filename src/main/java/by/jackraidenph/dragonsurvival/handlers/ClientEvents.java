@@ -174,6 +174,10 @@ public class ClientEvents {
                     matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
 //                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 }
+
+                float maxHealth = player.getMaxHealth();
+                float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+                matrixStack.scale(scale, scale, scale);
                 thirdPersonModel.render(
                         matrixStack,
                         renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
