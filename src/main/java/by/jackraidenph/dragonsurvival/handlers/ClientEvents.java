@@ -141,10 +141,11 @@ public class ClientEvents {
                         bodyYaw -= Math.signum(bodyAndHeadYawDiff) * 2;
                     }
                 }
-                if (player.getMotion().x != 0 && player.getMotion().z != 0) {
-                    bodyYaw = player.rotationYaw;
+                if (player.getMotion().x != 0 || player.getMotion().z != 0) {
+//                    bodyYaw = player.rotationYaw;
+//                    neckYaw=player.rotationYaw;
                 }
-                DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> neckYaw = (float) -dragonStateHandler.getMovementData().headYaw);
+//                DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> neckYaw = (float) -dragonStateHandler.getMovementData().headYaw);
 
             }
         }

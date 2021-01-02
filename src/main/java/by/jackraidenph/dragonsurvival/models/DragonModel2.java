@@ -394,8 +394,10 @@ public class DragonModel2 extends EntityModel<Entity> {
         Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
 
         lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
-
-        Neckand_3.rotateAngleZ = -(float) ((netHeadYaw + ClientEvents.neckYaw) * Math.PI / 180.0F);
+        if(entity.getMotion().x!=0 || entity.getMotion().z!=0)
+            Neckand_3.rotateAngleZ=0;
+//        else
+//            Neckand_3.rotateAngleZ = -(float) ((netHeadYaw) * Math.PI / 180.0F);
     }
 
     @Override
