@@ -19,8 +19,10 @@ import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -46,7 +48,6 @@ public class DragonSurvivalMod {
             PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     private static int nextPacketId = 0;
-
     public DragonSurvivalMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
@@ -90,7 +91,9 @@ public class DragonSurvivalMod {
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
             return new SynchronizeDragonCap(id, hiding, type, level, isDragon);
-        }, PacketProxy::handleCapabilitySync);
+        }, (synchronizeDragonCap, contextSupplier) -> {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilitySync(synchronizeDragonCap, contextSupplier));
+        });
 
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();

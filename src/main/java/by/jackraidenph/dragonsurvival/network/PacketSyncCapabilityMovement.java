@@ -3,6 +3,8 @@ package by.jackraidenph.dragonsurvival.network;
 import by.jackraidenph.dragonsurvival.PacketProxy;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -66,6 +68,6 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
 
     @Override
     public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
-        PacketProxy.handleCapabilityMovement(syncCapabilityMovement, supplier);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
     }
 }

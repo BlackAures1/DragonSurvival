@@ -53,8 +53,11 @@ public class EventHandler {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                         }
                     }
+                    //FIXME
                     if (playerEntity instanceof ServerPlayerEntity) {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                    } else {
+                        DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
                     }
                 }
             });
