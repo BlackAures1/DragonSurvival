@@ -14,15 +14,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -79,6 +75,7 @@ public class DragonSurvivalMod {
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
 
+        //TODO proxy
         CHANNEL.registerMessage(10, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
@@ -93,43 +90,8 @@ public class DragonSurvivalMod {
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
             return new SynchronizeDragonCap(id, hiding, type, level, isDragon);
-        }, (synchronizeDragonCap, contextSupplier) -> {
-            //TODO proxy
-            contextSupplier.get().enqueueWork(() -> {
-                ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                if (myPlayer != null) {
-                    World world = myPlayer.world;
-                    PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-                    if (thatPlayer != null) {
-                        DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                            dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                            dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                            dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                            dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                        });
-                        contextSupplier.get().setPacketHandled(true);
-                    }
-                }
-            });
-        });
+        }, PacketProxy::handleCapabilitySync);
 
-//        CHANNEL.registerMessage(11, SyncCapBounceBack.class, (syncCapBounceBack, packetBuffer) -> {
-//            packetBuffer.writeInt(syncCapBounceBack.playerId);
-//            packetBuffer.writeByte(syncCapBounceBack.dragonLevel.ordinal());
-//            packetBuffer.writeByte(syncCapBounceBack.dragonType.ordinal());
-//            packetBuffer.writeBoolean(syncCapBounceBack.hiding);
-//            packetBuffer.writeBoolean(syncCapBounceBack.isDragon);
-//        }, packetBuffer -> {
-//            int id = packetBuffer.readInt();
-//            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
-//            DragonType type = DragonType.values()[packetBuffer.readByte()];
-//            boolean hiding = packetBuffer.readBoolean();
-//            boolean isDragon = packetBuffer.readBoolean();
-//            return new SyncCapBounceBack(id, hiding, type, level, isDragon);
-//        }, (syncCapBounceBack, contextSupplier) -> {
-//            ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
-//
-//        });
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered entity spawns!");

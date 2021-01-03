@@ -32,14 +32,6 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         this.playerId = playerId;
     }
 
-//    public PacketSyncCapabilityMovement(DragonStateHandler.DragonMovementData data) {
-//        this.bodyYaw = data.bodyYaw;
-//        this.headYaw = data.headYaw;
-//        this.headPitch = data.headPitch;
-//        this.headPos = data.headPos;
-//        this.tailPos = data.tailPos;
-//    }
-
     @Override
     public void encode(PacketSyncCapabilityMovement m, PacketBuffer b) {
         b.writeInt(m.playerId);
@@ -74,6 +66,6 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
 
     @Override
     public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
-        PacketProxy.handleCapabilitySync(syncCapabilityMovement, supplier);
+        PacketProxy.handleCapabilityMovement(syncCapabilityMovement, supplier);
     }
 }
