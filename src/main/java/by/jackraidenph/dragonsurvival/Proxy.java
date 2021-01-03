@@ -7,7 +7,7 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
-
+@Deprecated
 public interface Proxy {
 
     void syncCapability(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier);

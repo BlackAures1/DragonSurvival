@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
-
+@Deprecated
 public class ClientProxy implements Proxy {
 
     @Override
