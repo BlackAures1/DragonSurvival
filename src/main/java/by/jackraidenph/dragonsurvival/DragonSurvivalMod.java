@@ -93,6 +93,9 @@ public class DragonSurvivalMod {
             return new SynchronizeDragonCap(id, hiding, type, level, isDragon);
         }, (synchronizeDragonCap, contextSupplier) -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilitySync(synchronizeDragonCap, contextSupplier));
+            //FIXME server
+//            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> );
+
         });
 
         LOGGER.info("Successfully registered packets!");

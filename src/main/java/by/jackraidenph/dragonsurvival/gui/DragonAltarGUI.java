@@ -129,15 +129,15 @@ public class DragonAltarGUI extends Screen {
         if (player == null)
             return;
         player.closeScreen();
-        DragonStateProvider.getCap(player)
-                .ifPresent(cap -> {
-                    Vec3d placeHolder = new Vec3d(0, 0, 0);
-                    DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true));
-                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, placeHolder, placeHolder));
-                    cap.setIsDragon(true);
-                    cap.setType(type);
-                    cap.setLevel(DragonLevel.BABY);
-                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
+            Vec3d placeHolder = new Vec3d(0, 0, 0);
+            //FIXME
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, placeHolder, placeHolder));
+            cap.setIsDragon(true);
+            cap.setType(type);
+            cap.setLevel(DragonLevel.BABY);
+            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
 //                    Random random = player.world.rand;
 //                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
 //                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));

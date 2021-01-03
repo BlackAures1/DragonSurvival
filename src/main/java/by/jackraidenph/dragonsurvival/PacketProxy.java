@@ -43,23 +43,21 @@ public class PacketProxy {
     }
 
     public DistExecutor.SafeRunnable handleCapabilitySync(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> contextSupplier) {
-        return () -> {
-            contextSupplier.get().enqueueWork(() -> {
-                ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                if (myPlayer != null) {
-                    World world = myPlayer.world;
-                    PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-                    if (thatPlayer != null) {
-                        DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                            dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                            dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                            dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                            dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                        });
-                        contextSupplier.get().setPacketHandled(true);
-                    }
+        return () -> contextSupplier.get().enqueueWork(() -> {
+            ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
+            if (myPlayer != null) {
+                World world = myPlayer.world;
+                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+                if (thatPlayer != null) {
+                    DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
+                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
+                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
+                        dragonStateHandler.setType(synchronizeDragonCap.dragonType);
+                        dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                    });
+                    contextSupplier.get().setPacketHandled(true);
                 }
-            });
-        };
+            }
+        });
     }
 }
