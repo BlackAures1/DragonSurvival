@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -33,7 +32,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 
@@ -55,9 +53,10 @@ public class EventHandler {
                     }
                     //FIXME
                     if (playerEntity instanceof ServerPlayerEntity) {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+//                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
                     } else {
-                        DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                        if (playerEntity.getMotion().x != 0 || playerEntity.getMotion().z != 0)
+                            dragonStateHandler.setMovementData(playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO);
                     }
                 }
             });
