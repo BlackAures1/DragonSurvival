@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -30,7 +31,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
     /**
      * Whether all three custom skins exist
@@ -77,6 +78,32 @@ public class ClientModEvents {
                 break;
             case ADULT:
                 url = new URL(SKINS + uuid + "_adult.png");
+                break;
+            default:
+                url = null;
+        }
+        InputStream inputStream = url.openConnection().getInputStream();
+        NativeImage customTexture = NativeImage.read(inputStream);
+        ResourceLocation resourceLocation;
+        Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
+        return resourceLocation;
+    }
+
+    /**
+     * Loads a custom image for skin based on profile name
+     */
+    public static ResourceLocation loadCustomSkinForName(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
+        String name = playerEntity.getGameProfile().getName();
+        URL url;
+        switch (dragonStage) {
+            case BABY:
+                url = new URL(SKINS + name + "_newborn.png");
+                break;
+            case YOUNG:
+                url = new URL(SKINS + name + "_young.png");
+                break;
+            case ADULT:
+                url = new URL(SKINS + name + "_adult.png");
                 break;
             default:
                 url = null;

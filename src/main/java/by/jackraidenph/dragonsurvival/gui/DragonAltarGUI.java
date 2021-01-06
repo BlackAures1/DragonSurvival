@@ -116,8 +116,8 @@ public class DragonAltarGUI extends Screen {
                 playerStateHandler.setIsHiding(false);
                 playerStateHandler.setLevel(DragonLevel.BABY);
                 playerStateHandler.setType(DragonType.NONE);
-                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, DragonLevel.BABY));
-                DragonSurvivalMod.INSTANCE.sendToServer(new ResetPlayer());
+                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, DragonLevel.BABY));
+                DragonSurvivalMod.CHANNEL.sendToServer(new ResetPlayer());
                 minecraft.player.closeScreen();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
             });
@@ -132,8 +132,8 @@ public class DragonAltarGUI extends Screen {
         PlayerStateProvider.getCap(player)
                 .ifPresent(cap -> {
                     Vec3d placeHolder = new Vec3d(0, 0, 0);
-                    DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));
-                    DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
+                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));
+                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
                     cap.setIsDragon(true);
                     cap.setType(type);
                     cap.setLevel(DragonLevel.BABY);

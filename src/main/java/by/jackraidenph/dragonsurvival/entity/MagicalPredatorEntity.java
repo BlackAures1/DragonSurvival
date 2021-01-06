@@ -4,7 +4,6 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
-import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -39,7 +38,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
 
     public MagicalPredatorEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
-        this.type = worldIn.getRandom().nextInt(MagicalPredatorRenderer.MAGICAL_BEAST_TEXTURES.size());
+        this.type = worldIn.getRandom().nextInt(10);
         this.size = worldIn.getRandom().nextFloat() + 0.95F;
         scale = this.size / this.getHeight();
     }
@@ -243,7 +242,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         public void tick() {
             this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(4), Objects::nonNull).forEach(
                     xpOrb -> {
-                        DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()));
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()));
                     }
             );
             super.tick();

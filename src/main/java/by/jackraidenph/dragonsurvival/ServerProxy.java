@@ -2,10 +2,7 @@ package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
-import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -18,7 +15,7 @@ public class ServerProxy implements Proxy {
         return () -> {
             ServerPlayerEntity playerEntity = supplier.get().getSender();
             if (playerEntity != null) {
-                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos), false));
+                PlayerStateProvider.getCap(playerEntity).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos), true));
             }
         };
     }
@@ -43,6 +40,11 @@ public class ServerProxy implements Proxy {
 
     @Override
     public DistExecutor.SafeRunnable syncPredatorStats(PacketSyncPredatorStats syncPredatorStats, Supplier<NetworkEvent.Context> supplier) {
+        return null;
+    }
+
+    @Override
+    public DistExecutor.SafeRunnable syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
         return null;
     }
 }

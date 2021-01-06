@@ -1,9 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
-import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.*;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -18,5 +15,7 @@ public interface Proxy {
     DistExecutor.SafeRunnable syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier);
 
     DistExecutor.SafeRunnable syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier);
+
+    DistExecutor.SafeRunnable syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier);
 }
 

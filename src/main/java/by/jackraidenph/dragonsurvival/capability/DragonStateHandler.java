@@ -39,7 +39,7 @@ public class DragonStateHandler {
 
     public void setMovementData(DragonMovementData data, boolean doSync) {
         if (doSync)
-            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
         this.data = Optional.of(data);
     }
 
@@ -86,18 +86,18 @@ public class DragonStateHandler {
      */
     public void syncCapabilityData(boolean isServer) {
         if (isServer) {
-            DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         } else {
-            DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         }
     }
 
     public void syncMovement(boolean isServer) {
         this.data.ifPresent(dat -> {
             if (isServer) {
-                DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
             } else {
-                DragonSurvivalMod.INSTANCE.sendToServer(new PacketSyncCapabilityMovement(dat));
+                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
             }
         });
     }
