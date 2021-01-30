@@ -10,6 +10,7 @@ loaderVersion="[31,)" #mandatory This is typically bumped every Minecraft versio
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="http://my.issue.tracker/" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
+license = "GNU LESSER GENERAL PUBLIC LICENSE v3"
 [[mods]] #mandatory
 # The modid of the mod
 modId="dragonsurvival" #mandatory
