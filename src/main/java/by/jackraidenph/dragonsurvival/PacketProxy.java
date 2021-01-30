@@ -4,7 +4,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,9 +18,7 @@ public class PacketProxy {
     public DistExecutor.SafeRunnable handleCapabilityMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
         return () -> {
             NetworkEvent.Context context = supplier.get();
-            context.enqueueWork(() -> {
-                handleMovement(syncCapabilityMovement, context);
-            });
+            context.enqueueWork(() -> handleMovement(syncCapabilityMovement, context));
         };
     }
 
@@ -31,9 +28,9 @@ public class PacketProxy {
             World world = thisPlayer.world;
             Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
-                AbstractClientPlayerEntity otherPlayer = (AbstractClientPlayerEntity) entity;
-                if (otherPlayer.getMotion().x != 0 || otherPlayer.getMotion().z != 0) {
-                    DragonStateProvider.getCap(otherPlayer).ifPresent(dragonStateHandler -> {
+                assert entity != thisPlayer;
+                if (entity.getMotion().x != 0 || entity.getMotion().z != 0) {
+                    DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
                         dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
                     });
                 }

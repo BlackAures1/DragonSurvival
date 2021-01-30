@@ -27,6 +27,7 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
@@ -141,21 +142,22 @@ public class ClientEvents {
                         bodyYaw -= Math.signum(bodyAndHeadYawDiff) * 2;
                     }
                 }
-                if (player.getMotion().x != 0 || player.getMotion().z != 0) {
-//                    bodyYaw = player.rotationYaw;
-//                    neckYaw=player.rotationYaw;
-                }
-//                DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> neckYaw = (float) -dragonStateHandler.getMovementData().headYaw);
 
+                if (player.getMotion().x != 0 || player.getMotion().z != 0) {
+                    DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getYaw(1), player.rotationYawHead, player.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+
+                }
             }
         }
     }
 
+    /**
+     * The player is always the local player
+     */
     @SubscribeEvent
     public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
-        ClientPlayerEntity thisPlayer = Minecraft.getInstance().player;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -170,7 +172,6 @@ public class ClientEvents {
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 matrixStack.push();
                 matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
-
                 float maxHealth = player.getMaxHealth();
                 float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
                 matrixStack.scale(scale, scale, scale);

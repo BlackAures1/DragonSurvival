@@ -2,9 +2,12 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,5 +45,24 @@ public class SynchronizationController {
                 dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
             }
         });
+    }
+
+    /**
+     * Synchronizes dragon model rotations among players
+     */
+    @SubscribeEvent
+    public static void onTick(TickEvent.PlayerTickEvent playerTickEvent) {
+        PlayerEntity playerEntity = playerTickEvent.player;
+        if (playerEntity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+            serverPlayerEntity.getServer().getPlayerList().getPlayers().forEach(otherPlayerEntity -> {
+                if (otherPlayerEntity != playerEntity) {
+                    DragonStateProvider.getCap(otherPlayerEntity).ifPresent(dragonStateHandler -> {
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getEntityId(), otherPlayerEntity.getYaw(1), otherPlayerEntity.rotationYawHead, otherPlayerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                    });
+                }
+            });
+        }
+
     }
 }

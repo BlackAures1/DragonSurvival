@@ -13,14 +13,12 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -50,13 +48,6 @@ public class EventHandler {
                         if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                         }
-                    }
-                    //FIXME
-                    if (playerEntity instanceof ServerPlayerEntity) {
-//                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketSyncCapabilityMovement(playerEntity.getEntityId(), playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
-                    } else {
-                        if (playerEntity.getMotion().x != 0 || playerEntity.getMotion().z != 0)
-                            dragonStateHandler.setMovementData(playerEntity.getYaw(1), playerEntity.rotationYawHead, playerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO);
                     }
                 }
             });

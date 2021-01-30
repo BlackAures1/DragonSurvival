@@ -40,8 +40,8 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         b.writeDouble(m.bodyYaw);
         b.writeDouble(m.headYaw);
         b.writeDouble(m.headPitch);
-        writeVec3d(b, m.headPos);
-        writeVec3d(b, m.tailPos);
+//        writeVec3d(b, m.headPos);
+//        writeVec3d(b, m.tailPos);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
                 b.readDouble(),
                 b.readDouble(),
                 b.readDouble(),
-                readVec3d(b), readVec3d(b));
+                Vec3d.ZERO, Vec3d.ZERO);
     }
 
     private void writeVec3d(PacketBuffer buffer, Vec3d vec) {
