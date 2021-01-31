@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -94,8 +95,9 @@ public class DragonSurvivalMod {
         }, (synchronizeDragonCap, contextSupplier) -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilitySync(synchronizeDragonCap, contextSupplier));
             //FIXME server
-//            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> );
-
+            if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
+                CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
+            }
         });
 
         LOGGER.info("Successfully registered packets!");

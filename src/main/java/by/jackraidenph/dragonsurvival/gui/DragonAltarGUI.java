@@ -88,14 +88,14 @@ public class DragonAltarGUI extends Screen {
         this.guiTop = (this.height - this.ySize) / 2;
 
         this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, "CAVE",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.CAVE);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.cave_dragon_choice"));
                 })
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 58, this.guiTop + 6, 49, 147, "FOREST",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.FOREST);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.forest_dragon_choice"));
                 })
@@ -103,7 +103,7 @@ public class DragonAltarGUI extends Screen {
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 110, this.guiTop + 6, 49, 147, "SEA",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.SEA);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.sea_dragon_choice"));
                 })
@@ -130,10 +130,8 @@ public class DragonAltarGUI extends Screen {
             return;
         player.closeScreen();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            Vec3d placeHolder = new Vec3d(0, 0, 0);
-            //FIXME
             DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true));
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, placeHolder, placeHolder));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, Vec3d.ZERO, Vec3d.ZERO));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setLevel(DragonLevel.BABY);
