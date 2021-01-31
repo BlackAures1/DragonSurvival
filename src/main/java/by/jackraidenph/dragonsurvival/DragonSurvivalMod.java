@@ -77,7 +77,7 @@ public class DragonSurvivalMod {
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
 
-        //TODO proxy
+        //TODO synchronize health
         CHANNEL.registerMessage(10, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
@@ -97,6 +97,13 @@ public class DragonSurvivalMod {
             //FIXME server
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
+                ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
+                DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                    dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel, serverPlayerEntity);
+                    dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
+                    dragonStateHandler.setType(synchronizeDragonCap.dragonType);
+                });
             }
         });
 
