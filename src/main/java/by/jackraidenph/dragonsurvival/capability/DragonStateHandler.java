@@ -12,6 +12,10 @@ public class DragonStateHandler {
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
     private DragonLevel level = DragonLevel.BABY;
+    /**
+     * Current health, must be equal to the player's health
+     */
+    private float health = level.initialHealth;
     private final DragonMovementData data = new DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO);
 
     public boolean isDragon() {
@@ -30,18 +34,20 @@ public class DragonStateHandler {
         isHiding = hiding;
     }
 
-//    public void setMovementData(DragonMovementData data, boolean doSync) {
-//        if (doSync)
-////            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
-//        this.data = Optional.of(data);
-//    }
-
     public DragonLevel getLevel() {
         return this.level;
     }
 
     public void setLevel(DragonLevel level) {
         this.level = level;
+    }
+
+    public void setHealth(float health) {
+        this.health = health;
+    }
+
+    public float getHealth() {
+        return health;
     }
 
     /**
@@ -51,6 +57,14 @@ public class DragonStateHandler {
         setLevel(level);
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(level.initialHealth);
         playerEntity.heal(playerEntity.getMaxHealth());
+        setHealth(level.initialHealth);
+    }
+
+    public void setLevelAndHealth(DragonLevel level, float health, PlayerEntity playerEntity) {
+        setLevel(level);
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+        playerEntity.heal(playerEntity.getMaxHealth());
+        setHealth(health);
     }
 
 

@@ -10,15 +10,17 @@ public class SynchronizeDragonCap {
     public DragonType dragonType;
     public DragonLevel dragonLevel;
     public boolean isDragon;
+    public float health;
 
     public SynchronizeDragonCap() {
     }
 
-    public SynchronizeDragonCap(int playerId, boolean hiding, DragonType dragonType, DragonLevel dragonLevel, boolean isDragon) {
+    public SynchronizeDragonCap(int playerId, boolean hiding, DragonType dragonType, DragonLevel dragonLevel, boolean isDragon, float health) {
         this.playerId = playerId;
         this.hiding = hiding;
         this.dragonType = dragonType;
         this.dragonLevel = dragonLevel;
         this.isDragon = isDragon;
+        this.health = health;
     }
 }

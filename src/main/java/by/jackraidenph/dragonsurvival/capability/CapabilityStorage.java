@@ -40,7 +40,8 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
 
             tag.putBoolean("isHiding", instance.isHiding());
             tag.putString("type", instance.getType().toString());
-            tag.putInt("level", instance.getLevel().ordinal());
+            tag.putString("level", instance.getLevel().toString());
+            tag.putFloat("Health", instance.getHealth());
         }
         return tag;
     }
@@ -54,7 +55,8 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
                     tag.getDouble("headPitch"), getVec3d(tag.get("headPos")), getVec3d(tag.get("tailPos")));
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
-            instance.setLevel(DragonLevel.values()[tag.getInt("level")]);
+            instance.setLevel(DragonLevel.valueOf(tag.getString("level")));
+            instance.setHealth(tag.getFloat("Health"));
         }
     }
 }
