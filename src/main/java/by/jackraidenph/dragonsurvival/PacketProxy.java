@@ -28,11 +28,12 @@ public class PacketProxy {
             World world = thisPlayer.world;
             Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
-                assert entity != thisPlayer;
-                if (entity.getMotion().x != 0 || entity.getMotion().z != 0) {
-                    DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
-                    });
+                if (entity != thisPlayer) {
+                    if (entity.getMotion().x != 0 || entity.getMotion().z != 0) {
+                        DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                            dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
+                        });
+                    }
                 }
                 context.setPacketHandled(true);
             }
@@ -57,4 +58,6 @@ public class PacketProxy {
             }
         });
     }
+
+
 }
