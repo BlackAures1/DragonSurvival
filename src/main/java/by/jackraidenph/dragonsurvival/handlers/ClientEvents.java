@@ -147,7 +147,8 @@ public class ClientEvents {
 
                 if (player.getMotion().x != 0 || player.getMotion().z != 0) {
                     DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getYaw(1), player.rotationYawHead, player.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
-
+                    //align body when moving
+                    bodyYaw = player.rotationYawHead;
                 }
             }
         }
