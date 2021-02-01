@@ -34,6 +34,7 @@ public class HeartElement extends Item {
                         dragonStateHandler.setLevel(DragonLevel.ADULT);
                     else if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth)
                         dragonStateHandler.setLevel(DragonLevel.YOUNG);
+                    //TODO sync level
                     return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
                 }
             }

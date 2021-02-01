@@ -43,6 +43,7 @@ public class ItemsInit {
                                 dragonStateHandler.setLevel(DragonLevel.YOUNG);
                             }
                             playerIn.getHeldItem(handIn).shrink(1);
+                            //TODO sync level
                             return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
                         }
                     }
