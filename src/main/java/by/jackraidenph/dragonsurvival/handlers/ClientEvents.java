@@ -212,10 +212,8 @@ public class ClientEvents {
         } else {
             Optional<ResourceLocation> skinForName = skinCacheForName.get(player.getGameProfile().getName()).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
             if (skinForName.isPresent()) {
-                {
-                    texture = skinForName.get();
-                    return texture;
-                }
+                texture = skinForName.get();
+                return texture;
             } else {
                 Optional<ResourceLocation> defSkin = skinCache.get(playerUniqueID).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
                 if (defSkin.isPresent()) {
