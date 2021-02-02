@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SyncLevel;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -57,5 +58,14 @@ public class PacketProxy {
         });
     }
 
-
+    public DistExecutor.SafeRunnable updateLevel(SyncLevel syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
+        return () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            Entity entity = minecraft.world.getEntityByID(syncLevel.playerId);
+            if (entity instanceof PlayerEntity) {
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> dragonStateHandler.setLevel(syncLevel.level));
+                contextSupplier.get().setPacketHandled(true);
+            }
+        };
+    }
 }

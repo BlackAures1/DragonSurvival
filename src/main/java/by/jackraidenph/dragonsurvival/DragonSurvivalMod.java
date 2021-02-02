@@ -76,9 +76,10 @@ public class DragonSurvivalMod {
         register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
+        register(SyncLevel.class, new SyncLevel());
 
         //TODO synchronize health
-        CHANNEL.registerMessage(10, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
+        CHANNEL.registerMessage(nextPacketId, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());

@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.items.HeartElement;
+import by.jackraidenph.dragonsurvival.network.SyncLevel;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemsInit {
@@ -39,11 +41,14 @@ public class ItemsInit {
                             health.setBaseValue(health.getBaseValue() - 2);
                             if (health.getValue() < DragonLevel.YOUNG.initialHealth) {
                                 dragonStateHandler.setLevel(DragonLevel.BABY);
+                                if (!worldIn.isRemote)
+                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getEntityId(), DragonLevel.BABY));
                             } else if (health.getValue() < DragonLevel.ADULT.initialHealth) {
                                 dragonStateHandler.setLevel(DragonLevel.YOUNG);
+                                if (!worldIn.isRemote)
+                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getEntityId(), DragonLevel.YOUNG));
                             }
                             playerIn.getHeldItem(handIn).shrink(1);
-                            //TODO sync level
                             return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
                         }
                     }

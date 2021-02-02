@@ -1,7 +1,9 @@
 package by.jackraidenph.dragonsurvival.items;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.SyncLevel;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -12,6 +14,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class HeartElement extends Item {
     public HeartElement(Properties properties) {
@@ -30,11 +33,16 @@ public class HeartElement extends Item {
                     currentHealth.setBaseValue(currentHealth.getBaseValue() + 2);
                     playerIn.getHeldItem(handIn).shrink(1);
 
-                    if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth)
+                    if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth) {
                         dragonStateHandler.setLevel(DragonLevel.ADULT);
-                    else if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth)
+                        if (!worldIn.isRemote)
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getEntityId(), DragonLevel.ADULT));
+                    } else if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth) {
                         dragonStateHandler.setLevel(DragonLevel.YOUNG);
-                    //TODO sync level
+                        if (!worldIn.isRemote)
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getEntityId(), DragonLevel.YOUNG));
+                    }
+
                     return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
                 }
             }
