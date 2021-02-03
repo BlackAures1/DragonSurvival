@@ -21,6 +21,7 @@ public class ResetPlayer implements IMessage<ResetPlayer> {
     @Override
     public void handle(ResetPlayer message, Supplier<NetworkEvent.Context> supplier) {
         ServerPlayerEntity playerEntity = supplier.get().getSender();
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+        if (playerEntity != null)
+            playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
     }
 }

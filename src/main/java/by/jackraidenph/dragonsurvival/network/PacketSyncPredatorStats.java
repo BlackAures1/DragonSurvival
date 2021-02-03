@@ -2,8 +2,6 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.ClientProxy;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -40,7 +38,7 @@ public class PacketSyncPredatorStats implements IMessage<PacketSyncPredatorStats
 
     @Override
     public void handle(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new ClientProxy().syncPredatorStats(m, supplier));
+        new ClientProxy().syncPredatorStats(m, supplier);
         supplier.get().setPacketHandled(true);
     }
 }

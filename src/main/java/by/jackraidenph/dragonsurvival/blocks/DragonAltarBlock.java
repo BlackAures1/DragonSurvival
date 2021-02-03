@@ -33,8 +33,8 @@ public class DragonAltarBlock extends Block {
             Block.makeCuboidShape(7, 10, 7, 9, 16, 9)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
-    public DragonAltarBlock(Properties p_i48440_1_) {
-        super(p_i48440_1_);
+    public DragonAltarBlock(Properties properties) {
+        super(properties);
         this.setRegistryName("dragon_altar");
     }
 
@@ -52,7 +52,7 @@ public class DragonAltarBlock extends Block {
         Minecraft.getInstance().displayGuiScreen(new DragonAltarGUI(new TextComponent() {
             @Override
             public String getUnformattedComponentText() {
-                return "test";
+                return "Dragon altar";
             }
 
             @Override

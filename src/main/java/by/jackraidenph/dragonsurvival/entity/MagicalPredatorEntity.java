@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
 import net.minecraft.block.BlockState;
@@ -48,7 +48,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         AtomicInteger distance = new AtomicInteger();
 
         if (player != null) {
-            PlayerStateProvider.getCap(player).ifPresent(cap -> {
+            DragonStateProvider.getCap(player).ifPresent(cap -> {
                 if (cap.isDragon() && !cap.isHiding())
                     distance.set(30);
                 else if (cap.isDragon())
@@ -241,9 +241,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         @Override
         public void tick() {
             this.world.getEntitiesWithinAABB(EntityType.EXPERIENCE_ORB, this.entity.getBoundingBox().grow(4), Objects::nonNull).forEach(
-                    xpOrb -> {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()));
-                    }
+                    xpOrb -> DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncXPDevour(this.entity.getEntityId(), xpOrb.getEntityId()))
             );
             super.tick();
         }
