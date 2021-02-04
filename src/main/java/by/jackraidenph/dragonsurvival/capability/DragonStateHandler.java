@@ -17,6 +17,15 @@ public class DragonStateHandler {
      */
     private float health = level.initialHealth;
     private final DragonMovementData data = new DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO);
+    private boolean hasWings;
+
+    public boolean hasWings() {
+        return hasWings;
+    }
+
+    public void setHasWings(boolean hasWings) {
+        this.hasWings = hasWings;
+    }
 
     public boolean isDragon() {
         return this.isDragon;

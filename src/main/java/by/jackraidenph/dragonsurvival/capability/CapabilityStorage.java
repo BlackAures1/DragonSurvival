@@ -42,6 +42,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             tag.putString("type", instance.getType().toString());
             tag.putString("level", instance.getLevel().toString());
             tag.putFloat("Health", instance.getHealth());
+            tag.putBoolean("Has wings", instance.hasWings());
         }
         return tag;
     }
@@ -61,6 +62,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             else
                 instance.setLevel(DragonLevel.valueOf(level));
             instance.setHealth(tag.getFloat("Health"));
+            instance.setHasWings(tag.getBoolean("Has wings"));
         }
     }
 }
