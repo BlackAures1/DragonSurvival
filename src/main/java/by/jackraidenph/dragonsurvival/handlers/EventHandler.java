@@ -183,11 +183,11 @@ public class EventHandler {
                                 livingEntity.removePotionEffect(Effects.HUNGER);
                                 if (food == Foods.CHICKEN) {
                                     playerEntity.getFoodStats().addStats(0, 5.8f);
-                                } else if (food == Foods.PORKCHOP) {
+                                } else if (food == Foods.PORKCHOP || food == Foods.BEEF) {
                                     playerEntity.getFoodStats().addStats(-1, 6.4f);
                                 } else if (food == Foods.ROTTEN_FLESH) {
                                     playerEntity.getFoodStats().addStats(-1, 2.2f);
-                                } else if (food == Foods.RABBIT || food == Foods.BEEF) {
+                                } else if (food == Foods.RABBIT) {
                                     playerEntity.getFoodStats().addStats(2, 11.2f);
                                 }
 
@@ -206,7 +206,7 @@ public class EventHandler {
                                 } else if (food == Foods.COD) {
                                     playerEntity.getFoodStats().addStats(0, 6.6f);
                                 } else if (food == Foods.PUFFERFISH) {
-                                    playerEntity.getFoodStats().addStats(4, 12.8f);
+                                    playerEntity.getFoodStats().addStats(9, 12.8f);
                                 } else {
                                     playerEntity.getFoodStats().addStats(1, 2.4f);
                                 }
