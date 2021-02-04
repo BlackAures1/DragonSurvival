@@ -88,31 +88,6 @@ public class DragonStateHandler {
         this.type = type;
     }
 
-    /**
-     * TODO remove
-     * Synchronizes dragon capability data
-     *
-     * @param isServer is server side currently?
-     */
-    @Deprecated
-    public void syncCapabilityData(boolean isServer) {
-        if (isServer) {
-//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
-        } else {
-//            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
-        }
-    }
-
-    public void syncMovement(boolean isServer) {
-//        this.data.ifPresent(dat -> {
-//            if (isServer) {
-////                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
-//            } else {
-////                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
-//            }
-//        });
-    }
-
     public static class DragonMovementData {
         public double bodyYaw;
         public double headYaw;

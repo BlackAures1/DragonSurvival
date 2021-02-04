@@ -43,7 +43,7 @@ public class SynchronizationController {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth()));
             }
         });
     }
