@@ -46,6 +46,12 @@ public class SynchronizationController {
                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth()));
             }
         });
+        //sync others' capability
+        playerEntity.getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
+            DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth()));
+            });
+        });
     }
 
     /**
