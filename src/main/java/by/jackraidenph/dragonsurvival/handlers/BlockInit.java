@@ -67,7 +67,7 @@ public class BlockInit {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
         Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
-        forgeRegistry.register(new BlockItem(nestBlock, new Item.Properties().group(blocks)).setRegistryName(nestBlock.getRegistryName()));
+//        forgeRegistry.register(new BlockItem(nestBlock, new Item.Properties().group(blocks)).setRegistryName(nestBlock.getRegistryName()));
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
     }
 }
