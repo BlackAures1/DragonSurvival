@@ -230,13 +230,10 @@ public class EventHandler {
                 if (dragonStateHandler.getType() == DragonType.CAVE) {
                     if (item == Items.COAL) {
                         itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(2, 7);
+                        playerEntity.getFoodStats().addStats(1, 1);
                     } else if (item == Items.CHARCOAL) {
                         itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(2, 3);
-                    } else if (item == Items.REDSTONE) {
-                        itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(5, 13);
+                        playerEntity.getFoodStats().addStats(1, 2);
                     }
                 }
             }
