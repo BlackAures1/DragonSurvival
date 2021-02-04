@@ -202,6 +202,7 @@ public class ClientEvents {
                 String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
                 thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
 
+                thirdPersonModel.copyModelAttributesTo(wings);
                 wings.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
                 String wingsTexture;
                 switch (cap.getType()) {
