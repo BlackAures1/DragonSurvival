@@ -81,8 +81,7 @@ public class FlightController {
 
     @SubscribeEvent
     public static void toggleWings(InputEvent.KeyInputEvent keyInputEvent) {
-        if (Minecraft.getInstance().player != null && ClientModEvents.TOGGLE_WINGS.isPressed())//(InputMappings.getInputByCode(keyInputEvent.getKey(), keyInputEvent.getScanCode())))
-        {
+        if (Minecraft.getInstance().player != null && ClientModEvents.TOGGLE_WINGS.isPressed()) {
             wingsEnabled = !wingsEnabled;
             if (wingsEnabled)
                 Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("ds.wings.enabled"));
