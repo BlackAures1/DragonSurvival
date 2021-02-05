@@ -372,24 +372,25 @@ public class DragonModel2 extends EntityModel<Entity> {
 
     @Override
     public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (entity.onGround || entity.isSwimming()) {
+            LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+            RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+            Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+            Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+            float speed = ageInTicks / 20;
+            //start
+            Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
+            Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
+            Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
+            Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
+            Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
 
-        float speed = ageInTicks / 20;
-        //start
-        Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
-        Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
-        Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
-        Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
-        Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
-
-        lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
+            lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
+        }
         if(entity.getMotion().x!=0 || entity.getMotion().z!=0)
             Neckand_3.rotateAngleZ=0;
 //        else
