@@ -212,6 +212,10 @@ public class EventHandler {
                                 }
                             }
                             break;
+                        case CAVE:
+                            if (item == ItemsInit.chargedCoal || item == ItemsInit.charredMeat)
+                                bad = false;
+                            break;
                     }
                     if (bad)
                         livingEntity.addPotionEffect(new EffectInstance(Effects.HUNGER, 20 * 60, 0));
