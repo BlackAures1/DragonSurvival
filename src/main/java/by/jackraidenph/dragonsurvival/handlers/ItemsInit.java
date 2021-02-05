@@ -8,6 +8,7 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public class ItemsInit {
     public static Item heartElement;
     public static Item starBone, elderDragonBone;
+    public static Item charredMeat, chargedCoal;
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<Item> event) {
@@ -88,6 +90,8 @@ public class ItemsInit {
         }.setRegistryName(DragonSurvivalMod.MODID, "star_bone");
 
         elderDragonBone = new Item(new Item.Properties().group(BlockInit.blocks)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_bone");
-        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone);
+        chargedCoal = new Item(new Item.Properties().group(BlockInit.blocks).food(new Food.Builder().hunger(5).saturation(7).build())).setRegistryName(DragonSurvivalMod.MODID, "charged_coal");
+        charredMeat = new Item(new Item.Properties().group(BlockInit.blocks).food(new Food.Builder().hunger(10).saturation(13).build())).setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
+        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat);
     }
 }
