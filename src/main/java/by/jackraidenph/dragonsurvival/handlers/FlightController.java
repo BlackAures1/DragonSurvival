@@ -19,15 +19,15 @@ import net.minecraftforge.fml.common.Mod;
 public class FlightController {
 
     static boolean wingsEnabled;
+    static double ax, ay, az;
 
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                if (!playerEntity.onGround && !playerEntity.isInWater() && wingsEnabled) {
-
-                    {
+                if (wingsEnabled) {
+                    if (!playerEntity.onGround && !playerEntity.isInWater()) {
                         Vec3d motion = playerEntity.getMotion();
                         if (motion.y > -0.5D) {
                             playerEntity.fallDistance = 1.0F;
@@ -56,7 +56,29 @@ public class FlightController {
                         if (d9 > 0.0D) {
                             motion = motion.add((lookVec.x / d9 * d11 - motion.x) * 0.1D, 0.0D, (lookVec.z / d9 * d11 - motion.z) * 0.1D);
                         }
+                        double lookY = lookVec.y;
+                        double yaw = Math.toRadians(playerEntity.rotationYawHead + 90);
+                        if (lookY < 0) {
+                            ax += Math.cos(yaw) / 1000;
+                            az += Math.sin(yaw) / 1000;
+                        } else {
+                            ax *= 0.99;
+                            az *= 0.99;
+                            ay = lookVec.y / 8;
+                        }
+                        ax = MathHelper.clamp(ax, -0.2, 0.2);
+                        az = MathHelper.clamp(az, -0.2, 0.2);
+                        if (lookY < 0) {
+                            motion = motion.add(ax, 0, az);
+                        } else {
+                            motion = motion.add(ax, ay, az);
+                        }
                         playerEntity.setMotion(motion.mul(0.99F, 0.98F, 0.99F));
+
+                    } else {
+                        ax = 0;
+                        az = 0;
+                        ay = 0;
                     }
                 }
             }
