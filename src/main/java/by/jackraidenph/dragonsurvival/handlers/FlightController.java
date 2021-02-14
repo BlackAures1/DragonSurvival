@@ -1,6 +1,8 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.ToggleWings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -89,6 +91,7 @@ public class FlightController {
     public static void toggleWings(InputEvent.KeyInputEvent keyInputEvent) {
         if (Minecraft.getInstance().player != null && ClientModEvents.TOGGLE_WINGS.isPressed()) {
             wingsEnabled = !wingsEnabled;
+            DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
             if (wingsEnabled)
                 Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("ds.wings.enabled"));
             else

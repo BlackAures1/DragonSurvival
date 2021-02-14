@@ -77,6 +77,7 @@ public class DragonSurvivalMod {
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncLevel.class, new SyncLevel());
+        register(ToggleWings.class, new ToggleWings());
 
         //TODO synchronize health
         CHANNEL.registerMessage(nextPacketId, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {

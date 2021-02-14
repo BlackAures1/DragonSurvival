@@ -262,11 +262,13 @@ public class EventHandler {
         });
     }
 
+    public static boolean wingsEnabled;
+
     @SubscribeEvent
     public static void cancelFall(LivingFallEvent fallEvent) {
         LivingEntity livingEntity = fallEvent.getEntityLiving();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.hasWings())
+            if (wingsEnabled)
                 fallEvent.setCanceled(true);
         });
     }
