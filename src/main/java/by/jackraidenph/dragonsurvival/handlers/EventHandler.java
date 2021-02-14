@@ -264,7 +264,7 @@ public class EventHandler {
 
     public static boolean wingsEnabled;
 
-    @SubscribeEvent
+//    @SubscribeEvent
     public static void cancelFall(LivingFallEvent fallEvent) {
         LivingEntity livingEntity = fallEvent.getEntityLiving();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
