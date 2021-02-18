@@ -1,9 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
 import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
@@ -23,17 +21,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 @Deprecated
 public class ClientProxy implements Proxy {
-
-    @Override
-    public void syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
-        if (Minecraft.getInstance().player != null) {
-            DragonStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
-                cap.setIsDragon(packetSyncCapability.isDragon);
-                cap.setType(packetSyncCapability.type);
-                cap.setLevel(packetSyncCapability.level);
-            });
-        }
-    }
 
     @Override
     public void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {

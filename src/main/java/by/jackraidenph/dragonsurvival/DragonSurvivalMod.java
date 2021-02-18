@@ -69,7 +69,6 @@ public class DragonSurvivalMod {
         Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
-        register(PacketSyncCapability.class, new PacketSyncCapability());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SetRespawnPosition.class, new SetRespawnPosition());

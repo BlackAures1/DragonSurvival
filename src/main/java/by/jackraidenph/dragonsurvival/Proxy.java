@@ -1,6 +1,5 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
 import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
 import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
@@ -10,7 +9,6 @@ import java.util.function.Supplier;
 @Deprecated
 public interface Proxy {
 
-    void syncCapability(PacketSyncCapability m, Supplier<NetworkEvent.Context> supplier);
 
     void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier);
 
