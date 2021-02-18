@@ -87,6 +87,7 @@ public class DragonSurvivalMod {
             packetBuffer.writeBoolean(synchronizeDragonCap.hiding);
             packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
             packetBuffer.writeFloat(synchronizeDragonCap.health);
+            packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
 
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
@@ -94,7 +95,7 @@ public class DragonSurvivalMod {
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
-            return new SynchronizeDragonCap(id, hiding, type, level, isDragon, packetBuffer.readFloat());
+            return new SynchronizeDragonCap(id, hiding, type, level, isDragon, packetBuffer.readFloat(), packetBuffer.readBoolean());
         }, (synchronizeDragonCap, contextSupplier) -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilitySync(synchronizeDragonCap, contextSupplier));
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
@@ -106,6 +107,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                     dragonStateHandler.setHealth(synchronizeDragonCap.health);
+                    dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                 });
             }
         });
@@ -133,7 +135,7 @@ public class DragonSurvivalMod {
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 //works
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, 20));
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, 20, false));
             });
             return 1;
         }).build();
