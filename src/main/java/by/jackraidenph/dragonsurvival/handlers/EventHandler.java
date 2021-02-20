@@ -133,6 +133,7 @@ public class EventHandler {
                         capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.headPos, movementData.tailPos);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
+                        capNew.setHasWings(capOld.hasWings());
                         e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());
                     }
                 }));
