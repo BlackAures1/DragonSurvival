@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -70,6 +71,18 @@ public class SynchronizationController {
                 }
             });
         }
+    }
 
+    @SubscribeEvent
+    public static void onTrackingStart(PlayerEvent.StartTracking startTracking) {
+        PlayerEntity trackingPlayer = startTracking.getPlayer();
+        if (trackingPlayer instanceof ServerPlayerEntity) {
+            Entity trackedEntity = startTracking.getTarget();
+            if (trackedEntity instanceof ServerPlayerEntity) {
+                DragonStateProvider.getCap(trackedEntity).ifPresent(dragonStateHandler -> {
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) trackingPlayer), new SynchronizeDragonCap(trackedEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                });
+            }
+        }
     }
 }
