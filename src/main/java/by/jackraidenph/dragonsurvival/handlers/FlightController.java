@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.ToggleWings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -89,13 +90,20 @@ public class FlightController {
 
     @SubscribeEvent
     public static void toggleWings(InputEvent.KeyInputEvent keyInputEvent) {
-        if (Minecraft.getInstance().player != null && ClientModEvents.TOGGLE_WINGS.isPressed()) {
-            wingsEnabled = !wingsEnabled;
-            DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
-            if (wingsEnabled)
-                Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("ds.wings.enabled"));
-            else
-                Minecraft.getInstance().player.sendMessage(new TranslationTextComponent("ds.wings.disabled"));
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player != null && ClientModEvents.TOGGLE_WINGS.isPressed()) {
+            DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+                if (dragonStateHandler.hasWings()) {
+                    wingsEnabled = !wingsEnabled;
+                    DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
+                    if (wingsEnabled)
+                        player.sendMessage(new TranslationTextComponent("ds.wings.enabled"));
+                    else
+                        player.sendMessage(new TranslationTextComponent("ds.wings.disabled"));
+                } else {
+                    player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"));
+                }
+            });
         }
     }
 }

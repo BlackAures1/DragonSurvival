@@ -1,12 +1,15 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Locale;
 
@@ -25,7 +28,7 @@ public class WingObtainmentController {
                         if (lowercase.contains("give") && lowercase.contains("wings")) {
                             Thread thread = new Thread(() -> {
                                 try {
-                                    Thread.sleep(500);
+                                    Thread.sleep(1000);
                                     playerEntity.sendMessage(new StringTextComponent("<Ender dragon>: I bestow wings on you"));
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
@@ -34,6 +37,7 @@ public class WingObtainmentController {
                             thread.start();
                             dragonStateHandler.setHasWings(true);
                             //synchronize
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), true));
                         }
                     }
                 }

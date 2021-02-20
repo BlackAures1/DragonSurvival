@@ -22,5 +22,6 @@
   "ds.sea_dragon_choice": "You have chosen to be a Sea dragon.",
   "ds.choice_human": "You have chosen to become a human.",
   "ds.wings.enabled": "Enabled wings",
-  "ds.wings.disabled": "Disabled wings"
+  "ds.wings.disabled": "Disabled wings",
+  "ds.you.have.no.wings": "You have no wings"
 }

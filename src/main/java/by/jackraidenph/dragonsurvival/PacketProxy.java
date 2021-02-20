@@ -54,6 +54,7 @@ public class PacketProxy {
                         dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                        dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                     });
                     contextSupplier.get().setPacketHandled(true);
                 }
