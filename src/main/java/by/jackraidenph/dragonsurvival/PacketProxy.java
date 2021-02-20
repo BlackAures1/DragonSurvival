@@ -37,8 +37,8 @@ public class PacketProxy {
                         dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
                     });
                 }
-                context.setPacketHandled(true);
             }
+            context.setPacketHandled(true);
         }
     }
 
