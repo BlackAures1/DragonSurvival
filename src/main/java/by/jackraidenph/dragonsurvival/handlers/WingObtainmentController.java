@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -17,7 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
@@ -29,8 +29,8 @@ public class WingObtainmentController {
     static String m5 = "Ты прошел через многое чтобы попасть сюда, (), чего ты желаешь?";
     static String m6 = "Ты пришёл договориться или воевать? Я убью тебя, если ты посмеешь подойти к моему гнезду.";
     static String m7 = "У меня есть то, чего ты желаешь, (). Вопрос в том, достоин ли ты этого?";
-    static String m8 = "Мы с тобой одной крови (), я не хочу сражаться с тобой. Но еще больше я не хочу чтобы мое гнездо было уничтожено. Скажи что ты хочешь и уходи.";
-    static String m9 = "Ты прошел грань миров и оказался здесь (), но ради чего? Тебя манит небо как и меня?";
+    static String m8 = "Мы с тобой одной крови, (), я не хочу сражаться с тобой. Но еще больше я не хочу чтобы мое гнездо было уничтожено. Скажи что ты хочешь и уходи.";
+    static String m9 = "Ты прошел грань миров и оказался здесь, (), но ради чего? Тебя манит небо как и меня?";
     static String m10 = "Ты наглец, (), раз решил появиться здесь. Ради каких целей ты пришел сюда?";
     static String m11 = "Ты пришёл убить меня? Прошу, сохрани моё дитя... Я расскажу тебе о крыльях, если ты хочешь этого, но оставь нас в покое.";
     static String m12 = "Сколько лет я не видела подобных себе и столько же не хочу их видеть. Но ты здесь, (), отвечай быстро и убирайся отсюда. Зачем пришёл?";
@@ -91,7 +91,7 @@ public class WingObtainmentController {
     public static void serverChatEvent(ServerChatEvent chatEvent) {
         String message = chatEvent.getMessage();
         ServerPlayerEntity playerEntity = chatEvent.getPlayer();
-        String lowercase = message.toLowerCase(Locale.ROOT);
+        String lowercase = message.toLowerCase();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon() && !dragonStateHandler.hasWings()) {
                 if (playerEntity.getServerWorld().getDimension().getType() == DimensionType.THE_END) {
@@ -101,7 +101,7 @@ public class WingObtainmentController {
                             Thread thread = new Thread(() -> {
                                 try {
                                     Thread.sleep(2000);
-                                    playerEntity.sendMessage(new StringTextComponent(""));
+                                    playerEntity.sendMessage(new TranslationTextComponent("ds.dragon.grants.wings"));
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
