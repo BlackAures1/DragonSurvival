@@ -1,10 +1,10 @@
 package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.ResetPlayer;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
@@ -88,14 +88,14 @@ public class DragonAltarGUI extends Screen {
         this.guiTop = (this.height - this.ySize) / 2;
 
         this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, "CAVE",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.CAVE);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.cave_dragon_choice"));
                 })
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 58, this.guiTop + 6, 49, 147, "FOREST",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.FOREST);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.forest_dragon_choice"));
                 })
@@ -103,7 +103,7 @@ public class DragonAltarGUI extends Screen {
         );
 
         this.addButton(new ExtendedButton(this.guiLeft + 110, this.guiTop + 6, 49, 147, "SEA",
-                $ -> {
+                button -> {
                     initiateDragonForm(DragonType.SEA);
                     minecraft.player.sendMessage(new TranslationTextComponent("ds.sea_dragon_choice"));
                 })
@@ -111,12 +111,12 @@ public class DragonAltarGUI extends Screen {
         );
 
         addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, "Human", b -> {
-            PlayerStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
+            DragonStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
                 playerStateHandler.setLevel(DragonLevel.BABY);
                 playerStateHandler.setType(DragonType.NONE);
-                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(false, false, DragonType.NONE, DragonLevel.BABY));
+                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getEntityId(), false, DragonType.NONE, DragonLevel.BABY, false, 20));
                 DragonSurvivalMod.CHANNEL.sendToServer(new ResetPlayer());
                 minecraft.player.closeScreen();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
@@ -129,15 +129,13 @@ public class DragonAltarGUI extends Screen {
         if (player == null)
             return;
         player.closeScreen();
-        PlayerStateProvider.getCap(player)
-                .ifPresent(cap -> {
-                    Vec3d placeHolder = new Vec3d(0, 0, 0);
-                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(true, true, type, DragonLevel.BABY));
-                    DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(0, 0, 0, placeHolder, placeHolder));
-                    cap.setIsDragon(true);
-                    cap.setType(type);
-                    cap.setLevel(DragonLevel.BABY);
-                    player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true, DragonLevel.BABY.initialHealth));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, Vec3d.ZERO, Vec3d.ZERO));
+            cap.setIsDragon(true);
+            cap.setType(type);
+            cap.setLevel(DragonLevel.BABY);
+            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
 //                    Random random = player.world.rand;
 //                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
 //                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));

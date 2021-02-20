@@ -1,8 +1,6 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.ClientProxy;
-import by.jackraidenph.dragonsurvival.ServerProxy;
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
+import by.jackraidenph.dragonsurvival.PacketProxy;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,6 +11,7 @@ import java.util.function.Supplier;
 
 public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabilityMovement> {
 
+    public int playerId;
     public double bodyYaw;
     public double headYaw;
     public double headPitch;
@@ -22,7 +21,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     public PacketSyncCapabilityMovement() {
     }
 
-    public PacketSyncCapabilityMovement(double bodyYaw,
+    public PacketSyncCapabilityMovement(int playerId, double bodyYaw,
                                         double headYaw,
                                         double headPitch,
                                         Vec3d headPos,
@@ -32,33 +31,26 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         this.headPitch = headPitch;
         this.headPos = headPos;
         this.tailPos = tailPos;
-    }
-
-    public PacketSyncCapabilityMovement(DragonStateHandler.DragonMovementData data) {
-        this.bodyYaw = data.bodyYaw;
-        this.headYaw = data.headYaw;
-        this.headPitch = data.headPitch;
-        this.headPos = data.headPos;
-        this.tailPos = data.tailPos;
+        this.playerId = playerId;
     }
 
     @Override
     public void encode(PacketSyncCapabilityMovement m, PacketBuffer b) {
+        b.writeInt(m.playerId);
         b.writeDouble(m.bodyYaw);
         b.writeDouble(m.headYaw);
         b.writeDouble(m.headPitch);
-        writeVec3d(b, m.headPos);
-        writeVec3d(b, m.tailPos);
+//        writeVec3d(b, m.headPos);
+//        writeVec3d(b, m.tailPos);
     }
 
     @Override
     public PacketSyncCapabilityMovement decode(PacketBuffer b) {
-        return new PacketSyncCapabilityMovement(
+        return new PacketSyncCapabilityMovement(b.readInt(),
                 b.readDouble(),
                 b.readDouble(),
                 b.readDouble(),
-                readVec3d(b),
-                readVec3d(b));
+                Vec3d.ZERO, Vec3d.ZERO);
     }
 
     private void writeVec3d(PacketBuffer buffer, Vec3d vec) {
@@ -75,9 +67,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     }
 
     @Override
-    public void handle(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new ClientProxy().syncMovement(m, supplier));
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> new ServerProxy().syncMovement(m, supplier));
-        supplier.get().setPacketHandled(true);
+    public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
     }
 }

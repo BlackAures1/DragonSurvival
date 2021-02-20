@@ -1,7 +1,8 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -27,6 +28,7 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
@@ -35,6 +37,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,7 +68,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        PlayerStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+        DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
                     renderHandEvent.setCanceled(true);
@@ -141,21 +144,24 @@ public class ClientEvents {
                         bodyYaw -= Math.signum(bodyAndHeadYawDiff) * 2;
                     }
                 }
-                if ((player.getMotion().x != 0 && player.getMotion().z != 0)) {
-                    bodyYaw = player.rotationYaw;
-                    neckYaw = -player.rotationYawHead;
+
+                if (player.getMotion().x != 0 || player.getMotion().z != 0) {
+                    DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getYaw(1), player.rotationYawHead, player.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                    //align body when moving
+                    bodyYaw = player.rotationYawHead;
                 }
-
-
             }
         }
     }
 
+    /**
+     * The player is always the local player
+     */
     @SubscribeEvent
     public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
-        PlayerStateProvider.getCap(player).ifPresent(cap -> {
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
 
@@ -168,9 +174,10 @@ public class ClientEvents {
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 matrixStack.push();
-                //don't rotate if viewing a screen
-                if (Minecraft.getInstance().currentScreen == null)
-                    matrixStack.rotate(Vector3f.YP.rotationDegrees(-ClientEvents.bodyYaw));
+                matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
+                float maxHealth = player.getMaxHealth();
+                float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+                matrixStack.scale(scale, scale, scale);
                 thirdPersonModel.render(
                         matrixStack,
                         renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
@@ -195,7 +202,7 @@ public class ClientEvents {
 
     }
 
-    private static ResourceLocation getSkin(PlayerEntity player, by.jackraidenph.dragonsurvival.capability.DragonStateHandler cap, DragonLevel dragonStage) {
+    private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
         ResourceLocation texture;
         UUID playerUniqueID = player.getUniqueID();
         Optional<ResourceLocation> optionalResourceLocation = skinCache.get(playerUniqueID).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
@@ -205,12 +212,10 @@ public class ClientEvents {
         } else {
             Optional<ResourceLocation> skinForName = skinCacheForName.get(player.getGameProfile().getName()).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
             if (skinForName.isPresent()) {
-                {
-                    texture = skinForName.get();
-                    return texture;
-                }
+                texture = skinForName.get();
+                return texture;
             } else {
-                Optional<ResourceLocation> defSkin = skinCache.get(playerUniqueID).stream().filter(location -> location.toString().endsWith(dragonStage.name + ".png")).findFirst();
+                Optional<ResourceLocation> defSkin = skinCache.get(playerUniqueID).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
                 if (defSkin.isPresent()) {
                     texture = defSkin.get();
                     return texture;

@@ -1,16 +1,10 @@
 package by.jackraidenph.dragonsurvival.capability;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapability;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.network.PacketDistributor;
-
-import java.util.Optional;
 
 
 public class DragonStateHandler {
@@ -18,8 +12,11 @@ public class DragonStateHandler {
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
     private DragonLevel level = DragonLevel.BABY;
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private Optional<DragonMovementData> data = Optional.empty();
+    /**
+     * Current health, must be equal to the player's health
+     */
+    private float health = level.initialHealth;
+    private final DragonMovementData data = new DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO);
 
     public boolean isDragon() {
         return this.isDragon;
@@ -37,18 +34,20 @@ public class DragonStateHandler {
         isHiding = hiding;
     }
 
-    public void setMovementData(DragonMovementData data, boolean doSync) {
-        if (doSync)
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data));
-        this.data = Optional.of(data);
-    }
-
     public DragonLevel getLevel() {
         return this.level;
     }
 
     public void setLevel(DragonLevel level) {
         this.level = level;
+    }
+
+    public void setHealth(float health) {
+        this.health = health;
+    }
+
+    public float getHealth() {
+        return health;
     }
 
     /**
@@ -58,16 +57,26 @@ public class DragonStateHandler {
         setLevel(level);
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(level.initialHealth);
         playerEntity.heal(playerEntity.getMaxHealth());
+        setHealth(level.initialHealth);
+    }
+
+    public void setLevelAndHealth(DragonLevel level, float health, PlayerEntity playerEntity) {
+        setLevel(level);
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+        playerEntity.heal(playerEntity.getMaxHealth());
+        setHealth(health);
     }
 
 
     public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos) {
-        this.data.ifPresent(dat -> {
-            dat.setMovementData(bodyYaw, headYaw, headPitch, headPos, tailPos);
-        });
+        data.bodyYaw = bodyYaw;
+        data.headYaw = headYaw;
+        data.headPitch = headPitch;
+        data.headPos = headPos;
+        data.tailPos = tailPos;
     }
 
-    public Optional<DragonMovementData> getMovementData() {
+    public DragonMovementData getMovementData() {
         return this.data;
     }
 
@@ -80,26 +89,28 @@ public class DragonStateHandler {
     }
 
     /**
+     * TODO remove
      * Synchronizes dragon capability data
      *
      * @param isServer is server side currently?
      */
+    @Deprecated
     public void syncCapabilityData(boolean isServer) {
         if (isServer) {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+//            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         } else {
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
+//            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapability(this.isDragon, this.isHiding, this.getType(), this.level));
         }
     }
 
     public void syncMovement(boolean isServer) {
-        this.data.ifPresent(dat -> {
-            if (isServer) {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
-            } else {
-                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
-            }
-        });
+//        this.data.ifPresent(dat -> {
+//            if (isServer) {
+////                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(dat));
+//            } else {
+////                DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(dat));
+//            }
+//        });
     }
 
     public static class DragonMovementData {

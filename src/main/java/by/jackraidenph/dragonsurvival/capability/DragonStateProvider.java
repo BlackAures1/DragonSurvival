@@ -1,21 +1,21 @@
 package by.jackraidenph.dragonsurvival.capability;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class PlayerStateProvider implements ICapabilitySerializable {
+public class DragonStateProvider implements ICapabilitySerializable<CompoundNBT> {
 
     @CapabilityInject(DragonStateHandler.class)
     public static Capability<DragonStateHandler> PLAYER_STATE_HANDLER_CAPABILITY = null;
     private LazyOptional<DragonStateHandler> instance = LazyOptional.of(PLAYER_STATE_HANDLER_CAPABILITY::getDefaultInstance);
 
     public static LazyOptional<DragonStateHandler> getCap(Entity entity) {
-        return entity.getCapability(PlayerStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+        return entity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
     }
 
     @Override
@@ -24,12 +24,12 @@ public class PlayerStateProvider implements ICapabilitySerializable {
     }
 
     @Override
-    public INBT serializeNBT() {
-        return PLAYER_STATE_HANDLER_CAPABILITY.getStorage().writeNBT(PLAYER_STATE_HANDLER_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null);
+    public CompoundNBT serializeNBT() {
+        return (CompoundNBT) PLAYER_STATE_HANDLER_CAPABILITY.getStorage().writeNBT(PLAYER_STATE_HANDLER_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null);
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         PLAYER_STATE_HANDLER_CAPABILITY.getStorage().readNBT(PLAYER_STATE_HANDLER_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null, nbt);
     }
 }

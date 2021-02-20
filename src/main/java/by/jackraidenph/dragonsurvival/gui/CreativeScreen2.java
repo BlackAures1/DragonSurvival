@@ -358,7 +358,6 @@ public class CreativeScreen2 extends DisplayEffectsScreen<CreativeScreen2.Creati
         if (tab.hasSearchBar() && tab != ItemGroup.SEARCH) {
             tab.fill(container.itemList);
             if (!this.searchField.getText().isEmpty()) {
-                //TODO: Make this a SearchTree not a manual search
                 String search = this.searchField.getText().toLowerCase(Locale.ROOT);
                 java.util.Iterator<ItemStack> itr = container.itemList.iterator();
                 while (itr.hasNext()) {

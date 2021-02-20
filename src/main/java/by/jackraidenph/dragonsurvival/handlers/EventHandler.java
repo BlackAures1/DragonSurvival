@@ -2,10 +2,9 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -20,10 +19,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -33,7 +30,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 
@@ -44,8 +40,7 @@ public class EventHandler {
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         if (playerTickEvent.phase == TickEvent.Phase.START) {
             PlayerEntity playerEntity = playerTickEvent.player;
-
-            PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     for (int i = 0; i < playerEntity.inventory.getSizeInventory(); i++) {
                         ItemStack stack = playerEntity.inventory.getStackInSlot(i);
@@ -93,12 +88,12 @@ public class EventHandler {
      * Adds dragon avoidance goal
      */
     @SubscribeEvent
-    public static void onJoin(EntityJoinWorldEvent e) {
-        if (!(e.getEntity() instanceof MonsterEntity || e.getEntity() instanceof VillagerEntity) & e.getEntity() instanceof CreatureEntity) {
-            ((MobEntity) e.getEntity()).goalSelector.addGoal(2, new AvoidEntityGoal(
-                    (CreatureEntity) e.getEntity(),
-                    PlayerEntity.class,
-                    livingEntity -> PlayerStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).isDragon(),
+    public static void onJoin(EntityJoinWorldEvent joinWorldEvent) {
+        Entity entity = joinWorldEvent.getEntity();
+        if (!(entity instanceof MonsterEntity || entity instanceof VillagerEntity) & entity instanceof CreatureEntity) {
+            ((MobEntity) entity).goalSelector.addGoal(2, new AvoidEntityGoal(
+                    (CreatureEntity) entity, PlayerEntity.class,
+                    livingEntity -> DragonStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).isDragon(),
                     20.0F, 1.3F, 1.5F, EntityPredicates.CAN_AI_TARGET));
         }
     }
@@ -106,28 +101,11 @@ public class EventHandler {
     @SubscribeEvent
     public static void onCapabilityAttachment(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
-            event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new PlayerStateProvider());
+            event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new DragonStateProvider());
             DragonSurvivalMod.LOGGER.info("Successfully attached capability to the " + event.getObject().getClass().getSimpleName());
         }
     }
 
-    @SubscribeEvent
-    public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
-        PlayerEntity player = e.getPlayer();
-        PlayerStateProvider.getCap(player).ifPresent(cap -> {
-            cap.syncCapabilityData(!player.world.isRemote);
-            cap.syncMovement(!player.world.isRemote);
-//            cap.getMovementData().ifPresent(data ->
-//                    DragonSurvivalMod.INSTANCE.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data)));
-        });
-    }
-
-    @SubscribeEvent
-    public static void onLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
-        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(cap ->
-                cap.getMovementData().ifPresent(data ->
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncCapabilityMovement(data))));
-    }
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
@@ -144,11 +122,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onClone(PlayerEvent.Clone e) {
-        PlayerStateProvider.getCap(e.getPlayer()).ifPresent(capNew ->
-                PlayerStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
+        DragonStateProvider.getCap(e.getPlayer()).ifPresent(capNew ->
+                DragonStateProvider.getCap(e.getOriginal()).ifPresent(capOld -> {
                     if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
-                        capNew.setMovementData(capOld.getMovementData().orElse(new DragonStateHandler.DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO)), false);
+                        DragonStateHandler.DragonMovementData movementData = capOld.getMovementData();
+                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.headPos, movementData.tailPos);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
                         e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());
@@ -156,23 +135,10 @@ public class EventHandler {
                 }));
     }
 
-    /**
-     * Synchronizes the capability after death
-     */
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
-        PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
-        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon()) {
-                dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
-            }
-        });
-    }
-
     @SubscribeEvent
     public static void modifyBreakSpeed(PlayerEvent.BreakSpeed breakSpeedEvent) {
         PlayerEntity playerEntity = breakSpeedEvent.getPlayer();
-        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 ItemStack mainStack = playerEntity.getHeldItemMainhand();
                 Item item = mainStack.getItem();
@@ -186,7 +152,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void disableMounts(EntityMountEvent mountEvent) {
         Entity mounting = mountEvent.getEntityMounting();
-        PlayerStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity)
                     mountEvent.setCanceled(true);
@@ -199,7 +165,7 @@ public class EventHandler {
         ItemStack itemStack = destroyItemEvent.getItem();
         Item item = itemStack.getItem();
         LivingEntity livingEntity = destroyItemEvent.getEntityLiving();
-        PlayerStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 PlayerEntity playerEntity = (PlayerEntity) livingEntity;
                 if (item.isFood()) {
@@ -256,7 +222,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void consumeSpecialFood(PlayerInteractEvent.RightClickItem rightClickItem) {
         PlayerEntity playerEntity = rightClickItem.getPlayer();
-        PlayerStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon() && playerEntity.getFoodStats().needFood()) {
                 ItemStack itemStack = rightClickItem.getItemStack();
                 Item item = itemStack.getItem();
@@ -278,7 +244,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent jumpEvent) {
-        PlayerStateProvider.getCap(jumpEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(jumpEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon())
                 switch (dragonStateHandler.getLevel()) {
                     case BABY:
@@ -294,13 +260,4 @@ public class EventHandler {
         });
     }
 
-    @SubscribeEvent
-    public static void changeEyeHeight(EntityEvent.EyeHeight eyeHeight) {
-//        Entity entity = eyeHeight.getEntity();
-//        PlayerStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-//            if (dragonStateHandler.isDragon()) {
-//                eyeHeight.setNewHeight(dragonStateHandler.getLevel().maxHeight);
-//            }
-//        });
-    }
 }
