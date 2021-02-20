@@ -23,5 +23,6 @@
   "ds.choice_human": "You have chosen to become a human.",
   "ds.wings.enabled": "Enabled wings",
   "ds.wings.disabled": "Disabled wings",
-  "ds.you.have.no.wings": "You have no wings"
+  "ds.you.have.no.wings": "You have no wings",
+  "ds.dragon.grants.wings": "<Ender dragon> I bestow wings on you. Now get out of here"
 }
