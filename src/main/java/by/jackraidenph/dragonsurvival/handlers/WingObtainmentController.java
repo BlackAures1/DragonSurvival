@@ -96,8 +96,7 @@ public class WingObtainmentController {
             if (dragonStateHandler.isDragon() && !dragonStateHandler.hasWings()) {
                 if (playerEntity.getServerWorld().getDimension().getType() == DimensionType.THE_END) {
                     if (!playerEntity.getServerWorld().getDragons().isEmpty()) {
-                        if ((lowercase.contains("give") && lowercase.contains("wings")) ||
-                                (lowercase.contains("дай") && lowercase.contains("крылья"))) {
+                        if (!lowercase.isEmpty()) {
                             Thread thread = new Thread(() -> {
                                 try {
                                     Thread.sleep(2000);
@@ -108,7 +107,6 @@ public class WingObtainmentController {
                             });
                             thread.start();
                             dragonStateHandler.setHasWings(true);
-                            //synchronize
                             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), true));
                         }
                     }
