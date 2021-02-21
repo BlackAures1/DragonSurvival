@@ -16,7 +16,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,10 +58,6 @@ public class DragonSurvivalMod {
 
     private static <T> void register(Class<T> clazz, IMessage<T> message) {
         CHANNEL.registerMessage(nextPacketId++, clazz, message::encode, message::decode, message::handle);
-    }
-
-    public static boolean isDragon(Entity entity) {
-        return DragonStateProvider.getCap(entity).filter(DragonStateHandler::isDragon).isPresent();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

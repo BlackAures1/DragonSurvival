@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.player.PlayerEntity;
@@ -65,7 +66,7 @@ public class CameraTweaks {
     @SubscribeEvent
     public static void cameraSetup(final EntityViewRenderEvent.CameraSetup event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (DragonSurvivalMod.isDragon(minecraft.player)) {
+        if (DragonStateProvider.isDragon(minecraft.player)) {
             ActiveRenderInfo info = event.getInfo();
 
             float pitch = event.getPitch();
@@ -86,7 +87,7 @@ public class CameraTweaks {
     public static void onPlayerEnterToWorld(EntityJoinWorldEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (event.getEntity() instanceof PlayerEntity && event.getEntity() == minecraft.player)
-            if (DragonSurvivalMod.isDragon(minecraft.player))
+            if (DragonStateProvider.isDragon(minecraft.player))
                 neckLen = maxNeckLen;
     }
 
@@ -94,7 +95,7 @@ public class CameraTweaks {
     public static void onPlayerTick(TickEvent.ClientTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && neckLen < maxNeckLen)
-            if (DragonSurvivalMod.isDragon(minecraft.player))
+            if (DragonStateProvider.isDragon(minecraft.player))
                 neckLen += 0.02;
     }
 
