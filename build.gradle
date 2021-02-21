@@ -51,6 +51,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
+            args '--username', 'Dev####'
+
             mods {
                 dragonsurvival {
                     source sourceSets.main
