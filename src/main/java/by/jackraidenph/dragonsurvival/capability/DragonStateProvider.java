@@ -18,6 +18,10 @@ public class DragonStateProvider implements ICapabilitySerializable<CompoundNBT>
         return entity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
     }
 
+    public static boolean isDragon(Entity entity) {
+        return getCap(entity).filter(DragonStateHandler::isDragon).isPresent();
+    }
+
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         return cap == PLAYER_STATE_HANDLER_CAPABILITY ? instance.cast() : LazyOptional.empty();

@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +42,8 @@ public class ClientModEvents {
     public static ResourceLocation customNewbornSkin;
     public static ResourceLocation customYoungSkin;
     public static ResourceLocation customAdultSkin;
+
+    public static KeyBinding TOGGLE_WINGS;
 
     public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
 
@@ -61,6 +65,9 @@ public class ClientModEvents {
 
         ScreenManager.registerFactory(Containers.nestContainer, NestScreen::new);
         ScreenManager.registerFactory(Containers.dragonContainer, DragonScreen::new);
+
+        TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
+        ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
     }
 
     /**

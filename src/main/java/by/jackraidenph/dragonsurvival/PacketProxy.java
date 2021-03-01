@@ -14,6 +14,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Synchronizes client data
+ */
 public class PacketProxy {
 
     public DistExecutor.SafeRunnable handleCapabilityMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
@@ -34,8 +37,8 @@ public class PacketProxy {
                         dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.headPos, syncCapabilityMovement.tailPos);
                     });
                 }
-                context.setPacketHandled(true);
             }
+            context.setPacketHandled(true);
         }
     }
 
@@ -51,6 +54,7 @@ public class PacketProxy {
                         dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
+                        dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                     });
                     contextSupplier.get().setPacketHandled(true);
                 }

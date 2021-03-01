@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -26,10 +27,12 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 
@@ -130,9 +133,18 @@ public class EventHandler {
                         capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.headPos, movementData.tailPos);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
+                        capNew.setHasWings(capOld.hasWings());
                         e.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(e.getOriginal().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue());
                     }
                 }));
+    }
+
+    @SubscribeEvent
+    public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
+        PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+        });
     }
 
     @SubscribeEvent
@@ -182,11 +194,11 @@ public class EventHandler {
                                 livingEntity.removePotionEffect(Effects.HUNGER);
                                 if (food == Foods.CHICKEN) {
                                     playerEntity.getFoodStats().addStats(0, 5.8f);
-                                } else if (food == Foods.PORKCHOP) {
+                                } else if (food == Foods.PORKCHOP || food == Foods.BEEF) {
                                     playerEntity.getFoodStats().addStats(-1, 6.4f);
                                 } else if (food == Foods.ROTTEN_FLESH) {
                                     playerEntity.getFoodStats().addStats(-1, 2.2f);
-                                } else if (food == Foods.RABBIT || food == Foods.BEEF) {
+                                } else if (food == Foods.RABBIT) {
                                     playerEntity.getFoodStats().addStats(2, 11.2f);
                                 }
 
@@ -205,11 +217,15 @@ public class EventHandler {
                                 } else if (food == Foods.COD) {
                                     playerEntity.getFoodStats().addStats(0, 6.6f);
                                 } else if (food == Foods.PUFFERFISH) {
-                                    playerEntity.getFoodStats().addStats(4, 12.8f);
+                                    playerEntity.getFoodStats().addStats(9, 12.8f);
                                 } else {
                                     playerEntity.getFoodStats().addStats(1, 2.4f);
                                 }
                             }
+                            break;
+                        case CAVE:
+                            if (item == ItemsInit.chargedCoal || item == ItemsInit.charredMeat)
+                                bad = false;
                             break;
                     }
                     if (bad)
@@ -229,13 +245,10 @@ public class EventHandler {
                 if (dragonStateHandler.getType() == DragonType.CAVE) {
                     if (item == Items.COAL) {
                         itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(2, 7);
+                        playerEntity.getFoodStats().addStats(1, 1);
                     } else if (item == Items.CHARCOAL) {
                         itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(2, 3);
-                    } else if (item == Items.REDSTONE) {
-                        itemStack.shrink(1);
-                        playerEntity.getFoodStats().addStats(5, 13);
+                        playerEntity.getFoodStats().addStats(1, 2);
                     }
                 }
             }
@@ -257,6 +270,17 @@ public class EventHandler {
                         jumpEvent.getEntityLiving().addVelocity(0, 0.15, 0); //2+ blocks
                         break;
                 }
+        });
+    }
+
+    public static boolean wingsEnabled;
+
+//    @SubscribeEvent
+    public static void cancelFall(LivingFallEvent fallEvent) {
+        LivingEntity livingEntity = fallEvent.getEntityLiving();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (wingsEnabled)
+                fallEvent.setCanceled(true);
         });
     }
 

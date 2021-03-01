@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -24,13 +25,13 @@ public class SynchronizationController {
         PlayerEntity player = loggedInEvent.getPlayer();
         //send the capability to everyone
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon(), cap.getHealth()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon(), cap.getHealth(), cap.hasWings()));
             DragonSurvivalMod.LOGGER.info("{} {}", player.getDisplayName().getString(), cap.getLevel());
         });
         //receive capability from others
         loggedInEvent.getPlayer().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
             DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth()));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
             });
         });
     }
@@ -43,8 +44,14 @@ public class SynchronizationController {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                dragonStateHandler.syncCapabilityData(!playerEntity.world.isRemote);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
             }
+        });
+        //sync others' capability
+        playerEntity.getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
+            DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+            });
         });
     }
 
@@ -64,6 +71,18 @@ public class SynchronizationController {
                 }
             });
         }
+    }
 
+    @SubscribeEvent
+    public static void onTrackingStart(PlayerEvent.StartTracking startTracking) {
+        PlayerEntity trackingPlayer = startTracking.getPlayer();
+        if (trackingPlayer instanceof ServerPlayerEntity) {
+            Entity trackedEntity = startTracking.getTarget();
+            if (trackedEntity instanceof ServerPlayerEntity) {
+                DragonStateProvider.getCap(trackedEntity).ifPresent(dragonStateHandler -> {
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) trackingPlayer), new SynchronizeDragonCap(trackedEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                });
+            }
+        }
     }
 }
