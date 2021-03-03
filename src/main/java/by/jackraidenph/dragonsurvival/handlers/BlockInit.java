@@ -33,17 +33,18 @@ public class BlockInit {
     };
 
     public static Block dragon_altar;
-    public static NestBlock nestBlock;
+    public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor dragonDoor;
+
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
         //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
         dragon_altar = new DragonAltarBlock(Block.Properties
-                        .create(Material.ANVIL)
-                        .harvestTool(ToolType.PICKAXE)
-                        .harvestLevel(2)
-                        .hardnessAndResistance(5.0f)
-                        .lightValue(5)
+                .create(Material.ANVIL)
+                .harvestTool(ToolType.PICKAXE)
+                .harvestLevel(2)
+                .hardnessAndResistance(5.0f)
+                .lightValue(5)
                         .sound(SoundType.ANVIL));
         event.getRegistry().register(dragon_altar);
         IForgeRegistry<Block> forgeRegistry = event.getRegistry();
@@ -56,8 +57,14 @@ public class BlockInit {
                 .sound(SoundType.NETHER_WART));
         forgeRegistry.register(PREDATOR_STAR_BLOCK.setRegistryName(DragonSurvivalMod.MODID, "predator_star"));
         dragonDoor = new DragonDoor(Block.Properties.create(Material.WOOD, MaterialColor.BROWN).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid());
-        nestBlock = new NestBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 100).notSolid());
-        forgeRegistry.register(nestBlock.setRegistryName(DragonSurvivalMod.MODID, "dragon_nest"));
+
+        smallCaveNest = new NestBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 100).notSolid());
+        smallSeaNest = new NestBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 100).notSolid());
+        smallForestNest = new NestBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3, 100).notSolid());
+        forgeRegistry.register(smallCaveNest.setRegistryName(DragonSurvivalMod.MODID, "cave_nest_small"));
+        forgeRegistry.register(smallForestNest.setRegistryName(DragonSurvivalMod.MODID, "forest_nest_small"));
+        forgeRegistry.register(smallSeaNest.setRegistryName(DragonSurvivalMod.MODID, "water_nest_small"));
+
         forgeRegistry.register(dragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
     }
 
@@ -67,7 +74,11 @@ public class BlockInit {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
         Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
-        forgeRegistry.register(new BlockItem(nestBlock, new Item.Properties()).setRegistryName(nestBlock.getRegistryName()));
+
+        forgeRegistry.register(new BlockItem(smallCaveNest, new Item.Properties().group(blocks)).setRegistryName(smallCaveNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(smallForestNest, new Item.Properties().group(blocks)).setRegistryName(smallForestNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(smallSeaNest, new Item.Properties().group(blocks)).setRegistryName(smallSeaNest.getRegistryName()));
+
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
     }
 }
