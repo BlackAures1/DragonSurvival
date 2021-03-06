@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.Functions;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,7 +27,7 @@ public class NestScreen extends ContainerScreen<NestContainer> {
         renderBackground();
         TextureManager textureManager = minecraft.getTextureManager();
         textureManager.bindTexture(BACKGROUND);
-        Functions.blit(guiLeft, guiTop, 0, 0, 176, 166, xSize, ySize);
+        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
         switch (nestEntity.type) {
             case CAVE:
                 textureManager.bindTexture(CAVE_NEST0);
@@ -40,8 +39,7 @@ public class NestScreen extends ContainerScreen<NestContainer> {
                 textureManager.bindTexture(SEA_NEST0);
                 break;
         }
-        Functions.blit(guiLeft + 8, guiTop + 8, 0, 0, 161, 50, xSize, ySize);
-//        drawCenteredString(font, "Health: " + container.nestEntity.health, width / 2, height / 2, 0xffffff);
+        blit(guiLeft + 8, guiTop + 8, 0, 0, 160, 49, 160, 49);
     }
 
     @Override

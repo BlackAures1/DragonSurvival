@@ -51,6 +51,8 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         damageCooldown = compound.getInt("Damage cooldown");
         type = DragonType.valueOf(compound.getString("Type"));
         ownerUUID = compound.getUniqueId("Owner");
+        if (ownerUUID.equals(new UUID(0, 0)))
+            ownerUUID = null;
     }
 
     @Override
