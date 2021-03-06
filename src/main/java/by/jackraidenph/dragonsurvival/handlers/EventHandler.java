@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.*;
@@ -20,6 +21,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -30,6 +33,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -275,13 +280,21 @@ public class EventHandler {
 
     public static boolean wingsEnabled;
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
     public static void cancelFall(LivingFallEvent fallEvent) {
         LivingEntity livingEntity = fallEvent.getEntityLiving();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (wingsEnabled)
                 fallEvent.setCanceled(true);
         });
+    }
+
+    @SubscribeEvent
+    public static void sleepCheck(SleepingLocationCheckEvent sleepingLocationCheckEvent) {
+        BlockPos sleepingLocation = sleepingLocationCheckEvent.getSleepingLocation();
+        World world = sleepingLocationCheckEvent.getEntity().world;
+        if (world.isNightTime() && world.getTileEntity(sleepingLocation) instanceof NestEntity)
+            sleepingLocationCheckEvent.setResult(Event.Result.ALLOW);
     }
 
 }

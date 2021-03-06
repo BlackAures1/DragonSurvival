@@ -140,7 +140,8 @@ public class DragonSurvivalMod {
             packetBuffer.writeBlockPos(sleepInNest.nestPos);
         }, packetBuffer -> new SleepInNest(packetBuffer.readBlockPos()), (sleepInNest, contextSupplier) -> {
             ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
-//            serverPlayerEntity.trySleep(sleepInNest.nestPos);
+            if (serverPlayerEntity.getServerWorld().isNightTime())
+                serverPlayerEntity.trySleep(sleepInNest.nestPos);
 //            serverPlayerEntity.startSleeping(sleepInNest.nestPos);
 //            Field field=PlayerEntity.class.getDeclaredFields()[28];
 //            if(field.getType()==int.class) {
