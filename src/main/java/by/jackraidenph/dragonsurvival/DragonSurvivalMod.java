@@ -4,6 +4,9 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.nest.DismantleNest;
+import by.jackraidenph.dragonsurvival.nest.NestEntity;
+import by.jackraidenph.dragonsurvival.nest.ToggleRegeneration;
 import by.jackraidenph.dragonsurvival.network.*;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -17,7 +20,9 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -74,7 +79,7 @@ public class DragonSurvivalMod {
         register(ToggleWings.class, new ToggleWings());
 
         //TODO synchronize health
-        CHANNEL.registerMessage(nextPacketId, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
+        CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
@@ -103,6 +108,30 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setHealth(synchronizeDragonCap.health);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                 });
+            }
+        });
+
+        CHANNEL.registerMessage(nextPacketId++, ToggleRegeneration.class, (toggleRegeneration, packetBuffer) -> {
+            packetBuffer.writeBlockPos(toggleRegeneration.nestPos);
+            packetBuffer.writeBoolean(toggleRegeneration.state);
+        }, packetBuffer -> new ToggleRegeneration(packetBuffer.readBlockPos(), packetBuffer.readBoolean()), (toggleRegeneration, contextSupplier) -> {
+            ServerWorld serverWorld = contextSupplier.get().getSender().getServerWorld();
+            TileEntity tileEntity = serverWorld.getTileEntity(toggleRegeneration.nestPos);
+            if (tileEntity instanceof NestEntity) {
+                ((NestEntity) tileEntity).regenerationMode = toggleRegeneration.state;
+                tileEntity.markDirty();
+                contextSupplier.get().setPacketHandled(true);
+            }
+        });
+
+        CHANNEL.registerMessage(nextPacketId++, DismantleNest.class, (dismantleNest, packetBuffer) -> {
+            packetBuffer.writeBlockPos(dismantleNest.nestPos);
+        }, packetBuffer -> new DismantleNest(packetBuffer.readBlockPos()), (dismantleNest, contextSupplier) -> {
+            ServerWorld serverWorld = contextSupplier.get().getSender().getServerWorld();
+            TileEntity tileEntity = serverWorld.getTileEntity(dismantleNest.nestPos);
+            if (tileEntity instanceof NestEntity) {
+                serverWorld.destroyBlock(dismantleNest.nestPos, true);
+                contextSupplier.get().setPacketHandled(true);
             }
         });
 

@@ -3,8 +3,10 @@ package by.jackraidenph.dragonsurvival.nest;
 import by.jackraidenph.dragonsurvival.handlers.Containers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
 public class NestContainer extends Container {
@@ -22,6 +24,13 @@ public class NestContainer extends Container {
                 addSlot(new Slot(inv, index++, 8 + 18 * j, 84 + 18 * i));
             }
         }
+
+        addSlot(new Slot(new Inventory(1), 0, 8 + 18 * 7, 85 - 24) {
+            @Override
+            public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
+                super.onSlotChange(oldStackIn, newStackIn);
+            }
+        });
     }
 
     @Override

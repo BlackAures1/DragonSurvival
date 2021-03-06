@@ -41,6 +41,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         compound.putInt("Damage cooldown", damageCooldown);
         compound.putString("Type", type.name());
         compound.putUniqueId("Owner", ownerUUID);
+        compound.putBoolean("Regenerating", regenerationMode);
         return super.write(compound);
     }
 
@@ -50,6 +51,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         health = compound.getInt("Health");
         damageCooldown = compound.getInt("Damage cooldown");
         type = DragonType.valueOf(compound.getString("Type"));
+        regenerationMode = compound.getBoolean("Regenerating");
         ownerUUID = compound.getUniqueId("Owner");
         if (ownerUUID.equals(new UUID(0, 0)))
             ownerUUID = null;
