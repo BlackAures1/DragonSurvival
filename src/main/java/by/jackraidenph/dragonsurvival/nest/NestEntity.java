@@ -39,6 +39,8 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
     public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("Health", health);
         compound.putInt("Damage cooldown", damageCooldown);
+        compound.putString("Type", type.name());
+        compound.putUniqueId("Owner", ownerUUID);
         return super.write(compound);
     }
 
@@ -47,6 +49,8 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         super.read(compound);
         health = compound.getInt("Health");
         damageCooldown = compound.getInt("Damage cooldown");
+        type = DragonType.valueOf(compound.getString("Type"));
+        ownerUUID = compound.getUniqueId("Owner");
     }
 
     @Override

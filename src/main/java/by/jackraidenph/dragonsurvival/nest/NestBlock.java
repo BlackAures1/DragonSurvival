@@ -1,8 +1,10 @@
 package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -82,7 +84,16 @@ public class NestBlock extends Block {
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         NestEntity nestEntity = getBlockEntity(worldIn, pos);
-        if (nestEntity.ownerUUID == null && placer instanceof PlayerEntity)
-            nestEntity.ownerUUID = placer.getUniqueID();
+        DragonStateProvider.getCap(placer).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                if (nestEntity.ownerUUID == null) {
+                    nestEntity.ownerUUID = placer.getUniqueID();
+                }
+                if (nestEntity.type == DragonType.NONE) {
+                    nestEntity.type = dragonStateHandler.getType();
+                }
+            }
+        });
+
     }
 }
