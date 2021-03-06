@@ -5,9 +5,11 @@ import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -19,6 +21,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import javax.annotation.Nullable;
 
 public class NestBlock extends Block {
     public NestBlock(Properties properties) {
@@ -49,7 +53,7 @@ public class NestBlock extends Block {
                     worldIn.destroyBlock(pos, false);
                 } else {
                     worldIn.playSound(player, pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
-                    nestEntity.damageCooldown = NestEntity.cooldownTime;
+                    nestEntity.damageCooldown = NestEntity.COOLDOWN_TIME;
                 }
                 nestEntity.markDirty();
             }
@@ -72,5 +76,13 @@ public class NestBlock extends Block {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
         }
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        NestEntity nestEntity = getBlockEntity(worldIn, pos);
+        if (nestEntity.ownerUUID == null && placer instanceof PlayerEntity)
+            nestEntity.ownerUUID = placer.getUniqueID();
     }
 }

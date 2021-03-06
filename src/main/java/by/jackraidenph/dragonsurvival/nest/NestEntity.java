@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.tiles.BaseBlockEntity;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,10 +14,15 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.UUID;
+
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
     public int health = 100;
-    final static int cooldownTime = 10 * 20;
+    final static int COOLDOWN_TIME = 10 * 20;
     public int damageCooldown;
+    public boolean regenerationMode;
+    public UUID ownerUUID;
+    public DragonType type = DragonType.NONE;
 
     public NestEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
