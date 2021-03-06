@@ -16,6 +16,6 @@ public class NestContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return true;//TODO only owner
+        return nestEntity.ownerUUID.equals(playerIn.getUniqueID());
     }
 }
