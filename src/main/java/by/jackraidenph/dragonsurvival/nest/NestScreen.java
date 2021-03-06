@@ -59,7 +59,18 @@ public class NestScreen extends ContainerScreen<NestContainer> {
 
             @Override
             public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-                playerEntity.startSleeping(nestEntity.getPos());
+//                playerEntity.trySleep(nestEntity.getPos());
+                //                playerEntity.startSleeping(nestEntity.getPos());
+//                Field field=PlayerEntity.class.getDeclaredFields()[28];
+//                if(field.getType()==int.class) {
+//                    field.setAccessible(true);
+//                    try {
+//                        field.set(playerEntity, 0);
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+                DragonSurvivalMod.CHANNEL.sendToServer(new SleepInNest(nestEntity.getPos()));
                 return true;
             }
         });

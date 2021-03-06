@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
+import by.jackraidenph.dragonsurvival.nest.SleepInNest;
 import by.jackraidenph.dragonsurvival.nest.ToggleRegeneration;
 import by.jackraidenph.dragonsurvival.network.*;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
@@ -133,6 +134,25 @@ public class DragonSurvivalMod {
                 serverWorld.destroyBlock(dismantleNest.nestPos, true);
                 contextSupplier.get().setPacketHandled(true);
             }
+        });
+
+        CHANNEL.registerMessage(nextPacketId, SleepInNest.class, (sleepInNest, packetBuffer) -> {
+            packetBuffer.writeBlockPos(sleepInNest.nestPos);
+        }, packetBuffer -> new SleepInNest(packetBuffer.readBlockPos()), (sleepInNest, contextSupplier) -> {
+            ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
+//            serverPlayerEntity.trySleep(sleepInNest.nestPos);
+//            serverPlayerEntity.startSleeping(sleepInNest.nestPos);
+//            Field field=PlayerEntity.class.getDeclaredFields()[28];
+//            if(field.getType()==int.class) {
+//                field.setAccessible(true);
+//                try {
+//                    field.set(serverPlayerEntity, 0);
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//                ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
+//                serverWorld.updateAllPlayersSleepingFlag();
+//            }
         });
 
         LOGGER.info("Successfully registered packets!");
