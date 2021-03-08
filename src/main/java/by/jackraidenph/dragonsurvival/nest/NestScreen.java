@@ -21,10 +21,17 @@ public class NestScreen extends ContainerScreen<NestContainer> {
     private final NestEntity nestEntity;
 
     private final PlayerEntity playerEntity;
+
     public NestScreen(NestContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
         nestEntity = screenContainer.nestEntity;
         playerEntity = inv.player;
+    }
+
+    public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
+        this.renderBackground();
+        super.render(p_render_1_, p_render_2_, p_render_3_);
+        this.renderHoveredToolTip(p_render_1_, p_render_2_);
     }
 
     @Override
