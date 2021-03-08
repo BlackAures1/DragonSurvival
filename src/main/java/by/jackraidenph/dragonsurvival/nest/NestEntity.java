@@ -70,8 +70,20 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
             if (energy < 64) {
                 energy = Math.min(64, energy + value);
                 itemStack.shrink(1);
+                if (!world.isRemote) {
+                    world.addBlockEvent(pos, getBlockState().getBlock(), 0, energy);
+                }
             }
         }
+    }
+
+    @Override
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == 0) {
+            energy = type;
+            return true;
+        }
+        return super.receiveClientEvent(id, type);
     }
 
     @Override

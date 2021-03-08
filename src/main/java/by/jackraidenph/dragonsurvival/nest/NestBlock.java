@@ -111,4 +111,10 @@ public class NestBlock extends HorizontalBlock {
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return VoxelShapes.empty();
     }
+
+    @Override
+    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return tileentity != null && tileentity.receiveClientEvent(id, param);
+    }
 }
