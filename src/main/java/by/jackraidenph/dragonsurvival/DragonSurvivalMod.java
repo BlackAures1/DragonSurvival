@@ -136,24 +136,12 @@ public class DragonSurvivalMod {
             }
         });
 
-        CHANNEL.registerMessage(nextPacketId, SleepInNest.class, (sleepInNest, packetBuffer) -> {
+        CHANNEL.registerMessage(nextPacketId++, SleepInNest.class, (sleepInNest, packetBuffer) -> {
             packetBuffer.writeBlockPos(sleepInNest.nestPos);
         }, packetBuffer -> new SleepInNest(packetBuffer.readBlockPos()), (sleepInNest, contextSupplier) -> {
             ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
             if (serverPlayerEntity.getServerWorld().isNightTime())
                 serverPlayerEntity.trySleep(sleepInNest.nestPos);
-//            serverPlayerEntity.startSleeping(sleepInNest.nestPos);
-//            Field field=PlayerEntity.class.getDeclaredFields()[28];
-//            if(field.getType()==int.class) {
-//                field.setAccessible(true);
-//                try {
-//                    field.set(serverPlayerEntity, 0);
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//                ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-//                serverWorld.updateAllPlayersSleepingFlag();
-//            }
         });
 
         LOGGER.info("Successfully registered packets!");

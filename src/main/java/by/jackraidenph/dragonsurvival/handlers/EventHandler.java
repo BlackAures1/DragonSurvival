@@ -30,7 +30,6 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
@@ -275,17 +274,6 @@ public class EventHandler {
                         jumpEvent.getEntityLiving().addVelocity(0, 0.15, 0); //2+ blocks
                         break;
                 }
-        });
-    }
-
-    public static boolean wingsEnabled;
-
-    //    @SubscribeEvent
-    public static void cancelFall(LivingFallEvent fallEvent) {
-        LivingEntity livingEntity = fallEvent.getEntityLiving();
-        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (wingsEnabled)
-                fallEvent.setCanceled(true);
         });
     }
 
