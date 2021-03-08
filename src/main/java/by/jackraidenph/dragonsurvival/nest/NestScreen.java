@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.Functions;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +19,7 @@ public class NestScreen extends ContainerScreen<NestContainer> {
     static final ResourceLocation FOREST_NEST1 = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/forest_nest_1.png");
     static final ResourceLocation SEA_NEST0 = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/sea_nest_0.png");
     static final ResourceLocation SEA_NEST1 = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/sea_nest_1.png");
+    static final ResourceLocation RED_HEART = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/red_heart.png");
     private final NestEntity nestEntity;
 
     private final PlayerEntity playerEntity;
@@ -52,6 +54,9 @@ public class NestScreen extends ContainerScreen<NestContainer> {
                 break;
         }
         blit(guiLeft + 8, guiTop + 8, 0, 0, 160, 49, 160, 49);
+        textureManager.bindTexture(RED_HEART);
+        Functions.blit(guiLeft + 122, guiTop + 12, 0, 0, 38, (int) (35 * (nestEntity.energy / 64f)), 38, 35);
+
     }
 
     @Override

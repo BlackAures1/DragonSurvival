@@ -57,23 +57,23 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         ItemStack itemStack = regenItem.getStackInSlot(0);
         if (!itemStack.isEmpty()) {
             int value = regenValue.get(itemStack.getItem());
-            List<PlayerEntity> playerEntities = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos), playerEntity -> playerEntity.getUniqueID().equals(ownerUUID));
-            if (playerEntities.size() == 1) {
-                PlayerEntity owner = playerEntities.get(0);
-                if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
-                    if (world.getGameTime() % 10 == 0) {
-                        owner.heal(1);
-                        energy--;
-                    }
-                }
-            }
             if (energy < 64) {
                 energy = Math.min(64, energy + value);
                 itemStack.shrink(1);
-                if (!world.isRemote) {
-                    world.addBlockEvent(pos, getBlockState().getBlock(), 0, energy);
+            }
+        }
+        List<PlayerEntity> playerEntities = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos), playerEntity -> playerEntity.getUniqueID().equals(ownerUUID));
+        if (playerEntities.size() == 1) {
+            PlayerEntity owner = playerEntities.get(0);
+            if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
+                if (world.getGameTime() % 10 == 0) {
+                    owner.heal(1);
+                    energy--;
                 }
             }
+        }
+        if (!world.isRemote) {
+            world.addBlockEvent(pos, getBlockState().getBlock(), 0, energy);
         }
     }
 
