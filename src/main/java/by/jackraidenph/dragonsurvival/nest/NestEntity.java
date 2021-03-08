@@ -17,7 +17,7 @@ import net.minecraft.util.text.StringTextComponent;
 import java.util.UUID;
 
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
-    public int health = 100;
+    public int health = 64;
     final static int COOLDOWN_TIME = 10 * 20;
     public int damageCooldown;
     public boolean regenerationMode;

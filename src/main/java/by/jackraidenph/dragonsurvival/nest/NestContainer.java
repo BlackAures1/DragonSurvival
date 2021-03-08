@@ -28,6 +28,7 @@ public class NestContainer extends Container {
         addSlot(new Slot(new Inventory(1), 0, 8 + 18 * 7, 85 - 24) {
             @Override
             public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
+                System.out.println(newStackIn);
                 super.onSlotChange(oldStackIn, newStackIn);
             }
         });
