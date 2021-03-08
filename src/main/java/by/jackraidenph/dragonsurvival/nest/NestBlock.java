@@ -73,9 +73,12 @@ public class NestBlock extends HorizontalBlock {
         return (NestEntity) world.getTileEntity(pos);
     }
 
+    /**
+     * Prevent anyone from breaking the nest
+     */
     @Override
     public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);// 0;
+        return 0;
     }
 
     @Override
