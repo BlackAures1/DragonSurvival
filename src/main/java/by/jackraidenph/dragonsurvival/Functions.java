@@ -30,6 +30,16 @@ public class Functions {
         return (float) (degrees * Math.PI / 180);
     }
 
+    /**
+     * @param startX   relative to left
+     * @param startY   relative to top
+     * @param textureX
+     * @param textureY
+     * @param width
+     * @param height
+     * @param sizeX    relative width
+     * @param sizeY    relative height
+     */
     public static void blit(int startX, int startY, float textureX, float textureY, int width, int height, int sizeX, int sizeY) {
         AbstractGui.blit(startX, startY, textureX, textureY, width, height, sizeX, sizeY);
     }
