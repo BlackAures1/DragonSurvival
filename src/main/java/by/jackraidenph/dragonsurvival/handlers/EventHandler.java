@@ -8,8 +8,10 @@ import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -22,7 +24,9 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -33,6 +37,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -285,4 +290,22 @@ public class EventHandler {
             sleepingLocationCheckEvent.setResult(Event.Result.ALLOW);
     }
 
+    @SubscribeEvent
+    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) {
+        if (!breakEvent.isCanceled()) {
+            IWorld world = breakEvent.getWorld();
+            if (world instanceof ServerWorld) {
+                BlockState blockState = breakEvent.getState();
+                BlockPos blockPos = breakEvent.getPos();
+                PlayerEntity playerEntity = breakEvent.getPlayer();
+                if (DragonStateProvider.isDragon(playerEntity)) {
+
+                }
+                Block block = blockState.getBlock();
+                if (block instanceof LogBlock || block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block instanceof SandBlock || block == Blocks.GRAVEL) {
+                    world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                }
+            }
+        }
+    }
 }
