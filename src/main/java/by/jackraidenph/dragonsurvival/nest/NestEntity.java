@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.BaseBlockEntity;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import io.netty.buffer.Unpooled;
@@ -7,13 +8,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
@@ -23,6 +28,19 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
     public boolean regenerationMode;
     public UUID ownerUUID;
     public DragonType type = DragonType.NONE;
+    public ItemStackHandler regenItem = new ItemStackHandler(1);
+
+    static HashMap<Item, Integer> regenValue;
+
+    static {
+        regenValue = new HashMap<>(6);
+        regenValue.put(ItemsInit.elderDragonDust, 5);
+        regenValue.put(Items.IRON_INGOT, 10);
+        regenValue.put(Items.GOLD_INGOT, 20);
+        regenValue.put(Items.DIAMOND, 30);
+        regenValue.put(ItemsInit.elderDragonBone, 40);
+        regenValue.put(ItemsInit.heartElement, 64);
+    }
 
     public NestEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -42,6 +60,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         compound.putString("Type", type.name());
         compound.putUniqueId("Owner", ownerUUID);
         compound.putBoolean("Regenerating", regenerationMode);
+        compound.put("Item", regenItem.serializeNBT());
         return super.write(compound);
     }
 
@@ -52,6 +71,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         damageCooldown = compound.getInt("Damage cooldown");
         type = DragonType.valueOf(compound.getString("Type"));
         regenerationMode = compound.getBoolean("Regenerating");
+        regenItem.deserializeNBT(compound.getCompound("Item"));
         ownerUUID = compound.getUniqueId("Owner");
         if (ownerUUID.equals(new UUID(0, 0)))
             ownerUUID = null;

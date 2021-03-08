@@ -3,11 +3,14 @@ package by.jackraidenph.dragonsurvival.nest;
 import by.jackraidenph.dragonsurvival.handlers.Containers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nonnull;
 
 public class NestContainer extends Container {
     NestEntity nestEntity;
@@ -25,11 +28,12 @@ public class NestContainer extends Container {
             }
         }
 
-        addSlot(new Slot(new Inventory(1), 0, 8 + 18 * 7, 85 - 24) {
+        addSlot(new SlotItemHandler(nestEntity.regenItem, 0, 8 + 18 * 7, 85 - 24) {
+
             @Override
-            public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
-                System.out.println(newStackIn);
-                super.onSlotChange(oldStackIn, newStackIn);
+            public boolean isItemValid(@Nonnull ItemStack stack) {
+                Item item = stack.getItem();
+                return NestEntity.regenValue.containsKey(item);
             }
         });
     }
