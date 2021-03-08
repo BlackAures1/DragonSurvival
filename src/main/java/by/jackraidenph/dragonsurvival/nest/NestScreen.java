@@ -55,8 +55,7 @@ public class NestScreen extends ContainerScreen<NestContainer> {
         }
         blit(guiLeft + 8, guiTop + 8, 0, 0, 160, 49, 160, 49);
         textureManager.bindTexture(RED_HEART);
-        Functions.blit(guiLeft + 122, guiTop + 12, 0, 0, 38, (int) (35 * (nestEntity.energy / 64f)), 38, 35);
-
+        Functions.blit(guiLeft + 122, guiTop + 12 + 35, 0, 0, 38, (int) (-35 * (nestEntity.energy / 64f)), 38, 35);
     }
 
     @Override
