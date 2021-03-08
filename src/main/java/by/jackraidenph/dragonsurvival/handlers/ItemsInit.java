@@ -111,6 +111,6 @@ public class ItemsInit {
                 return ActionResult.resultPass(playerIn.getHeldItem(handIn));
             }
         }.setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
-        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat);
+        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, elderDragonDust);
     }
 }
