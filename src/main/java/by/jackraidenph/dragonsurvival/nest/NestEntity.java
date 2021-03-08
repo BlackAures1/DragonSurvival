@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
-    public int energy = 64;
+    public int energy = 0;
     final static int COOLDOWN_TIME = 10 * 20;
     public int damageCooldown;
-    public boolean regenerationMode;
+    public boolean regenerationMode = true;
     public UUID ownerUUID;
     public DragonType type = DragonType.NONE;
     public ItemStackHandler regenItem = new ItemStackHandler(1);
@@ -61,7 +61,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
             if (playerEntities.size() == 1) {
                 PlayerEntity owner = playerEntities.get(0);
                 if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
-                    if (world.getGameTime() % 20 == 0) {
+                    if (world.getGameTime() % 10 == 0) {
                         owner.heal(1);
                         energy--;
                     }
