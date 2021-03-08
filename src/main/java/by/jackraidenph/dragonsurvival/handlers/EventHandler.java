@@ -298,12 +298,16 @@ public class EventHandler {
                 BlockState blockState = breakEvent.getState();
                 BlockPos blockPos = breakEvent.getPos();
                 PlayerEntity playerEntity = breakEvent.getPlayer();
-                if (DragonStateProvider.isDragon(playerEntity)) {
-
-                }
                 Block block = blockState.getBlock();
-                if (block instanceof LogBlock || block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block instanceof SandBlock || block == Blocks.GRAVEL) {
-                    world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                int random = -1;
+                if (DragonStateProvider.isDragon(playerEntity))
+                    random = playerEntity.getRNG().nextInt(50);
+                else
+                    random = playerEntity.getRNG().nextInt(300);
+                if (random == 0) {
+                    if (block instanceof LogBlock || block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block instanceof SandBlock || block == Blocks.GRAVEL || block == Blocks.GRASS_BLOCK) {
+                        world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                    }
                 }
             }
         }
