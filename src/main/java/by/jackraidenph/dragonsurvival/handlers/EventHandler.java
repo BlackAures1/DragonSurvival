@@ -299,7 +299,7 @@ public class EventHandler {
                 BlockPos blockPos = breakEvent.getPos();
                 PlayerEntity playerEntity = breakEvent.getPlayer();
                 Block block = blockState.getBlock();
-                int random = -1;
+                int random;
                 if (DragonStateProvider.isDragon(playerEntity))
                     random = playerEntity.getRNG().nextInt(50);
                 else
