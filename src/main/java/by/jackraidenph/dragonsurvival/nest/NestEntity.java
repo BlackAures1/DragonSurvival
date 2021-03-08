@@ -9,20 +9,23 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
-    public int health = 64;
+    public int energy = 64;
     final static int COOLDOWN_TIME = 10 * 20;
     public int damageCooldown;
     public boolean regenerationMode;
@@ -51,11 +54,29 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         if (damageCooldown > 0) {
             damageCooldown--;
         }
+        ItemStack itemStack = regenItem.getStackInSlot(0);
+        if (!itemStack.isEmpty()) {
+            int value = regenValue.get(itemStack.getItem());
+            List<PlayerEntity> playerEntities = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos), playerEntity -> playerEntity.getUniqueID().equals(ownerUUID));
+            if (playerEntities.size() == 1) {
+                PlayerEntity owner = playerEntities.get(0);
+                if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
+                    if (world.getGameTime() % 20 == 0) {
+                        owner.heal(1);
+                        energy--;
+                    }
+                }
+            }
+            if (energy < 64) {
+                energy = Math.min(64, energy + value);
+                itemStack.shrink(1);
+            }
+        }
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("Health", health);
+        compound.putInt("Health", energy);
         compound.putInt("Damage cooldown", damageCooldown);
         compound.putString("Type", type.name());
         compound.putUniqueId("Owner", ownerUUID);
@@ -67,7 +88,7 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
-        health = compound.getInt("Health");
+        energy = compound.getInt("Health");
         damageCooldown = compound.getInt("Damage cooldown");
         type = DragonType.valueOf(compound.getString("Type"));
         regenerationMode = compound.getBoolean("Regenerating");
