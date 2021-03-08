@@ -1,6 +1,5 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.handlers.EventHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -28,7 +27,6 @@ public class ToggleWings implements IMessage<ToggleWings> {
 
     @Override
     public void handle(ToggleWings message, Supplier<NetworkEvent.Context> supplier) {
-        EventHandler.wingsEnabled = message.state;
         supplier.get().setPacketHandled(true);
     }
 }
