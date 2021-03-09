@@ -168,6 +168,7 @@ public class DragonSurvivalMod {
                             item = null;
                     }
                     ItemStack itemStack = new ItemStack(item);
+                    //might not work in creative mode
                     if (playerEntity.getHeldItemOffhand().isEmpty()) {
                         playerEntity.setHeldItem(Hand.OFF_HAND, itemStack);
                     } else {
@@ -176,7 +177,6 @@ public class DragonSurvivalMod {
                         if (!playerEntity.inventory.addItemStackToInventory(stack)) {
                             playerEntity.dropItem(stack, false, false);
                         }
-                        ;
                     }
                 });
 
