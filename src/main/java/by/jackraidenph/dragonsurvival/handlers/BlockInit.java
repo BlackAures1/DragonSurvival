@@ -85,15 +85,15 @@ public class BlockInit {
         Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
 
-        forgeRegistry.register(new BlockItem(smallCaveNest, new Item.Properties().group(blocks)).setRegistryName(smallCaveNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(smallForestNest, new Item.Properties().group(blocks)).setRegistryName(smallForestNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(smallSeaNest, new Item.Properties().group(blocks)).setRegistryName(smallSeaNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(smallCaveNest, new Item.Properties()).setRegistryName(smallCaveNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(smallForestNest, new Item.Properties()).setRegistryName(smallForestNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(smallSeaNest, new Item.Properties()).setRegistryName(smallSeaNest.getRegistryName()));
 
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
 
-        forgeRegistry.register(new BlockItem(mediumSeaNest, new Item.Properties().group(blocks)).setRegistryName(mediumSeaNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(mediumCaveNest, new Item.Properties().group(blocks)).setRegistryName(mediumCaveNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(mediumForestNest, new Item.Properties().group(blocks)).setRegistryName(mediumForestNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(mediumSeaNest, new Item.Properties()).setRegistryName(mediumSeaNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(mediumCaveNest, new Item.Properties()).setRegistryName(mediumCaveNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(mediumForestNest, new Item.Properties()).setRegistryName(mediumForestNest.getRegistryName()));
 
     }
 }
