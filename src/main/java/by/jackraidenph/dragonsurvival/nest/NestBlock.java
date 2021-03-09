@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -12,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -88,19 +90,25 @@ public class NestBlock extends HorizontalBlock {
         DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
-        //TODO transformation
-        if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
+        TileEntity blockEntity = worldIn.getTileEntity(pos);
+        if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG && blockEntity instanceof NestEntity) {
+
+            CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
             switch (dragonType) {
                 case SEA:
-//                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
-                    return ActionResultType.SUCCESS;
+                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
+                    break;
                 case FOREST:
-//                    worldIn.setBlockState(pos,BlockInit.mediumForestNest.getDefaultState());
-                    return ActionResultType.SUCCESS;
+                    worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState());
+                    break;
                 case CAVE:
-//                    worldIn.setBlockState(pos,BlockInit.mediumCaveNest.getDefaultState());
-                    return ActionResultType.SUCCESS;
+                    worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState());
             }
+            NestEntity nestEntity = getBlockEntity(worldIn, pos);
+            nestEntity.read(compoundNBT);
+            BlockState blockState = worldIn.getBlockState(pos);
+            blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+            return ActionResultType.SUCCESS;
         }
         if (player instanceof ServerPlayerEntity) {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
@@ -113,7 +121,6 @@ public class NestBlock extends HorizontalBlock {
      */
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         NestEntity nestEntity = getBlockEntity(worldIn, pos);
         if (placer != null) {
             DragonStateProvider.getCap(placer).ifPresent(dragonStateHandler -> {
@@ -131,7 +138,7 @@ public class NestBlock extends HorizontalBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.empty();
+        return VoxelShapes.create(0, 0, 0, 1, 0.1, 1);
     }
 
     @Override

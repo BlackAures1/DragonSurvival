@@ -91,7 +91,8 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
         compound.putInt("Health", energy);
         compound.putInt("Damage cooldown", damageCooldown);
         compound.putString("Type", type.name());
-        compound.putUniqueId("Owner", ownerUUID);
+        if (ownerUUID != null)
+            compound.putUniqueId("Owner", ownerUUID);
         compound.putBoolean("Regenerating", regenerationMode);
         compound.put("Item", regenItem.serializeNBT());
         return super.write(compound);
