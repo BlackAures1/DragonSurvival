@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -89,15 +88,17 @@ public class NestBlock extends HorizontalBlock {
         DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
-
+        //TODO transformation
         if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
             switch (dragonType) {
                 case SEA:
-                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
+//                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
                     return ActionResultType.SUCCESS;
                 case FOREST:
+//                    worldIn.setBlockState(pos,BlockInit.mediumForestNest.getDefaultState());
                     return ActionResultType.SUCCESS;
                 case CAVE:
+//                    worldIn.setBlockState(pos,BlockInit.mediumCaveNest.getDefaultState());
                     return ActionResultType.SUCCESS;
             }
         }
