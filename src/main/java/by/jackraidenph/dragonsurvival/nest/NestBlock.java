@@ -31,6 +31,8 @@ import javax.annotation.Nullable;
 
 public class NestBlock extends HorizontalBlock {
 
+    public static final VoxelShape SHAPE = VoxelShapes.create(0, 0, 0, 1, 0.1, 1);
+
     public NestBlock(Properties properties) {
         super(properties);
     }
@@ -138,7 +140,7 @@ public class NestBlock extends HorizontalBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.create(0, 0, 0, 1, 0.1, 1);
+        return SHAPE;
     }
 
     @Override
