@@ -16,7 +16,7 @@ public class TileEntityTypesInit {
 
     @SubscribeEvent
     public static void registerTE(RegistryEvent.Register<TileEntityType<?>> event) {
-        nestEntityTile = TileEntityType.Builder.create(() -> new NestEntity(nestEntityTile), BlockInit.smallCaveNest).build(null);
+        nestEntityTile = TileEntityType.Builder.create(() -> new NestEntity(nestEntityTile), BlockInit.smallCaveNest, BlockInit.smallForestNest, BlockInit.smallSeaNest, BlockInit.mediumSeaNest).build(null);
         PREDATOR_STAR_TILE_ENTITY_TYPE = TileEntityType.Builder.create(PredatorStarTileEntity::new, BlockInit.PREDATOR_STAR_BLOCK).build(null);
         event.getRegistry().registerAll(nestEntityTile.setRegistryName(DragonSurvivalMod.MODID, "dragon_nest"),
                 PREDATOR_STAR_TILE_ENTITY_TYPE.setRegistryName(DragonSurvivalMod.MODID, "predator_star_te"));

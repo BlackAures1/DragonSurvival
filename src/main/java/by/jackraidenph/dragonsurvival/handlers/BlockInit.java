@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
 import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
+import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
 import by.jackraidenph.dragonsurvival.nest.NestBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -35,6 +36,7 @@ public class BlockInit {
     public static Block dragon_altar;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor dragonDoor;
+    public static MediumNestBlock mediumSeaNest;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -66,8 +68,12 @@ public class BlockInit {
         forgeRegistry.register(smallSeaNest.setRegistryName(DragonSurvivalMod.MODID, "water_nest_small"));
 
         forgeRegistry.register(dragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
+
+        mediumSeaNest = new MediumNestBlock(Block.Properties.from(smallSeaNest));
+        forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(blocks)).setRegistryName("dragon_altar"));
@@ -80,5 +86,7 @@ public class BlockInit {
         forgeRegistry.register(new BlockItem(smallSeaNest, new Item.Properties().group(blocks)).setRegistryName(smallSeaNest.getRegistryName()));
 
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
+
+        forgeRegistry.register(new BlockItem(mediumSeaNest, new Item.Properties().group(blocks)).setRegistryName(mediumSeaNest.getRegistryName()));
     }
 }
