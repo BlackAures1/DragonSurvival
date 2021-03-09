@@ -36,7 +36,7 @@ public class BlockInit {
     public static Block dragon_altar;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor dragonDoor;
-    public static MediumNestBlock mediumSeaNest;
+    public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -71,6 +71,10 @@ public class BlockInit {
 
         mediumSeaNest = new MediumNestBlock(Block.Properties.from(smallSeaNest));
         forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
+        mediumCaveNest = new MediumNestBlock(Block.Properties.from(smallCaveNest));
+        forgeRegistry.register(mediumCaveNest.setRegistryName(DragonSurvivalMod.MODID, "medium_cave_nest"));
+        mediumForestNest = new MediumNestBlock(Block.Properties.from(smallForestNest));
+        forgeRegistry.register(mediumForestNest.setRegistryName(DragonSurvivalMod.MODID, "medium_forest_nest"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -88,5 +92,8 @@ public class BlockInit {
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
 
         forgeRegistry.register(new BlockItem(mediumSeaNest, new Item.Properties().group(blocks)).setRegistryName(mediumSeaNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(mediumCaveNest, new Item.Properties().group(blocks)).setRegistryName(mediumCaveNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(mediumForestNest, new Item.Properties().group(blocks)).setRegistryName(mediumForestNest.getRegistryName()));
+
     }
 }

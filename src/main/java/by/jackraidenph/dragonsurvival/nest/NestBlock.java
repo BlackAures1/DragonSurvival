@@ -1,7 +1,10 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -83,6 +86,21 @@ public class NestBlock extends HorizontalBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        DragonLevel dragonLevel = dragonStateHandler.getLevel();
+        DragonType dragonType = dragonStateHandler.getType();
+
+        if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
+            switch (dragonType) {
+                case SEA:
+                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
+                    return ActionResultType.SUCCESS;
+                case FOREST:
+                    return ActionResultType.SUCCESS;
+                case CAVE:
+                    return ActionResultType.SUCCESS;
+            }
+        }
         if (player instanceof ServerPlayerEntity) {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
         }
