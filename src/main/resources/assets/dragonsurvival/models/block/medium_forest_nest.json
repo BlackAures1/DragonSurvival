@@ -1,5 +1,6 @@
 {
   "credit": "Made with Blockbench",
+  "parent": "block/cube_all",
   "texture_size": [
     128,
     128
@@ -1320,94 +1321,6 @@
       }
     }
   ],
-  "display": {
-    "thirdperson_righthand": {
-      "translation": [
-        -2,
-        2,
-        -1.25
-      ],
-      "scale": [
-        0.42,
-        0.41,
-        0.42
-      ]
-    },
-    "thirdperson_lefthand": {
-      "scale": [
-        0.34,
-        0.3,
-        0.27
-      ]
-    },
-    "firstperson_righthand": {
-      "translation": [
-        0.5,
-        4.75,
-        -1
-      ],
-      "scale": [
-        0.39,
-        0.38,
-        0.35
-      ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [
-        79,
-        -54,
-        36
-      ],
-      "translation": [
-        -12,
-        12,
-        0.75
-      ]
-    },
-    "ground": {
-      "translation": [
-        0,
-        7.5,
-        0
-      ]
-    },
-    "gui": {
-      "rotation": [
-        -153,
-        -24,
-        -180
-      ]
-    },
-    "head": {
-      "translation": [
-        21.75,
-        -28.25,
-        0
-      ],
-      "scale": [
-        2,
-        2,
-        2
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        -90,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        -2.75
-      ],
-      "scale": [
-        1,
-        0.41,
-        1
-      ]
-    }
-  },
   "groups": [
     {
       "name": "group",
