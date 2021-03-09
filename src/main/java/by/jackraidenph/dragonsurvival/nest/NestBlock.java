@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -147,5 +149,15 @@ public class NestBlock extends HorizontalBlock {
     public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity != null && tileentity.receiveClientEvent(id, param);
+    }
+
+    @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
+        return true;
+    }
+
+    @Override
+    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+
     }
 }

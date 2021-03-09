@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -144,8 +145,11 @@ public class DragonSurvivalMod {
             packetBuffer.writeBlockPos(sleepInNest.nestPos);
         }, packetBuffer -> new SleepInNest(packetBuffer.readBlockPos()), (sleepInNest, contextSupplier) -> {
             ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
-            if (serverPlayerEntity.getServerWorld().isNightTime())
+            if (serverPlayerEntity.getServerWorld().isNightTime()) {
                 serverPlayerEntity.trySleep(sleepInNest.nestPos);
+                serverPlayerEntity.setSpawnPoint(sleepInNest.nestPos, false, true, DimensionType.OVERWORLD);
+            }
+
         });
 
         CHANNEL.registerMessage(nextPacketId++, GiveNest.class, (giveNest, packetBuffer) -> {
