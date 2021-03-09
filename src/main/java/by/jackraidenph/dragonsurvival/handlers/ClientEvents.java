@@ -29,7 +29,6 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
@@ -149,7 +148,7 @@ public class ClientEvents {
                 }
 
                 if (player.getMotion().x != 0 || player.getMotion().z != 0) {
-                    DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getYaw(1), player.rotationYawHead, player.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                    DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getYaw(1), player.rotationYawHead, player.rotationPitch));
                     //align body when moving
                     bodyYaw = player.rotationYawHead;
                 }

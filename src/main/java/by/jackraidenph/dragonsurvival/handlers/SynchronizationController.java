@@ -7,7 +7,6 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,7 +65,7 @@ public class SynchronizationController {
             serverPlayerEntity.getServer().getPlayerList().getPlayers().forEach(otherPlayerEntity -> {
                 if (otherPlayerEntity != playerEntity) {
                     DragonStateProvider.getCap(otherPlayerEntity).ifPresent(dragonStateHandler -> {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getEntityId(), otherPlayerEntity.getYaw(1), otherPlayerEntity.rotationYawHead, otherPlayerEntity.rotationPitch, Vec3d.ZERO, Vec3d.ZERO));
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getEntityId(), otherPlayerEntity.getYaw(1), otherPlayerEntity.rotationYawHead, otherPlayerEntity.rotationPitch));
                     });
                 }
             });

@@ -13,7 +13,6 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -131,7 +130,7 @@ public class DragonAltarGUI extends Screen {
         player.closeScreen();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true, DragonLevel.BABY.initialHealth, false));
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0, Vec3d.ZERO, Vec3d.ZERO));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setLevel(DragonLevel.BABY);
