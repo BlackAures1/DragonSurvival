@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
@@ -18,10 +19,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+import net.minecraft.block.Block;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -143,6 +147,38 @@ public class DragonSurvivalMod {
             if (serverPlayerEntity.getServerWorld().isNightTime())
                 serverPlayerEntity.trySleep(sleepInNest.nestPos);
         });
+
+        CHANNEL.registerMessage(nextPacketId++, GiveNest.class, (giveNest, packetBuffer) -> {
+                    packetBuffer.writeEnumValue(giveNest.dragonType);
+                },
+                packetBuffer -> new GiveNest(packetBuffer.readEnumValue(DragonType.class)), (giveNest, contextSupplier) -> {
+                    ServerPlayerEntity playerEntity = contextSupplier.get().getSender();
+                    Block item;
+                    switch (giveNest.dragonType) {
+                        case CAVE:
+                            item = BlockInit.smallCaveNest;
+                            break;
+                        case FOREST:
+                            item = BlockInit.smallForestNest;
+                            break;
+                        case SEA:
+                            item = BlockInit.smallSeaNest;
+                            break;
+                        default:
+                            item = null;
+                    }
+                    ItemStack itemStack = new ItemStack(item);
+                    if (playerEntity.getHeldItemOffhand().isEmpty()) {
+                        playerEntity.setHeldItem(Hand.OFF_HAND, itemStack);
+                    } else {
+                        ItemStack stack = playerEntity.getHeldItemOffhand().copy();
+                        playerEntity.setHeldItem(Hand.OFF_HAND, itemStack);
+                        if (!playerEntity.inventory.addItemStackToInventory(stack)) {
+                            playerEntity.dropItem(stack, false, false);
+                        }
+                        ;
+                    }
+                });
 
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();

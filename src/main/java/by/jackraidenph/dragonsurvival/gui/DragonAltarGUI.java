@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.GiveNest;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.ResetPlayer;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
@@ -130,6 +131,7 @@ public class DragonAltarGUI extends Screen {
         player.closeScreen();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true, DragonLevel.BABY.initialHealth, false));
+            DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(cap.getType()));
             DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0));
             cap.setIsDragon(true);
             cap.setType(type);
