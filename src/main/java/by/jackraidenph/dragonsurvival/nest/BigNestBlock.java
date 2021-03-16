@@ -2,6 +2,8 @@ package by.jackraidenph.dragonsurvival.nest;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -12,6 +14,20 @@ import javax.annotation.Nullable;
 public class BigNestBlock extends MediumNestBlock {
     public BigNestBlock(Properties properties) {
         super(properties);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState superState = super.getStateForPlacement(context);
+        if (superState != null) {
+            BlockPos blockPos = context.getPos();
+            World world = context.getWorld();
+            PlayerEntity playerEntity = context.getPlayer();
+            Direction direction = playerEntity.getHorizontalFacing();
+            return superState;
+        }
+        return null;
     }
 
     @Override
@@ -39,6 +55,21 @@ public class BigNestBlock extends MediumNestBlock {
             placeHolder4.rootPos = pos;
             NestPlaceHolder placeHolder5 = (NestPlaceHolder) worldIn.getTileEntity(pos5);
             placeHolder5.rootPos = pos;
+        }
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        if (state.get(PRIMARY_BLOCK)) {
+            Direction direction = state.get(HORIZONTAL_FACING);
+            //TODO remove redundant one
+            worldIn.destroyBlock(pos.offset(direction), false);
+            worldIn.destroyBlock(pos.offset(direction.getOpposite()).offset(direction.rotateY()), false);
+            worldIn.destroyBlock(pos.offset(direction.getOpposite()).offset(direction.getOpposite().rotateY()), false);
+            worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateYCCW()), false);
+            worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateY()), false);
+            worldIn.destroyBlock(pos.offset(direction.rotateYCCW()), false);
         }
     }
 }
