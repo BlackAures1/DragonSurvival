@@ -62,6 +62,9 @@ public class ClientModEvents {
         RenderTypeLookup.setRenderLayer(BlockInit.mediumCaveNest, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.mediumForestNest, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.mediumSeaNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigCaveNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigForestNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigSeaNest, RenderType.getCutout());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();
