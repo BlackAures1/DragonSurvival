@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -99,15 +100,16 @@ public class NestBlock extends HorizontalBlock {
         if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG && blockEntity instanceof NestEntity) {
 
             CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+            final Direction placementDirection = player.getHorizontalFacing().getOpposite();
             switch (dragonType) {
                 case SEA:
-                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState());
+                    worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
                     break;
                 case FOREST:
-                    worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState());
+                    worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
                     break;
                 case CAVE:
-                    worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState());
+                    worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
             }
             NestEntity nestEntity = getBlockEntity(worldIn, pos);
             nestEntity.read(compoundNBT);

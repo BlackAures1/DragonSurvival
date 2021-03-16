@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 
 /**
  * This is a 2x2 multi-block.
- * TODO make it orientable
  */
 public class MediumNestBlock extends NestBlock {
     static final BooleanProperty PRIMARY_BLOCK = BooleanProperty.create("primary");
@@ -45,10 +44,10 @@ public class MediumNestBlock extends NestBlock {
         BlockPos blockPos = context.getPos();
         World world = context.getWorld();
         PlayerEntity playerEntity = context.getPlayer();
-        Direction direction = Direction.SOUTH;//playerEntity.getHorizontalFacing();
+        Direction direction = playerEntity.getHorizontalFacing();
         if (world.isAirBlock(blockPos.offset(direction)) && world.isAirBlock(blockPos.offset(direction.rotateYCCW()))
                 && world.isAirBlock(blockPos.offset(direction).offset(direction.rotateYCCW())))
-            return super.getStateForPlacement(context);
+            return super.getStateForPlacement(context).with(HORIZONTAL_FACING, direction.getOpposite());
         return null;
     }
 
@@ -77,7 +76,7 @@ public class MediumNestBlock extends NestBlock {
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         if (placer != null) {
-            Direction direction = Direction.SOUTH; //placer.getHorizontalFacing();
+            Direction direction = placer.getHorizontalFacing();
             worldIn.setBlockState(pos.offset(direction), state.with(PRIMARY_BLOCK, false));
             NestPlaceHolder placeHolder = (NestPlaceHolder) worldIn.getTileEntity(pos.offset(direction));
             placeHolder.rootPos = pos;
@@ -99,6 +98,7 @@ public class MediumNestBlock extends NestBlock {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         super.onReplaced(state, worldIn, pos, newState, isMoving);
         if (state.get(PRIMARY_BLOCK)) {
+            Direction direction = state.get(HORIZONTAL_FACING);
             worldIn.destroyBlock(pos.south(), false);
             worldIn.destroyBlock(pos.south().east(), false);
             worldIn.destroyBlock(pos.east(), false);
