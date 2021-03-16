@@ -25,7 +25,12 @@ public class BigNestBlock extends MediumNestBlock {
             World world = context.getWorld();
             PlayerEntity playerEntity = context.getPlayer();
             Direction direction = playerEntity.getHorizontalFacing();
-            return superState;
+            if (world.isAirBlock(blockPos.offset(direction.getOpposite())) &&
+                    world.isAirBlock(blockPos.offset(direction).offset(direction.rotateY())) &&
+                    world.isAirBlock(blockPos.offset(direction.rotateY())) &&
+                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateYCCW())) &&
+                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateY())))
+                return superState;
         }
         return null;
     }
