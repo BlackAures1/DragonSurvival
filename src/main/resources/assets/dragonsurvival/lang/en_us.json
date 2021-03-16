@@ -28,5 +28,6 @@
   "ds.wings.enabled": "Enabled wings",
   "ds.wings.disabled": "Disabled wings",
   "ds.you.have.no.wings": "You have no wings",
-  "ds.dragon.grants.wings": "<Ender dragon> I bestow wings on you. Now get out of here"
+  "ds.dragon.grants.wings": "<Ender dragon> I bestow wings on you. Now get out of here",
+  "ds.space.occupied": "Not enough free space around"
 }
