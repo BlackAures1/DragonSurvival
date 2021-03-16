@@ -60,6 +60,7 @@ public class MediumNestBlock extends NestBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        //TODO transformation
         if (!state.get(PRIMARY_BLOCK)) {
             NestPlaceHolder placeHolder = (NestPlaceHolder) worldIn.getTileEntity(pos);
             BlockPos root = placeHolder.rootPos;
