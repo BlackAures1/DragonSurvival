@@ -99,9 +99,9 @@ public class MediumNestBlock extends NestBlock {
         super.onReplaced(state, worldIn, pos, newState, isMoving);
         if (state.get(PRIMARY_BLOCK)) {
             Direction direction = state.get(HORIZONTAL_FACING);
-            worldIn.destroyBlock(pos.south(), false);
-            worldIn.destroyBlock(pos.south().east(), false);
-            worldIn.destroyBlock(pos.east(), false);
+            worldIn.destroyBlock(pos.offset(direction.getOpposite()), false);
+            worldIn.destroyBlock(pos.offset(direction.getOpposite()).offset(direction.rotateY()), false);
+            worldIn.destroyBlock(pos.offset(direction.rotateY()), false);
         }
     }
 }
