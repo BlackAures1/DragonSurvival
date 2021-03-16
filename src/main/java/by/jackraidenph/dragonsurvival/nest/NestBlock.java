@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class NestBlock extends HorizontalBlock {
 
@@ -94,38 +95,41 @@ public class NestBlock extends HorizontalBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        UUID uuid = player.getUniqueID();
         DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
         TileEntity blockEntity = worldIn.getTileEntity(pos);
-        if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG && blockEntity instanceof NestEntity) {
+        if (blockEntity instanceof NestEntity && ((NestEntity) blockEntity).ownerUUID.equals(uuid)) {
+            if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
 
-            final Direction playerHorizontalFacing = player.getHorizontalFacing();
-            if (worldIn.isAirBlock(pos.offset(playerHorizontalFacing)) &&
-                    worldIn.isAirBlock(pos.offset(playerHorizontalFacing.rotateYCCW())) &&
-                    worldIn.isAirBlock(pos.offset(playerHorizontalFacing).offset(playerHorizontalFacing.rotateYCCW()))) {
-                CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
-                final Direction placementDirection = playerHorizontalFacing.getOpposite();
-                switch (dragonType) {
-                    case SEA:
-                        worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
-                        break;
-                    case FOREST:
-                        worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
-                        break;
-                    case CAVE:
-                        worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                final Direction playerHorizontalFacing = player.getHorizontalFacing();
+                if (worldIn.isAirBlock(pos.offset(playerHorizontalFacing)) &&
+                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing.rotateYCCW())) &&
+                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing).offset(playerHorizontalFacing.rotateYCCW()))) {
+                    CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+                    final Direction placementDirection = playerHorizontalFacing.getOpposite();
+                    switch (dragonType) {
+                        case SEA:
+                            worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case FOREST:
+                            worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case CAVE:
+                            worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                    }
+                    NestEntity nestEntity = getBlockEntity(worldIn, pos);
+                    nestEntity.read(compoundNBT);
+                    BlockState blockState = worldIn.getBlockState(pos);
+                    blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+                    return ActionResultType.SUCCESS;
+                } else {
+                    if (worldIn.isRemote) {
+                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
+                    }
+                    return ActionResultType.CONSUME;
                 }
-                NestEntity nestEntity = getBlockEntity(worldIn, pos);
-                nestEntity.read(compoundNBT);
-                BlockState blockState = worldIn.getBlockState(pos);
-                blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
-                return ActionResultType.SUCCESS;
-            } else {
-                if (worldIn.isRemote) {
-                    player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
-                }
-                return ActionResultType.CONSUME;
             }
         }
         if (player instanceof ServerPlayerEntity) {
