@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
 import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
+import by.jackraidenph.dragonsurvival.nest.BigNestBlock;
 import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
 import by.jackraidenph.dragonsurvival.nest.NestBlock;
 import net.minecraft.block.Block;
@@ -37,6 +38,7 @@ public class BlockInit {
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor dragonDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
+    public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -75,6 +77,13 @@ public class BlockInit {
         forgeRegistry.register(mediumCaveNest.setRegistryName(DragonSurvivalMod.MODID, "medium_cave_nest"));
         mediumForestNest = new MediumNestBlock(Block.Properties.from(smallForestNest));
         forgeRegistry.register(mediumForestNest.setRegistryName(DragonSurvivalMod.MODID, "medium_forest_nest"));
+
+        bigCaveNest = new BigNestBlock(Block.Properties.from(smallCaveNest));
+        forgeRegistry.register(bigCaveNest.setRegistryName(DragonSurvivalMod.MODID, "big_cave_nest"));
+        bigForestNest = new BigNestBlock(Block.Properties.from(smallForestNest));
+        forgeRegistry.register(bigForestNest.setRegistryName(DragonSurvivalMod.MODID, "big_forest_nest"));
+        bigSeaNest = new BigNestBlock(Block.Properties.from(smallSeaNest));
+        forgeRegistry.register(bigSeaNest.setRegistryName(DragonSurvivalMod.MODID, "big_sea_nest"));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -95,5 +104,8 @@ public class BlockInit {
         forgeRegistry.register(new BlockItem(mediumCaveNest, new Item.Properties()).setRegistryName(mediumCaveNest.getRegistryName()));
         forgeRegistry.register(new BlockItem(mediumForestNest, new Item.Properties()).setRegistryName(mediumForestNest.getRegistryName()));
 
+        forgeRegistry.register(new BlockItem(bigCaveNest, new Item.Properties().group(blocks)).setRegistryName(bigCaveNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(bigSeaNest, new Item.Properties().group(blocks)).setRegistryName(bigSeaNest.getRegistryName()));
+        forgeRegistry.register(new BlockItem(bigForestNest, new Item.Properties().group(blocks)).setRegistryName(bigForestNest.getRegistryName()));
     }
 }
