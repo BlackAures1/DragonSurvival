@@ -18,13 +18,16 @@ public class TileEntityTypesInit {
     public static TileEntityType<NestPlaceHolder> nestPlaceHolder;
 
     @SubscribeEvent
-    public static void registerTE(RegistryEvent.Register<TileEntityType<?>> event) {
-        nestEntityTile = TileEntityType.Builder.create(() -> new NestEntity(nestEntityTile), BlockInit.smallCaveNest, BlockInit.smallForestNest, BlockInit.smallSeaNest, BlockInit.mediumSeaNest, BlockInit.mediumCaveNest, BlockInit.mediumForestNest).build(null);
+    public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+        nestEntityTile = TileEntityType.Builder.create(() -> new NestEntity(nestEntityTile),
+                BlockInit.smallCaveNest, BlockInit.smallForestNest, BlockInit.smallSeaNest,
+                BlockInit.mediumSeaNest, BlockInit.mediumCaveNest, BlockInit.mediumForestNest,
+                BlockInit.bigCaveNest, BlockInit.bigSeaNest, BlockInit.bigForestNest).build(null);
         PREDATOR_STAR_TILE_ENTITY_TYPE = TileEntityType.Builder.create(PredatorStarTileEntity::new, BlockInit.PREDATOR_STAR_BLOCK).build(null);
         IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
         registry.registerAll(nestEntityTile.setRegistryName(DragonSurvivalMod.MODID, "dragon_nest"),
                 PREDATOR_STAR_TILE_ENTITY_TYPE.setRegistryName(DragonSurvivalMod.MODID, "predator_star_te"));
-        nestPlaceHolder = TileEntityType.Builder.create(() -> new NestPlaceHolder(nestPlaceHolder), BlockInit.mediumSeaNest, BlockInit.mediumForestNest, BlockInit.mediumCaveNest).build(null);
+        nestPlaceHolder = TileEntityType.Builder.create(() -> new NestPlaceHolder(nestPlaceHolder), BlockInit.mediumSeaNest, BlockInit.mediumForestNest, BlockInit.mediumCaveNest, BlockInit.bigForestNest, BlockInit.bigSeaNest, BlockInit.bigCaveNest).build(null);
         registry.register(nestPlaceHolder.setRegistryName("nest_placeholder"));
     }
 }
