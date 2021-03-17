@@ -202,7 +202,7 @@ public class DragonSurvivalMod {
         ArgumentCommandNode<CommandSource, Boolean> giveWings = argument("wings", BoolArgumentType.bool()).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
-            boolean wings = context.getArgument("wings?", Boolean.TYPE);
+            boolean wings = context.getArgument("wings", Boolean.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().asPlayer();
             serverPlayerEntity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
