@@ -3,7 +3,6 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
@@ -75,21 +74,6 @@ public class EventHandler {
                 PlayerContainer playerContainer = new PlayerContainer(playerEntity.inventory, playerEntity.world.isRemote, playerEntity);
                 field.set(playerEntity, playerContainer);
                 playerEntity.openContainer = playerContainer;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Deprecated
-    public static void setDragonContainer(PlayerEntity playerEntity) {
-        Field field = PlayerEntity.class.getDeclaredFields()[15];
-        if (field.getType() == PlayerContainer.class) {
-            field.setAccessible(true);
-            try {
-                DragonInventoryContainer dragonInventoryContainer = new DragonInventoryContainer(playerEntity.inventory, playerEntity.world.isRemote, playerEntity);
-                field.set(playerEntity, dragonInventoryContainer);
-                playerEntity.openContainer = dragonInventoryContainer;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
