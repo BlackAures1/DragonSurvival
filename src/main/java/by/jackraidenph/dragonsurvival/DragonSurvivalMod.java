@@ -14,6 +14,7 @@ import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
@@ -196,9 +197,12 @@ public class DragonSurvivalMod {
 
         ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest"}, builder)).build();
 
-        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).executes(context -> {
+        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).build();
+
+        ArgumentCommandNode<CommandSource, Boolean> giveWings = argument("wings", BoolArgumentType.bool()).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
+            boolean wings = context.getArgument("wings?", Boolean.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().asPlayer();
             serverPlayerEntity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
@@ -206,8 +210,9 @@ public class DragonSurvivalMod {
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
+                dragonStateHandler.setHasWings(wings);
                 //works
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, 20, false));
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, 20, wings));
             });
             return 1;
         }).build();
@@ -215,6 +220,7 @@ public class DragonSurvivalMod {
         rootCommandNode.addChild(dragon);
         dragon.addChild(dragonType);
         dragonType.addChild(dragonStage);
+        dragonStage.addChild(giveWings);
         LOGGER.info("Registered commands");
     }
 }
