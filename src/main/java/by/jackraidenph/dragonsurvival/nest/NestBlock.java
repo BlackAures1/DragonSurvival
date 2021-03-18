@@ -130,6 +130,8 @@ public class NestBlock extends HorizontalBlock {
                     }
                     return ActionResultType.CONSUME;
                 }
+            } else if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.ADULT) {
+                //TODO transformation to big nest
             }
         }
         if (player instanceof ServerPlayerEntity) {
