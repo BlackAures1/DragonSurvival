@@ -95,17 +95,25 @@ public class BlockInit {
         forgeRegistry.register(dragonDoorItem);
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
 
-        forgeRegistry.register(new BlockItem(smallCaveNest, new Item.Properties().group(blocks)).setRegistryName(smallCaveNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(smallForestNest, new Item.Properties().group(blocks)).setRegistryName(smallForestNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(smallSeaNest, new Item.Properties().group(blocks)).setRegistryName(smallSeaNest.getRegistryName()));
+        registerSingleItem(smallCaveNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(smallForestNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(smallSeaNest, new Item.Properties(), forgeRegistry);
 
+        registerSingleItem(mediumSeaNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(mediumForestNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(mediumCaveNest, new Item.Properties(), forgeRegistry);
 
-        forgeRegistry.register(new BlockItem(mediumSeaNest, new Item.Properties().group(blocks)).setRegistryName(mediumSeaNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(mediumCaveNest, new Item.Properties().group(blocks)).setRegistryName(mediumCaveNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(mediumForestNest, new Item.Properties().group(blocks)).setRegistryName(mediumForestNest.getRegistryName()));
+        registerSingleItem(bigSeaNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(bigForestNest, new Item.Properties(), forgeRegistry);
+        registerSingleItem(bigCaveNest, new Item.Properties(), forgeRegistry);
+    }
 
-        forgeRegistry.register(new BlockItem(bigCaveNest, new Item.Properties().group(blocks)).setRegistryName(bigCaveNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(bigSeaNest, new Item.Properties().group(blocks)).setRegistryName(bigSeaNest.getRegistryName()));
-        forgeRegistry.register(new BlockItem(bigForestNest, new Item.Properties().group(blocks)).setRegistryName(bigForestNest.getRegistryName()));
+    @SuppressWarnings("ConstantConditions")
+    private static void registerItem(Block block, Item.Properties itemProperties, IForgeRegistry<Item> forgeRegistry) {
+        forgeRegistry.register(new BlockItem(block, itemProperties.group(blocks)).setRegistryName(block.getRegistryName()));
+    }
+
+    private static void registerSingleItem(Block block, Item.Properties properties, IForgeRegistry<Item> forgeRegistry) {
+        registerItem(block, properties.maxStackSize(1), forgeRegistry);
     }
 }
