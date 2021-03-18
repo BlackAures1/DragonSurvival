@@ -118,6 +118,7 @@ public class DragonAltarGUI extends Screen {
                 playerStateHandler.setIsHiding(false);
                 playerStateHandler.setLevel(DragonLevel.BABY);
                 playerStateHandler.setType(DragonType.NONE);
+                playerStateHandler.setHasWings(false);
                 DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getEntityId(), false, DragonType.NONE, DragonLevel.BABY, false, 20, false));
                 DragonSurvivalMod.CHANNEL.sendToServer(new ResetPlayer());
                 minecraft.player.closeScreen();
@@ -139,6 +140,7 @@ public class DragonAltarGUI extends Screen {
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setLevel(DragonLevel.BABY);
+            cap.setHasWings(false);
             player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
 //                    Random random = player.world.rand;
 //                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
