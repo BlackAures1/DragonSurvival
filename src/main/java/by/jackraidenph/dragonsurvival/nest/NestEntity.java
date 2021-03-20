@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.BaseBlockEntity;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import io.netty.buffer.Unpooled;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -62,13 +63,16 @@ public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, 
                 itemStack.shrink(1);
             }
         }
-        List<PlayerEntity> playerEntities = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos), playerEntity -> playerEntity.getUniqueID().equals(ownerUUID));
-        if (playerEntities.size() == 1) {
-            PlayerEntity owner = playerEntities.get(0);
-            if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
-                if (world.getGameTime() % 10 == 0) {
-                    owner.heal(1);
-                    energy--;
+        Block block = getBlockState().getBlock();
+        if (block instanceof BigNestBlock) {
+            List<PlayerEntity> playerEntities = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos).grow(1, 0, 1).expand(0, 1, 0), playerEntity -> playerEntity.getUniqueID().equals(ownerUUID));
+            if (playerEntities.size() == 1) {
+                PlayerEntity owner = playerEntities.get(0);
+                if (owner.getHealth() < owner.getMaxHealth() && regenerationMode && energy > 0) {
+                    if (world.getGameTime() % 10 == 0) {
+                        owner.heal(1);
+                        energy--;
+                    }
                 }
             }
         }
