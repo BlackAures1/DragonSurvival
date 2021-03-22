@@ -4,7 +4,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
@@ -40,7 +39,7 @@ public class ConfigurationHandler {
             builder.pop();
             builder.push("Predator spawn biomes");
             builder.comment("Biome types to include & exclude.");
-            include = builder.defineList("include", Collections.singletonList(FOREST.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+            include = builder.defineList("include", Arrays.asList(FOREST.toString(), PLAINS.toString(), HILLS.toString(), SWAMP.toString(), SANDY.toString(), SNOWY.toString(), WASTELAND.toString(), BEACH.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
             exclude = builder.defineList("exclude", Arrays.asList(MOUNTAIN.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
             builder.pop();
         }
