@@ -1,28 +1,52 @@
 package by.jackraidenph.dragonsurvival.nest;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
-import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
+import by.jackraidenph.dragonsurvival.util.DragonLevel;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.fml.network.PacketDistributor;
 
-public class NestBlock extends Block {
+import javax.annotation.Nullable;
+import java.util.UUID;
+
+public class NestBlock extends HorizontalBlock {
+
+    public static final VoxelShape SHAPE = VoxelShapes.create(0, 0, 0, 1, 0.1, 1);
+    public static final VoxelShape OUTLINE = VoxelShapes.create(0, 0, 0, 1, 0.5, 1);
+
     public NestBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+        builder.add(HORIZONTAL_FACING);
     }
 
     @Override
@@ -37,23 +61,23 @@ public class NestBlock extends Block {
 
     @Override
     public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        NestEntity nestEntity = getBlockEntity(worldIn, pos);
-        if (!worldIn.isRemote()) {
+//        NestEntity nestEntity = getBlockEntity(worldIn, pos);
+//        if (!worldIn.isRemote()) {
 //        if (nestEntity.damageCooldown <= 0)
-            {
-                double damage = player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
-                nestEntity.health -= Math.min(damage, 10);
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 40, worldIn.getDimension().getType())), new SynchronizeNest(nestEntity.getPos(), nestEntity.health, nestEntity.damageCooldown));
-                if (nestEntity.health <= 0) {
-                    worldIn.playSound(player, pos, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.BLOCKS, 1, 1);
-                    worldIn.destroyBlock(pos, false);
-                } else {
-                    worldIn.playSound(player, pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
-                    nestEntity.damageCooldown = NestEntity.cooldownTime;
-                }
-                nestEntity.markDirty();
-            }
-        }
+//            {
+//                double damage = player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
+//                nestEntity.health -= Math.min(damage, 10);
+//                DragonSurvivalMod.CHANNEL.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 40, worldIn.getDimension().getType())), new SynchronizeNest(nestEntity.getPos(), nestEntity.health, nestEntity.damageCooldown));
+//                if (nestEntity.health <= 0) {
+//                    worldIn.playSound(player, pos, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.BLOCKS, 1, 1);
+//                    worldIn.destroyBlock(pos, false);
+//                } else {
+//                    worldIn.playSound(player, pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
+//                    nestEntity.damageCooldown = NestEntity.COOLDOWN_TIME;
+//                }
+//                nestEntity.markDirty();
+//            }
+//        }
         super.onBlockClicked(state, worldIn, pos, player);
     }
 
@@ -61,6 +85,9 @@ public class NestBlock extends Block {
         return (NestEntity) world.getTileEntity(pos);
     }
 
+    /**
+     * Prevent anyone from breaking the nest
+     */
     @Override
     public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
         return 0;
@@ -68,9 +95,119 @@ public class NestBlock extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (player instanceof ServerPlayerEntity) {
+        UUID uuid = player.getUniqueID();
+        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        DragonLevel dragonLevel = dragonStateHandler.getLevel();
+        DragonType dragonType = dragonStateHandler.getType();
+        TileEntity blockEntity = worldIn.getTileEntity(pos);
+        if (blockEntity instanceof NestEntity && ((NestEntity) blockEntity).ownerUUID.equals(uuid)) {
+            final Direction playerHorizontalFacing = player.getHorizontalFacing();
+            final Direction placementDirection = playerHorizontalFacing.getOpposite();
+            if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
+
+                if (worldIn.isAirBlock(pos.offset(playerHorizontalFacing)) &&
+                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing.rotateYCCW())) &&
+                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing).offset(playerHorizontalFacing.rotateYCCW()))) {
+                    CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+                    switch (dragonType) {
+                        case SEA:
+                            worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case FOREST:
+                            worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case CAVE:
+                            worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                    }
+                    NestEntity nestEntity = getBlockEntity(worldIn, pos);
+                    nestEntity.read(compoundNBT);
+                    BlockState blockState = worldIn.getBlockState(pos);
+                    blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+                    return ActionResultType.SUCCESS;
+                } else {
+                    if (worldIn.isRemote) {
+                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
+                    }
+                    return ActionResultType.CONSUME;
+                }
+            } else if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.ADULT) {
+                if (worldIn.isAirBlock(pos.north()) && worldIn.isAirBlock(pos.south()) &&
+                        worldIn.isAirBlock(pos.west()) && worldIn.isAirBlock(pos.east())
+                        && worldIn.isAirBlock(pos.north().west()) && worldIn.isAirBlock(pos.north().east())
+                        && worldIn.isAirBlock(pos.south().east()) && worldIn.isAirBlock(pos.south().west())) {
+                    CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+                    switch (dragonType) {
+                        case SEA:
+                            worldIn.setBlockState(pos, BlockInit.bigSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case FOREST:
+                            worldIn.setBlockState(pos, BlockInit.bigForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            break;
+                        case CAVE:
+                            worldIn.setBlockState(pos, BlockInit.bigCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                    }
+                    NestEntity nestEntity = getBlockEntity(worldIn, pos);
+                    nestEntity.read(compoundNBT);
+                    BlockState blockState = worldIn.getBlockState(pos);
+                    blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+                    return ActionResultType.SUCCESS;
+                } else {
+                    if (worldIn.isRemote) {
+                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
+                    }
+                    return ActionResultType.CONSUME;
+                }
+            }
+        }
+        if (player instanceof ServerPlayerEntity && getBlockEntity(worldIn, pos).ownerUUID.equals(player.getUniqueID())) {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
         }
         return ActionResultType.SUCCESS;
+    }
+
+    /**
+     * Setting owner and type
+     */
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        NestEntity nestEntity = getBlockEntity(worldIn, pos);
+        if (placer != null) {
+            DragonStateProvider.getCap(placer).ifPresent(dragonStateHandler -> {
+                if (dragonStateHandler.isDragon()) {
+                    if (nestEntity.ownerUUID == null) {
+                        nestEntity.ownerUUID = placer.getUniqueID();
+                    }
+                    if (nestEntity.type == DragonType.NONE) {
+                        nestEntity.type = dragonStateHandler.getType();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return OUTLINE;
+    }
+
+    @Override
+    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return tileentity != null && tileentity.receiveClientEvent(id, param);
+    }
+
+    @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
+        return true;
+    }
+
+    @Override
+    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+
     }
 }

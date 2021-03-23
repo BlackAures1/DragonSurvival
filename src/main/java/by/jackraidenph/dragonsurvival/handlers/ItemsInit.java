@@ -24,7 +24,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemsInit {
     public static Item heartElement;
-    public static Item starBone, elderDragonBone;
+    public static Item starBone, elderDragonBone, elderDragonDust;
     public static Item charredMeat, chargedCoal;
 
     @SubscribeEvent
@@ -90,7 +90,9 @@ public class ItemsInit {
             }
         }.setRegistryName(DragonSurvivalMod.MODID, "star_bone");
 
+        elderDragonDust = new Item(new Item.Properties().group(BlockInit.blocks)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_dust");
         elderDragonBone = new Item(new Item.Properties().group(BlockInit.blocks)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_bone");
+
         chargedCoal = new Item(new Item.Properties().group(BlockInit.blocks).food(new Food.Builder().hunger(5).saturation(7).build())) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
@@ -109,6 +111,6 @@ public class ItemsInit {
                 return ActionResult.resultPass(playerIn.getHeldItem(handIn));
             }
         }.setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
-        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat);
+        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, elderDragonDust);
     }
 }

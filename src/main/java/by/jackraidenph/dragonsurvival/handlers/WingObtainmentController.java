@@ -3,6 +3,8 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.Language;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -41,7 +43,12 @@ public class WingObtainmentController {
     static String m17 = "Оставь меня и мое гнездо в покое, в обмен я дам тебе часть своей силы. Ты сможешь покорить небеса.";
     static String m18 = "Еще одна душа, пришедшая через портал.... Но ты отличаешься от них. В тебе есть сила. Скрытая сила. Я могу пробудить ее. Но в обмен на это ты покинешь мои земли и больше никогда не потревожишь меня. Согласен?";
 
+    static String e3 = "Have you come here for the wings, ()? Get out, before it's too late.";
+    static String e4 = "This is my land, (), show some respect. Go away, but first answer, why have you come here. Is it for wings?";
+    static String e5 = "You have gone through lot to get here, (), what do you wish?";
+
     static ArrayList<String> dragonPhrases;
+    static ArrayList<String> englishPhrases;
 
     static {
         dragonPhrases = new ArrayList<>(18);
@@ -63,6 +70,10 @@ public class WingObtainmentController {
         dragonPhrases.add(m16);
         dragonPhrases.add(m17);
         dragonPhrases.add(m18);
+
+        englishPhrases = new ArrayList<>(18);
+        englishPhrases.add(e3);
+        englishPhrases.add(e5);
     }
 
     @SubscribeEvent
@@ -74,7 +85,13 @@ public class WingObtainmentController {
                     Thread thread = new Thread(() -> {
                         try {
                             Thread.sleep(3000);
-                            String randomPhrase = dragonPhrases.get(playerEntity.getRNG().nextInt(dragonPhrases.size()));
+                            Language language = Minecraft.getInstance().getLanguageManager().getCurrentLanguage();
+
+                            String randomPhrase;
+                            if (language.getCode().equals("ru_ru")) {
+                                randomPhrase = dragonPhrases.get(playerEntity.getRNG().nextInt(dragonPhrases.size()));
+                            } else
+                                randomPhrase = englishPhrases.get(playerEntity.getRNG().nextInt(englishPhrases.size()));
                             randomPhrase = randomPhrase.replace("()", playerEntity.getDisplayName().getString());
                             playerEntity.sendMessage(new StringTextComponent(randomPhrase));
                         } catch (InterruptedException e) {

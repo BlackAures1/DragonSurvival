@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SBS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "B": {
+      "item": "dragonsurvival:elder_dragon_dust"
+    }
+  },
+  "result": {
+    "item": "dragonsurvival:dragon_altar"
+  }
+}

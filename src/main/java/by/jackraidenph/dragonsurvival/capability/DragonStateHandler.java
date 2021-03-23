@@ -16,7 +16,7 @@ public class DragonStateHandler {
      * Current health, must be equal to the player's health
      */
     private float health = level.initialHealth;
-    private final DragonMovementData data = new DragonMovementData(0, 0, 0, Vec3d.ZERO, Vec3d.ZERO);
+    private final DragonMovementData data = new DragonMovementData(0, 0, 0);
     private boolean hasWings;
 
     public boolean hasWings() {
@@ -77,12 +77,10 @@ public class DragonStateHandler {
     }
 
 
-    public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos) {
+    public void setMovementData(double bodyYaw, double headYaw, double headPitch) {
         data.bodyYaw = bodyYaw;
         data.headYaw = headYaw;
         data.headPitch = headPitch;
-        data.headPos = headPos;
-        data.tailPos = tailPos;
     }
 
     public DragonMovementData getMovementData() {
@@ -101,8 +99,6 @@ public class DragonStateHandler {
         public double bodyYaw;
         public double headYaw;
         public double headPitch;
-        public Vec3d headPos;
-        public Vec3d tailPos;
 
         public Vec3d headPosLastTick;
         public Vec3d tailPosLastTick;
@@ -113,38 +109,28 @@ public class DragonStateHandler {
         public DragonMovementData(
                 double bodyYaw,
                 double headYaw,
-                double headPitch,
-                Vec3d headPos,
-                Vec3d tailPos) {
+                double headPitch) {
 
             this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
-            this.headPos = headPos;
-            this.tailPos = tailPos;
 
-            this.headPosLastTick = headPos;
-            this.tailPosLastTick = tailPos;
             this.headYawLastTick = headYaw;
             this.headPitchLastTick = headPitch;
             this.bodyYawLastTick = bodyYaw;
         }
 
-        void setMovementData(double bodyYaw, double headYaw, double headPitch, Vec3d headPos, Vec3d tailPos) {
-            this.setMovementLastTick(this.bodyYaw, this.headYaw, this.headPitch, this.headPos, this.tailPos);
+        void setMovementData(double bodyYaw, double headYaw, double headPitch) {
+            this.setMovementLastTick(this.bodyYaw, this.headYaw, this.headPitch);
             this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
-            this.headPos = headPos;
-            this.tailPos = tailPos;
         }
 
-        void setMovementLastTick(double bodyYawLastTick, double headYawLastTick, double headPitchLastTick, Vec3d headPosLastTick, Vec3d tailPosLastTick) {
+        void setMovementLastTick(double bodyYawLastTick, double headYawLastTick, double headPitchLastTick) {
             this.bodyYawLastTick = bodyYawLastTick;
             this.headYawLastTick = headYawLastTick;
             this.headPitchLastTick = headPitchLastTick;
-            this.headPosLastTick = headPosLastTick;
-            this.tailPosLastTick = tailPosLastTick;
         }
     }
 }

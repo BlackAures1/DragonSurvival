@@ -3,12 +3,17 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.containers.DragonInventoryContainer;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.RedstoneOreBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -20,6 +25,10 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -27,9 +36,11 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -66,21 +77,6 @@ public class EventHandler {
                 PlayerContainer playerContainer = new PlayerContainer(playerEntity.inventory, playerEntity.world.isRemote, playerEntity);
                 field.set(playerEntity, playerContainer);
                 playerEntity.openContainer = playerContainer;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Deprecated
-    public static void setDragonContainer(PlayerEntity playerEntity) {
-        Field field = PlayerEntity.class.getDeclaredFields()[15];
-        if (field.getType() == PlayerContainer.class) {
-            field.setAccessible(true);
-            try {
-                DragonInventoryContainer dragonInventoryContainer = new DragonInventoryContainer(playerEntity.inventory, playerEntity.world.isRemote, playerEntity);
-                field.set(playerEntity, dragonInventoryContainer);
-                playerEntity.openContainer = dragonInventoryContainer;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -130,7 +126,7 @@ public class EventHandler {
                     if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
                         DragonStateHandler.DragonMovementData movementData = capOld.getMovementData();
-                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.headPos, movementData.tailPos);
+                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch);
                         capNew.setLevel(capOld.getLevel());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
@@ -273,15 +269,34 @@ public class EventHandler {
         });
     }
 
-    public static boolean wingsEnabled;
-
-//    @SubscribeEvent
-    public static void cancelFall(LivingFallEvent fallEvent) {
-        LivingEntity livingEntity = fallEvent.getEntityLiving();
-        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (wingsEnabled)
-                fallEvent.setCanceled(true);
-        });
+    @SubscribeEvent
+    public static void sleepCheck(SleepingLocationCheckEvent sleepingLocationCheckEvent) {
+        BlockPos sleepingLocation = sleepingLocationCheckEvent.getSleepingLocation();
+        World world = sleepingLocationCheckEvent.getEntity().world;
+        if (world.isNightTime() && world.getTileEntity(sleepingLocation) instanceof NestEntity)
+            sleepingLocationCheckEvent.setResult(Event.Result.ALLOW);
     }
 
+    @SubscribeEvent
+    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) {
+        if (!breakEvent.isCanceled()) {
+            IWorld world = breakEvent.getWorld();
+            if (world instanceof ServerWorld) {
+                BlockState blockState = breakEvent.getState();
+                BlockPos blockPos = breakEvent.getPos();
+                PlayerEntity playerEntity = breakEvent.getPlayer();
+                Block block = blockState.getBlock();
+                int random;
+                if (DragonStateProvider.isDragon(playerEntity))
+                    random = playerEntity.getRNG().nextInt(50);
+                else
+                    random = playerEntity.getRNG().nextInt(300);
+                if (random == 0) {
+                    if (block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE) {
+                        world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                    }
+                }
+            }
+        }
+    }
 }

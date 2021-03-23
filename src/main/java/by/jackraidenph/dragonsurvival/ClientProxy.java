@@ -58,10 +58,10 @@ public class ClientProxy implements Proxy {
         TileEntity entity = world.getTileEntity(synchronizeNest.pos);
         if (entity instanceof NestEntity) {
             NestEntity nestEntity = (NestEntity) entity;
-            nestEntity.health = synchronizeNest.health;
+            nestEntity.energy = synchronizeNest.health;
             nestEntity.damageCooldown = synchronizeNest.cooldown;
             nestEntity.markDirty();
-            if (nestEntity.health <= 0) {
+            if (nestEntity.energy <= 0) {
                 world.playSound(player, synchronizeNest.pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1, 1);
             } else {
                 world.playSound(player, synchronizeNest.pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
