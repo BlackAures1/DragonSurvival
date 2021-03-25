@@ -59,7 +59,7 @@ public class EntityTypesInit {
             EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawn);
         }
 
-        dragonEntity = new EntityType<>(DragonEntity::new, EntityClassification.CREATURE, true, true, false, false, EntitySize.fixed(0.9f, 1.9f));
+        dragonEntity = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, EntitySize.fixed(0.9f, 1.9f));
         dragonEntity.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
         event.getRegistry().register(dragonEntity);
     }
