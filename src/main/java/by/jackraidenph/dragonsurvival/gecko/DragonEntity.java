@@ -34,7 +34,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("dragon.stand.json"));
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand2", true));
         return PlayState.CONTINUE;
     }
 

@@ -7,7 +7,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class DragonModel extends AnimatedGeoModel<DragonEntity> {
     @Override
     public ResourceLocation getModelLocation(DragonEntity dragonEntity) {
-        return new ResourceLocation(DragonSurvivalMod.MODID, "geo.dragon_model.geo.json");
+        return new ResourceLocation(DragonSurvivalMod.MODID, "geo/dragon_model.geo.json");
     }
 
     @Override
@@ -17,6 +17,6 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(DragonEntity dragonEntity) {
-        return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.json");
+        return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
     }
 }
