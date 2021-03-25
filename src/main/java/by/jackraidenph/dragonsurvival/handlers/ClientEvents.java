@@ -63,6 +63,7 @@ public class ClientEvents {
      * Instance used for rendering dragon model
      */
     static DragonEntity dummyDragon;
+    static DragonEntity dummyDragonForArmor;
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -79,6 +80,7 @@ public class ClientEvents {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (dummyDragon == null) {
             dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragonForArmor = EntityTypesInit.dragonEntity.create(player.world);
         }
         assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
@@ -103,6 +105,7 @@ public class ClientEvents {
 
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
+                ClientModEvents.dragonModel.setCurrentTexture(texture);
                 dragonRenderer.render(dummyDragon, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                 firstPersonModel.copyModelAttributesTo(firstPersonArmor);
@@ -218,26 +221,26 @@ public class ClientEvents {
                 String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
                 thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
 
-                if (cap.hasWings()) {
-                    thirdPersonModel.copyModelAttributesTo(wings);
-                    wings.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
-                    String wingsTexture;
-                    switch (cap.getType()) {
-                        case SEA:
-                            wingsTexture = "wings_sea.png";
-                            break;
-                        case CAVE:
-                            wingsTexture = "wings_cave.png";
-                            break;
-                        case FOREST:
-                            wingsTexture = "wings_forest.png";
-                            break;
-                        default:
-                            wingsTexture = null;
-                    }
-                    if (wingsTexture != null)
-                        wings.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, "textures/wings/" + wingsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0), 0, 0, 0, 1.0f);
-                }
+//                if (cap.hasWings()) {
+//                    thirdPersonModel.copyModelAttributesTo(wings);
+//                    wings.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
+//                    String wingsTexture;
+//                    switch (cap.getType()) {
+//                        case SEA:
+//                            wingsTexture = "wings_sea.png";
+//                            break;
+//                        case CAVE:
+//                            wingsTexture = "wings_cave.png";
+//                            break;
+//                        case FOREST:
+//                            wingsTexture = "wings_forest.png";
+//                            break;
+//                        default:
+//                            wingsTexture = null;
+//                    }
+//                    if (wingsTexture != null)
+//                        wings.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, "textures/wings/" + wingsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0), 0, 0, 0, 1.0f);
+//                }
                 matrixStack.pop();
             }
         });
