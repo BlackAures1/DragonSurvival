@@ -37,6 +37,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -197,6 +198,10 @@ public class ClientEvents {
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
                 ClientModEvents.dragonModel.setCurrentTexture(texture);
+                final IBone leftwing = ClientModEvents.dragonModel.getBone("Leftwing");
+                final IBone rightWing = ClientModEvents.dragonModel.getBone("Leftwing2");
+                leftwing.setHidden(!cap.hasWings());
+                rightWing.setHidden(!cap.hasWings());
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
 
                 thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
