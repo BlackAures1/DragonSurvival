@@ -11,7 +11,6 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -37,6 +36,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -77,6 +77,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (dummyDragon == null) {
+            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+        }
+        assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
@@ -94,10 +98,12 @@ public class ClientEvents {
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 eventMatrixStack.translate(0, -2, -1);
                 IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-                IVertexBuilder buffer = buffers.getBuffer(RenderType.getEntityTranslucentCull(texture));
                 int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
-                firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+
+                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
+                dummyDragon.copyLocationAndAnglesFrom(player);
+                dragonRenderer.render(dummyDragon, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                 firstPersonModel.copyModelAttributesTo(firstPersonArmor);
                 firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
@@ -170,10 +176,6 @@ public class ClientEvents {
     public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
-
-        if (dummyDragon == null)
-            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
-        assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -197,10 +199,10 @@ public class ClientEvents {
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
                 ClientModEvents.dragonModel.setCurrentTexture(texture);
-//                final IBone leftwing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("allwing");
-//                final IBone rightWing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("Leftwing2");
-//                leftwing.setHidden(!cap.hasWings());
-//                rightWing.setHidden(!cap.hasWings());
+                final IBone leftwing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("Leftwing");
+                final IBone rightWing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                leftwing.setHidden(!cap.hasWings());
+                rightWing.setHidden(!cap.hasWings());
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
 
                 thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
