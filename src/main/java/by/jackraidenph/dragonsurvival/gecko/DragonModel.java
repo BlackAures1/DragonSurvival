@@ -1,4 +1,4 @@
-package by.jackraidenph.dragonsurvival.models;
+package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import net.minecraft.util.ResourceLocation;
