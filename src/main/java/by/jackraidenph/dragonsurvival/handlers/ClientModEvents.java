@@ -37,13 +37,8 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
-    /**
-     * Whether all three custom skins exist
-     */
-    public static boolean customSkinPresence;
-    public static ResourceLocation customNewbornSkin;
-    public static ResourceLocation customYoungSkin;
-    public static ResourceLocation customAdultSkin;
+
+    public static DragonModel dragonModel;
 
     public static KeyBinding TOGGLE_WINGS;
 
@@ -77,7 +72,7 @@ public class ClientModEvents {
         TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, new DragonModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, dragonModel = new DragonModel()));
     }
 
     /**

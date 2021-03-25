@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.models.Wings;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
@@ -19,6 +20,8 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,7 +48,6 @@ import java.util.UUID;
 public class ClientEvents {
 
     public static float bodyYaw;
-    public static float neckYaw;
     static boolean showingInventory;
     static HashMap<UUID, Boolean> warnings = new HashMap<>();
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
@@ -55,8 +57,12 @@ public class ClientEvents {
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
     public static DragonModel2 thirdPersonArmor = new DragonModel2(false);
     public static DragonModel2 firstPersonArmor = new DragonModel2(true);
-
+    static EntityRendererManager entityRendererManager;
     public static Wings wings = new Wings();
+    /**
+     * Instance used for rendering dragon model
+     */
+    static DragonEntity dummyDragon;
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -65,6 +71,7 @@ public class ClientEvents {
 
         firstPersonArmor.NeckandMain.showModel = false;
         firstPersonArmor.NeckandHead.showModel = false;
+        entityRendererManager = Minecraft.getInstance().getRenderManager();
     }
 
     @SubscribeEvent
@@ -163,6 +170,10 @@ public class ClientEvents {
     public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
+
+        if (dummyDragon == null)
+            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+        assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -182,11 +193,11 @@ public class ClientEvents {
                 float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
                 matrixStack.scale(scale, scale, scale);
                 int eventLight = renderPlayerEvent.getLight();
-                thirdPersonModel.render(
-                        matrixStack,
-                        renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
-                        eventLight, LivingRenderer.getPackedOverlay(player, 0.0f),
-                        partialRenderTick, yaw, pitch, 1.0f);
+
+                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
+                dummyDragon.copyLocationAndAnglesFrom(player);
+                ClientModEvents.dragonModel.setCurrentTexture(texture);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
 
                 thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
                 thirdPersonArmor.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
