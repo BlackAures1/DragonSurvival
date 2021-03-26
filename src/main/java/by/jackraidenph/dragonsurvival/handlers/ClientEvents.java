@@ -6,7 +6,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
-import by.jackraidenph.dragonsurvival.models.Wings;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -20,7 +19,6 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -53,12 +51,8 @@ public class ClientEvents {
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     static HashMultimap<UUID, ResourceLocation> skinCache = HashMultimap.create(1, 3);
     static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
-    public static DragonModel2 thirdPersonModel = new DragonModel2(false);
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
-    public static DragonModel2 thirdPersonArmor = new DragonModel2(false);
     public static DragonModel2 firstPersonArmor = new DragonModel2(true);
-    static EntityRendererManager entityRendererManager;
-    public static Wings wings = new Wings();
     /**
      * Instance used for rendering dragon model
      */
@@ -72,7 +66,6 @@ public class ClientEvents {
 
         firstPersonArmor.NeckandMain.showModel = false;
         firstPersonArmor.NeckandHead.showModel = false;
-        entityRendererManager = Minecraft.getInstance().getRenderManager();
     }
 
     @SubscribeEvent
