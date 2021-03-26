@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
+import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.models.Wings;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
@@ -48,6 +49,7 @@ import java.util.UUID;
 public class ClientEvents {
 
     public static float bodyYaw;
+    public static DragonModel dragonModel;
     static boolean showingInventory;
     static HashMap<UUID, Boolean> warnings = new HashMap<>();
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
@@ -105,7 +107,7 @@ public class ClientEvents {
 
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
-                ClientModEvents.dragonModel.setCurrentTexture(texture);
+                dragonModel.setCurrentTexture(texture);
                 dragonRenderer.render(dummyDragon, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                 firstPersonModel.copyModelAttributesTo(firstPersonArmor);
@@ -201,9 +203,9 @@ public class ClientEvents {
 
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
-                ClientModEvents.dragonModel.setCurrentTexture(texture);
-                final IBone leftwing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("Leftwing");
-                final IBone rightWing = ClientModEvents.dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                dragonModel.setCurrentTexture(texture);
+                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
+                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
                 leftwing.setHidden(!cap.hasWings());
                 rightWing.setHidden(!cap.hasWings());
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
@@ -212,35 +214,21 @@ public class ClientEvents {
 
                 setArmorVisibility(thirdPersonArmor, player);
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
-
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
                 String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
                 String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
                 String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
 
-//                if (cap.hasWings()) {
-//                    thirdPersonModel.copyModelAttributesTo(wings);
-//                    wings.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
-//                    String wingsTexture;
-//                    switch (cap.getType()) {
-//                        case SEA:
-//                            wingsTexture = "wings_sea.png";
-//                            break;
-//                        case CAVE:
-//                            wingsTexture = "wings_cave.png";
-//                            break;
-//                        case FOREST:
-//                            wingsTexture = "wings_forest.png";
-//                            break;
-//                        default:
-//                            wingsTexture = null;
-//                    }
-//                    if (wingsTexture != null)
-//                        wings.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, "textures/wings/" + wingsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0), 0, 0, 0, 1.0f);
-//                }
+                //scale to try to prevent texture fighting
+                matrixStack.scale(1.02f, 1.02f, 1.02f);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+
                 matrixStack.pop();
             }
         });
