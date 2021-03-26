@@ -176,7 +176,7 @@ public class ClientEvents {
      * The player is always the local player
      */
     @SubscribeEvent
-    public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
+    public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
@@ -207,12 +207,12 @@ public class ClientEvents {
                 leftwing.setHidden(!cap.hasWings());
                 rightWing.setHidden(!cap.hasWings());
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
-
                 thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
                 thirdPersonArmor.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
 
                 setArmorVisibility(thirdPersonArmor, player);
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+
                 thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
                 String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
                 thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
