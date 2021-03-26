@@ -18,11 +18,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -65,7 +63,7 @@ public class ClientEvents {
      * Instance used for rendering dragon model
      */
     static DragonEntity dummyDragon;
-    static DragonEntity dummyDragonForArmor;
+    static DragonEntity dummyDragon2;
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -82,7 +80,7 @@ public class ClientEvents {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (dummyDragon == null) {
             dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
-            dummyDragonForArmor = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon2 = EntityTypesInit.dragonEntity.create(player.world);
         }
         assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
@@ -102,25 +100,28 @@ public class ClientEvents {
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 eventMatrixStack.translate(0, -2, -1);
                 IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
+//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
 
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
-                dummyDragon.copyLocationAndAnglesFrom(player);
+                dummyDragon2.copyLocationAndAnglesFrom(player);
                 dragonModel.setCurrentTexture(texture);
-                dragonRenderer.render(dummyDragon, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                if (neckandHead != null)
+                    neckandHead.setHidden(true);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
-                firstPersonModel.copyModelAttributesTo(firstPersonArmor);
-                firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                setArmorVisibility(firstPersonArmor, player);
-
-//                eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
+                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
                 ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(chestplate)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(chestplate);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                 ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(legs)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(legs);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                 ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(boots)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(boots);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+
                 eventMatrixStack.translate(0, 0, 0.15);
                 eventMatrixStack.pop();
 
@@ -189,7 +190,6 @@ public class ClientEvents {
                 float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount);
                 float yaw = player.getYaw(partialRenderTick);
                 float pitch = player.getPitch(partialRenderTick);
-                thirdPersonModel.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
 
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
@@ -208,11 +208,10 @@ public class ClientEvents {
                 final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
                 leftwing.setHidden(!cap.hasWings());
                 rightWing.setHidden(!cap.hasWings());
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
-                thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
-                thirdPersonArmor.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
+                dragonModel.getBone("NeckandHead").setHidden(false);
 
-                setArmorVisibility(thirdPersonArmor, player);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
                 String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
                 String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
