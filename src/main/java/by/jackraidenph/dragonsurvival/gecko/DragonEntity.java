@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
@@ -18,7 +19,7 @@ import java.util.Collections;
 
 public class DragonEntity extends LivingEntity implements IAnimatable {
     AnimationFactory animationFactory = new AnimationFactory(this);
-
+    public PlayerEntity player;
     public DragonEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -34,7 +35,10 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand2", true));
+        if (player.isSleeping()) {
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
+        } else
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand2", true));
         return PlayState.CONTINUE;
     }
 

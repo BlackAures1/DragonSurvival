@@ -73,7 +73,9 @@ public class ClientEvents {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (dummyDragon == null) {
             dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon.player = player;
             dummyDragon2 = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon2.player = player;
         }
         assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
