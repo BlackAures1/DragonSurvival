@@ -213,7 +213,7 @@ public class ClientEvents {
                 String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
                 //scale to try to prevent texture fighting
-                matrixStack.scale(1.02f, 1.02f, 1.02f);
+                matrixStack.scale(1.08f, 1.02f, 1.02f);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
