@@ -10,7 +10,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -21,21 +20,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.stream.Stream;
-
 public class DragonAltarBlock extends Block {
-    VoxelShape SHAPE = Stream.of(
-            Block.makeCuboidShape(0, 0, 0, 16, 5, 16),
-            Block.makeCuboidShape(2, 7, 7, 4, 13, 9),
-            Block.makeCuboidShape(7, 7, 11, 9, 13, 13),
-            Block.makeCuboidShape(11, 7, 7, 13, 13, 9),
-            Block.makeCuboidShape(7, 7, 3, 9, 13, 5),
-            Block.makeCuboidShape(7, 10, 7, 9, 16, 9)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
+    VoxelShape SHAPE = VoxelShapes.fullCube();
 
     public DragonAltarBlock(Properties properties) {
         super(properties);
-        this.setRegistryName("dragon_altar");
     }
 
     @Override
@@ -72,9 +61,4 @@ public class DragonAltarBlock extends Block {
         return SHAPE;
     }
 
-    /*@Override
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        worldIn.addParticle(ParticleTypes.END_ROD, pos.getX() + rand.nextFloat(), pos.getY() + rand.nextFloat(), pos.getZ() + rand.nextFloat(), 0, rand.nextFloat() / 4.0f + 0.1f, 0);
-    }*/
 }
