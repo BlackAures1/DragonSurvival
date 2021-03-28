@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,9 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        if (player.isSleeping()) {
+        if (!player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).hasWings()) {
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow"));
+        } else if (player.isSleeping()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
         } else
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand2", true));
