@@ -30,7 +30,7 @@ public class BlockInit {
     public static ItemGroup blocks = new ItemGroup("dragon.survival.blocks") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(dragon_altar);
+            return new ItemStack(ItemsInit.elderDragonDust);
         }
     };
 

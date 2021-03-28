@@ -23,8 +23,7 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -297,6 +296,39 @@ public class EventHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void createAltar(PlayerInteractEvent.RightClickBlock rightClickBlock) {
+        ItemStack itemStack = rightClickBlock.getItemStack();
+        if (itemStack.getItem() == ItemsInit.elderDragonBone) {
+
+            final World world = rightClickBlock.getWorld();
+            final BlockPos blockPos = rightClickBlock.getPos();
+            BlockState blockState = world.getBlockState(blockPos);
+            final Block block = blockState.getBlock();
+            boolean replace = false;
+            if (block == Blocks.STONE) {
+                world.setBlockState(blockPos, BlockInit.dragon_altar3.getDefaultState());
+                replace = true;
+            } else if (block == Blocks.SANDSTONE) {
+                world.setBlockState(blockPos, BlockInit.dragon_altar4.getDefaultState());
+                replace = true;
+            } else if (block == Blocks.MOSSY_COBBLESTONE) {
+                world.setBlockState(blockPos, BlockInit.dragon_altar.getDefaultState());
+                replace = true;
+            } else if (block == Blocks.OAK_LOG) {
+                world.setBlockState(blockPos, BlockInit.dragon_altar2.getDefaultState());
+                replace = true;
+            }
+            if (replace) {
+                itemStack.shrink(1);
+                rightClickBlock.setCanceled(true);
+                world.playSound(rightClickBlock.getPlayer(), blockPos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.PLAYERS, 1, 1);
+                rightClickBlock.setCancellationResult(ActionResultType.SUCCESS);
+            }
+
         }
     }
 }
