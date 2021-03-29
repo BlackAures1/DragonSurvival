@@ -37,7 +37,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         if (!player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null).hasWings()) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow"));
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSleeping()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
         } else
