@@ -96,7 +96,7 @@ public class NestBlock extends HorizontalBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         UUID uuid = player.getUniqueID();
-        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
         TileEntity blockEntity = worldIn.getTileEntity(pos);

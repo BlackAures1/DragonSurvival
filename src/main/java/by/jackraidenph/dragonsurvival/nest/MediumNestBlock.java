@@ -67,7 +67,7 @@ public class MediumNestBlock extends NestBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+        DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         BlockPos rootPos = null;
         TileEntity tileEntity = worldIn.getTileEntity(pos);

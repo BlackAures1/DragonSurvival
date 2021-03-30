@@ -32,7 +32,7 @@ public class ItemsInit {
         heartElement = new Item(new Item.Properties().group(BlockInit.blocks).maxStackSize(64)) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+                LazyOptional<DragonStateHandler> dragonStateHandlerLazyOptional = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY);
                 if (dragonStateHandlerLazyOptional.isPresent()) {
                     DragonStateHandler dragonStateHandler = dragonStateHandlerLazyOptional.orElseGet(() -> null);
                     if (dragonStateHandler.isDragon()) {
@@ -64,7 +64,7 @@ public class ItemsInit {
         starBone = new Item(new Item.Properties().group(BlockInit.blocks)) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                LazyOptional<DragonStateHandler> playerStateProvider = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+                LazyOptional<DragonStateHandler> playerStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY);
                 if (playerStateProvider.isPresent()) {
                     DragonStateHandler dragonStateHandler = playerStateProvider.orElse(null);
                     if (dragonStateHandler.isDragon()) {
@@ -96,7 +96,7 @@ public class ItemsInit {
         chargedCoal = new Item(new Item.Properties().group(BlockInit.blocks).food(new Food.Builder().hunger(5).saturation(7).build())) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
                 if (dragonStateProvider.isDragon() && dragonStateProvider.getType() == DragonType.CAVE)
                     return super.onItemRightClick(worldIn, playerIn, handIn);
                 return ActionResult.resultPass(playerIn.getHeldItem(handIn));
@@ -105,7 +105,7 @@ public class ItemsInit {
         charredMeat = new Item(new Item.Properties().group(BlockInit.blocks).food(new Food.Builder().hunger(10).saturation(13).build())) {
             @Override
             public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).orElse(null);
+                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
                 if (dragonStateProvider.isDragon() && dragonStateProvider.getType() == DragonType.CAVE)
                     return super.onItemRightClick(worldIn, playerIn, handIn);
                 return ActionResult.resultPass(playerIn.getHeldItem(handIn));
