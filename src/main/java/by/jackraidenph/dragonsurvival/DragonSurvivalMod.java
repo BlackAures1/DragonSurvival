@@ -212,7 +212,6 @@ public class DragonSurvivalMod {
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
-                //works
                 CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, dragonLevel.initialHealth, wings));
             });
             return 1;

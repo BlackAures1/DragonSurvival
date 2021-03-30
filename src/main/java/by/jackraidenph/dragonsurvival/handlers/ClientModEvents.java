@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@SuppressWarnings("unused")
 public class ClientModEvents {
 
     public static KeyBinding TOGGLE_WINGS;

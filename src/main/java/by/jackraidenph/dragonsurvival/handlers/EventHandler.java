@@ -45,7 +45,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
-
+@SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 public class EventHandler {
 

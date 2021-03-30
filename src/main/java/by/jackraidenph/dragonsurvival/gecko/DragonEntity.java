@@ -20,7 +20,11 @@ import java.util.Collections;
 
 public class DragonEntity extends LivingEntity implements IAnimatable {
     AnimationFactory animationFactory = new AnimationFactory(this);
+    /**
+     * This reference must be updated whenever player is remade, for example, when changing dimensions
+     */
     public PlayerEntity player;
+
     public DragonEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
     }

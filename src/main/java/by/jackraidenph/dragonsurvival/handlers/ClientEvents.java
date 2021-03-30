@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
+@SuppressWarnings("unused")
 public class ClientEvents {
 
     public static float bodyYaw;
@@ -54,10 +55,13 @@ public class ClientEvents {
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
     public static DragonModel2 firstPersonArmor = new DragonModel2(true);
     /**
-     * Instance used for rendering dragon model
+     * Instance used for rendering third-person dragon model
      */
-    static DragonEntity dummyDragon;
-    static DragonEntity dummyDragon2;
+    public static DragonEntity dummyDragon;
+    /**
+     * Instance used for rendering first-person dragon model
+     */
+    public static DragonEntity dummyDragon2;
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -71,13 +75,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (dummyDragon == null) {
-            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
-            dummyDragon.player = player;
+        if (dummyDragon2 == null) {
             dummyDragon2 = EntityTypesInit.dragonEntity.create(player.world);
             dummyDragon2.player = player;
         }
-        assert dummyDragon != null;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
@@ -98,7 +99,7 @@ public class ClientEvents {
 //                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
 
-                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
+                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon2);
                 dummyDragon2.copyLocationAndAnglesFrom(player);
                 dragonModel.setCurrentTexture(texture);
                 final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
@@ -177,6 +178,10 @@ public class ClientEvents {
     public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
+        if (dummyDragon == null) {
+            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon.player = player;
+        }
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
