@@ -17,15 +17,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -209,8 +209,9 @@ public class ClientEvents {
                 leftwing.setHidden(!cap.hasWings());
                 rightWing.setHidden(!cap.hasWings());
                 dragonModel.getBone("NeckandHead").setHidden(false);
-
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
                 String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
@@ -220,14 +221,22 @@ public class ClientEvents {
                 //scale to try to prevent texture fighting
                 matrixStack.scale(1.08f, 1.02f, 1.02f);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderPlayerEvent.getBuffers(), eventLight);
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
+                ItemStack right = player.getHeldItemMainhand();
+                matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
+                matrixStack.translate(-0.45f, 1, 0);
+                final int combinedOverlayIn = LivingRenderer.getPackedOverlay(player, 0);
+                itemRenderer.renderItem(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                ItemStack left = player.getHeldItemOffhand();
+                matrixStack.translate(0.9, 0, 0);
+                itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                 matrixStack.pop();
             }
         });
