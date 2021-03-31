@@ -55,13 +55,13 @@ public class ClientEvents {
     public static DragonModel2 firstPersonModel = new DragonModel2(true);
     public static DragonModel2 firstPersonArmor = new DragonModel2(true);
     /**
-     * Instance used for rendering third-person dragon model
-     */
-    public static DragonEntity dummyDragon;
-    /**
      * Instance used for rendering first-person dragon model
      */
     public static DragonEntity dummyDragon2;
+    /**
+     * Instances used for rendering third-person dragon models
+     */
+    public static HashMap<PlayerEntity, DragonEntity> playerEntityDragonEntityHashMap = new HashMap<>(20);
 
     static {
         firstPersonModel.Head.showModel = false;
@@ -172,25 +172,24 @@ public class ClientEvents {
     }
 
     /**
-     * The player is always the local player
+     * Called for every player.
      */
     @SubscribeEvent
     public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
-        if (dummyDragon == null) {
-            dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+        if (!playerEntityDragonEntityHashMap.containsKey(player)) {
+            DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
             dummyDragon.player = player;
+            playerEntityDragonEntityHashMap.put(player, dummyDragon);
         }
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
-
                 float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
                 float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount);
                 float yaw = player.getYaw(partialRenderTick);
                 float pitch = player.getPitch(partialRenderTick);
-
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
@@ -201,6 +200,7 @@ public class ClientEvents {
                 matrixStack.scale(scale, scale, scale);
                 int eventLight = renderPlayerEvent.getLight();
 
+                DragonEntity dummyDragon = playerEntityDragonEntityHashMap.get(player);
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
                 dragonModel.setCurrentTexture(texture);

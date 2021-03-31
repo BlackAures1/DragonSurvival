@@ -60,7 +60,8 @@ public class PacketProxy {
                     contextSupplier.get().setPacketHandled(true);
                     //delete instances
                     ClientEvents.dummyDragon2 = null;
-                    ClientEvents.dummyDragon = null;
+                    ClientEvents.playerEntityDragonEntityHashMap.clear();
+                    ;
 
                 }
             }
