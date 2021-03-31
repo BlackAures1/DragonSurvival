@@ -365,7 +365,7 @@ public class ClientEvents {
     /**
      * Render nest health
      */
-    @SubscribeEvent
+//    @SubscribeEvent
     public static void onHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
         MainWindow mainWindow = renderGameOverlayEvent.getWindow();
