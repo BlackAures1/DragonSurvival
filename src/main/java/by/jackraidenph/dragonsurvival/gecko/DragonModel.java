@@ -36,15 +36,17 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (dragonEntity.player.isSneaking()) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
         }
-        if (dragonEntity.player.getMotion().y > 0)
-            return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
+        //TODO jumping
+//        if ()
+//            return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
         boolean flyingEnabled = ClientEvents.dragonsFlying.getOrDefault(dragonEntity.player.getEntityId(), false);
         if (flyingEnabled && !dragonEntity.player.isInWater() && !dragonEntity.player.onGround && dragonEntity.player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
 
         if (dragonEntity.player.isSprinting())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
-        if (dragonEntity.player.getCooledAttackStrength(0.5f) != 1) {
+        //todo too slow animation
+        if (dragonEntity.player.getCooledAttackStrength(-3f) != 1) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
         }
         if (vec3d.z != 0 || vec3d.x != 0)

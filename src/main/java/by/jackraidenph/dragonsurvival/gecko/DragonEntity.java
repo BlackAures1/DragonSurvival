@@ -48,15 +48,17 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
         else if (player.isInWaterOrBubbleColumn() && (motio.x != 0 || motio.z != 0)) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
-        } else if (player.getMotion().y > 0)
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new2"));
+        }
+//        else if (player.getMotion().y > 0)
+//            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new2"));
         else if (ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSprinting())
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
         else if (player.isSneaking())
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
-        else if (player.getCooledAttackStrength(0.5f) != 1)
+            //TODO
+        else if (player.getCooledAttackStrength(-3.0f) != 1)
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
         else if (motio.getX() != 0 || motio.getZ() != 0)
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
