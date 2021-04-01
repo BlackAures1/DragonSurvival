@@ -200,8 +200,18 @@ public class ClientEvents {
                 dragonModel.getBone("NeckandHead").setHidden(false);
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
-                if (player.isCrouching())
-                    matrixStack.translate(0, 0.4, 0);
+                if (player.isCrouching()) {
+                    switch (dragonStage) {
+                        case ADULT:
+                            matrixStack.translate(0, 0.2, 0);
+                            break;
+                        case YOUNG:
+                            matrixStack.translate(0, 0.25, 0);
+                            break;
+                        case BABY:
+                            matrixStack.translate(0, 0.3, 0);
+                    }
+                }
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
