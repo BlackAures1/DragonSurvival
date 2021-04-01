@@ -49,7 +49,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (dragonEntity.player.isSprinting())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
         //todo too slow animation
-        if (dragonEntity.player.getCooledAttackStrength(-3f) != 1) {
+        if (dragonEntity.player.isSwingInProgress && dragonEntity.player.getCooledAttackStrength(-3f) != 1) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
         }
         if (vec3d.z != 0 || vec3d.x != 0)
