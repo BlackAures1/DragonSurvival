@@ -55,9 +55,13 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSprinting())
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
-        else if (player.isSneaking())
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
-            //TODO
+        else if (player.isSneaking()) {
+            if (motio.getX() != 0 || motio.getZ() != 0)
+                animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
+            else
+                animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6"));
+        }
+        //TODO
         else if (player.getCooledAttackStrength(-3.0f) != 1)
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
         else if (motio.getX() != 0 || motio.getZ() != 0)
