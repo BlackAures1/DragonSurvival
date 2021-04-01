@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
@@ -49,7 +50,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
         } else if (player.getMotion().y > 0)
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new2"));
-        else if (!player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
+        else if (ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSprinting())
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));

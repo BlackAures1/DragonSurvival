@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import net.minecraft.entity.Pose;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -37,8 +38,8 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         }
         if (dragonEntity.player.getMotion().y > 0)
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
-        //TODO only when wings are active
-        if (!dragonEntity.player.isInWater() && !dragonEntity.player.onGround && dragonEntity.player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+        boolean flyingEnabled = ClientEvents.dragonsFlying.getOrDefault(dragonEntity.player.getEntityId(), false);
+        if (flyingEnabled && !dragonEntity.player.isInWater() && !dragonEntity.player.onGround && dragonEntity.player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
 
         if (dragonEntity.player.isSprinting())

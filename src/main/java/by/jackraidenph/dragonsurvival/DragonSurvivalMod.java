@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
@@ -183,6 +184,18 @@ public class DragonSurvivalMod {
                         if (!playerEntity.inventory.addItemStackToInventory(stack)) {
                             playerEntity.dropItem(stack, false, false);
                         }
+                    }
+                });
+
+        CHANNEL.registerMessage(nextPacketId++, SetFlyState.class, (setFlyState, packetBuffer) -> {
+                    packetBuffer.writeInt(setFlyState.playerid);
+                    packetBuffer.writeBoolean(setFlyState.flying);
+                },
+                packetBuffer -> new SetFlyState(packetBuffer.readInt(), packetBuffer.readBoolean()),
+                (setFlyState, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        ClientEvents.dragonsFlying.put(setFlyState.playerid, setFlyState.flying);
+                        contextSupplier.get().setPacketHandled(true);
                     }
                 });
 

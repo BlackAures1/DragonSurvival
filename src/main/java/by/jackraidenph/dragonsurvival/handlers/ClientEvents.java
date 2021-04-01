@@ -52,8 +52,6 @@ public class ClientEvents {
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     static HashMultimap<UUID, ResourceLocation> skinCache = HashMultimap.create(1, 3);
     static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
-    public static DragonModel2 firstPersonModel = new DragonModel2(true);
-    public static DragonModel2 firstPersonArmor = new DragonModel2(true);
     /**
      * Instance used for rendering first-person dragon model
      */
@@ -62,15 +60,7 @@ public class ClientEvents {
      * Instances used for rendering third-person dragon models
      */
     public static HashMap<PlayerEntity, DragonEntity> playerEntityDragonEntityHashMap = new HashMap<>(20);
-
-    static {
-        firstPersonModel.Head.showModel = false;
-        firstPersonModel.Neckand_1.showModel = false;
-        firstPersonModel.NeckandMain.showModel = false;
-
-        firstPersonArmor.NeckandMain.showModel = false;
-        firstPersonArmor.NeckandHead.showModel = false;
-    }
+    public static HashMap<Integer, Boolean> dragonsFlying = new HashMap<>(20);
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
@@ -88,7 +78,6 @@ public class ClientEvents {
                 float partialTicks = renderHandEvent.getPartialTicks();
                 float playerYaw = player.getYaw(partialTicks);
                 float playerPitch = player.getPitch(partialTicks);
-                firstPersonModel.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
                 ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
                 eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
