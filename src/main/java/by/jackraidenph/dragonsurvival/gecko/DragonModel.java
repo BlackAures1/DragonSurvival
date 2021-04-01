@@ -33,6 +33,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
         if (dragonEntity.player.isInWaterOrBubbleColumn() && (vec3d.x != 0 || vec3d.z != 0))
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
+        //TODO goes into ground
         if (dragonEntity.player.isSneaking()) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
         }

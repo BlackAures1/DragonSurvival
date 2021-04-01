@@ -8,4 +8,9 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
     public DragonRenderer(EntityRendererManager renderManager, AnimatedGeoModel<DragonEntity> modelProvider) {
         super(renderManager, modelProvider);
     }
+
+//    @Override
+//    public void render(DragonEntity entity, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
+//        super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
+//    }
 }
