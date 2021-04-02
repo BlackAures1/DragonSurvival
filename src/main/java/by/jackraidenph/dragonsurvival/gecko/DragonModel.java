@@ -44,7 +44,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 //        if ()
 //            return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
         boolean flyingEnabled = ClientEvents.dragonsFlying.getOrDefault(dragonEntity.player.getEntityId(), false);
-        if (flyingEnabled && !dragonEntity.player.isInWater() && !dragonEntity.player.onGround && dragonEntity.player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+        if (/*flyingEnabled &&*/ !dragonEntity.player.isInWater() && !dragonEntity.player.onGround && dragonEntity.player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
 
         if (dragonEntity.player.isSprinting())

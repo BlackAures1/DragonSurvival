@@ -52,7 +52,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
         }
 //        else if (player.getMotion().y > 0)
 //            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new2"));
-        else if (ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
+        else if (/*ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false) &&*/ !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSprinting())
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
