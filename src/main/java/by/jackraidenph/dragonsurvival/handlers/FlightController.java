@@ -69,6 +69,7 @@ public class FlightController {
                             az *= 0.99;
                             ay = lookVec.y / 8;
                         }
+                        //TODO speed limit option
                         ax = MathHelper.clamp(ax, -0.2, 0.2);
                         az = MathHelper.clamp(az, -0.2, 0.2);
                         if (lookY < 0) {

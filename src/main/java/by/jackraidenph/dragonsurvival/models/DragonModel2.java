@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-
+@Deprecated
 public class DragonModel2 extends EntityModel<Entity> {
     public final ModelRenderer LeftFrontLeg;
     public final ModelRenderer Forearm1;
