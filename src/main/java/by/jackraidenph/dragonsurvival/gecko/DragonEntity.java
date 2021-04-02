@@ -44,32 +44,36 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         Vec3d motio = player.getMotion();
+        final AnimationController animationController = animationEvent.getController();
         if (player.getPose() == Pose.SWIMMING)
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
         else if (player.isInWaterOrBubbleColumn() && (motio.x != 0 || motio.z != 0)) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
         }
 //        else if (player.getMotion().y > 0)
 //            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new2"));
         else if (ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
         } else if (player.isSprinting())
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
         else if (player.isSneaking()) {
             if (motio.getX() != 0 || motio.getZ() != 0)
-                animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
-            else
-                animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6"));
+                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
+            else if (ClientEvents.dragonsDigging.getOrDefault(player, false)) {
+                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand8", true));
+            } else
+                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6", true));
         }
-        //TODO
         else if (player.isSwingInProgress && player.getCooledAttackStrength(-3.0f) != 1)
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
         else if (motio.getX() != 0 || motio.getZ() != 0)
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
         else if (player.isSleeping()) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
+        } else if (ClientEvents.dragonsDigging.getOrDefault(player, false)) {
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand7", true));
         } else
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
+            animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
         return PlayState.CONTINUE;
     }
 

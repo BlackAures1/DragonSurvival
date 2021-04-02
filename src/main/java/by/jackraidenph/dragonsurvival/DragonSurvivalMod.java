@@ -22,8 +22,11 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -196,6 +199,22 @@ public class DragonSurvivalMod {
                     if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                         ClientEvents.dragonsFlying.put(setFlyState.playerid, setFlyState.flying);
                         contextSupplier.get().setPacketHandled(true);
+                    }
+                });
+
+        CHANNEL.registerMessage(nextPacketId++, DiggingStatus.class, (diggingStatus, packetBuffer) -> {
+                    packetBuffer.writeInt(diggingStatus.playerId);
+                    packetBuffer.writeBoolean(diggingStatus.status);
+                },
+                packetBuffer -> new DiggingStatus(packetBuffer.readInt(), packetBuffer.readBoolean()),
+                (diggingStatus, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        Minecraft minecraft = Minecraft.getInstance();
+                        Entity entity = minecraft.world.getEntityByID(diggingStatus.playerId);
+                        if (entity instanceof PlayerEntity) {
+                            ClientEvents.dragonsDigging.put((PlayerEntity) entity, diggingStatus.status);
+                            contextSupplier.get().setPacketHandled(true);
+                        }
                     }
                 });
 

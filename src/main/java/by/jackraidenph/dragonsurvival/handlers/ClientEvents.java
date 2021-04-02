@@ -61,6 +61,10 @@ public class ClientEvents {
      */
     public static HashMap<PlayerEntity, DragonEntity> playerEntityDragonEntityHashMap = new HashMap<>(20);
     public static HashMap<Integer, Boolean> dragonsFlying = new HashMap<>(20);
+    /**
+     * States of digging/breaking blocks
+     */
+    public static HashMap<PlayerEntity, Boolean> dragonsDigging = new HashMap<>(20);
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {

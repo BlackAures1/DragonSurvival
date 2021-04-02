@@ -36,7 +36,8 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (dragonEntity.player.isSneaking()) {
             if (vec3d.getZ() != 0 || vec3d.getX() != 0) {
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
-            }
+            } else if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
+                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking_stand.animation.json");
         }
         //TODO jumping
@@ -48,7 +49,6 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
         if (dragonEntity.player.isSprinting())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
-        //todo too slow animation
         if (dragonEntity.player.isSwingInProgress && dragonEntity.player.getCooledAttackStrength(-3f) != 1) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
         }
@@ -56,6 +56,8 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
         if (dragonEntity.player.isSleeping())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sleep.animation.json");
+        if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
+            return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging.animation.json");
         return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
     }
 }
