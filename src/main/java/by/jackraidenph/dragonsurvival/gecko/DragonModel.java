@@ -34,7 +34,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (dragonEntity.player.isInWaterOrBubbleColumn() && (vec3d.x != 0 || vec3d.z != 0))
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
         if (dragonEntity.player.isSneaking()) {
-            if (vec3d.getZ() != 0 || vec3d.getX() != 0) {
+            if ((vec3d.getZ() != 0 || vec3d.getX() != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
             } else if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
@@ -52,8 +52,10 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (dragonEntity.player.isSwingInProgress && dragonEntity.player.getCooledAttackStrength(-3f) != 1) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
         }
-        if (vec3d.z != 0 || vec3d.x != 0)
+        //motion variables alone are not reliable
+        if ((vec3d.z != 0 || vec3d.x != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
+        }
         if (dragonEntity.player.isSleeping())
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sleep.animation.json");
         if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))

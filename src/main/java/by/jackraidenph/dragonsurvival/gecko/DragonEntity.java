@@ -57,7 +57,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
         } else if (player.isSprinting())
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
         else if (player.isSneaking()) {
-            if (motio.getX() != 0 || motio.getZ() != 0)
+            if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount > 0.1f)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
             else if (ClientEvents.dragonsDigging.getOrDefault(player, false)) {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand8", true));
@@ -66,7 +66,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
         }
         else if (player.isSwingInProgress && player.getCooledAttackStrength(-3.0f) != 1)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
-        else if (motio.getX() != 0 || motio.getZ() != 0)
+        else if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount > 0.1f)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
         else if (player.isSleeping()) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
