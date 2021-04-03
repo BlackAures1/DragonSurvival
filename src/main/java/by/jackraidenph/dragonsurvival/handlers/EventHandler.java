@@ -18,6 +18,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -104,10 +105,10 @@ public class EventHandler {
     @SubscribeEvent
     public static void onJoin(EntityJoinWorldEvent joinWorldEvent) {
         Entity entity = joinWorldEvent.getEntity();
-        if (!(entity instanceof MonsterEntity || entity instanceof VillagerEntity) & entity instanceof CreatureEntity) {
+        if (!(entity instanceof MonsterEntity || entity instanceof VillagerEntity || entity instanceof GolemEntity) & entity instanceof CreatureEntity) {
             ((MobEntity) entity).goalSelector.addGoal(2, new AvoidEntityGoal(
                     (CreatureEntity) entity, PlayerEntity.class,
-                    livingEntity -> DragonStateProvider.getCap((PlayerEntity) livingEntity).orElse(null).isDragon(),
+                    livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity),
                     20.0F, 1.3F, 1.5F, EntityPredicates.CAN_AI_TARGET));
         }
     }
