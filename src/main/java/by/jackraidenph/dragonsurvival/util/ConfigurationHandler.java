@@ -13,12 +13,12 @@ public class ConfigurationHandler {
     public static final General GENERAL = new General(BUILDER);
     public static final Spawn SPAWN = new Spawn(BUILDER);
     public static final ForgeConfigSpec SPEC = BUILDER.build();
-
+    public static ForgeConfigSpec.DoubleValue maxFlightSpeed;
     public static class General {
 
         General(ForgeConfigSpec.Builder builder) {
             builder.push("general");
-
+            maxFlightSpeed = builder.defineInRange("Flight speed limiter", 0.8, 0.1, 1);
             builder.pop();
         }
     }
@@ -29,6 +29,7 @@ public class ConfigurationHandler {
         public final ForgeConfigSpec.IntValue weight;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> include;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> exclude;
+
 
         Spawn(ForgeConfigSpec.Builder builder) {
             builder.push("Predator spawn chances");
