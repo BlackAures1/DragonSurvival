@@ -14,12 +14,18 @@ public class ConfigurationHandler {
     public static final Spawn SPAWN = new Spawn(BUILDER);
     public static final ForgeConfigSpec SPEC = BUILDER.build();
     public static ForgeConfigSpec.DoubleValue maxFlightSpeed;
+    public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
+    public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
+
     public static class General {
 
         General(ForgeConfigSpec.Builder builder) {
             builder.push("general");
             maxFlightSpeed = builder.defineInRange("Flight speed limiter", 0.8, 0.1, 1);
+            predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
+            predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             builder.pop();
+
         }
     }
 

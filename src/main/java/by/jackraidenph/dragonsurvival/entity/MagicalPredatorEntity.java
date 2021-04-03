@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -145,9 +146,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
 
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.475D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0F);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0F);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0F * ConfigurationHandler.predatorDamageFactor.get());
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0F);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(29.5F);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(29.5F * ConfigurationHandler.predatorHealthFactor.get());
 
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier("healthBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier("damageBoost", scale, AttributeModifier.Operation.MULTIPLY_BASE));
