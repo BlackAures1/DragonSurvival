@@ -65,6 +65,18 @@ public class ClientEvents {
      * States of digging/breaking blocks
      */
     public static HashMap<PlayerEntity, Boolean> dragonsDigging = new HashMap<>(20);
+    public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
+
+    @SubscribeEvent
+    public static void decreaseJumpDuration(TickEvent.PlayerTickEvent playerTickEvent) {
+//        System.out.println(playerTickEvent.player);
+//        if(playerTickEvent.phase== TickEvent.Phase.END) {
+//            dragonsJumpingTicks.forEach((playerEntity, integer) -> {
+//                if (integer > 0)
+//                    dragonsJumpingTicks.put(playerEntity, integer - 1);
+//            });
+//        }
+    }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
@@ -199,8 +211,10 @@ public class ClientEvents {
                 dragonModel.setCurrentTexture(texture);
                 final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
                 final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
-                leftwing.setHidden(!cap.hasWings());
-                rightWing.setHidden(!cap.hasWings());
+                if (leftwing != null)
+                    leftwing.setHidden(!cap.hasWings());
+                if (rightWing != null)
+                    rightWing.setHidden(!cap.hasWings());
                 dragonModel.getBone("NeckandHead").setHidden(false);
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
