@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.DiggingStatus;
+import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
@@ -49,9 +50,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
+
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 public class EventHandler {
+
+//    public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
@@ -66,21 +70,26 @@ public class EventHandler {
                             playerEntity.dropItem(playerEntity.inventory.removeStackFromSlot(i), true, false);
                         }
                     }
+                    if (playerEntity instanceof ServerPlayerEntity) {
+                        PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).interactionManager;
+                        Field field = PlayerInteractionManager.class.getDeclaredFields()[4];
+                        field.setAccessible(true);
+                        if (field.getType() == boolean.class) {
+                            try {
+                                boolean isMining = field.getBoolean(interactionManager);
+                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getEntityId(), isMining));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+//                    if(dragonsJumpingTicks.getOrDefault(playerEntity,0)>0)
+//                    {
+//                        dragonsJumpingTicks.put(playerEntity,dragonsJumpingTicks.get(playerEntity)-1);
+//                    }
                 }
             });
-            if (playerEntity instanceof ServerPlayerEntity) {
-                PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).interactionManager;
-                Field field = PlayerInteractionManager.class.getDeclaredFields()[4];
-                field.setAccessible(true);
-                if (field.getType() == boolean.class) {
-                    try {
-                        boolean isMining = field.getBoolean(interactionManager);
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getEntityId(), isMining));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+
         }
     }
 
@@ -269,19 +278,25 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent jumpEvent) {
-        DragonStateProvider.getCap(jumpEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon())
+        final LivingEntity livingEntity = jumpEvent.getEntityLiving();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
                 switch (dragonStateHandler.getLevel()) {
                     case BABY:
-                        jumpEvent.getEntityLiving().addVelocity(0, 0.025, 0); //1+ block
+                        livingEntity.addVelocity(0, 0.025, 0); //1+ block
                         break;
                     case YOUNG:
-                        jumpEvent.getEntityLiving().addVelocity(0, 0.1, 0); //1.5+ block
+                        livingEntity.addVelocity(0, 0.1, 0); //1.5+ block
                         break;
                     case ADULT:
-                        jumpEvent.getEntityLiving().addVelocity(0, 0.15, 0); //2+ blocks
+                        livingEntity.addVelocity(0, 0.15, 0); //2+ blocks
                         break;
                 }
+                if (livingEntity instanceof ServerPlayerEntity) {
+//                    dragonsJumpingTicks.put((PlayerEntity) livingEntity,21);
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new StartJump(livingEntity.getEntityId(), 21));
+                }
+            }
         });
     }
 

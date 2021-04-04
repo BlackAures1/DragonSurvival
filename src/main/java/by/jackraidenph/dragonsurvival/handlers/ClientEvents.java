@@ -65,17 +65,17 @@ public class ClientEvents {
      * States of digging/breaking blocks
      */
     public static HashMap<PlayerEntity, Boolean> dragonsDigging = new HashMap<>(20);
+    /**
+     * Durations of jumps
+     */
     public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
 
     @SubscribeEvent
     public static void decreaseJumpDuration(TickEvent.PlayerTickEvent playerTickEvent) {
-//        System.out.println(playerTickEvent.player);
-//        if(playerTickEvent.phase== TickEvent.Phase.END) {
-//            dragonsJumpingTicks.forEach((playerEntity, integer) -> {
-//                if (integer > 0)
-//                    dragonsJumpingTicks.put(playerEntity, integer - 1);
-//            });
-//        }
+        if (playerTickEvent.phase == TickEvent.Phase.END) {
+            PlayerEntity playerEntity = playerTickEvent.player;
+            dragonsJumpingTicks.computeIfPresent(playerEntity, (playerEntity1, integer) -> integer > 0 ? integer - 1 : integer);
+        }
     }
 
     @SubscribeEvent

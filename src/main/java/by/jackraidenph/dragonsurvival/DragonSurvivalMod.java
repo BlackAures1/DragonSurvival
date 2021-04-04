@@ -218,6 +218,20 @@ public class DragonSurvivalMod {
                     }
                 });
 
+        CHANNEL.registerMessage(nextPacketId++, StartJump.class, (startJump, packetBuffer) -> {
+                    packetBuffer.writeInt(startJump.playerId);
+                    packetBuffer.writeByte(startJump.ticks);
+                },
+                packetBuffer -> new StartJump(packetBuffer.readInt(), packetBuffer.readByte()),
+                (startJump, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        Entity entity = Minecraft.getInstance().world.getEntityByID(startJump.playerId);
+                        if (entity instanceof PlayerEntity) {
+                            ClientEvents.dragonsJumpingTicks.put((PlayerEntity) entity, startJump.ticks);
+                            contextSupplier.get().setPacketHandled(true);
+                        }
+                    }
+                });
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered entity spawns!");
