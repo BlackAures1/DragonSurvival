@@ -14,8 +14,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,12 +25,6 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockInit {
     public static Block PREDATOR_STAR_BLOCK;
-    public static ItemGroup blocks = new ItemGroup("dragon.survival.blocks") {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ItemsInit.elderDragonDust);
-        }
-    };
 
     public static Block dragon_altar;
     public static Block dragon_altar2;
@@ -95,9 +87,9 @@ public class BlockInit {
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
-        Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
+        Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(ItemsInit.items)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
-        forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
+        forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(ItemsInit.items)).setRegistryName("predator_star"));
 
         registerSingleItem(smallCaveNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(smallForestNest, new Item.Properties(), forgeRegistry);
@@ -119,7 +111,7 @@ public class BlockInit {
 
     @SuppressWarnings("ConstantConditions")
     private static void registerItem(Block block, Item.Properties itemProperties, IForgeRegistry<Item> forgeRegistry) {
-        forgeRegistry.register(new BlockItem(block, itemProperties.group(blocks)).setRegistryName(block.getRegistryName()));
+        forgeRegistry.register(new BlockItem(block, itemProperties.group(ItemsInit.items)).setRegistryName(block.getRegistryName()));
     }
 
     private static void registerSingleItem(Block block, Item.Properties properties, IForgeRegistry<Item> forgeRegistry) {
