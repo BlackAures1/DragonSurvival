@@ -1,6 +1,8 @@
 {
   "itemGroup.dragon.survival.blocks": "Dragon Survival",
+
   "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
+
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Magical Predator Spawn Egg",
   "item.dragonsurvival.heart_element": "Heart Element",
   "item.dragonsurvival.star_bone": "Star Bone",
@@ -8,6 +10,7 @@
   "item.dragonsurvival.charged_coal": "Charged Coal",
   "item.dragonsurvival.charred_meat": "Charred Meat",
   "item.dragonsurvival.elder_dragon_dust": "Elder Dragon Dust",
+
   "block.dragonsurvival.dragon_gate": "Dragon Gate",
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragon Altar",
@@ -24,8 +27,10 @@
   "block.dragonsurvival.dragon_altar2": "Stone Dragon Altar",
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
+
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
+
   "ds.dragon_altar_warning1": "WARNING:",
   "ds.dragon_altar_warning2": " after choosing you will die, lose all progress and find yourself in an unknown place without your inventory.",
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
