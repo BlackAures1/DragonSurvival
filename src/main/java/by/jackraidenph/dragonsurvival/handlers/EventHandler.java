@@ -318,12 +318,19 @@ public class EventHandler {
                 PlayerEntity playerEntity = breakEvent.getPlayer();
                 Block block = blockState.getBlock();
                 int random;
-                if (DragonStateProvider.isDragon(playerEntity))
-                    random = playerEntity.getRNG().nextInt(50);
-                else
-                    random = playerEntity.getRNG().nextInt(300);
-                if (random == 0) {
-                    if (block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE) {
+                final boolean suitableOre = block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE;
+                if (suitableOre) {
+                    if (DragonStateProvider.isDragon(playerEntity)) {
+                        random = playerEntity.getRNG().nextInt(100);
+                        if (random < 80) {
+                            world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                        }
+                        if (random == 0) {
+                            world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
+                        }
+                    } else
+                        random = playerEntity.getRNG().nextInt(300);
+                    if (random == 0) {
                         world.addEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                     }
                 }
