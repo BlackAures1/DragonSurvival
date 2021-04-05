@@ -17,14 +17,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.HashMap;
 
 public class DragonAltarGUI extends Screen {
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar_texture.png");
     private final int xSize = 852 / 2;
     private final int ySize = 500 / 2;
     private int guiLeft;
@@ -44,41 +43,38 @@ public class DragonAltarGUI extends Screen {
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (this.minecraft == null)
             return;
-
         this.renderBackground();
-
         int startX = this.guiLeft;
         int startY = this.guiTop;
-
-        this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
 
         this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
 
-        blit(startX, startY, 0, 0, 434 / 2, 496 / 2, xSize, ySize);
+        blit(startX, startY, 0, 0, 215, 158, 512, 512);
 
 
         if (mouseY > startY + 6 && mouseY < startY + 153) {
             if (mouseX > startX + 5 && mouseX < startX + 55) {
-                blit(startX + 6, startY + 6, 217, 0, 49, 149, xSize, ySize);
+                blit(startX + 6, startY + 6, 217, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 57 && mouseX < startX + 107) {
-                blit(startX + 58, startY + 6, 266, 0, 49, 149, xSize, ySize);
+                blit(startX + 58, startY + 6, 266, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 109 && mouseX < startX + 159) {
-                blit(startX + 110, startY + 6, 315, 0, 49, 149, xSize, ySize);
+                blit(startX + 110, startY + 6, 315, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 161 && mouseX < startX + 211) {
-                blit(startX + 162, startY + 6, 364, 0, 49, 149, xSize, ySize);
+                blit(startX + 161, startY + 6, 364, 0, 49, 149, 512, 512);
             }
-            if(mouseX>startX+5 && mouseX<startX+211) {
-                fill(startX + 8, startY + 166, guiLeft + 210, guiTop + 242, 0xff333333);
-                String warning =TextFormatting.RED + new TranslationTextComponent( "ds.dragon_altar_warning1").getString()+ TextFormatting.RESET + new TranslationTextComponent("ds.dragon_altar_warning2").getString();
-                font.drawSplitString(warning, startX + 10, startY + 153 + 20, 200, 0xffffff);
-            }
+            //warning
+//            if(mouseX>startX+5 && mouseX<startX+211) {
+//                fill(startX + 8, startY + 166, guiLeft + 210, guiTop + 242, 0xff333333);
+//                String warning =TextFormatting.RED + new TranslationTextComponent( "ds.dragon_altar_warning1").getString()+ TextFormatting.RESET + new TranslationTextComponent("ds.dragon_altar_warning2").getString();
+//                font.drawSplitString(warning, startX + 10, startY + 153 + 20, 200, 0xffffff);
+//            }
         }
     }
 
