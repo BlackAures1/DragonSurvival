@@ -59,7 +59,7 @@ import static net.minecraft.command.Commands.literal;
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("Dragon Survival");
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"),
             () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
