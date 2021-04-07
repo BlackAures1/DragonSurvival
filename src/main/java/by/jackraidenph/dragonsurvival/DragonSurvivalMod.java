@@ -82,6 +82,7 @@ public class DragonSurvivalMod {
     private void setup(final FMLCommonSetupEvent event) {
         Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
+        //TODO move client code here
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());

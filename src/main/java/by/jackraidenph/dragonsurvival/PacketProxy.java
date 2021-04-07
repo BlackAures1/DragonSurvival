@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 /**
  * Synchronizes client data
  */
+@Deprecated
 public class PacketProxy {
 
     public DistExecutor.SafeRunnable handleCapabilityMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
