@@ -64,8 +64,6 @@ public class PacketProxy {
                     //delete instances
                     ClientEvents.dummyDragon2 = null;
                     ClientEvents.playerEntityDragonEntityHashMap.clear();
-                    ;
-
                 }
             }
         });

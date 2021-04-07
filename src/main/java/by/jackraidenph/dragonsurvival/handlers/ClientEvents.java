@@ -230,6 +230,7 @@ public class ClientEvents {
                             matrixStack.translate(0, 0.3, 0);
                     }
                 }
+                //crashes here with optifine
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
