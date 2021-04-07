@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 @SuppressWarnings("unused")
 public class FlightController {
 
-    static boolean wingsEnabled;
+    public static boolean wingsEnabled;
     static double ax, ay, az;
 
     @SubscribeEvent

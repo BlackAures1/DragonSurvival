@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncLevel;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
@@ -56,6 +57,8 @@ public class PacketProxy {
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                        if (!dragonStateHandler.hasWings())
+                            FlightController.wingsEnabled = false;
                     });
                     contextSupplier.get().setPacketHandled(true);
                     //delete instances
