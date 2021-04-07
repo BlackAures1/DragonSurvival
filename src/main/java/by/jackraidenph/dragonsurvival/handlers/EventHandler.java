@@ -294,7 +294,10 @@ public class EventHandler {
                 }
                 if (livingEntity instanceof ServerPlayerEntity) {
 //                    dragonsJumpingTicks.put((PlayerEntity) livingEntity,21);
-                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new StartJump(livingEntity.getEntityId(), 21));
+                    if (livingEntity.getServer().isSinglePlayer())
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new StartJump(livingEntity.getEntityId(), 42));
+                    else
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new StartJump(livingEntity.getEntityId(), 21));
                 }
             }
         });
