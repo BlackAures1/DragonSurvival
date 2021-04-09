@@ -40,6 +40,7 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
@@ -372,5 +373,12 @@ public class EventHandler {
             }
 
         }
+    }
+
+    @SubscribeEvent
+    public static void reduceFallDistance(LivingFallEvent livingFallEvent) {
+        LivingEntity livingEntity = livingFallEvent.getEntityLiving();
+        if (DragonStateProvider.isDragon(livingEntity))
+            livingFallEvent.setDistance(livingFallEvent.getDistance() - 1);
     }
 }
