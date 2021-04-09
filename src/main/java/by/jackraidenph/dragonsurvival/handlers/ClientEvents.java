@@ -216,7 +216,6 @@ public class ClientEvents {
                 if (rightWing != null)
                     rightWing.setHidden(!cap.hasWings());
                 dragonModel.getBone("NeckandHead").setHidden(false);
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
                 if (player.isCrouching()) {
                     switch (dragonStage) {
@@ -249,6 +248,7 @@ public class ClientEvents {
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
+                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 ItemStack right = player.getHeldItemMainhand();
                 matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
                 matrixStack.translate(-0.45f, 1, 0);
