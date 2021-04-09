@@ -238,7 +238,7 @@ public class ClientEvents {
                 String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
                 String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
-                //scale to try to prevent texture fighting
+                //scale to try to prevent texture fighting (problem is in consecutive renders)
                 matrixStack.scale(1.08f, 1.02f, 1.02f);
                 dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
