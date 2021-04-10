@@ -215,7 +215,9 @@ public class ClientEvents {
                     leftwing.setHidden(!cap.hasWings());
                 if (rightWing != null)
                     rightWing.setHidden(!cap.hasWings());
-                dragonModel.getBone("NeckandHead").setHidden(false);
+                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                if (neckHead != null)
+                    neckHead.setHidden(false);
                 final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
                 if (player.isCrouching()) {
                     switch (dragonStage) {
