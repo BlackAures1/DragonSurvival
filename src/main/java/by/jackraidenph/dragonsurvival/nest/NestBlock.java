@@ -100,7 +100,7 @@ public class NestBlock extends HorizontalBlock {
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
         TileEntity blockEntity = worldIn.getTileEntity(pos);
-        if (blockEntity instanceof NestEntity && ((NestEntity) blockEntity).ownerUUID.equals(uuid)) {
+        if (blockEntity instanceof NestEntity && uuid.equals(((NestEntity) blockEntity).ownerUUID)) {
             final Direction playerHorizontalFacing = player.getHorizontalFacing();
             final Direction placementDirection = playerHorizontalFacing.getOpposite();
             if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
@@ -159,7 +159,7 @@ public class NestBlock extends HorizontalBlock {
                 }
             }
         }
-        if (player instanceof ServerPlayerEntity && getBlockEntity(worldIn, pos).ownerUUID.equals(player.getUniqueID())) {
+        if (player instanceof ServerPlayerEntity && player.getUniqueID().equals(getBlockEntity(worldIn, pos).ownerUUID)) {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
         }
         return ActionResultType.SUCCESS;
