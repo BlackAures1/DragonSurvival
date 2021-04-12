@@ -84,6 +84,7 @@ public class ClientEvents {
         if (dummyDragon2 == null) {
             dummyDragon2 = EntityTypesInit.dragonEntity.create(player.world);
             dummyDragon2.player = player;
+            dummyDragon2.setUniqueId(UUID.randomUUID());
         }
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
@@ -186,6 +187,7 @@ public class ClientEvents {
         if (!playerEntityDragonEntityHashMap.containsKey(player)) {
             DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
             dummyDragon.player = player;
+            dummyDragon.setUniqueId(UUID.randomUUID());
             playerEntityDragonEntityHashMap.put(player, dummyDragon);
         }
         DragonStateProvider.getCap(player).ifPresent(cap -> {

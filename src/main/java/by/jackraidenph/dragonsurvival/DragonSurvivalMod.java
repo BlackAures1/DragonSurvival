@@ -6,7 +6,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.SleepInNest;
@@ -24,7 +23,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
@@ -34,11 +32,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -82,7 +81,7 @@ public class DragonSurvivalMod {
     private void setup(final FMLCommonSetupEvent event) {
         Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
-        //TODO move client code here
+
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
@@ -123,26 +122,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                 });
             } else {
-                ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                if (myPlayer != null) {
-                    World world = myPlayer.world;
-                    PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-                    if (thatPlayer != null) {
-                        DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                            dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                            dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                            dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                            dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                            dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
-                            if (!dragonStateHandler.hasWings())
-                                FlightController.wingsEnabled = false;
-                        });
-                        contextSupplier.get().setPacketHandled(true);
-                        //delete instances
-                        ClientEvents.dummyDragon2 = null;
-                        ClientEvents.playerEntityDragonEntityHashMap.clear();
-                    }
-                }
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().refreshInstances(synchronizeDragonCap, contextSupplier));
             }
         });
 
