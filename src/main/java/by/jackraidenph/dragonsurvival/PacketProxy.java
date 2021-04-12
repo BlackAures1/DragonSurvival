@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -107,6 +108,7 @@ public class PacketProxy {
                         if (thatPlayer != myPlayer) {
                             DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                             dragonEntity.player = thatPlayer;
+                            dragonEntity.setUniqueId(UUID.randomUUID());
                             ClientEvents.playerEntityDragonEntityHashMap.put(thatPlayer, dragonEntity);
                         }
                     });
