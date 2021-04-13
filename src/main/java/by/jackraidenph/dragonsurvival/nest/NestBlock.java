@@ -59,28 +59,6 @@ public class NestBlock extends HorizontalBlock {
         return TileEntityTypesInit.nestEntityTile.create();
     }
 
-    @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-//        NestEntity nestEntity = getBlockEntity(worldIn, pos);
-//        if (!worldIn.isRemote()) {
-//        if (nestEntity.damageCooldown <= 0)
-//            {
-//                double damage = player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
-//                nestEntity.health -= Math.min(damage, 10);
-//                DragonSurvivalMod.CHANNEL.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 40, worldIn.getDimension().getType())), new SynchronizeNest(nestEntity.getPos(), nestEntity.health, nestEntity.damageCooldown));
-//                if (nestEntity.health <= 0) {
-//                    worldIn.playSound(player, pos, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.BLOCKS, 1, 1);
-//                    worldIn.destroyBlock(pos, false);
-//                } else {
-//                    worldIn.playSound(player, pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
-//                    nestEntity.damageCooldown = NestEntity.COOLDOWN_TIME;
-//                }
-//                nestEntity.markDirty();
-//            }
-//        }
-        super.onBlockClicked(state, worldIn, pos, player);
-    }
-
     public NestEntity getBlockEntity(World world, BlockPos pos) {
         return (NestEntity) world.getTileEntity(pos);
     }
