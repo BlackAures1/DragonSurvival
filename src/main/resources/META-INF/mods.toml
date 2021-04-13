@@ -31,7 +31,7 @@ authors = "Black Aures, Alexiy, Jack Raiden, Hohserg" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
 This mod lets you play as a dragon. There are 3 dragon kinds, which have different traits.
-To start, you must create a Dragon Altar where you can choose the dragon kind you want to become.
+To start, you must create a Dragon Altar where you can choose the dragon type you want to become.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.dragonsurvival]] #optional
