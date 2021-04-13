@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
@@ -21,8 +22,11 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -46,6 +50,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 import static net.minecraft.command.Commands.argument;
 import static net.minecraft.command.Commands.literal;
@@ -53,14 +58,15 @@ import static net.minecraft.command.Commands.literal;
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("Dragon Survival");
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(MODID, "main"), () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"),
+            () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     private static int nextPacketId = 0;
+
     public DragonSurvivalMod() {
+        GeckoLib.initialize();
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
@@ -75,6 +81,7 @@ public class DragonSurvivalMod {
     private void setup(final FMLCommonSetupEvent event) {
         Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
+
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
@@ -103,7 +110,6 @@ public class DragonSurvivalMod {
             boolean isDragon = packetBuffer.readBoolean();
             return new SynchronizeDragonCap(id, hiding, type, level, isDragon, packetBuffer.readFloat(), packetBuffer.readBoolean());
         }, (synchronizeDragonCap, contextSupplier) -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilitySync(synchronizeDragonCap, contextSupplier));
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
                 ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
@@ -115,6 +121,8 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setHealth(synchronizeDragonCap.health);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                 });
+            } else {
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().refreshInstances(synchronizeDragonCap, contextSupplier));
             }
         });
 
@@ -184,6 +192,48 @@ public class DragonSurvivalMod {
                     }
                 });
 
+        CHANNEL.registerMessage(nextPacketId++, SetFlyState.class, (setFlyState, packetBuffer) -> {
+                    packetBuffer.writeInt(setFlyState.playerid);
+                    packetBuffer.writeBoolean(setFlyState.flying);
+                },
+                packetBuffer -> new SetFlyState(packetBuffer.readInt(), packetBuffer.readBoolean()),
+                (setFlyState, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        ClientEvents.dragonsFlying.put(setFlyState.playerid, setFlyState.flying);
+                        contextSupplier.get().setPacketHandled(true);
+                    }
+                });
+
+        CHANNEL.registerMessage(nextPacketId++, DiggingStatus.class, (diggingStatus, packetBuffer) -> {
+                    packetBuffer.writeInt(diggingStatus.playerId);
+                    packetBuffer.writeBoolean(diggingStatus.status);
+                },
+                packetBuffer -> new DiggingStatus(packetBuffer.readInt(), packetBuffer.readBoolean()),
+                (diggingStatus, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        Minecraft minecraft = Minecraft.getInstance();
+                        Entity entity = minecraft.world.getEntityByID(diggingStatus.playerId);
+                        if (entity instanceof PlayerEntity) {
+                            ClientEvents.dragonsDigging.put((PlayerEntity) entity, diggingStatus.status);
+                            contextSupplier.get().setPacketHandled(true);
+                        }
+                    }
+                });
+
+        CHANNEL.registerMessage(nextPacketId++, StartJump.class, (startJump, packetBuffer) -> {
+                    packetBuffer.writeInt(startJump.playerId);
+                    packetBuffer.writeByte(startJump.ticks);
+                },
+                packetBuffer -> new StartJump(packetBuffer.readInt(), packetBuffer.readByte()),
+                (startJump, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        Entity entity = Minecraft.getInstance().world.getEntityByID(startJump.playerId);
+                        if (entity instanceof PlayerEntity) {
+                            ClientEvents.dragonsJumpingTicks.put((PlayerEntity) entity, startJump.ticks);
+                            contextSupplier.get().setPacketHandled(true);
+                        }
+                    }
+                });
         LOGGER.info("Successfully registered packets!");
         EntityTypesInit.addSpawn();
         LOGGER.info("Successfully registered entity spawns!");
@@ -203,14 +253,13 @@ public class DragonSurvivalMod {
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             boolean wings = context.getArgument("wings", Boolean.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().asPlayer();
-            serverPlayerEntity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY).ifPresent(dragonStateHandler -> {
+            serverPlayerEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).ifPresent(dragonStateHandler -> {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
                 dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
-                //works
                 CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), false, dragonType1, dragonLevel, true, dragonLevel.initialHealth, wings));
             });
             return 1;

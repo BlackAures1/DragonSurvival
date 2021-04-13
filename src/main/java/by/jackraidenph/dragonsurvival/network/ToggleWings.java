@@ -1,7 +1,9 @@
 package by.jackraidenph.dragonsurvival.network;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -27,6 +29,7 @@ public class ToggleWings implements IMessage<ToggleWings> {
 
     @Override
     public void handle(ToggleWings message, Supplier<NetworkEvent.Context> supplier) {
+        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SetFlyState(supplier.get().getSender().getEntityId(), message.state));
         supplier.get().setPacketHandled(true);
     }
 }

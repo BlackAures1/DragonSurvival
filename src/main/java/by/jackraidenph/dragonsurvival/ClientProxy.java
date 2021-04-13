@@ -34,6 +34,7 @@ public class ClientProxy implements Proxy {
                 entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
                 world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
                 xpOrb.remove();
+                supplier.get().setPacketHandled(true);
             }
         }
     }
@@ -47,6 +48,7 @@ public class ClientProxy implements Proxy {
             if (entity != null) {
                 ((MagicalPredatorEntity) entity).size = m.size;
                 ((MagicalPredatorEntity) entity).type = m.type;
+                supplier.get().setPacketHandled(true);
             }
         }
     }
@@ -66,7 +68,7 @@ public class ClientProxy implements Proxy {
             } else {
                 world.playSound(player, synchronizeNest.pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
             }
+            contextSupplier.get().setPacketHandled(true);
         }
-        contextSupplier.get().setPacketHandled(true);
     }
 }

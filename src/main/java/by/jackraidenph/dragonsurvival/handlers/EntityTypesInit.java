@@ -2,15 +2,13 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
@@ -33,6 +31,7 @@ public class EntityTypesInit {
     private static final List<Item> spawnEggs = Lists.newArrayList();
 
     public static EntityType<MagicalPredatorEntity> MAGICAL_BEAST;
+    public static EntityType<DragonEntity> dragonEntity;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
 
@@ -40,7 +39,7 @@ public class EntityTypesInit {
         EntityType<T> entity = EntityType.Builder.create(factory, EntityClassification.MONSTER).size(width, height).setTrackingRange(64).setUpdateInterval(1).build(location.toString());
         entity.setRegistryName(location);
         entities.add(entity);
-        Item spawnEgg = new SpawnEggItem(entity, eggPrimary, eggSecondary, (new Item.Properties()).group(BlockInit.blocks));
+        Item spawnEgg = new SpawnEggItem(entity, eggPrimary, eggSecondary, (new Item.Properties()).group(ItemsInit.items));
         spawnEgg.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, classToString(entityClass) + "_spawn_egg"));
         spawnEggs.add(spawnEgg);
 
@@ -59,6 +58,10 @@ public class EntityTypesInit {
             event.getRegistry().register(entity);
             EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawn);
         }
+
+        dragonEntity = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, EntitySize.fixed(0.9f, 1.9f));
+        dragonEntity.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
+        event.getRegistry().register(dragonEntity);
     }
 
     @SubscribeEvent

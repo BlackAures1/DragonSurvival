@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 /**
  * Sets a spawn point for a player. Doesn't work in super-flat world properly
  */
+@Deprecated
 public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
     BlockPos position;
 

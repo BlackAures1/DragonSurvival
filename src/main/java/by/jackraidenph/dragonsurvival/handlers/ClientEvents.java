@@ -3,30 +3,29 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
+import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.models.DragonModel2;
-import by.jackraidenph.dragonsurvival.models.Wings;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,6 +33,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,34 +42,50 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
+@SuppressWarnings("unused")
 public class ClientEvents {
 
     public static float bodyYaw;
-    public static float neckYaw;
+    public static DragonModel dragonModel;
     static boolean showingInventory;
     static HashMap<UUID, Boolean> warnings = new HashMap<>();
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     static HashMultimap<UUID, ResourceLocation> skinCache = HashMultimap.create(1, 3);
     static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
-    public static DragonModel2 thirdPersonModel = new DragonModel2(false);
-    public static DragonModel2 firstPersonModel = new DragonModel2(true);
-    public static DragonModel2 thirdPersonArmor = new DragonModel2(false);
-    public static DragonModel2 firstPersonArmor = new DragonModel2(true);
+    /**
+     * Instance used for rendering first-person dragon model
+     */
+    public static DragonEntity dummyDragon2;
+    /**
+     * Instances used for rendering third-person dragon models
+     */
+    public static HashMap<PlayerEntity, DragonEntity> playerEntityDragonEntityHashMap = new HashMap<>(20);
+    public static HashMap<Integer, Boolean> dragonsFlying = new HashMap<>(20);
+    /**
+     * States of digging/breaking blocks
+     */
+    public static HashMap<PlayerEntity, Boolean> dragonsDigging = new HashMap<>(20);
+    /**
+     * Durations of jumps
+     */
+    public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
 
-    public static Wings wings = new Wings();
-
-    static {
-        firstPersonModel.Head.showModel = false;
-        firstPersonModel.Neckand_1.showModel = false;
-        firstPersonModel.NeckandMain.showModel = false;
-
-        firstPersonArmor.NeckandMain.showModel = false;
-        firstPersonArmor.NeckandHead.showModel = false;
+    @SubscribeEvent
+    public static void decreaseJumpDuration(TickEvent.PlayerTickEvent playerTickEvent) {
+        if (playerTickEvent.phase == TickEvent.Phase.END) {
+            PlayerEntity playerEntity = playerTickEvent.player;
+            dragonsJumpingTicks.computeIfPresent(playerEntity, (playerEntity1, integer) -> integer > 0 ? integer - 1 : integer);
+        }
     }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (dummyDragon2 == null) {
+            dummyDragon2 = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon2.player = player;
+            dummyDragon2.setUniqueId(UUID.randomUUID());
+        }
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
@@ -79,7 +95,6 @@ public class ClientEvents {
                 float partialTicks = renderHandEvent.getPartialTicks();
                 float playerYaw = player.getYaw(partialTicks);
                 float playerPitch = player.getPitch(partialTicks);
-                firstPersonModel.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
                 ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
                 eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
@@ -87,22 +102,28 @@ public class ClientEvents {
                 eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
                 eventMatrixStack.translate(0, -2, -1);
                 IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-                IVertexBuilder buffer = buffers.getBuffer(RenderType.getEntityTranslucentCull(texture));
-                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
+//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
                 int light = renderHandEvent.getLight();
-                firstPersonModel.render(eventMatrixStack, buffer, light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
 
-                firstPersonModel.copyModelAttributesTo(firstPersonArmor);
-                firstPersonArmor.setRotationAngles(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, playerYaw, playerPitch);
-                setArmorVisibility(firstPersonArmor, player);
+                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon2);
+                dummyDragon2.copyLocationAndAnglesFrom(player);
+                dragonModel.setCurrentTexture(texture);
+                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                if (neckandHead != null)
+                    neckandHead.setHidden(true);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
-//                eventMatrixStack.scale(1.4f, 1.4f, 1.4f);
+                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
                 ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(chestplate)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(chestplate);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                 ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(legs)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(legs);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                 ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
-                firstPersonArmor.render(eventMatrixStack, buffers.getBuffer(RenderType.getEntityTranslucentCull(boots)), light, packedOverlay, partialTicks, playerYaw, playerPitch, 1);
+                dragonModel.setCurrentTexture(boots);
+                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+
                 eventMatrixStack.translate(0, 0, 0.15);
                 eventMatrixStack.pop();
 
@@ -157,22 +178,25 @@ public class ClientEvents {
     }
 
     /**
-     * The player is always the local player
+     * Called for every player.
      */
     @SubscribeEvent
-    public static void onRender(RenderPlayerEvent.Pre renderPlayerEvent) {
+    public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
+        if (!playerEntityDragonEntityHashMap.containsKey(player)) {
+            DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
+            dummyDragon.player = player;
+            dummyDragon.setUniqueId(UUID.randomUUID());
+            playerEntityDragonEntityHashMap.put(player, dummyDragon);
+        }
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
-
                 float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
                 float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.prevLimbSwingAmount, player.limbSwingAmount);
                 float yaw = player.getYaw(partialRenderTick);
                 float pitch = player.getPitch(partialRenderTick);
-                thirdPersonModel.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
-
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
@@ -182,45 +206,61 @@ public class ClientEvents {
                 float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
                 matrixStack.scale(scale, scale, scale);
                 int eventLight = renderPlayerEvent.getLight();
-                thirdPersonModel.render(
-                        matrixStack,
-                        renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(texture)),
-                        eventLight, LivingRenderer.getPackedOverlay(player, 0.0f),
-                        partialRenderTick, yaw, pitch, 1.0f);
 
-                thirdPersonModel.copyModelAttributesTo(thirdPersonArmor);
-                thirdPersonArmor.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
-
-                setArmorVisibility(thirdPersonArmor, player);
-                String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
-                String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
-                String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
-                String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
-                thirdPersonArmor.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0.0f), 0, 0, 0, 1.0f);
-
-                if (cap.hasWings()) {
-                    thirdPersonModel.copyModelAttributesTo(wings);
-                    wings.setRotationAngles(player, player.limbSwing, limbSwingAmount, player.ticksExisted, yaw, pitch);
-                    String wingsTexture;
-                    switch (cap.getType()) {
-                        case SEA:
-                            wingsTexture = "wings_sea.png";
+                DragonEntity dummyDragon = playerEntityDragonEntityHashMap.get(player);
+                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
+                dummyDragon.copyLocationAndAnglesFrom(player);
+                dragonModel.setCurrentTexture(texture);
+                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
+                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                if (leftwing != null)
+                    leftwing.setHidden(!cap.hasWings());
+                if (rightWing != null)
+                    rightWing.setHidden(!cap.hasWings());
+                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                if (neckHead != null)
+                    neckHead.setHidden(false);
+                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
+                if (player.isCrouching()) {
+                    switch (dragonStage) {
+                        case ADULT:
+                            matrixStack.translate(0, 0.2, 0);
                             break;
-                        case CAVE:
-                            wingsTexture = "wings_cave.png";
+                        case YOUNG:
+                            matrixStack.translate(0, 0.25, 0);
                             break;
-                        case FOREST:
-                            wingsTexture = "wings_forest.png";
-                            break;
-                        default:
-                            wingsTexture = null;
+                        case BABY:
+                            matrixStack.translate(0, 0.3, 0);
                     }
-                    if (wingsTexture != null)
-                        wings.render(matrixStack, renderPlayerEvent.getBuffers().getBuffer(RenderType.getEntityTranslucentCull(new ResourceLocation(DragonSurvivalMod.MODID, "textures/wings/" + wingsTexture))), eventLight, LivingRenderer.getPackedOverlay(player, 0), 0, 0, 0, 1.0f);
                 }
+                //crashes here with optifine
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+
+                String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+                String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
+                String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
+                String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
+
+                //scale to try to prevent texture fighting (problem is in consecutive renders)
+                matrixStack.scale(1.08f, 1.02f, 1.02f);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
+                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+
+                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                ItemStack right = player.getHeldItemMainhand();
+                matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
+                matrixStack.translate(-0.45f, 1, 0);
+                final int combinedOverlayIn = LivingRenderer.getPackedOverlay(player, 0);
+                itemRenderer.renderItem(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                ItemStack left = player.getHeldItemOffhand();
+                matrixStack.translate(0.9, 0, 0);
+                itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                 matrixStack.pop();
             }
         });
@@ -358,7 +398,7 @@ public class ClientEvents {
     /**
      * Render nest health
      */
-    @SubscribeEvent
+//    @SubscribeEvent
     public static void onHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
         MainWindow mainWindow = renderGameOverlayEvent.getWindow();

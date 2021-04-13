@@ -42,16 +42,30 @@ public class NestScreen extends ContainerScreen<NestContainer> {
         TextureManager textureManager = minecraft.getTextureManager();
         textureManager.bindTexture(BACKGROUND);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
-        switch (nestEntity.type) {
-            case CAVE:
-                textureManager.bindTexture(CAVE_NEST0);
-                break;
-            case FOREST:
-                textureManager.bindTexture(FOREST_NEST0);
-                break;
-            case SEA:
-                textureManager.bindTexture(SEA_NEST0);
-                break;
+        if (nestEntity.energy == 64) {
+            switch (nestEntity.type) {
+                case CAVE:
+                    textureManager.bindTexture(CAVE_NEST1);
+                    break;
+                case FOREST:
+                    textureManager.bindTexture(FOREST_NEST1);
+                    break;
+                case SEA:
+                    textureManager.bindTexture(SEA_NEST1);
+                    break;
+            }
+        } else {
+            switch (nestEntity.type) {
+                case CAVE:
+                    textureManager.bindTexture(CAVE_NEST0);
+                    break;
+                case FOREST:
+                    textureManager.bindTexture(FOREST_NEST0);
+                    break;
+                case SEA:
+                    textureManager.bindTexture(SEA_NEST0);
+                    break;
+            }
         }
         blit(guiLeft + 8, guiTop + 8, 0, 0, 160, 49, 160, 49);
         textureManager.bindTexture(RED_HEART);
@@ -93,7 +107,7 @@ public class NestScreen extends ContainerScreen<NestContainer> {
                 return true;
             }
         });
-        ExtendedButton carry = addButton(new ExtendedButton(regenerate.x + regenerate.getWidth() + 4, guiTop + 60, 33, 18, "", p_onPress_1_ -> {
+        addButton(new ExtendedButton(regenerate.x + regenerate.getWidth() + 4, guiTop + 60, 33, 18, "", p_onPress_1_ -> {
         }) {
             @Override
             public void renderButton(int mouseX, int mouseY, float partial) {

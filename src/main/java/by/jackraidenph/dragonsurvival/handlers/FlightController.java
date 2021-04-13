@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.ToggleWings;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 @SuppressWarnings("unused")
 public class FlightController {
 
-    static boolean wingsEnabled;
+    public static boolean wingsEnabled;
     static double ax, ay, az;
 
     @SubscribeEvent
@@ -69,8 +70,9 @@ public class FlightController {
                             az *= 0.99;
                             ay = lookVec.y / 8;
                         }
-                        ax = MathHelper.clamp(ax, -0.2, 0.2);
-                        az = MathHelper.clamp(az, -0.2, 0.2);
+                        double speedLimit = ConfigurationHandler.maxFlightSpeed.get();
+                        ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
+                        az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
                         if (lookY < 0) {
                             motion = motion.add(ax, 0, az);
                         } else {

@@ -1,6 +1,8 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.gecko.DragonModel;
+import by.jackraidenph.dragonsurvival.gecko.DragonRenderer;
 import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
@@ -34,14 +36,8 @@ import java.net.URL;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@SuppressWarnings("unused")
 public class ClientModEvents {
-    /**
-     * Whether all three custom skins exist
-     */
-    public static boolean customSkinPresence;
-    public static ResourceLocation customNewbornSkin;
-    public static ResourceLocation customYoungSkin;
-    public static ResourceLocation customAdultSkin;
 
     public static KeyBinding TOGGLE_WINGS;
 
@@ -74,6 +70,8 @@ public class ClientModEvents {
 
         TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
     }
 
     /**

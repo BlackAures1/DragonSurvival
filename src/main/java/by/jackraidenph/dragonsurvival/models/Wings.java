@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
+@Deprecated
 public class Wings extends EntityModel<Entity> {
     private final ModelRenderer Leg1;
     private final ModelRenderer Forearm1;

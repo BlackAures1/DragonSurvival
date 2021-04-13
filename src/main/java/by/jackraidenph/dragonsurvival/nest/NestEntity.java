@@ -27,7 +27,6 @@ import java.util.UUID;
 
 public class NestEntity extends BaseBlockEntity implements ITickableTileEntity, INamedContainerProvider {
     public int energy = 0;
-    final static int COOLDOWN_TIME = 10 * 20;
     public int damageCooldown;
     public boolean regenerationMode = true;
     public UUID ownerUUID;

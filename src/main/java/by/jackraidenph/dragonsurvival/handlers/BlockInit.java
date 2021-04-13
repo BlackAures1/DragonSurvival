@@ -14,8 +14,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,14 +25,11 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockInit {
     public static Block PREDATOR_STAR_BLOCK;
-    public static ItemGroup blocks = new ItemGroup("dragon.survival.blocks") {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(dragon_altar);
-        }
-    };
 
     public static Block dragon_altar;
+    public static Block dragon_altar2;
+    public static Block dragon_altar3;
+    public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor dragonDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
@@ -43,15 +38,17 @@ public class BlockInit {
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
         //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
-        dragon_altar = new DragonAltarBlock(Block.Properties
-                .create(Material.ANVIL)
-                .harvestTool(ToolType.PICKAXE)
-                .harvestLevel(2)
-                .hardnessAndResistance(5.0f)
-                .lightValue(5)
-                        .sound(SoundType.ANVIL));
-        event.getRegistry().register(dragon_altar);
         IForgeRegistry<Block> forgeRegistry = event.getRegistry();
+        dragon_altar = new DragonAltarBlock(Block.Properties
+                .create(Material.ANVIL).harvestTool(ToolType.PICKAXE).harvestLevel(2)
+                .hardnessAndResistance(5.0f).lightValue(5).sound(SoundType.ANVIL));
+        forgeRegistry.register(dragon_altar.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar0"));
+        dragon_altar2 = new DragonAltarBlock(Block.Properties.from(dragon_altar));
+        forgeRegistry.register(dragon_altar2.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar1"));
+        dragon_altar3 = new DragonAltarBlock(Block.Properties.from(dragon_altar));
+        forgeRegistry.register(dragon_altar3.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar2"));
+        dragon_altar4 = new DragonAltarBlock(Block.Properties.from(dragon_altar));
+        forgeRegistry.register(dragon_altar4.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar3"));
         PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties
                 .create(Material.DRAGON_EGG)
                 .doesNotBlockMovement()
@@ -89,11 +86,10 @@ public class BlockInit {
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new BlockItem(dragon_altar, new Item.Properties().group(blocks)).setRegistryName("dragon_altar"));
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
-        Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(blocks)).setRegistryName(dragonDoor.getRegistryName());
+        Item dragonDoorItem = new DragonDoorItem(dragonDoor, new Item.Properties().group(ItemsInit.items)).setRegistryName(dragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
-        forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(blocks)).setRegistryName("predator_star"));
+        forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().group(ItemsInit.items)).setRegistryName("predator_star"));
 
         registerSingleItem(smallCaveNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(smallForestNest, new Item.Properties(), forgeRegistry);
@@ -106,11 +102,16 @@ public class BlockInit {
         registerSingleItem(bigSeaNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(bigForestNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(bigCaveNest, new Item.Properties(), forgeRegistry);
+
+        registerItem(dragon_altar, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar2, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar3, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar4, new Item.Properties(), forgeRegistry);
     }
 
     @SuppressWarnings("ConstantConditions")
     private static void registerItem(Block block, Item.Properties itemProperties, IForgeRegistry<Item> forgeRegistry) {
-        forgeRegistry.register(new BlockItem(block, itemProperties.group(blocks)).setRegistryName(block.getRegistryName()));
+        forgeRegistry.register(new BlockItem(block, itemProperties.group(ItemsInit.items)).setRegistryName(block.getRegistryName()));
     }
 
     private static void registerSingleItem(Block block, Item.Properties properties, IForgeRegistry<Item> forgeRegistry) {

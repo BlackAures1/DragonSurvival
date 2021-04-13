@@ -29,7 +29,11 @@ public class BigNestBlock extends MediumNestBlock {
                     world.isAirBlock(blockPos.offset(direction).offset(direction.rotateY())) &&
                     world.isAirBlock(blockPos.offset(direction.rotateY())) &&
                     world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateYCCW())) &&
-                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateY())))
+                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateY())) &&
+                    world.isAirBlock(blockPos.offset(direction).up()) &&
+                    world.isAirBlock(blockPos.offset(direction).up().offset(direction.rotateY())) &&
+                    world.isAirBlock(blockPos.offset(direction).up().offset(direction.rotateYCCW()))
+            )
                 return superState;
         }
         return null;
@@ -60,6 +64,20 @@ public class BigNestBlock extends MediumNestBlock {
             placeHolder4.rootPos = pos;
             NestPlaceHolder placeHolder5 = (NestPlaceHolder) worldIn.getTileEntity(pos5);
             placeHolder5.rootPos = pos;
+
+            final BlockPos pos6 = pos.up().offset(direction);
+            final BlockPos pos7 = pos.up().offset(direction).offset(direction.rotateYCCW());
+            final BlockPos pos8 = pos.up().offset(direction).offset(direction.rotateY());
+            worldIn.setBlockState(pos6, state.with(PRIMARY_BLOCK, false));
+            worldIn.setBlockState(pos7, state.with(PRIMARY_BLOCK, false));
+            worldIn.setBlockState(pos8, state.with(PRIMARY_BLOCK, false));
+            NestPlaceHolder placeHolder6 = (NestPlaceHolder) worldIn.getTileEntity(pos6);
+            placeHolder6.rootPos = pos;
+            NestPlaceHolder placeHolder7 = (NestPlaceHolder) worldIn.getTileEntity(pos7);
+            placeHolder7.rootPos = pos;
+            NestPlaceHolder placeHolder8 = (NestPlaceHolder) worldIn.getTileEntity(pos8);
+            placeHolder8.rootPos = pos;
+
         }
     }
 
@@ -75,6 +93,10 @@ public class BigNestBlock extends MediumNestBlock {
             worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateYCCW()), false);
             worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateY()), false);
             worldIn.destroyBlock(pos.offset(direction.rotateYCCW()), false);
+            //upper blocks
+            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()), false);
+            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()).offset(direction.rotateYCCW()), false);
+            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()).offset(direction.rotateY()), false);
         }
     }
 }
