@@ -61,15 +61,15 @@ public class ClientEvents {
      * Instances used for rendering third-person dragon models
      */
     public static ConcurrentHashMap<PlayerEntity, DragonEntity> playerDragonHashMap = new ConcurrentHashMap<>(20);
-    public static HashMap<Integer, Boolean> dragonsFlying = new HashMap<>(20);
+    public static ConcurrentHashMap<Integer, Boolean> dragonsFlying = new ConcurrentHashMap<>(20);
     /**
      * States of digging/breaking blocks
      */
-    public static HashMap<PlayerEntity, Boolean> dragonsDigging = new HashMap<>(20);
+    public static ConcurrentHashMap<PlayerEntity, Boolean> dragonsDigging = new ConcurrentHashMap<>(20);
     /**
      * Durations of jumps
      */
-    public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
+    public static ConcurrentHashMap<PlayerEntity, Integer> dragonsJumpingTicks = new ConcurrentHashMap<>(20);
 
     @SubscribeEvent
     public static void decreaseJumpDuration(TickEvent.PlayerTickEvent playerTickEvent) {

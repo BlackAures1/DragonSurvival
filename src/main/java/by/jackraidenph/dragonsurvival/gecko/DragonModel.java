@@ -28,13 +28,13 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(DragonEntity dragonEntity) {
-        Vec3d vec3d = dragonEntity.player.getMotion();
+        Vec3d playerMotion = dragonEntity.player.getMotion();
         if (dragonEntity.player.getPose() == Pose.SWIMMING)
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
-        if (dragonEntity.player.isInWaterOrBubbleColumn() && (vec3d.x != 0 || vec3d.z != 0))
+        if (dragonEntity.player.isInWaterOrBubbleColumn() && (playerMotion.x != 0 || playerMotion.z != 0))
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
         if (dragonEntity.player.isSneaking()) {
-            if ((vec3d.getZ() != 0 || vec3d.getX() != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
+            if ((playerMotion.getZ() != 0 || playerMotion.getX() != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
             } else if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
@@ -53,7 +53,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (ClientEvents.dragonsJumpingTicks.getOrDefault(dragonEntity.player, 0) > 0)
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
         //motion variables alone are not reliable
-        if ((vec3d.z != 0 || vec3d.x != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
+        if ((playerMotion.z != 0 || playerMotion.x != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
         }
         if (dragonEntity.player.isSleeping())
