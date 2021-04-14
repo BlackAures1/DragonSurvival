@@ -27,7 +27,7 @@ logoFile = "dragonsurvival.png" #optional
 # A text field displayed in the mod UI
 credits = "" #optional
 # A text field displayed in the mod UI
-authors = "Black Aures, Alexiy, Jack Raiden, Hohserg" #optional
+authors = "Black Aures, Alexiy, Jack Raiden" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
 This mod lets you play as a dragon. There are 3 dragon kinds, which have different traits.

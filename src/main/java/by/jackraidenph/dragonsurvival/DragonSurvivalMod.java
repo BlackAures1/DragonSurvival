@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
@@ -23,6 +24,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
@@ -232,6 +234,28 @@ public class DragonSurvivalMod {
                             ClientEvents.dragonsJumpingTicks.put(entity.getEntityId(), startJump.ticks);
                             contextSupplier.get().setPacketHandled(true);
                         }
+                    }
+                });
+
+        CHANNEL.registerMessage(nextPacketId++, RefreshDragons.class, (refreshDragons, packetBuffer) -> {
+                    packetBuffer.writeInt(refreshDragons.playerId);
+                },
+                packetBuffer -> new RefreshDragons(packetBuffer.readInt()),
+                (refreshDragons, contextSupplier) -> {
+                    if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+                        contextSupplier.get().enqueueWork(() -> {
+                            ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
+                            if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
+                                ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+                            }
+                            PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
+                            if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
+                                DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                dragonEntity.player = thatPlayer.getEntityId();
+                                ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                            }
+                        });
+                        contextSupplier.get().setPacketHandled(true);
                     }
                 });
         LOGGER.info("Successfully registered packets!");
