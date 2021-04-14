@@ -53,7 +53,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         if (ClientEvents.dragonsJumpingTicks.getOrDefault(dragonEntity.player, 0) > 0)
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
         //motion variables alone are not reliable
-        if ((playerMotion.z != 0 || playerMotion.x != 0) && dragonEntity.player.limbSwingAmount > 0.1f) {
+        if ((playerMotion.z != 0 || playerMotion.x != 0) && dragonEntity.player.limbSwingAmount != 0f) {
             return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
         }
         if (dragonEntity.player.isSleeping())
