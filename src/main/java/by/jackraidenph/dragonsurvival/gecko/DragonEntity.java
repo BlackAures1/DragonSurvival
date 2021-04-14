@@ -26,7 +26,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     /**
      * This reference must be updated whenever player is remade, for example, when changing dimensions
      */
-    public PlayerEntity player;
+    public int player;
 
     public DragonEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -43,32 +43,30 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        Vec3d motio = player.getMotion();
+        Vec3d motio = getPlayer().getMotion();
         final AnimationController animationController = animationEvent.getController();
-        if (player.getPose() == Pose.SWIMMING)
+        if (getPlayer().getPose() == Pose.SWIMMING)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
-        else if (player.isInWaterOrBubbleColumn() && (motio.x != 0 || motio.z != 0)) {
+        else if (getPlayer().isInWaterOrBubbleColumn() && (motio.x != 0 || motio.z != 0)) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
-        }
-        else if ((player.abilities.isFlying || ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false)) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
+        } else if ((getPlayer().abilities.isFlying || ClientEvents.dragonsFlying.getOrDefault(getPlayer().getEntityId(), false)) && !getPlayer().onGround && !getPlayer().isInWater() && getPlayer().getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
-        } else if (player.isSprinting())
+        } else if (getPlayer().isSprinting())
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
-        else if (player.isSneaking()) {
-            if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount > 0.1f)
+        else if (getPlayer().isSneaking()) {
+            if ((motio.getX() != 0 || motio.getZ() != 0) && getPlayer().limbSwingAmount != 0.1f)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
             else if (ClientEvents.dragonsDigging.getOrDefault(player, false)) {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand8", true));
             } else
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6", true));
-        }
-        else if (player.isSwingInProgress && player.getCooledAttackStrength(-3.0f) != 1)
+        } else if (getPlayer().isSwingInProgress && getPlayer().getCooledAttackStrength(-3.0f) != 1)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
         else if (ClientEvents.dragonsJumpingTicks.getOrDefault(player, 0) > 0)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new2", true));
-        else if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount != 0f)
+        else if ((motio.getX() != 0 || motio.getZ() != 0) && getPlayer().limbSwingAmount != 0f)
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
-        else if (player.isSleeping()) {
+        else if (getPlayer().isSleeping()) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
         } else if (ClientEvents.dragonsDigging.getOrDefault(player, false)) {
             animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand7", true));
@@ -95,5 +93,9 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     @Override
     public HandSide getPrimaryHand() {
         return HandSide.RIGHT;
+    }
+
+    PlayerEntity getPlayer() {
+        return (PlayerEntity) world.getEntityByID(player);
     }
 }

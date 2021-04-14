@@ -214,7 +214,7 @@ public class DragonSurvivalMod {
                         Minecraft minecraft = Minecraft.getInstance();
                         Entity entity = minecraft.world.getEntityByID(diggingStatus.playerId);
                         if (entity instanceof PlayerEntity) {
-                            ClientEvents.dragonsDigging.put((PlayerEntity) entity, diggingStatus.status);
+                            ClientEvents.dragonsDigging.put(entity.getEntityId(), diggingStatus.status);
                             contextSupplier.get().setPacketHandled(true);
                         }
                     }
@@ -229,7 +229,7 @@ public class DragonSurvivalMod {
                     if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                         Entity entity = Minecraft.getInstance().world.getEntityByID(startJump.playerId);
                         if (entity instanceof PlayerEntity) {
-                            ClientEvents.dragonsJumpingTicks.put((PlayerEntity) entity, startJump.ticks);
+                            ClientEvents.dragonsJumpingTicks.put(entity.getEntityId(), startJump.ticks);
                             contextSupplier.get().setPacketHandled(true);
                         }
                     }

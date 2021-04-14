@@ -1,9 +1,7 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
-import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncLevel;
@@ -16,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -101,17 +98,16 @@ public class PacketProxy {
                     });
                     //refresh instances
 
-                    context.get().enqueueWork(() -> {
-                        if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
-                            ClientEvents.dummyDragon2.player = myPlayer;
-                        }
-                        if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
-                            DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
-                            dragonEntity.player = thatPlayer;
-                            dragonEntity.setUniqueId(UUID.randomUUID());
-                            ClientEvents.playerDragonHashMap.put(thatPlayer, dragonEntity);
-                        }
-                    });
+//                    context.get().enqueueWork(() -> {
+//                        if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
+//                            ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+//                        }
+//                        if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
+//                            DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
+//                            dragonEntity.player = thatPlayer.getEntityId();
+//                            ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+//                        }
+//                    });
                     context.get().setPacketHandled(true);
                 }
             }
