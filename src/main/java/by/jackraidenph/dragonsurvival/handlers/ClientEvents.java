@@ -115,6 +115,12 @@ public class ClientEvents {
                 final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
                 if (neckandHead != null)
                     neckandHead.setHidden(true);
+                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
+                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                if (leftwing != null)
+                    leftwing.setHidden(!playerStateHandler.hasWings());
+                if (rightWing != null)
+                    rightWing.setHidden(!playerStateHandler.hasWings());
                 dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                 eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
