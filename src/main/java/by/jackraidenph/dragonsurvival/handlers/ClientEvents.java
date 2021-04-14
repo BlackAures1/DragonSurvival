@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 @SuppressWarnings("unused")
@@ -59,7 +60,7 @@ public class ClientEvents {
     /**
      * Instances used for rendering third-person dragon models
      */
-    public static HashMap<PlayerEntity, DragonEntity> playerEntityDragonEntityHashMap = new HashMap<>(20);
+    public static ConcurrentHashMap<PlayerEntity, DragonEntity> playerDragonHashMap = new ConcurrentHashMap<>(20);
     public static HashMap<Integer, Boolean> dragonsFlying = new HashMap<>(20);
     /**
      * States of digging/breaking blocks
@@ -78,6 +79,8 @@ public class ClientEvents {
         }
     }
 
+    public static boolean isRenderingFirstPerson;
+
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -86,6 +89,7 @@ public class ClientEvents {
             dummyDragon2.player = player;
             dummyDragon2.setUniqueId(UUID.randomUUID());
         }
+        isRenderingFirstPerson = true;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
@@ -129,6 +133,7 @@ public class ClientEvents {
 
             }
         });
+        isRenderingFirstPerson = false;
     }
 
     @SubscribeEvent
@@ -177,6 +182,7 @@ public class ClientEvents {
         }
     }
 
+    public static boolean isRenderingThirdPerson;
     /**
      * Called for every player.
      */
@@ -184,12 +190,13 @@ public class ClientEvents {
     public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
-        if (!playerEntityDragonEntityHashMap.containsKey(player)) {
+        if (!playerDragonHashMap.containsKey(player)) {
             DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.world);
             dummyDragon.player = player;
             dummyDragon.setUniqueId(UUID.randomUUID());
-            playerEntityDragonEntityHashMap.put(player, dummyDragon);
+            playerDragonHashMap.put(player, dummyDragon);
         }
+        isRenderingThirdPerson = true;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -207,7 +214,7 @@ public class ClientEvents {
                 matrixStack.scale(scale, scale, scale);
                 int eventLight = renderPlayerEvent.getLight();
 
-                DragonEntity dummyDragon = playerEntityDragonEntityHashMap.get(player);
+                DragonEntity dummyDragon = playerDragonHashMap.get(player);
                 EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
                 dummyDragon.copyLocationAndAnglesFrom(player);
                 dragonModel.setCurrentTexture(texture);
@@ -233,7 +240,7 @@ public class ClientEvents {
                             matrixStack.translate(0, 0.3, 0);
                     }
                 }
-                //crashes here with optifine
+                //crashes here
                 dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                 String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
@@ -264,7 +271,7 @@ public class ClientEvents {
                 matrixStack.pop();
             }
         });
-
+        isRenderingThirdPerson = false;
     }
 
     private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {

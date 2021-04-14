@@ -66,7 +66,7 @@ public class PacketProxy {
                     contextSupplier.get().setPacketHandled(true);
                     //delete instances
                     ClientEvents.dummyDragon2 = null;
-                    ClientEvents.playerEntityDragonEntityHashMap.clear();
+                    ClientEvents.playerDragonHashMap.clear();
                 }
             }
         });
@@ -102,14 +102,14 @@ public class PacketProxy {
                     //refresh instances
 
                     context.get().enqueueWork(() -> {
-                        if (ClientEvents.dummyDragon2 != null) {
+                        if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
                             ClientEvents.dummyDragon2.player = myPlayer;
                         }
-                        if (thatPlayer != myPlayer) {
+                        if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
                             DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                             dragonEntity.player = thatPlayer;
                             dragonEntity.setUniqueId(UUID.randomUUID());
-                            ClientEvents.playerEntityDragonEntityHashMap.put(thatPlayer, dragonEntity);
+                            ClientEvents.playerDragonHashMap.put(thatPlayer, dragonEntity);
                         }
                     });
                     context.get().setPacketHandled(true);
