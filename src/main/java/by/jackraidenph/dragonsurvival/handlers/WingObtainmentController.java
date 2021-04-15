@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.Language;
@@ -73,6 +74,7 @@ public class WingObtainmentController {
 
         englishPhrases = new ArrayList<>(18);
         englishPhrases.add(e3);
+        englishPhrases.add(e4);
         englishPhrases.add(e5);
     }
 
@@ -141,6 +143,7 @@ public class WingObtainmentController {
                 DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
                     if (dragonStateHandler.isDragon()) {
                         livingEntity.changeDimension(DimensionType.OVERWORLD);
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(livingEntity.getEntityId()));
                     }
                 });
             }
