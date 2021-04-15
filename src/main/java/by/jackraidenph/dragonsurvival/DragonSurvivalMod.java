@@ -244,16 +244,25 @@ public class DragonSurvivalMod {
                 (refreshDragons, contextSupplier) -> {
                     if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                         contextSupplier.get().enqueueWork(() -> {
-                            ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                            if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
-                                ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
-                            }
-                            PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
-                            if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
-                                DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
-                                dragonEntity.player = thatPlayer.getEntityId();
-                                ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
-                            }
+                            Thread thread = new Thread(() -> {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
+                                if (!ClientEvents.isRenderingFirstPerson) {
+                                    ClientEvents.dummyDragon2 = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                    ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+                                }
+                                PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
+                                if (!ClientEvents.isRenderingThirdPerson) {
+                                    DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                    dragonEntity.player = thatPlayer.getEntityId();
+                                    ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                                }
+                            });
+                            thread.start();
                         });
                         contextSupplier.get().setPacketHandled(true);
                     }

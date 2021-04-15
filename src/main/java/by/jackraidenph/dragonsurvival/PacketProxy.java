@@ -1,7 +1,9 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncLevel;
@@ -85,7 +87,11 @@ public class PacketProxy {
             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
             if (myPlayer != null) {
                 World world = myPlayer.world;
+                if (ClientEvents.dummyDragon2 != null) {
+                    ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+                }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+
                 if (thatPlayer != null) {
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
                         dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
@@ -97,17 +103,12 @@ public class PacketProxy {
                             FlightController.wingsEnabled = false;
                     });
                     //refresh instances
+                    if (thatPlayer != myPlayer) {
+                        DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
+                        dragonEntity.player = thatPlayer.getEntityId();
+                        ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                    }
 
-//                    context.get().enqueueWork(() -> {
-//                        if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
-//                            ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
-//                        }
-//                        if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
-//                            DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
-//                            dragonEntity.player = thatPlayer.getEntityId();
-//                            ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
-//                        }
-//                    });
                     context.get().setPacketHandled(true);
                 }
             }
