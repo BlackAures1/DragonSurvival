@@ -108,14 +108,9 @@ public class PacketProxy {
                         dragonEntity.player = thatPlayer.getEntityId();
                         ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
                     }
-
                     context.get().setPacketHandled(true);
                 }
             }
         };
     }
-
-//    public DistExecutor.SafeRunnable refreshDragons(){
-//
-//    }
 }

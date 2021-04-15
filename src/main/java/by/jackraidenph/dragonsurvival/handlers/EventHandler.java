@@ -60,8 +60,6 @@ import java.lang.reflect.Field;
 @Mod.EventBusSubscriber
 public class EventHandler {
 
-//    public static HashMap<PlayerEntity, Integer> dragonsJumpingTicks = new HashMap<>(20);
-
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         if (playerTickEvent.phase == TickEvent.Phase.START) {
@@ -88,10 +86,6 @@ public class EventHandler {
                             }
                         }
                     }
-//                    if(dragonsJumpingTicks.getOrDefault(playerEntity,0)>0)
-//                    {
-//                        dragonsJumpingTicks.put(playerEntity,dragonsJumpingTicks.get(playerEntity)-1);
-//                    }
                 }
             });
 
@@ -304,7 +298,6 @@ public class EventHandler {
                         break;
                 }
                 if (livingEntity instanceof ServerPlayerEntity) {
-//                    dragonsJumpingTicks.put((PlayerEntity) livingEntity,21);
                     if (livingEntity.getServer().isSinglePlayer())
                         DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new StartJump(livingEntity.getEntityId(), 42));
                     else

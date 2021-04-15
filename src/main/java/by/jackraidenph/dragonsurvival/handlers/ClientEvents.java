@@ -5,14 +5,12 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
-import by.jackraidenph.dragonsurvival.models.DragonModel2;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.GameSettings;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -29,7 +27,10 @@ import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -394,71 +395,5 @@ public class ClientEvents {
         return texture + "empty_armor.png";
     }
 
-    private static void setArmorVisibility(DragonModel2 dragonModel2, PlayerEntity player) {
-        dragonModel2.Head.showModel = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof ArmorItem;
-        dragonModel2.main_body.showModel = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
-
-        dragonModel2.Elbow1.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.Elbow2.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.Elbow3.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-        dragonModel2.Elbow4.showModel = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() instanceof ArmorItem;
-    }
-
     static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
-
-    /**
-     * Render nest health
-     */
-//    @SubscribeEvent
-    public static void onHud(RenderGameOverlayEvent.Post renderGameOverlayEvent) {
-        ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
-        MainWindow mainWindow = renderGameOverlayEvent.getWindow();
-        float partialTicks = renderGameOverlayEvent.getPartialTicks();
-//        if (DragonSurvivalMod.playerIsDragon(clientPlayerEntity)) {
-//            if (renderGameOverlayEvent.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
-//                Minecraft minecraft = Minecraft.getInstance();
-//                Screen screen = minecraft.currentScreen;
-//                RenderSystem.pushMatrix();
-//                minecraft.getTextureManager().bindTexture(HUDTextures);
-//                //heart background
-//                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80, 78, 627, 76, 72, 700, 700);
-//                minecraft.getTextureManager().bindTexture(HUDTextures);
-//                //health heart
-//                Functions.blit(screen, 20, mainWindow.getScaledHeight() - 80 + 72, 154, 627 + 72, 76, (int) (-(72) * (clientPlayerEntity.getHealth() / clientPlayerEntity.getMaxHealth())), 700, 700);
-//                //health int
-//                minecraft.fontRenderer.drawString("" + (int) clientPlayerEntity.getHealth(), 20 + 32, mainWindow.getScaledHeight() - 50, 0xffffff);
-//                RenderSystem.popMatrix();
-//            }
-//        }
-    }
-
-//    @SubscribeEvent
-//    public static void onMouseClickInScreen(GuiScreenEvent.MouseClickedEvent.Pre pre)
-//    {
-//        Screen screen=pre.getGui();
-//        if(screen instanceof ContainerScreen)
-//        {
-//            ContainerScreen<?> containerScreen= (ContainerScreen<?>) screen;
-//            Container container= containerScreen.getContainer();
-//            double mouseX= pre.getMouseX();
-//            double mouseY= pre.getMouseY();
-//            for (Slot inventorySlot : container.inventorySlots) {
-//                int slotX=inventorySlot.xPos+ containerScreen.getGuiLeft();
-//                int slotY=inventorySlot.yPos+containerScreen.getGuiTop();
-//                if (slotX<mouseX && slotX+16>mouseX && slotY<mouseY && slotY+16>mouseY)
-//                {
-//                    ItemStack itemStack=inventorySlot.getStack();
-//                    Item item=itemStack.getItem();
-//                    if(item instanceof ToolItem && inventorySlot.getSlotIndex()<10)
-//                    {
-//                        Minecraft.getInstance().player.sendMessage(new StringTextComponent("A dragon can't use "+itemStack.getDisplayName().getString()));
-//                        pre.setCanceled(true);
-//                    }
-//                    System.out.println(inventorySlot.getSlotIndex());
-//                    break;
-//                }
-//
-//            }
-//        }
-//    }
 }
