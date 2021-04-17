@@ -46,31 +46,6 @@ public class PacketProxy {
         }
     }
 
-    public DistExecutor.SafeRunnable handleCapabilitySync(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> contextSupplier) {
-        return () -> contextSupplier.get().enqueueWork(() -> {
-            ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-            if (myPlayer != null) {
-                World world = myPlayer.world;
-                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
-                if (thatPlayer != null) {
-                    DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
-                        dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                        dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                        dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
-                        if (!dragonStateHandler.hasWings())
-                            FlightController.wingsEnabled = false;
-                    });
-                    contextSupplier.get().setPacketHandled(true);
-                    //delete instances
-                    ClientEvents.dummyDragon2 = null;
-                    ClientEvents.playerDragonHashMap.clear();
-                }
-            }
-        });
-    }
-
     public DistExecutor.SafeRunnable updateLevel(SyncLevel syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
         return () -> {
             Minecraft minecraft = Minecraft.getInstance();
@@ -87,7 +62,8 @@ public class PacketProxy {
             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
             if (myPlayer != null) {
                 World world = myPlayer.world;
-                if (ClientEvents.dummyDragon2 != null) {
+
+                if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
                     ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
                 }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
@@ -103,13 +79,13 @@ public class PacketProxy {
                             FlightController.wingsEnabled = false;
                     });
                     //refresh instances
-                    if (thatPlayer != myPlayer) {
+                    if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
                         DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                         dragonEntity.player = thatPlayer.getEntityId();
                         ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
                     }
-                    context.get().setPacketHandled(true);
                 }
+                context.get().setPacketHandled(true);
             }
         };
     }
