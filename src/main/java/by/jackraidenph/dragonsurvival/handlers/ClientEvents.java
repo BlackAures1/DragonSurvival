@@ -245,25 +245,28 @@ public class ClientEvents {
                             matrixStack.translate(0, 0.3, 0);
                     }
                 }
-                //crashes here
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                try {
+                    //FIXME crashes here
+                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
-                String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
-                String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
-                String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
-                String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
+                    String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+                    String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
+                    String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
+                    String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
-                //scale to try to prevent texture fighting (problem is in consecutive renders)
-                matrixStack.scale(1.08f, 1.02f, 1.02f);
-                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-                dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-
+                    //scale to try to prevent texture fighting (problem is in consecutive renders)
+                    matrixStack.scale(1.08f, 1.02f, 1.02f);
+                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
+                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
+                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
+                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
+                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 ItemStack right = player.getHeldItemMainhand();
                 matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));

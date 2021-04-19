@@ -26,7 +26,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     /**
      * This reference must be updated whenever player is remade, for example, when changing dimensions
      */
-    public int player;
+    public volatile int player;
 
     public DragonEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);

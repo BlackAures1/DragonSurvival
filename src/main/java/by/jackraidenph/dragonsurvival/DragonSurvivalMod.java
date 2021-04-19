@@ -255,11 +255,13 @@ public class DragonSurvivalMod {
                                     ClientEvents.dummyDragon2 = EntityTypesInit.dragonEntity.create(myPlayer.world);
                                     ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
                                 }
-                                PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
                                 if (!ClientEvents.isRenderingThirdPerson) {
-                                    DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
-                                    dragonEntity.player = thatPlayer.getEntityId();
-                                    ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                                    PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
+                                    if (thatPlayer != null) {
+                                        DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                        dragonEntity.player = thatPlayer.getEntityId();
+                                        ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                                    }
                                 }
                             });
                             thread.start();
