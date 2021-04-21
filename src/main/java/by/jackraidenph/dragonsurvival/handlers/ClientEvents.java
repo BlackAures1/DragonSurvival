@@ -52,7 +52,13 @@ public class ClientEvents {
     static boolean showingInventory;
     static HashMap<UUID, Boolean> warnings = new HashMap<>();
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
-    static HashMultimap<UUID, ResourceLocation> skinCache = HashMultimap.create(1, 3);
+    /**
+     * Default skins
+     */
+    static HashMultimap<String, ResourceLocation> skinCache = HashMultimap.create(1, 3);
+    /**
+     * Skins by name
+     */
     static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
     /**
      * Instance used for rendering first-person dragon model
@@ -285,42 +291,28 @@ public class ClientEvents {
     private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
         ResourceLocation texture;
         UUID playerUniqueID = player.getUniqueID();
-        Optional<ResourceLocation> optionalResourceLocation = skinCache.get(playerUniqueID).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
-        if (optionalResourceLocation.isPresent()) {
-            texture = optionalResourceLocation.get();
-            return texture;
+        final String playerName = player.getGameProfile().getName();
+
+        Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name)+"")).findFirst();
+        if (skinForName.isPresent()) {
+            return skinForName.get();
         } else {
-            Optional<ResourceLocation> skinForName = skinCacheForName.get(player.getGameProfile().getName()).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name) + "")).findFirst();
-            if (skinForName.isPresent()) {
-                texture = skinForName.get();
-                return texture;
-            } else {
-                Optional<ResourceLocation> defSkin = skinCache.get(playerUniqueID).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
-                if (defSkin.isPresent()) {
-                    texture = defSkin.get();
-                    return texture;
+            Optional<ResourceLocation> defSkin = skinCache.get(playerName).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
+            if (defSkin.isPresent()) {
+                return defSkin.get();
+            }
+
+            try {
+                texture = ClientModEvents.loadCustomSkinForName(player, dragonStage);
+                skinCacheForName.put(playerName, texture);
+            } catch (IOException e) {
+                if (warningsForName.get(playerName) == null) {
+                    DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", playerName);
+                    warningsForName.put(playerName, true);
                 }
-                try {
-                    texture = ClientModEvents.loadCustomSkin(player, dragonStage);
-                    skinCache.put(playerUniqueID, texture);
-                } catch (IOException ioException) {
-                    try {
-                        texture = ClientModEvents.loadCustomSkinForName(player, dragonStage);
-                        skinCacheForName.put(player.getGameProfile().getName(), texture);
-                        if (warningsForName.get(player.getGameProfile().getName()) == null) {
-                            DragonSurvivalMod.LOGGER.warn("No UUID-based skin for {}", player.getName().getString());
-                            warningsForName.put(player.getGameProfile().getName(), true);
-                        }
-                    } catch (IOException e) {
-                        if (warnings.get(playerUniqueID) == null) {
-                            DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", playerUniqueID);
-                            warnings.put(playerUniqueID, true);
-                        }
-                    } finally {
-                        texture = constructTexture(cap.getType(), dragonStage);
-                        skinCache.put(playerUniqueID, texture);
-                    }
-                }
+            } finally {
+                texture = constructTexture(cap.getType(), dragonStage);
+                skinCache.put(playerName, texture);
             }
         }
         return texture;
