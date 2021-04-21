@@ -101,33 +101,33 @@ public class ClientEvents {
                 if (renderHandEvent.getItemStack().isEmpty())
                     renderHandEvent.setCanceled(true);
                 MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
-                eventMatrixStack.push();
-                float partialTicks = renderHandEvent.getPartialTicks();
-                float playerYaw = player.getYaw(partialTicks);
-                float playerPitch = player.getPitch(partialTicks);
-                ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
-                eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
-                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
-                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
-                eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
-                eventMatrixStack.translate(0, -2, -1);
-                IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
-                int light = renderHandEvent.getLight();
-
-                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon2);
-                dummyDragon2.copyLocationAndAnglesFrom(player);
-                dragonModel.setCurrentTexture(texture);
-                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
-                if (neckandHead != null)
-                    neckandHead.setHidden(true);
-                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
-                if (leftwing != null)
-                    leftwing.setHidden(!playerStateHandler.hasWings());
-                if (rightWing != null)
-                    rightWing.setHidden(!playerStateHandler.hasWings());
                 try {
+                    eventMatrixStack.push();
+                    float partialTicks = renderHandEvent.getPartialTicks();
+                    float playerYaw = player.getYaw(partialTicks);
+                    float playerPitch = player.getPitch(partialTicks);
+                    ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
+                    eventMatrixStack.rotate(Vector3f.XP.rotationDegrees(player.rotationPitch));
+                    eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(180));
+                    eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(player.rotationYaw));
+                    eventMatrixStack.rotate(Vector3f.YP.rotationDegrees(-bodyYaw));
+                    eventMatrixStack.translate(0, -2, -1);
+                    IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
+//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
+                    int light = renderHandEvent.getLight();
+
+                    EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon2);
+                    dummyDragon2.copyLocationAndAnglesFrom(player);
+                    dragonModel.setCurrentTexture(texture);
+                    final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                    if (neckandHead != null)
+                        neckandHead.setHidden(true);
+                    final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
+                    final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                    if (leftwing != null)
+                        leftwing.setHidden(!playerStateHandler.hasWings());
+                    if (rightWing != null)
+                        rightWing.setHidden(!playerStateHandler.hasWings());
                     dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                     eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
@@ -140,12 +140,11 @@ public class ClientEvents {
                     ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
                     dragonModel.setCurrentTexture(boots);
                     dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                    eventMatrixStack.translate(0, 0, 0.15);
+                    eventMatrixStack.pop();
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
-                eventMatrixStack.translate(0, 0, 0.15);
-                eventMatrixStack.pop();
-
             }
         });
         isRenderingFirstPerson = false;
@@ -221,40 +220,41 @@ public class ClientEvents {
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
-                matrixStack.push();
-                matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
-                float maxHealth = player.getMaxHealth();
-                float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
-                matrixStack.scale(scale, scale, scale);
-                int eventLight = renderPlayerEvent.getLight();
 
-                DragonEntity dummyDragon = playerDragonHashMap.get(player.getEntityId());
-                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
-                dummyDragon.copyLocationAndAnglesFrom(player);
-                dragonModel.setCurrentTexture(texture);
-                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
-                if (leftwing != null)
-                    leftwing.setHidden(!cap.hasWings());
-                if (rightWing != null)
-                    rightWing.setHidden(!cap.hasWings());
-                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
-                if (neckHead != null)
-                    neckHead.setHidden(false);
-                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
-                if (player.isCrouching()) {
-                    switch (dragonStage) {
-                        case ADULT:
-                            matrixStack.translate(0, 0.2, 0);
-                            break;
-                        case YOUNG:
-                            matrixStack.translate(0, 0.25, 0);
-                            break;
-                        case BABY:
-                            matrixStack.translate(0, 0.3, 0);
-                    }
-                }
                 try {
+                    matrixStack.push();
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
+                    float maxHealth = player.getMaxHealth();
+                    float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+                    matrixStack.scale(scale, scale, scale);
+                    int eventLight = renderPlayerEvent.getLight();
+
+                    DragonEntity dummyDragon = playerDragonHashMap.get(player.getEntityId());
+                    EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getRenderManager().getRenderer(dummyDragon);
+                    dummyDragon.copyLocationAndAnglesFrom(player);
+                    dragonModel.setCurrentTexture(texture);
+                    final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
+                    final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+                    if (leftwing != null)
+                        leftwing.setHidden(!cap.hasWings());
+                    if (rightWing != null)
+                        rightWing.setHidden(!cap.hasWings());
+                    IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+                    if (neckHead != null)
+                        neckHead.setHidden(false);
+                    final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
+                    if (player.isCrouching()) {
+                        switch (dragonStage) {
+                            case ADULT:
+                                matrixStack.translate(0, 0.2, 0);
+                                break;
+                            case YOUNG:
+                                matrixStack.translate(0, 0.25, 0);
+                                break;
+                            case BABY:
+                                matrixStack.translate(0, 0.3, 0);
+                        }
+                    }
                     //FIXME crashes here
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
@@ -273,19 +273,19 @@ public class ClientEvents {
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                    ItemStack right = player.getHeldItemMainhand();
+                    matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
+                    matrixStack.translate(-0.45f, 1, 0);
+                    final int combinedOverlayIn = LivingRenderer.getPackedOverlay(player, 0);
+                    itemRenderer.renderItem(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    ItemStack left = player.getHeldItemOffhand();
+                    matrixStack.translate(0.9, 0, 0);
+                    itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    matrixStack.pop();
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                ItemStack right = player.getHeldItemMainhand();
-                matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
-                matrixStack.translate(-0.45f, 1, 0);
-                final int combinedOverlayIn = LivingRenderer.getPackedOverlay(player, 0);
-                itemRenderer.renderItem(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
-                ItemStack left = player.getHeldItemOffhand();
-                matrixStack.translate(0.9, 0, 0);
-                itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
-                matrixStack.pop();
             }
         });
         isRenderingThirdPerson = false;
