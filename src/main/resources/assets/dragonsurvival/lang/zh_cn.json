@@ -1,0 +1,43 @@
+{
+  "itemGroup.dragon.survival.blocks": "Dragons Survival",
+
+  "entity.dragonsurvival.magical_predator_entity": "魔法猎食者",
+
+  "item.dragonsurvival.magical_predator_entity_spawn_egg": "生成魔法猎食者",
+  "item.dragonsurvival.heart_element": "心之素",
+  "item.dragonsurvival.star_bone": "星骨",
+  "item.dragonsurvival.elder_dragon_bone": "古龙之骨",
+  "item.dragonsurvival.charged_coal": "充能煤",
+  "item.dragonsurvival.charred_meat": "焦肉",
+  "item.dragonsurvival.elder_dragon_dust": "古龙之尘",
+
+  "block.dragonsurvival.dragon_gate": "龙门",
+  "block.dragonsurvival.predator_star": "猎食之星",
+  "block.dragonsurvival.dragon_altar": "神龙祭坛",
+  "block.dragonsurvival.cave_nest_small": "小型洞穴龙巢",
+  "block.dragonsurvival.forest_nest_small": "小型森林龙巢",
+  "block.dragonsurvival.water_nest_small": "小型海洋龙巢",
+  "block.dragonsurvival.medium_sea_nest": "中型海洋龙巢",
+  "block.dragonsurvival.medium_cave_nest": "中型洞穴龙巢",
+  "block.dragonsurvival.medium_forest_nest": "中型森林龙巢",
+  "block.dragonsurvival.big_forest_nest": "大型森林龙巢",
+  "block.dragonsurvival.big_sea_nest": "大型海洋龙巢",
+  "block.dragonsurvival.big_cave_nest": "大型洞穴龙巢",
+  "block.dragonsurvival.dragon_altar1": "橡木神龙祭坛",
+  "block.dragonsurvival.dragon_altar2": "石头神龙祭坛",
+  "block.dragonsurvival.dragon_altar3": "砂岩神龙祭坛",
+  "block.dragonsurvival.dragon_altar0": "苔覆神龙祭坛",
+
+  "dragonsurvival:config.category.general.tooltip": "龙之生存常规配置选项",
+  "dragonsurvival:config.category.spawnchances.tooltip": "实体可配置生成机会",
+
+  "ds.cave_dragon_choice": "你选择成为一只洞穴龙。",
+  "ds.forest_dragon_choice": "你选择成为一只森林龙。",
+  "ds.sea_dragon_choice": "你选择成为一只海洋龙。",
+  "ds.choice_human": "你选择成为一名人类。",
+  "ds.wings.enabled": "你伸展开了你的翅膀",
+  "ds.wings.disabled": "你收起了你的翅膀",
+  "ds.you.have.no.wings": "你还没有翅膀",
+  "ds.dragon.grants.wings": "<末影龙> 我已经赐予你了翅膀，现在离开我的地盘！",
+  "ds.space.occupied": "周围没有足够的空间"
+}

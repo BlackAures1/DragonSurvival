@@ -1,0 +1,43 @@
+{
+  "itemGroup.dragon.survival.blocks": "Dragons Survival",
+
+  "entity.dragonsurvival.magical_predator_entity": "Магический хищник",
+
+  "item.dragonsurvival.magical_predator_entity_spawn_egg": "Яйцо призыва магического хищника",
+  "item.dragonsurvival.heart_element": "Элемент сердца",
+  "item.dragonsurvival.star_bone": "Звёздная кость",
+  "item.dragonsurvival.elder_dragon_bone": "Кость древнего дракона",
+  "item.dragonsurvival.charged_coal": "Заряженный уголь",
+  "item.dragonsurvival.charred_meat": "Обугленное мясо",
+  "item.dragonsurvival.elder_dragon_dust": "Пыль древнего дракона",
+
+  "block.dragonsurvival.dragon_gate": "Драконья дверь",
+  "block.dragonsurvival.predator_star": "Звезда хищника",
+  "block.dragonsurvival.dragon_altar": "Алтарь Драконов",
+  "block.dragonsurvival.cave_nest_small": "Маленькое пещерное гнездо",
+  "block.dragonsurvival.forest_nest_small": "Маленькое лесное гнездо",
+  "block.dragonsurvival.water_nest_small": "Маленькое морское гнездо",
+  "block.dragonsurvival.medium_sea_nest": "Среднее морское гнездо",
+  "block.dragonsurvival.medium_cave_nest": "Среднее пещерное гнездо",
+  "block.dragonsurvival.medium_forest_nest": "Среднее лесное гнездо",
+  "block.dragonsurvival.big_forest_nest": "Большое лесное гнездо",
+  "block.dragonsurvival.big_sea_nest": "Большое морское гнездо",
+  "block.dragonsurvival.big_cave_nest": "Большое пещерное гнездо",
+  "block.dragonsurvival.dragon_altar1": "Древесный алтарь драконов",
+  "block.dragonsurvival.dragon_altar2": "Каменный алтарь драконов",
+  "block.dragonsurvival.dragon_altar3": "Песчаный алтарь драконов",
+  "block.dragonsurvival.dragon_altar0": "Замшелый алтарь драконов",
+
+  "dragonsurvival:config.category.general.tooltip": "Общие параметры конфигурации для Dragons Survival",
+  "dragonsurvival:config.category.spawnchances.tooltip": "Настройка спавна сущностей",
+
+  "ds.cave_dragon_choice": "Вы стали пещерным драконом.",
+  "ds.forest_dragon_choice": "Вы стали лесным драконом.",
+  "ds.sea_dragon_choice": "Вы стали морским драконом.",
+  "ds.choice_human": "Вы стали человеком.",
+  "ds.wings.enabled": "Крылья расправлены",
+  "ds.wings.disabled": "Крылья сложены",
+  "ds.you.have.no.wings": "У вас ещё нет крыльев",
+  "ds.dragon.grants.wings": "<Ender dragon> Я дарю тебе крылья. А теперь убирайся отсюда!",
+  "ds.space.occupied": "Нет свободного места для увеличения размера"
+}

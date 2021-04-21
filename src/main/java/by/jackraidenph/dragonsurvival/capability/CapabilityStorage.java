@@ -30,20 +30,18 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
         CompoundNBT tag = new CompoundNBT();
         tag.putBoolean("isDragon", instance.isDragon());
         if (instance.isDragon()) {
-            instance.getMovementData().ifPresent(data -> {
-                        tag.putDouble("bodyYaw", data.bodyYaw);
-                        tag.putDouble("headYaw", data.headYaw);
-                        tag.putDouble("headPitch", data.headPitch);
-                        tag.put("headPos", writeVec3d(data.headPos));
-                        tag.put("tailPos", writeVec3d(data.tailPos));
-                    }
-            );
+            DragonStateHandler.DragonMovementData movementData = instance.getMovementData();
+
+            tag.putDouble("bodyYaw", movementData.bodyYaw);
+            tag.putDouble("headYaw", movementData.headYaw);
+            tag.putDouble("headPitch", movementData.headPitch);
+
             tag.putBoolean("isHiding", instance.isHiding());
             tag.putString("type", instance.getType().toString());
-            tag.putInt("level", instance.getLevel().ordinal());
+            tag.putString("level", instance.getLevel().toString());
+            tag.putFloat("Health", instance.getHealth());
+            tag.putBoolean("Has wings", instance.hasWings());
         }
-        instance.syncCapabilityData(true);
-        instance.syncMovement(true);
         return tag;
     }
 
@@ -52,19 +50,17 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
         CompoundNBT tag = (CompoundNBT) base;
         instance.setIsDragon(tag.getBoolean("isDragon"));
         if (tag.getBoolean("isDragon")) {
-            instance.setMovementData(
-                    new DragonStateHandler.DragonMovementData(
-                            tag.getDouble("bodyYaw"),
-                            tag.getDouble("headYaw"),
-                            tag.getDouble("headPitch"),
-                            getVec3d(tag.get("headPos")),
-                            getVec3d(tag.get("tailPos"))
-                    ), true);
+            instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"),
+                    tag.getDouble("headPitch"));
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
-            instance.setLevel(DragonLevel.values()[tag.getInt("level")]);
+            String level = tag.getString("level");
+            if (level.isEmpty())
+                instance.setLevel(DragonLevel.BABY);
+            else
+                instance.setLevel(DragonLevel.valueOf(level));
+            instance.setHealth(tag.getFloat("Health"));
+            instance.setHasWings(tag.getBoolean("Has wings"));
         }
-        instance.syncCapabilityData(true);
-        instance.syncMovement(true);
     }
 }

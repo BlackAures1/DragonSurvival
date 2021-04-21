@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HHH",
+    "OOO",
+    " R "
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "H": {
+      "item": "dragonsurvival:heart_element"
+    },
+    "R": {
+      "item": "minecraft:diamond_ore"
+    }
+  },
+  "result": {
+    "item": "dragonsurvival:water_nest_small"
+  }
+}

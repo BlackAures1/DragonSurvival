@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "dragonsurvival:block/dragon_altar_top_oak",
+    "east": "dragonsurvival:block/dragon_altar_side1_oak",
+    "west": "dragonsurvival:block/dragon_altar_side2_oak",
+    "north": "dragonsurvival:block/dragon_altar_side3_oak",
+    "south": "dragonsurvival:block/dragon_altar_side4_oak",
+    "up": "dragonsurvival:block/dragon_altar_top_oak",
+    "down": "dragonsurvival:block/dragon_altar_top_oak"
+  }
+}

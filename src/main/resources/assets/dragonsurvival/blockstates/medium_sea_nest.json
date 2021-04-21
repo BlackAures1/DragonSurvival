@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "dragonsurvival:block/medium_sea_nest",
+      "x": 0
+    },
+    "facing=south": {
+      "model": "dragonsurvival:block/medium_sea_nest",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "dragonsurvival:block/medium_sea_nest",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "dragonsurvival:block/medium_sea_nest",
+      "y": 270
+    }
+  }
+}

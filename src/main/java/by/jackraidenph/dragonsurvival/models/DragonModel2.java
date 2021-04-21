@@ -1,18 +1,14 @@
 package by.jackraidenph.dragonsurvival.models;
 
 import by.jackraidenph.dragonsurvival.Functions;
-import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
-import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
-
+@Deprecated
 public class DragonModel2 extends EntityModel<Entity> {
     public final ModelRenderer LeftFrontLeg;
     public final ModelRenderer Forearm1;
@@ -376,37 +372,34 @@ public class DragonModel2 extends EntityModel<Entity> {
 
     @Override
     public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (entity.onGround || entity.isSwimming()) {
+            LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        LeftFrontLeg.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+            RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        RightFrontLeg.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+            Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        Leg3.rotateAngleX = Functions.getDefaultXLeftLimbRotation(limbSwing, limbSwingAmount) / 2;
+            Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
 
-        Leg4.rotateAngleX = Functions.getDefaultXRightLimbRotation(limbSwing, limbSwingAmount) / 2;
+            float speed = ageInTicks / 20;
+            //start
+            Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
+            Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
+            Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
+            Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
+            Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
 
-        float speed = ageInTicks / 20;
-        //start
-        Tail1.rotateAngleX = MathHelper.cos(speed) / 6;
-        Tail2.rotateAngleX = MathHelper.sin(speed) / 12;
-        Tail3.rotateAngleX = MathHelper.cos(speed) / 12;
-        Tail4.rotateAngleX = MathHelper.sin(speed) / 12;
-        Tail5.rotateAngleX = MathHelper.cos(speed) / 12;
-
-        lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
-
-        Neckand_3.rotateAngleZ = -(float) ((netHeadYaw + ClientEvents.neckYaw) * Math.PI / 180.0F);
+            lower_jaw.rotateAngleX = MathHelper.sin(speed * 1.5f) / 12 + Functions.degreesToRadians(5);
+        }
+        if(entity.getMotion().x!=0 || entity.getMotion().z!=0)
+            Neckand_3.rotateAngleZ=0;
+//        else
+//            Neckand_3.rotateAngleZ = -(float) ((netHeadYaw) * Math.PI / 180.0F);
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.push();
-        if (!firstPerson) {
-            PlayerEntity playerEntity = Minecraft.getInstance().player;
-            float maxHealth = playerEntity.getMaxHealth();
-            float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
-            matrixStack.scale(scale, scale, scale);
-        }
         matrixStack.translate(0, 1.5, 0);
         matrixStack.rotate(new Quaternion(180, 0, 0, true));
         LeftFrontLeg.render(matrixStack, buffer, packedLight, packedOverlay);

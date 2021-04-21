@@ -1,10 +1,10 @@
 package by.jackraidenph.dragonsurvival;
 
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-import by.jackraidenph.dragonsurvival.capability.PlayerStateProvider;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
-import by.jackraidenph.dragonsurvival.network.*;
+import by.jackraidenph.dragonsurvival.network.PacketSyncPredatorStats;
+import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
+import by.jackraidenph.dragonsurvival.network.SynchronizeNest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -16,81 +16,59 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
-
+@Deprecated
 public class ClientProxy implements Proxy {
 
     @Override
-    public DistExecutor.SafeRunnable syncMovement(PacketSyncCapabilityMovement m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            if (Minecraft.getInstance().player != null)
-                PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> cap.setMovementData(new DragonStateHandler.DragonMovementData(m.bodyYaw, m.headYaw, m.headPitch, m.headPos, m.tailPos), false));
-        };
-    }
+    public void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
 
-    @Override
-    public DistExecutor.SafeRunnable syncCapability(PacketSyncCapability packetSyncCapability, Supplier<NetworkEvent.Context> supplier) {
-        if (Minecraft.getInstance().player != null) {
-            PlayerStateProvider.getCap(Minecraft.getInstance().player).ifPresent(cap -> {
-                cap.setIsDragon(packetSyncCapability.isDragon);
-                cap.setType(packetSyncCapability.type);
-                cap.setLevel(packetSyncCapability.level);
-            });
+        World world = Minecraft.getInstance().world;
+        if (world != null) {
+            ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntityByID(m.xp));
+            MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntityByID(m.entity);
+            if (xpOrb != null && entity != null) {
+                entity.size += xpOrb.getXpValue() / 100.0F;
+                entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
+                world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
+                xpOrb.remove();
+                supplier.get().setPacketHandled(true);
+            }
         }
-        return null;
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            World world = Minecraft.getInstance().world;
-            if (world != null) {
-                ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntityByID(m.xp));
-                MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntityByID(m.entity);
-                if (xpOrb != null && entity != null) {
-                    entity.size += xpOrb.getXpValue() / 100.0F;
-                    entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
-                    world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
-                    xpOrb.remove();
-                }
+    public void syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
+
+        World world = Minecraft.getInstance().world;
+        if (world != null) {
+            Entity entity = world.getEntityByID(m.id);
+            if (entity != null) {
+                ((MagicalPredatorEntity) entity).size = m.size;
+                ((MagicalPredatorEntity) entity).type = m.type;
+                supplier.get().setPacketHandled(true);
             }
-        };
+        }
     }
 
     @Override
-    public DistExecutor.SafeRunnable syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
-        return () -> {
-            World world = Minecraft.getInstance().world;
-            if (world != null) {
-                Entity entity = world.getEntityByID(m.id);
-                if (entity != null) {
-                    ((MagicalPredatorEntity) entity).size = m.size;
-                    ((MagicalPredatorEntity) entity).type = m.type;
-                }
-            }
-        };
-    }
-
-    @Override
-    public DistExecutor.SafeRunnable syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
+    public void syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
         PlayerEntity player = Minecraft.getInstance().player;
         ClientWorld world = Minecraft.getInstance().world;
         TileEntity entity = world.getTileEntity(synchronizeNest.pos);
         if (entity instanceof NestEntity) {
             NestEntity nestEntity = (NestEntity) entity;
-            nestEntity.health = synchronizeNest.health;
+            nestEntity.energy = synchronizeNest.health;
             nestEntity.damageCooldown = synchronizeNest.cooldown;
             nestEntity.markDirty();
-            if (nestEntity.health <= 0) {
+            if (nestEntity.energy <= 0) {
                 world.playSound(player, synchronizeNest.pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1, 1);
             } else {
                 world.playSound(player, synchronizeNest.pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
             }
+            contextSupplier.get().setPacketHandled(true);
         }
-        contextSupplier.get().setPacketHandled(true);
-        return null;
     }
 }

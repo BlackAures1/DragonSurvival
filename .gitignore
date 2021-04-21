@@ -24,3 +24,6 @@ server
 
 # Files from Forge MDK
 forge*changelog.txt
+/server/
+run2
+logs

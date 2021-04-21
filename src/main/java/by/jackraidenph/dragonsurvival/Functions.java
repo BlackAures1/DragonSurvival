@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.math.MathHelper;
 
 public class Functions {
@@ -30,8 +30,18 @@ public class Functions {
         return (float) (degrees * Math.PI / 180);
     }
 
-    public static void blit(Screen screen, int startX, int startY, float textureX, float textureY, int width, int height, int sizeX, int sizeY) {
-        screen.blit(startX, startY, textureX, textureY, width, height, sizeX, sizeY);
+    /**
+     * @param startX   relative to left
+     * @param startY   relative to top
+     * @param textureX
+     * @param textureY
+     * @param width
+     * @param height
+     * @param sizeX    relative width
+     * @param sizeY    relative height
+     */
+    public static void blit(int startX, int startY, float textureX, float textureY, int width, int height, int sizeX, int sizeY) {
+        AbstractGui.blit(startX, startY, textureX, textureY, width, height, sizeX, sizeY);
     }
 
 }

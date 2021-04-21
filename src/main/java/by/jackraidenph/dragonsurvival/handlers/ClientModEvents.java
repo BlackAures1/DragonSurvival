@@ -1,6 +1,8 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.gecko.DragonModel;
+import by.jackraidenph.dragonsurvival.gecko.DragonRenderer;
 import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
@@ -14,6 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,14 +36,10 @@ import java.net.URL;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@SuppressWarnings("unused")
 public class ClientModEvents {
-    /**
-     * Whether all three custom skins exist
-     */
-    public static boolean customSkinPresence;
-    public static ResourceLocation customNewbornSkin;
-    public static ResourceLocation customYoungSkin;
-    public static ResourceLocation customAdultSkin;
+
+    public static KeyBinding TOGGLE_WINGS;
 
     public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
 
@@ -55,12 +55,23 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void setupClient(final FMLClientSetupEvent event) {
         RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.mediumCaveNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.mediumForestNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.mediumSeaNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigCaveNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigForestNest, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.bigSeaNest, RenderType.getCutout());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();
 
         ScreenManager.registerFactory(Containers.nestContainer, NestScreen::new);
         ScreenManager.registerFactory(Containers.dragonContainer, DragonScreen::new);
+
+        TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
+        ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
     }
 
     /**
