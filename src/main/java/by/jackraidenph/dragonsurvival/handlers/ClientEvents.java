@@ -127,19 +127,22 @@ public class ClientEvents {
                     leftwing.setHidden(!playerStateHandler.hasWings());
                 if (rightWing != null)
                     rightWing.setHidden(!playerStateHandler.hasWings());
-                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                try {
+                    dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
-                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
-                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-                dragonModel.setCurrentTexture(chestplate);
-                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
-                ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-                dragonModel.setCurrentTexture(legs);
-                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
-                ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
-                dragonModel.setCurrentTexture(boots);
-                dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
-
+                    eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
+                    ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
+                    dragonModel.setCurrentTexture(chestplate);
+                    dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                    ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
+                    dragonModel.setCurrentTexture(legs);
+                    dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                    ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
+                    dragonModel.setCurrentTexture(boots);
+                    dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
                 eventMatrixStack.translate(0, 0, 0.15);
                 eventMatrixStack.pop();
 
