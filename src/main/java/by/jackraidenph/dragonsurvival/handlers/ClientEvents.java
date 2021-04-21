@@ -293,7 +293,7 @@ public class ClientEvents {
         UUID playerUniqueID = player.getUniqueID();
         final String playerName = player.getGameProfile().getName();
 
-        Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(dragonStage.name)+"")).findFirst();
+        Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(playerName.toLowerCase()+"_"+dragonStage.name)+"")).findFirst();
         if (skinForName.isPresent()) {
             return skinForName.get();
         } else {

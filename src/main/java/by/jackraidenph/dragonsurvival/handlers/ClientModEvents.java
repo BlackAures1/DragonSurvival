@@ -122,7 +122,7 @@ public class ClientModEvents {
         InputStream inputStream = url.openConnection().getInputStream();
         NativeImage customTexture = NativeImage.read(inputStream);
         ResourceLocation resourceLocation;
-        Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
+        Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name), new DynamicTexture(customTexture));
         return resourceLocation;
     }
 }
