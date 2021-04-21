@@ -125,36 +125,4 @@ public class ClientModEvents {
         Minecraft.getInstance().getTextureManager().loadTexture(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
         return resourceLocation;
     }
-
-    /**
-     * Loads a custom image for skin from the root directory. The image name must be [player's name]_[stage].png or [player's UUID]_[stage].png
-     *
-     * @param dragonStage <b>newborn</b>, <b>young</b> or <b>adult</b>
-     * @return usable resourceLocation of the image
-     */
-    @SuppressWarnings("unused")
-    private static ResourceLocation loadCustomSkin(Minecraft minecraft, String dragonStage) {
-        GameProfile gameProfile = minecraft.getSession().getProfile();
-        try {
-            ResourceLocation skinLocation;
-            String name = gameProfile.getName();
-            String uuid = gameProfile.getId().toString();
-            NativeImage customTexture = null;
-            File fileNameA = new File(minecraft.gameDir, name + "_" + dragonStage + ".png");
-            File fileNameB = new File(minecraft.gameDir, uuid + "_" + dragonStage + ".png");
-            if (fileNameA.exists())
-                customTexture = NativeImage.read(new FileInputStream(fileNameA));
-            else if (fileNameB.exists()) {
-                customTexture = NativeImage.read(new FileInputStream(fileNameB));
-            }
-            if (customTexture != null) {
-                minecraft.getTextureManager().loadTexture(skinLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage), new DynamicTexture(customTexture));
-                return skinLocation;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }
