@@ -67,11 +67,6 @@ public class MagicalPredatorEntity extends MonsterEntity {
     }
 
     @Override
-    public boolean preventDespawn() {
-        return true;
-    }
-
-    @Override
     protected void onDeathUpdate() {
         super.onDeathUpdate();
         if (this.deathTime == 19) {
