@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber
+@SuppressWarnings("unused")
 public class SynchronizationController {
 
     /**
@@ -25,7 +26,6 @@ public class SynchronizationController {
         //send the capability to everyone
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon(), cap.getHealth(), cap.hasWings()));
-            DragonSurvivalMod.LOGGER.info("{} {}", player.getDisplayName().getString(), cap.getLevel());
         });
         //receive capability from others
         loggedInEvent.getPlayer().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
