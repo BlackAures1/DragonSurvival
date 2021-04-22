@@ -20,9 +20,8 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 @Deprecated
-public class ClientProxy implements Proxy {
+public class ClientProxy {
 
-    @Override
     public void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
 
         World world = Minecraft.getInstance().world;
@@ -39,7 +38,6 @@ public class ClientProxy implements Proxy {
         }
     }
 
-    @Override
     public void syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
 
         World world = Minecraft.getInstance().world;
@@ -53,7 +51,6 @@ public class ClientProxy implements Proxy {
         }
     }
 
-    @Override
     public void syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
         PlayerEntity player = Minecraft.getInstance().player;
         ClientWorld world = Minecraft.getInstance().world;
