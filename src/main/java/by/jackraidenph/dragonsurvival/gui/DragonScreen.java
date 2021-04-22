@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
@@ -136,14 +135,6 @@ public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implemen
         int offSet = 30;
         this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width + offSet, this.xSize);
         this.children.add(this.recipeBookGui);
-        this.setFocusedDefault(this.recipeBookGui);
-        this.addButton(new ImageButton(guiLeft + this.xSize - offSet, guiTop + ySize - 26, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (p_214086_1_) -> {
-            this.recipeBookGui.initSearchBar(this.widthTooNarrow);
-            this.recipeBookGui.toggleVisibility();
-            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width + offSet, this.xSize);
-            ((ImageButton) p_214086_1_).setPosition(this.guiLeft + this.xSize - offSet, guiTop + ySize - 26);
-            this.buttonClicked = true;
-        }));
     }
 
     public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
