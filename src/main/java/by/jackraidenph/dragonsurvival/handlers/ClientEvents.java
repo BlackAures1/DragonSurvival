@@ -144,6 +144,8 @@ public class ClientEvents {
                     eventMatrixStack.pop();
                 } catch (Throwable e) {
                     e.printStackTrace();
+                } finally {
+                    eventMatrixStack.pop();
                 }
             }
         });
@@ -285,6 +287,8 @@ public class ClientEvents {
                     matrixStack.pop();
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
+                } finally {
+                    matrixStack.pop();
                 }
             }
         });
