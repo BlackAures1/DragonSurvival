@@ -1,17 +1,15 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -89,31 +87,8 @@ public class PredatorStarBlock extends Block {
         return 1;
     }
 
-    public static class CallEntity extends Goal {
-
-        CreatureEntity entity;
-        BlockPos pos;
-
-        public CallEntity(CreatureEntity entityIn, BlockPos posIn) {
-            this.entity = entityIn;
-            this.pos = posIn;
-        }
-
-        @Override
-        public boolean shouldContinueExecuting() {
-            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
-        }
-
-        @Override
-        public void startExecuting() {
-            super.startExecuting();
-            this.entity.getNavigator().tryMoveToXYZ(pos.getX(), pos.getY(), pos.getZ(), 0.88);
-        }
-
-        @Override
-        public boolean shouldExecute() {
-            return entity.world.getBlockState(pos).getBlock() == BlockInit.PREDATOR_STAR_BLOCK;
-        }
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.IGNORE;
     }
-
 }
