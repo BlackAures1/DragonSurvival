@@ -251,18 +251,16 @@ public class DragonSurvivalMod {
                                     e.printStackTrace();
                                 }
                                 ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                                if (!ClientEvents.isRenderingFirstPerson) {
-                                    ClientEvents.dummyDragon2 = EntityTypesInit.dragonEntity.create(myPlayer.world);
-                                    ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+                                ClientEvents.dummyDragon2 = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+
+                                PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
+                                if (thatPlayer != null) {
+                                    DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
+                                    dragonEntity.player = thatPlayer.getEntityId();
+                                    ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
                                 }
-                                if (!ClientEvents.isRenderingThirdPerson) {
-                                    PlayerEntity thatPlayer = (PlayerEntity) myPlayer.world.getEntityByID(refreshDragons.playerId);
-                                    if (thatPlayer != null) {
-                                        DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
-                                        dragonEntity.player = thatPlayer.getEntityId();
-                                        ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
-                                    }
-                                }
+
                             });
                             thread.start();
                         });

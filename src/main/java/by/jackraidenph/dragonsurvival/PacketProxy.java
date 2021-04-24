@@ -63,7 +63,7 @@ public class PacketProxy {
             if (myPlayer != null) {
                 World world = myPlayer.world;
 
-                if (ClientEvents.dummyDragon2 != null && !ClientEvents.isRenderingFirstPerson) {
+                if (ClientEvents.dummyDragon2 != null) {
                     ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
                 }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
@@ -79,7 +79,7 @@ public class PacketProxy {
                             FlightController.wingsEnabled = false;
                     });
                     //refresh instances
-                    if (thatPlayer != myPlayer && !ClientEvents.isRenderingThirdPerson) {
+                    if (thatPlayer != myPlayer) {
                         DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                         dragonEntity.player = thatPlayer.getEntityId();
                         ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
