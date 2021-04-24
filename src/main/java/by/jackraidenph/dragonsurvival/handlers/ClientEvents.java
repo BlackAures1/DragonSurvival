@@ -141,7 +141,6 @@ public class ClientEvents {
                     dragonModel.setCurrentTexture(boots);
                     dragonRenderer.render(dummyDragon2, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                     eventMatrixStack.translate(0, 0, 0.15);
-                    eventMatrixStack.pop();
                 } catch (Throwable e) {
                     e.printStackTrace();
                 } finally {
@@ -284,7 +283,6 @@ public class ClientEvents {
                     ItemStack left = player.getHeldItemOffhand();
                     matrixStack.translate(0.9, 0, 0);
                     itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
-                    matrixStack.pop();
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 } finally {
