@@ -64,7 +64,7 @@ public class PacketProxy {
                 World world = myPlayer.world;
 
                 if (ClientEvents.dummyDragon2 != null) {
-                    ClientEvents.dummyDragon2.player = myPlayer.getEntityId();
+                    ClientEvents.dummyDragon2.get().player = myPlayer.getEntityId();
                 }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
 
@@ -82,7 +82,7 @@ public class PacketProxy {
                     if (thatPlayer != myPlayer) {
                         DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                         dragonEntity.player = thatPlayer.getEntityId();
-                        ClientEvents.playerDragonHashMap.put(thatPlayer.getEntityId(), dragonEntity);
+                        ClientEvents.playerDragonHashMap.get(thatPlayer.getEntityId()).getAndSet(dragonEntity);
                     }
                 }
                 context.get().setPacketHandled(true);
