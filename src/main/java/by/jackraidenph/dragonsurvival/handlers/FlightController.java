@@ -79,7 +79,7 @@ public class FlightController {
                             motion = motion.add(ax, ay, az);
                         }
                         playerEntity.setMotion(motion.mul(0.99F, 0.98F, 0.99F));
-
+                        playerEntity.fallDistance = 0;
                     } else {
                         ax = 0;
                         az = 0;
