@@ -8,10 +8,11 @@ import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -26,12 +27,13 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.UUID;
 
@@ -72,6 +74,20 @@ public class ClientModEvents {
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
+
+        if (ConfigurationHandler.disableClientHandlerSpam.get()) {
+            Field loggerfield = ClientPlayNetHandler.class.getDeclaredFields()[0];
+            loggerfield.setAccessible(true);
+            if (loggerfield.getType() == Logger.class) {
+                try {
+                    Logger logger = (Logger) loggerfield.get(ClientPlayNetHandler.class);
+                    if (logger instanceof org.apache.logging.log4j.core.Logger)
+                        ((org.apache.logging.log4j.core.Logger) logger).setLevel(Level.ERROR);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

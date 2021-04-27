@@ -16,6 +16,7 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.DoubleValue maxFlightSpeed;
     public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
+    public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
 
     public static class General {
 
@@ -24,6 +25,7 @@ public class ConfigurationHandler {
             maxFlightSpeed = builder.defineInRange("Flight speed limiter", 0.3, 0.1, 1);
             predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
+            disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
             builder.pop();
 
         }
