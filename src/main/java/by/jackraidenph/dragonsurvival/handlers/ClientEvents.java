@@ -258,7 +258,6 @@ public class ClientEvents {
                                 matrixStack.translate(0, 0.3, 0);
                         }
                     }
-                    //FIXME crashes here
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
