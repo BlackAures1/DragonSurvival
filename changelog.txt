@@ -2,6 +2,7 @@
 disable NPE spam;
 command 'dragon' requires permission 4;
 dragons can't ride pigs;
+fix crash when Shift + clicking in nest GUI;
 
 0.0.29:
 neutralized crashes

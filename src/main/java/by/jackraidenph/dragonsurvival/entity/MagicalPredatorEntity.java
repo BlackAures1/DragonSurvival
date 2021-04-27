@@ -36,6 +36,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
     public int type;
     public float size;
     private final float scale;
+    private int teleportationCoolDown;
 
     public MagicalPredatorEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
@@ -78,14 +79,13 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     public void livingTick() {
         super.livingTick();
-        this.world.addParticle(
-                ParticleTypes.SMOKE,
+        this.world.addParticle(ParticleTypes.SMOKE,
                 this.getPosX() + this.world.getRandom().nextFloat() * 1.25 - 0.75F,
                 this.getPosY() + this.getHeight() / 1.5F * scale,
-                this.getPosZ() + this.world.getRandom().nextFloat() * 1.25 - 0.75F,
-                0,
-                this.world.getRandom().nextFloat() / 12.5f,
-                0);
+                this.getPosZ() + this.world.getRandom().nextFloat() * 1.25 - 0.75F, 0,
+                this.world.getRandom().nextFloat() / 12.5f, 0);
+        if (teleportationCoolDown > 0)
+            teleportationCoolDown--;
     }
 
     @Override
@@ -133,6 +133,19 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     public double getMountedYOffset() {
         return (this.getHeight() * scale * 0.75D);
+    }
+
+
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("Tele-cooldown", teleportationCoolDown);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        teleportationCoolDown = compound.getInt("Tele-cooldown");
     }
 
     @Override
@@ -274,9 +287,12 @@ public class MagicalPredatorEntity extends MonsterEntity {
         public void tick() {
             if (this.nearestTarget != null) {
                 if (this.nearestTarget instanceof PlayerEntity) {
-                    float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
-                    if (diff <= 16 & diff >= -2) {
-                        beast.teleportToEntity(this.nearestTarget);
+                    if (beast.teleportationCoolDown == 0) {
+                        float diff = getActualDistance((PlayerEntity) this.nearestTarget) - beast.getDistance(this.nearestTarget);
+                        if (diff <= 16 & diff >= -2) {
+                            beast.teleportToEntity(this.nearestTarget);
+                            beast.teleportationCoolDown = 40;
+                        }
                     }
                 }
             }
