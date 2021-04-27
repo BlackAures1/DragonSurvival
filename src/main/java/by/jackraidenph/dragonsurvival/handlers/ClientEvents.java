@@ -144,6 +144,7 @@ public class ClientEvents {
                     eventMatrixStack.translate(0, 0, 0.15);
                 } catch (Throwable e) {
                     e.printStackTrace();
+                    DragonSurvivalMod.LOGGER.info("(Neutralized)");
                 } finally {
                     eventMatrixStack.pop();
                 }
@@ -275,6 +276,7 @@ public class ClientEvents {
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                     ItemStack right = player.getHeldItemMainhand();
                     matrixStack.rotate(Vector3f.XP.rotationDegrees(45.0F));
@@ -286,6 +288,8 @@ public class ClientEvents {
                     itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
+                    matrixStack.pop();
+                    DragonSurvivalMod.LOGGER.info("(Neutralized)");
                 } finally {
                     matrixStack.pop();
                 }
