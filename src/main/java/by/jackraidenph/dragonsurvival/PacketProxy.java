@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -82,7 +83,7 @@ public class PacketProxy {
                     if (thatPlayer != myPlayer) {
                         DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
                         dragonEntity.player = thatPlayer.getEntityId();
-                        ClientEvents.playerDragonHashMap.get(thatPlayer.getEntityId()).getAndSet(dragonEntity);
+                        ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getEntityId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                     }
                 }
                 context.get().setPacketHandled(true);
