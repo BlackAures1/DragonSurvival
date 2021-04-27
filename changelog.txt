@@ -1,8 +1,10 @@
 0.0.30:
-disable NPE spam;
+disabled NPE spam;
 command 'dragon' requires permission 4;
 dragons can't ride pigs;
-fix crash when Shift + clicking in nest GUI;
+fixed crash when Shift + clicking in nest GUI;
+added teleportation cooldown to the Magical Predator;
+added usage cooldown to Dragon altar;
 
 0.0.29:
 neutralized crashes
