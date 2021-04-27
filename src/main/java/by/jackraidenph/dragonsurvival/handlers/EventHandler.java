@@ -23,6 +23,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -192,7 +193,7 @@ public class EventHandler {
         Entity mounting = mountEvent.getEntityMounting();
         DragonStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity)
+                if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity || mountEvent.getEntityBeingMounted() instanceof PigEntity)
                     mountEvent.setCanceled(true);
             }
         });
