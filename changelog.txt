@@ -1,6 +1,7 @@
 0.0.30:
 disable NPE spam;
 command 'dragon' requires permission 4;
+dragons can't ride pigs;
 
 0.0.29:
 neutralized crashes

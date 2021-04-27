@@ -42,4 +42,26 @@ public class NestContainer extends Container {
     public boolean canInteractWith(PlayerEntity playerIn) {
         return nestEntity.ownerUUID.equals(playerIn.getUniqueID());
     }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        Slot clickedSlot = this.inventorySlots.get(index);
+        ItemStack stack;
+        if (clickedSlot.getHasStack()) {
+            ItemStack clickedStack = clickedSlot.getStack();
+            stack = clickedStack.copy();
+            if (clickedStack.getCount() == 0) {
+                clickedSlot.putStack(ItemStack.EMPTY);
+            } else {
+                clickedSlot.onSlotChanged();
+            }
+
+            if (clickedStack.getCount() == stack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            clickedSlot.onTake(playerIn, clickedStack);
+        }
+        return super.transferStackInSlot(playerIn, index);
+    }
 }
