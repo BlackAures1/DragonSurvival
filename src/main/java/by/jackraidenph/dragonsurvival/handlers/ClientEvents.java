@@ -142,9 +142,9 @@ public class ClientEvents {
                     dragonModel.setCurrentTexture(boots);
                     dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
                     eventMatrixStack.translate(0, 0, 0.15);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    DragonSurvivalMod.LOGGER.info("(Neutralized)");
+                } catch (Throwable ignored) {
+                    if (!(ignored instanceof NullPointerException))
+                        ignored.printStackTrace();
                 } finally {
                     eventMatrixStack.pop();
                 }
@@ -286,9 +286,9 @@ public class ClientEvents {
                     matrixStack.translate(0.9, 0, 0);
                     itemRenderer.renderItem(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                 } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                    if (!(throwable instanceof NullPointerException))
+                        throwable.printStackTrace();
                     matrixStack.pop();
-                    DragonSurvivalMod.LOGGER.info("(Neutralized)");
                 } finally {
                     matrixStack.pop();
                 }
