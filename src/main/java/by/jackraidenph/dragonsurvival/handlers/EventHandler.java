@@ -381,6 +381,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void reduceFallDistance(LivingFallEvent livingFallEvent) {
+        //TODO prevent death from falling
         LivingEntity livingEntity = livingFallEvent.getEntityLiving();
         if (DragonStateProvider.isDragon(livingEntity))
             livingFallEvent.setDistance(livingFallEvent.getDistance() - 1);
