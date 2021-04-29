@@ -54,6 +54,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import static net.minecraft.command.Commands.argument;
 import static net.minecraft.command.Commands.literal;
 
@@ -257,7 +259,7 @@ public class DragonSurvivalMod {
                             if (thatPlayer != null) {
                                 DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.world);
                                 dragonEntity.player = thatPlayer.getEntityId();
-                                ClientEvents.playerDragonHashMap.get(thatPlayer.getEntityId()).getAndSet(dragonEntity);
+                                ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getEntityId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                             }
 
                         });
