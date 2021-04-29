@@ -275,7 +275,7 @@ public class DragonSurvivalMod {
     private void onServerStart(FMLServerStartingEvent serverStartingEvent) {
         CommandDispatcher<CommandSource> commandDispatcher = serverStartingEvent.getCommandDispatcher();
         RootCommandNode<CommandSource> rootCommandNode = commandDispatcher.getRoot();
-        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermissionLevel(4)).build();
+        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermissionLevel(2)).build();
 
         ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest"}, builder)).build();
 
