@@ -152,7 +152,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
     protected void registerAttributes() {
         super.registerAttributes();
 
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.475D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.375D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0F * ConfigurationHandler.predatorDamageFactor.get());
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.0F);
