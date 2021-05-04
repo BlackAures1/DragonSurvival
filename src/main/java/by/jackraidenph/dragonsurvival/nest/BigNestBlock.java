@@ -21,18 +21,18 @@ public class BigNestBlock extends MediumNestBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState superState = super.getStateForPlacement(context);
         if (superState != null) {
-            BlockPos blockPos = context.getPos();
-            World world = context.getWorld();
+            BlockPos blockPos = context.getClickedPos();
+            World world = context.getLevel();
             PlayerEntity playerEntity = context.getPlayer();
-            Direction direction = playerEntity.getHorizontalFacing();
-            if (world.isAirBlock(blockPos.offset(direction.getOpposite())) &&
-                    world.isAirBlock(blockPos.offset(direction).offset(direction.rotateY())) &&
-                    world.isAirBlock(blockPos.offset(direction.rotateY())) &&
-                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateYCCW())) &&
-                    world.isAirBlock(blockPos.offset(direction.getOpposite()).offset(direction.rotateY())) &&
-                    world.isAirBlock(blockPos.offset(direction).up()) &&
-                    world.isAirBlock(blockPos.offset(direction).up().offset(direction.rotateY())) &&
-                    world.isAirBlock(blockPos.offset(direction).up().offset(direction.rotateYCCW()))
+            Direction direction = playerEntity.getDirection();
+            if (world.isEmptyBlock(blockPos.relative(direction.getOpposite())) &&
+                    world.isEmptyBlock(blockPos.relative(direction).relative(direction.getClockWise())) &&
+                    world.isEmptyBlock(blockPos.relative(direction.getClockWise())) &&
+                    world.isEmptyBlock(blockPos.relative(direction.getOpposite()).relative(direction.getCounterClockWise())) &&
+                    world.isEmptyBlock(blockPos.relative(direction.getOpposite()).relative(direction.getClockWise())) &&
+                    world.isEmptyBlock(blockPos.relative(direction).above()) &&
+                    world.isEmptyBlock(blockPos.relative(direction).above().relative(direction.getClockWise())) &&
+                    world.isEmptyBlock(blockPos.relative(direction).above().relative(direction.getCounterClockWise()))
             )
                 return superState;
         }
@@ -40,63 +40,63 @@ public class BigNestBlock extends MediumNestBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
         if (placer != null) {
-            Direction direction = placer.getHorizontalFacing();
-            final BlockPos pos1 = pos.offset(direction.getOpposite());
-            worldIn.setBlockState(pos1, state.with(PRIMARY_BLOCK, false));
-            final BlockPos pos2 = pos.offset(direction).offset(direction.rotateY());
-            worldIn.setBlockState(pos2, state.with(PRIMARY_BLOCK, false));
-            final BlockPos pos3 = pos.offset(direction.rotateY());
-            worldIn.setBlockState(pos3, state.with(PRIMARY_BLOCK, false));
-            final BlockPos pos4 = pos.offset(direction.getOpposite()).offset(direction.rotateYCCW());
-            worldIn.setBlockState(pos4, state.with(PRIMARY_BLOCK, false));
-            final BlockPos pos5 = pos.offset(direction.getOpposite()).offset(direction.rotateY());
-            worldIn.setBlockState(pos5, state.with(PRIMARY_BLOCK, false));
-            NestPlaceHolder placeHolder1 = (NestPlaceHolder) worldIn.getTileEntity(pos1);
+            Direction direction = placer.getDirection();
+            final BlockPos pos1 = pos.relative(direction.getOpposite());
+            worldIn.setBlockAndUpdate(pos1, state.setValue(PRIMARY_BLOCK, false));
+            final BlockPos pos2 = pos.relative(direction).relative(direction.getClockWise());
+            worldIn.setBlockAndUpdate(pos2, state.setValue(PRIMARY_BLOCK, false));
+            final BlockPos pos3 = pos.relative(direction.getClockWise());
+            worldIn.setBlockAndUpdate(pos3, state.setValue(PRIMARY_BLOCK, false));
+            final BlockPos pos4 = pos.relative(direction.getOpposite()).relative(direction.getCounterClockWise());
+            worldIn.setBlockAndUpdate(pos4, state.setValue(PRIMARY_BLOCK, false));
+            final BlockPos pos5 = pos.relative(direction.getOpposite()).relative(direction.getClockWise());
+            worldIn.setBlockAndUpdate(pos5, state.setValue(PRIMARY_BLOCK, false));
+            NestPlaceHolder placeHolder1 = (NestPlaceHolder) worldIn.getBlockEntity(pos1);
             placeHolder1.rootPos = pos;
-            NestPlaceHolder placeHolder2 = (NestPlaceHolder) worldIn.getTileEntity(pos2);
+            NestPlaceHolder placeHolder2 = (NestPlaceHolder) worldIn.getBlockEntity(pos2);
             placeHolder2.rootPos = pos;
-            NestPlaceHolder placeHolder3 = (NestPlaceHolder) worldIn.getTileEntity(pos3);
+            NestPlaceHolder placeHolder3 = (NestPlaceHolder) worldIn.getBlockEntity(pos3);
             placeHolder3.rootPos = pos;
-            NestPlaceHolder placeHolder4 = (NestPlaceHolder) worldIn.getTileEntity(pos4);
+            NestPlaceHolder placeHolder4 = (NestPlaceHolder) worldIn.getBlockEntity(pos4);
             placeHolder4.rootPos = pos;
-            NestPlaceHolder placeHolder5 = (NestPlaceHolder) worldIn.getTileEntity(pos5);
+            NestPlaceHolder placeHolder5 = (NestPlaceHolder) worldIn.getBlockEntity(pos5);
             placeHolder5.rootPos = pos;
 
-            final BlockPos pos6 = pos.up().offset(direction);
-            final BlockPos pos7 = pos.up().offset(direction).offset(direction.rotateYCCW());
-            final BlockPos pos8 = pos.up().offset(direction).offset(direction.rotateY());
-            worldIn.setBlockState(pos6, state.with(PRIMARY_BLOCK, false));
-            worldIn.setBlockState(pos7, state.with(PRIMARY_BLOCK, false));
-            worldIn.setBlockState(pos8, state.with(PRIMARY_BLOCK, false));
-            NestPlaceHolder placeHolder6 = (NestPlaceHolder) worldIn.getTileEntity(pos6);
+            final BlockPos pos6 = pos.above().relative(direction);
+            final BlockPos pos7 = pos.above().relative(direction).relative(direction.getCounterClockWise());
+            final BlockPos pos8 = pos.above().relative(direction).relative(direction.getClockWise());
+            worldIn.setBlockAndUpdate(pos6, state.setValue(PRIMARY_BLOCK, false));
+            worldIn.setBlockAndUpdate(pos7, state.setValue(PRIMARY_BLOCK, false));
+            worldIn.setBlockAndUpdate(pos8, state.setValue(PRIMARY_BLOCK, false));
+            NestPlaceHolder placeHolder6 = (NestPlaceHolder) worldIn.getBlockEntity(pos6);
             placeHolder6.rootPos = pos;
-            NestPlaceHolder placeHolder7 = (NestPlaceHolder) worldIn.getTileEntity(pos7);
+            NestPlaceHolder placeHolder7 = (NestPlaceHolder) worldIn.getBlockEntity(pos7);
             placeHolder7.rootPos = pos;
-            NestPlaceHolder placeHolder8 = (NestPlaceHolder) worldIn.getTileEntity(pos8);
+            NestPlaceHolder placeHolder8 = (NestPlaceHolder) worldIn.getBlockEntity(pos8);
             placeHolder8.rootPos = pos;
 
         }
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
-        if (state.get(PRIMARY_BLOCK)) {
-            Direction direction = state.get(HORIZONTAL_FACING);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onRemove(state, worldIn, pos, newState, isMoving);
+        if (state.getValue(PRIMARY_BLOCK)) {
+            Direction direction = state.getValue(FACING);
             //TODO remove redundant one
-            worldIn.destroyBlock(pos.offset(direction), false);
-            worldIn.destroyBlock(pos.offset(direction.getOpposite()).offset(direction.rotateY()), false);
-            worldIn.destroyBlock(pos.offset(direction.getOpposite()).offset(direction.getOpposite().rotateY()), false);
-            worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateYCCW()), false);
-            worldIn.destroyBlock(pos.offset(direction).offset(direction.rotateY()), false);
-            worldIn.destroyBlock(pos.offset(direction.rotateYCCW()), false);
+            worldIn.destroyBlock(pos.relative(direction), false);
+            worldIn.destroyBlock(pos.relative(direction.getOpposite()).relative(direction.getClockWise()), false);
+            worldIn.destroyBlock(pos.relative(direction.getOpposite()).relative(direction.getOpposite().getClockWise()), false);
+            worldIn.destroyBlock(pos.relative(direction).relative(direction.getCounterClockWise()), false);
+            worldIn.destroyBlock(pos.relative(direction).relative(direction.getClockWise()), false);
+            worldIn.destroyBlock(pos.relative(direction.getCounterClockWise()), false);
             //upper blocks
-            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()), false);
-            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()).offset(direction.rotateYCCW()), false);
-            worldIn.destroyBlock(pos.up().offset(direction.getOpposite()).offset(direction.rotateY()), false);
+            worldIn.destroyBlock(pos.above().relative(direction.getOpposite()), false);
+            worldIn.destroyBlock(pos.above().relative(direction.getOpposite()).relative(direction.getCounterClockWise()), false);
+            worldIn.destroyBlock(pos.above().relative(direction.getOpposite()).relative(direction.getClockWise()), false);
         }
     }
 }

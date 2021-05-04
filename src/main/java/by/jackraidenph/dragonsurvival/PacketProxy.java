@@ -34,8 +34,8 @@ public class PacketProxy {
     private void handleMovement(PacketSyncCapabilityMovement syncCapabilityMovement, NetworkEvent.Context context) {
         PlayerEntity thisPlayer = Minecraft.getInstance().player;
         if (thisPlayer != null) {
-            World world = thisPlayer.world;
-            Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
+            World world = thisPlayer.level;
+            Entity entity = world.getEntity(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
                 if (entity != thisPlayer) {
                     DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
@@ -50,7 +50,7 @@ public class PacketProxy {
     public DistExecutor.SafeRunnable updateLevel(SyncLevel syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
         return () -> {
             Minecraft minecraft = Minecraft.getInstance();
-            Entity entity = minecraft.world.getEntityByID(syncLevel.playerId);
+            Entity entity = minecraft.level.getEntity(syncLevel.playerId);
             if (entity instanceof PlayerEntity) {
                 DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> dragonStateHandler.setLevel(syncLevel.level));
                 contextSupplier.get().setPacketHandled(true);
@@ -62,12 +62,12 @@ public class PacketProxy {
         return () -> {
             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
             if (myPlayer != null) {
-                World world = myPlayer.world;
+                World world = myPlayer.level;
 
                 if (ClientEvents.dummyDragon2 != null) {
-                    ClientEvents.dummyDragon2.get().player = myPlayer.getEntityId();
+                    ClientEvents.dummyDragon2.get().player = myPlayer.getId();
                 }
-                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+                PlayerEntity thatPlayer = (PlayerEntity) world.getEntity(synchronizeDragonCap.playerId);
 
                 if (thatPlayer != null) {
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
@@ -82,8 +82,8 @@ public class PacketProxy {
                     //refresh instances
                     if (thatPlayer != myPlayer) {
                         DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
-                        dragonEntity.player = thatPlayer.getEntityId();
-                        ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getEntityId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
+                        dragonEntity.player = thatPlayer.getId();
+                        ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                     }
                 }
                 context.get().setPacketHandled(true);

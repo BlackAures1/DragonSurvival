@@ -25,12 +25,12 @@ public class SynchronizationController {
         PlayerEntity player = loggedInEvent.getPlayer();
         //send the capability to everyone
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getEntityId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon(), cap.getHealth(), cap.hasWings()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getId(), cap.isHiding(), cap.getType(), cap.getLevel(), cap.isDragon(), cap.getHealth(), cap.hasWings()));
         });
         //receive capability from others
         loggedInEvent.getPlayer().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
             DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
             });
         });
     }
@@ -43,13 +43,13 @@ public class SynchronizationController {
         PlayerEntity playerEntity = playerRespawnEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
             }
         });
         //sync others' capability
         playerEntity.getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
             DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
-                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new SynchronizeDragonCap(serverPlayerEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
             });
         });
     }
@@ -65,7 +65,7 @@ public class SynchronizationController {
             serverPlayerEntity.getServer().getPlayerList().getPlayers().forEach(otherPlayerEntity -> {
                 if (otherPlayerEntity != playerEntity) {
                     DragonStateProvider.getCap(otherPlayerEntity).ifPresent(dragonStateHandler -> {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getEntityId(), otherPlayerEntity.getYaw(1), otherPlayerEntity.rotationYawHead, otherPlayerEntity.rotationPitch));
+                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getId(), otherPlayerEntity.getViewYRot(1), otherPlayerEntity.yHeadRot, otherPlayerEntity.xRot));
                     });
                 }
             });
@@ -79,7 +79,7 @@ public class SynchronizationController {
             Entity trackedEntity = startTracking.getTarget();
             if (trackedEntity instanceof ServerPlayerEntity) {
                 DragonStateProvider.getCap(trackedEntity).ifPresent(dragonStateHandler -> {
-                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) trackingPlayer), new SynchronizeDragonCap(trackedEntity.getEntityId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) trackingPlayer), new SynchronizeDragonCap(trackedEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getLevel(), dragonStateHandler.isDragon(), dragonStateHandler.getHealth(), dragonStateHandler.hasWings()));
                 });
             }
         }

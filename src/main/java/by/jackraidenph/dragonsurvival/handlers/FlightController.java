@@ -7,10 +7,10 @@ import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -31,22 +31,22 @@ public class FlightController {
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 if (wingsEnabled) {
-                    if (!playerEntity.onGround && !playerEntity.isInWater()) {
-                        Vec3d motion = playerEntity.getMotion();
+                    if (!playerEntity.isOnGround() && !playerEntity.isInWater()) {
+                        Vector3d motion = playerEntity.getDeltaMovement();
                         if (motion.y > -0.5D) {
                             playerEntity.fallDistance = 1.0F;
                         }
 
-                        Vec3d lookVec = playerEntity.getLookVec();
-                        float f6 = playerEntity.rotationPitch * ((float) Math.PI / 180F);
+                        Vector3d lookVec = playerEntity.getLookAngle();
+                        float f6 = playerEntity.xRot * ((float) Math.PI / 180F);
                         double d9 = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
-                        double d11 = Math.sqrt(LivingEntity.horizontalMag(motion));
+                        double d11 = Math.sqrt(LivingEntity.getHorizontalDistanceSqr(motion));
                         double d12 = lookVec.length();
                         float f3 = MathHelper.cos(f6);
                         f3 = (float) ((double) f3 * (double) f3 * Math.min(1.0D, d12 / 0.4D));
-                        IAttributeInstance gravity = playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY);
+                        ModifiableAttributeInstance gravity = playerEntity.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get());
                         double g = gravity.getValue();
-                        motion = playerEntity.getMotion().add(0.0D, g * (-1.0D + (double) f3 * 0.75D), 0.0D);
+                        motion = playerEntity.getDeltaMovement().add(0.0D, g * (-1.0D + (double) f3 * 0.75D), 0.0D);
                         if (motion.y < 0.0D && d9 > 0.0D) {
                             double d3 = motion.y * -0.1D * (double) f3;
                             motion = motion.add(lookVec.x * d3 / d9, d3, lookVec.z * d3 / d9);
@@ -61,7 +61,7 @@ public class FlightController {
                             motion = motion.add((lookVec.x / d9 * d11 - motion.x) * 0.1D, 0.0D, (lookVec.z / d9 * d11 - motion.z) * 0.1D);
                         }
                         double lookY = lookVec.y;
-                        double yaw = Math.toRadians(playerEntity.rotationYawHead + 90);
+                        double yaw = Math.toRadians(playerEntity.yHeadRot + 90);
                         if (lookY < 0) {
                             ax += Math.cos(yaw) / 1000;
                             az += Math.sin(yaw) / 1000;
@@ -78,8 +78,9 @@ public class FlightController {
                         } else {
                             motion = motion.add(ax, ay, az);
                         }
-                        playerEntity.setMotion(motion.mul(0.99F, 0.98F, 0.99F));
+                        playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
                         playerEntity.fallDistance = 0;
+
                     } else {
                         ax = 0;
                         az = 0;
@@ -93,17 +94,17 @@ public class FlightController {
     @SubscribeEvent
     public static void toggleWings(InputEvent.KeyInputEvent keyInputEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null && ClientModEvents.TOGGLE_WINGS.isPressed()) {
+        if (player != null && ClientModEvents.TOGGLE_WINGS.consumeClick()) {
             DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.hasWings()) {
                     wingsEnabled = !wingsEnabled;
                     DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
                     if (wingsEnabled)
-                        player.sendMessage(new TranslationTextComponent("ds.wings.enabled"));
+                        player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
                     else
-                        player.sendMessage(new TranslationTextComponent("ds.wings.disabled"));
+                        player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
                 } else {
-                    player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"));
+                    player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"), player.getUUID());
                 }
             });
         }

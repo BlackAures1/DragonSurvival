@@ -1,5 +1,7 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import javax.annotation.Nullable;
+
 import by.jackraidenph.dragonsurvival.gui.DragonAltarGUI;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
@@ -24,26 +26,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-
 public class DragonAltarBlock extends Block {
-    VoxelShape SHAPE = VoxelShapes.fullCube();
+    VoxelShape SHAPE = VoxelShapes.block();
 
     public DragonAltarBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World worldIn, BlockPos blockPos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
-        TileEntity tileEntity = worldIn.getTileEntity(blockPos);
+    public ActionResultType use(BlockState blockState, World worldIn, BlockPos blockPos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+    	TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof AltarEntity) {
             AltarEntity altarEntity = (AltarEntity) tileEntity;
             if (altarEntity.usageCooldown > 0) {
-                if (worldIn.isRemote)
-                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active"));
+                if (worldIn.isClientSide)
+                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active"), player.getUUID());
                 return ActionResultType.FAIL;
             } else {
-                if (worldIn.isRemote) {
+                if (worldIn.isClientSide) {
                     openGUi();
                 }
                 altarEntity.usageCooldown = 20 * 60 * 3; //3 minutes
@@ -54,21 +54,22 @@ public class DragonAltarBlock extends Block {
 
     @OnlyIn(Dist.CLIENT)
     private void openGUi() {
-        Minecraft.getInstance().displayGuiScreen(new DragonAltarGUI(new TextComponent() {
+        Minecraft.getInstance().setScreen(new DragonAltarGUI(new TextComponent() {
             @Override
-            public String getUnformattedComponentText() {
+            public String getContents() {
                 return "Dragon altar";
             }
 
             @Override
-            public ITextComponent shallowCopy() {
+            public TextComponent plainCopy() {
                 return this;
             }
+
         }));
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
@@ -76,7 +77,7 @@ public class DragonAltarBlock extends Block {
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
-
+    
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -87,4 +88,5 @@ public class DragonAltarBlock extends Block {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return TileEntityTypesInit.altarEntityTile.create();
     }
+
 }

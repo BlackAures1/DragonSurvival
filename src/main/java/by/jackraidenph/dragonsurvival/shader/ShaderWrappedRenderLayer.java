@@ -22,7 +22,7 @@ public class ShaderWrappedRenderLayer extends RenderType {
     private final ShaderCallback cb;
 
     public ShaderWrappedRenderLayer(ShaderHelper.BotaniaShader shader, @Nullable ShaderCallback cb, RenderType delegate) {
-        super(DragonSurvivalMod.MODID + ":" + delegate.toString() + "_with_" + shader.name(), delegate.getVertexFormat(), delegate.getDrawMode(), delegate.getBufferSize(), delegate.isUseDelegate(), true,
+        super(DragonSurvivalMod.MODID + ":" + delegate.toString() + "_with_" + shader.name(), delegate.format(), delegate.mode(), delegate.bufferSize(), delegate.affectsCrumbling(), true,
                 () -> {
                     delegate.setupRenderState();
                     ShaderHelper.useShader(shader, cb);
@@ -38,8 +38,8 @@ public class ShaderWrappedRenderLayer extends RenderType {
     }
 
     @Override
-    public Optional<RenderType> getOutline() {
-        return delegate.getOutline();
+    public Optional<RenderType> outline() {
+        return delegate.outline();
     }
 
     @Override

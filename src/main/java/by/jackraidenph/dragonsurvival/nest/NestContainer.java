@@ -17,7 +17,7 @@ public class NestContainer extends Container {
 
     public NestContainer(int windowId, PlayerInventory inv, PacketBuffer data) {
         super(Containers.nestContainer, windowId);
-        nestEntity = (NestEntity) inv.player.world.getTileEntity(data.readBlockPos());
+        nestEntity = (NestEntity) inv.player.level.getBlockEntity(data.readBlockPos());
         int index = 0;
         for (int i = 0; i < 9; i++) {
             addSlot(new Slot(inv, index++, 8 + 18 * i, 141));
@@ -31,29 +31,24 @@ public class NestContainer extends Container {
         addSlot(new SlotItemHandler(nestEntity.regenItem, 0, 8 + 18 * 7, 85 - 24) {
 
             @Override
-            public boolean isItemValid(@Nonnull ItemStack stack) {
+            public boolean mayPlace(@Nonnull ItemStack stack) {
                 Item item = stack.getItem();
                 return NestEntity.regenValue.containsKey(item);
             }
         });
     }
-
+    
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return nestEntity.ownerUUID.equals(playerIn.getUniqueID());
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        Slot clickedSlot = this.inventorySlots.get(index);
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+        Slot clickedSlot = this.slots.get(index);
         ItemStack stack;
-        if (clickedSlot.getHasStack()) {
-            ItemStack clickedStack = clickedSlot.getStack();
+        if (clickedSlot.hasItem()) {
+            ItemStack clickedStack = clickedSlot.getItem();
             stack = clickedStack.copy();
             if (clickedStack.getCount() == 0) {
-                clickedSlot.putStack(ItemStack.EMPTY);
+                clickedSlot.set(ItemStack.EMPTY);
             } else {
-                clickedSlot.onSlotChanged();
+                clickedSlot.setChanged();
             }
 
             if (clickedStack.getCount() == stack.getCount()) {
@@ -62,6 +57,11 @@ public class NestContainer extends Container {
 
             clickedSlot.onTake(playerIn, clickedStack);
         }
-        return super.transferStackInSlot(playerIn, index);
+        return super.quickMoveStack(playerIn, index);
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity playerIn) {
+        return nestEntity.ownerUUID.equals(playerIn.getUUID());
     }
 }

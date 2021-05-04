@@ -5,11 +5,11 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class CapabilityStorage implements Capability.IStorage<DragonStateHandler> {
-    private static CompoundNBT writeVec3d(Vec3d vec) {
+    private static CompoundNBT writeVec3d(Vector3d vec) {
         CompoundNBT comp = new CompoundNBT();
         comp.putDouble("X", vec.x);
         comp.putDouble("Y", vec.y);
@@ -17,11 +17,11 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
         return comp;
     }
 
-    private static Vec3d getVec3d(INBT nbt) {
+    private static Vector3d getVec3d(INBT nbt) {
         CompoundNBT tag = (CompoundNBT) nbt;
-        Vec3d vec = Vec3d.ZERO;
+        Vector3d vec = Vector3d.ZERO;
         if (tag != null && tag.contains("X"))
-            vec = new Vec3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z"));
+            vec = new Vector3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z"));
         return vec;
     }
 

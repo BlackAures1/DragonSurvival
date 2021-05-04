@@ -7,21 +7,24 @@ import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.model.Material;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
+
 import org.lwjgl.opengl.GL11;
 
 public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity> {
 
-    public static final Material CAGE_TEXTURE = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
-    public static final Material WIND_TEXTURE = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
-    public static final Material VERTICAL_WIND_TEXTURE = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
-    public static final Material OPEN_EYE_TEXTURE = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
+    public static final RenderMaterial CAGE_TEXTURE = new RenderMaterial(PlayerContainer.BLOCK_ATLAS, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
+    public static final RenderMaterial WIND_TEXTURE = new RenderMaterial(PlayerContainer.BLOCK_ATLAS, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind"));
+    public static final RenderMaterial VERTICAL_WIND_TEXTURE = new RenderMaterial(PlayerContainer.BLOCK_ATLAS, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/wind_vertical"));
+    public static final RenderMaterial OPEN_EYE_TEXTURE = new RenderMaterial(PlayerContainer.BLOCK_ATLAS, new ResourceLocation(DragonSurvivalMod.MODID, "te/star/open_eye"));
 
     /*private static final ShaderCallback CALLBACK = shader -> {
         int width = GlStateManager.getUniformLocation(shader, "width");
@@ -67,7 +70,7 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
     }
 
     private static RenderType makeRenderType(ResourceLocation texture) {
-        RenderType normal = RenderType.getEntityTranslucent(texture);
+        RenderType normal = RenderType.entityTranslucent(texture);
         return new ShaderWrappedRenderLayer(ShaderHelper.BotaniaShader.COLOR_CYCLE, null, normal);
     }
 
@@ -77,15 +80,15 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         float f1 = tileEntityIn.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
         float f2 = MathHelper.sin(f * 0.1F) / 2.0F + 0.5F;
         f2 = f2 * f2 + f2;
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0.5D, (double) (0.3F + f2 * 0.2F), 0.5D);
         Vector3f vector3f = new Vector3f(0.5F, 1.0F, 0.5F);
         vector3f.normalize();
-        matrixStackIn.rotate(new Quaternion(vector3f, f1, true));
-        this.field_228875_k_.render(matrixStackIn, CAGE_TEXTURE.getBuffer(bufferIn, RenderType::getEntityTranslucent), combinedLightIn, combinedOverlayIn);
+        matrixStackIn.mulPose(new Quaternion(vector3f, f1, true));
+        this.field_228875_k_.render(matrixStackIn, CAGE_TEXTURE.buffer(bufferIn, RenderType::entityTranslucent), combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
         /*int i = tileEntityIn.getTicksExisted() / 66 % 3;
 
         matrixStackIn.push();
@@ -107,21 +110,21 @@ public class PredatorStarTESR extends TileEntityRenderer<PredatorStarTileEntity>
         this.field_228873_i_.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
         matrixStackIn.pop();*/
 
-        ActiveRenderInfo activerenderinfo = this.renderDispatcher.renderInfo;
+        ActiveRenderInfo activerenderinfo = this.renderer.camera;
         GL11.glPushMatrix();
         RenderSystem.enableBlend();
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0.5D, 0.3F + f2 * 0.2F, 0.5D);
         matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-        float f3 = -activerenderinfo.getYaw();
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f3));
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(activerenderinfo.getPitch()));
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+        float f3 = -activerenderinfo.getYRot();
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f3));
+        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(activerenderinfo.getXRot()));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
         matrixStackIn.scale(1.3333334F, 1.3333334F, 1.3333334F);
-        this.field_228872_h_.render(matrixStackIn, OPEN_EYE_TEXTURE.getBuffer(bufferIn, RenderType::getEntityTranslucent), combinedLightIn, combinedOverlayIn);
+        this.field_228872_h_.render(matrixStackIn, OPEN_EYE_TEXTURE.buffer(bufferIn, RenderType::entityTranslucent), combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
         GL11.glPopMatrix();
     }
 }

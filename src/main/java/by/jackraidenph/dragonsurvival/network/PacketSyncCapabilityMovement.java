@@ -2,7 +2,7 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.PacketProxy;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -45,17 +45,17 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         );
     }
 
-    private void writeVec3d(PacketBuffer buffer, Vec3d vec) {
+    private void writeVec3d(PacketBuffer buffer, Vector3d vec) {
         buffer.writeDouble(vec.x);
         buffer.writeDouble(vec.y);
         buffer.writeDouble(vec.z);
     }
 
-    private Vec3d readVec3d(PacketBuffer buffer) {
+    private Vector3d readVec3d(PacketBuffer buffer) {
         double x = buffer.readDouble();
         double y = buffer.readDouble();
         double z = buffer.readDouble();
-        return new Vec3d(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
     @Override

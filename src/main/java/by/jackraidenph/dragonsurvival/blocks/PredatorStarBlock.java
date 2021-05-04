@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
@@ -8,8 +9,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,7 +28,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class PredatorStarBlock extends Block {
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
+    protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public PredatorStarBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
@@ -37,18 +40,18 @@ public class PredatorStarBlock extends Block {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     public void blockBehaviour(Entity entity, World worldIn, BlockPos pos) {
         if (entity instanceof LivingEntity) {
-            entity.attackEntityFrom(DamageSource.DRYOUT, ((LivingEntity) entity).getHealth() + 1);
+            entity.hurt(DamageSource.DRY_OUT, ((LivingEntity) entity).getHealth() + 1);
             worldIn.destroyBlock(pos, false);
             if (new Random().nextInt(3) == 0) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
-                worldIn.addEntity(beast);
-                beast.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+                worldIn.addFreshEntity(beast);
+                beast.teleportTo(pos.getX(), pos.getY(), pos.getZ());
             }
         } else if (entity instanceof ItemEntity) {
             ItemEntity itemEntity = (ItemEntity) entity;
@@ -70,25 +73,25 @@ public class PredatorStarBlock extends Block {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        super.entityInside(state, worldIn, pos, entityIn);
         if (!(entityIn instanceof MagicalPredatorEntity))
             this.blockBehaviour(entityIn, worldIn, pos);
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        super.onBlockClicked(state, worldIn, pos, player);
+    public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        super.attack(state, worldIn, pos, player);
         this.blockBehaviour(player, worldIn, pos);
     }
 
-    @Override
-    public int tickRate(IWorldReader worldIn) {
+    /*@Override
+    public int tickRate(IWorldReader worldIn) { // This was totally removed in 1.16
         return 1;
-    }
+    }*/
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
-        return PushReaction.IGNORE;
+    public PushReaction getPistonPushReaction(BlockState state) {
+    	return PushReaction.IGNORE;
     }
 }
