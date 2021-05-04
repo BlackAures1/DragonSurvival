@@ -1,6 +1,12 @@
 0.0.31-1.16.5:
 update;
+added netherite armor textures;
+improved nest item consumption logic;
+added nest background transparency based on energy;
+dragons can't ride striders;
+updated recipes to use tags;
 fixed crash with 'trap' skeleton horses;
+added additional recipe options for charred meat;
 
 0.0.30:
 disabled NPE spam;
