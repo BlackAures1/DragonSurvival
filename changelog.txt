@@ -1,5 +1,6 @@
 0.0.31-1.16.5:
 update;
+fixed crash with 'trap' skeleton horses;
 
 0.0.30:
 disabled NPE spam;
