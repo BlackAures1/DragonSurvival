@@ -2,9 +2,9 @@ package by.jackraidenph.dragonsurvival.capability;
 
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 
 public class DragonStateHandler {
@@ -64,14 +64,14 @@ public class DragonStateHandler {
      */
     public void setLevel(DragonLevel level, PlayerEntity playerEntity) {
         setLevel(level);
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(level.initialHealth);
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).setBaseValue(level.initialHealth);
         playerEntity.heal(playerEntity.getMaxHealth());
         setHealth(level.initialHealth);
     }
 
     public void setLevelAndHealth(DragonLevel level, float health, PlayerEntity playerEntity) {
         setLevel(level);
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).setBaseValue(health);
         playerEntity.heal(playerEntity.getMaxHealth());
         setHealth(health);
     }
@@ -100,8 +100,8 @@ public class DragonStateHandler {
         public double headYaw;
         public double headPitch;
 
-        public Vec3d headPosLastTick;
-        public Vec3d tailPosLastTick;
+        public Vector3d headPosLastTick;
+        public Vector3d tailPosLastTick;
         public double headYawLastTick;
         public double headPitchLastTick;
         public double bodyYawLastTick;

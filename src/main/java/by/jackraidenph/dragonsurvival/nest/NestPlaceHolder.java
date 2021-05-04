@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.nest;
 
 import by.jackraidenph.dragonsurvival.tiles.BaseBlockEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
@@ -13,14 +14,14 @@ public class NestPlaceHolder extends BaseBlockEntity {
     public BlockPos rootPos = BlockPos.ZERO;
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putLong("Root", rootPos.toLong());
-        return super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        compound.putLong("Root", rootPos.asLong());
+        return super.save(compound);
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        rootPos = BlockPos.fromLong(compound.getLong("Root"));
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        rootPos = BlockPos.of(compound.getLong("Root"));
     }
 }

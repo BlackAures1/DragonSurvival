@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -45,28 +45,28 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         final PlayerEntity player = getPlayer();
         if (player != null) {
-            Vec3d motio = player.getMotion();
+            Vector3d motio = player.getDeltaMovement();
             final AnimationController animationController = animationEvent.getController();
             if (player.getPose() == Pose.SWIMMING)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
-            else if (player.isInWaterOrBubbleColumn() && (motio.x != 0 || motio.z != 0)) {
+            else if (player.isInWaterOrBubble() && (motio.x != 0 || motio.z != 0)) {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
-            } else if ((player.abilities.isFlying || ClientEvents.dragonsFlying.getOrDefault(player.getEntityId(), false)) && !player.onGround && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
+            } else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
             } else if (player.isSprinting())
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
-            else if (player.isSneaking()) {
-                if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount != 0f)
+            else if (player.isShiftKeyDown()) {
+                if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f)
                     animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false)) {
                     animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand8", true));
                 } else
                     animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6", true));
-            } else if (player.isSwingInProgress && player.getCooledAttackStrength(-3.0f) != 1)
+            } else if (player.swinging && player.getAttackStrengthScale(-3.0f) != 1)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
             else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new2", true));
-            else if ((motio.getX() != 0 || motio.getZ() != 0) && player.limbSwingAmount != 0f)
+            else if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f)
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
             else if (player.isSleeping()) {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
@@ -79,26 +79,26 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     @Override
-    public Iterable<ItemStack> getArmorInventoryList() {
+    public Iterable<ItemStack> getArmorSlots() {
         return Collections.emptyList();
     }
 
     @Override
-    public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
+    public ItemStack getItemBySlot(EquipmentSlotType slotIn) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
+    public void setItemSlot(EquipmentSlotType slotIn, ItemStack stack) {
 
     }
 
     @Override
-    public HandSide getPrimaryHand() {
+    public HandSide getMainArm() {
         return HandSide.RIGHT;
     }
 
     PlayerEntity getPlayer() {
-        return (PlayerEntity) world.getEntityByID(player);
+        return (PlayerEntity) level.getEntity(player);
     }
 }

@@ -29,12 +29,12 @@ public class SyncLevel implements IMessage<SyncLevel> {
     @Override
     public void encode(SyncLevel message, PacketBuffer buffer) {
         buffer.writeInt(message.playerId);
-        buffer.writeEnumValue(message.level);
+        buffer.writeEnum(message.level);
     }
 
     @Override
     public SyncLevel decode(PacketBuffer buffer) {
-        return new SyncLevel(buffer.readInt(), buffer.readEnumValue(DragonLevel.class));
+        return new SyncLevel(buffer.readInt(), buffer.readEnum(DragonLevel.class));
     }
 
     @Override

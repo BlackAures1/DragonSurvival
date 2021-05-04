@@ -29,7 +29,7 @@ public class ToggleWings implements IMessage<ToggleWings> {
 
     @Override
     public void handle(ToggleWings message, Supplier<NetworkEvent.Context> supplier) {
-        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SetFlyState(supplier.get().getSender().getEntityId(), message.state));
+        DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SetFlyState(supplier.get().getSender().getId(), message.state));
         supplier.get().setPacketHandled(true);
     }
 }

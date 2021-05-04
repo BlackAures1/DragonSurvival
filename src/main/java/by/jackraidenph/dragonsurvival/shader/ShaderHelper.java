@@ -41,9 +41,9 @@ public final class ShaderHelper {
     public static void initShaders() {
         if (Minecraft.getInstance() != null
                 && Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(
+            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(
                     (IResourceManagerReloadListener) manager -> {
-                        PROGRAMS.values().forEach(ShaderLinkHelper::deleteShader);
+                        PROGRAMS.values().forEach(ShaderLinkHelper::releaseProgram);
                         PROGRAMS.clear();
                         loadShaders(manager);
                     });
@@ -70,11 +70,11 @@ public final class ShaderHelper {
             return;
         }
 
-        int program = prog.getProgram();
-        ShaderLinkHelper.func_227804_a_(program);
+        int program = prog.getId();
+        ShaderLinkHelper.glUseProgram(program);
 
-        int time = GlStateManager.getUniformLocation(program, "time");
-        GlStateManager.uniform1i(time, (int) (System.currentTimeMillis() / 50));
+        int time = GlStateManager._glGetUniformLocation(program, "time");
+        GlStateManager._glUniform1i(time, (int) (System.currentTimeMillis() / 50));
 
         if (callback != null) {
             callback.call(program);
@@ -86,7 +86,7 @@ public final class ShaderHelper {
     }
 
     public static void releaseShader() {
-        ShaderLinkHelper.func_227804_a_(0);
+        ShaderLinkHelper.glUseProgram(0);
     }
 
     public static boolean useShaders() {
@@ -119,7 +119,7 @@ public final class ShaderHelper {
         ResourceLocation loc = new ResourceLocation(DragonSurvivalMod.MODID, filename);
 
         try (InputStream is = new BufferedInputStream(manager.getResource(loc).getInputStream())) {
-            return ShaderLoader.func_216534_a(shaderType, loc.toString(), is);
+            return ShaderLoader.compileShader(shaderType, loc.toString(), is, ""); //The final string is just used in an exception message
         }
     }
 
@@ -147,7 +147,7 @@ public final class ShaderHelper {
         }
 
         @Override
-        public int getProgram() {
+        public int getId() {
             return program;
         }
 
@@ -157,12 +157,12 @@ public final class ShaderHelper {
         }
 
         @Override
-        public ShaderLoader getVertexShaderLoader() {
+        public ShaderLoader getVertexProgram() {
             return vert;
         }
 
         @Override
-        public ShaderLoader getFragmentShaderLoader() {
+        public ShaderLoader getFragmentProgram() {
             return frag;
         }
     }

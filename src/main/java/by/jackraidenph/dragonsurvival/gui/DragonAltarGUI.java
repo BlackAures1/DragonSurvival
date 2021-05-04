@@ -9,14 +9,17 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
@@ -39,35 +42,37 @@ public class DragonAltarGUI extends Screen {
         return false;
     }
 
+    
+    
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.minecraft == null)
             return;
-        this.renderBackground();
+        this.renderBackground(matrixStack);
         int startX = this.guiLeft;
         int startY = this.guiTop;
-        super.render(mouseX, mouseY, partialTicks);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
+        this.minecraft.getTextureManager().bind(BACKGROUND_TEXTURE);
 
-        blit(startX, startY, 0, 0, 215, 158, 512, 512);
+        blit(matrixStack, startX, startY, 0, 0, 215, 158, 512, 512);
 
 
         if (mouseY > startY + 6 && mouseY < startY + 153) {
             if (mouseX > startX + 5 && mouseX < startX + 55) {
-                blit(startX + 6, startY + 6, 217, 0, 49, 149, 512, 512);
+                blit(matrixStack, startX + 6, startY + 6, 217, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 57 && mouseX < startX + 107) {
-                blit(startX + 58, startY + 6, 266, 0, 49, 149, 512, 512);
+                blit(matrixStack, startX + 58, startY + 6, 266, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 109 && mouseX < startX + 159) {
-                blit(startX + 110, startY + 6, 315, 0, 49, 149, 512, 512);
+                blit(matrixStack, startX + 110, startY + 6, 315, 0, 49, 149, 512, 512);
             }
 
             if (mouseX > startX + 161 && mouseX < startX + 211) {
-                blit(startX + 161, startY + 6, 364, 0, 49, 149, 512, 512);
+                blit(matrixStack, startX + 161, startY + 6, 364, 0, 49, 149, 512, 512);
             }
             //warning
 //            if(mouseX>startX+5 && mouseX<startX+211) {
@@ -85,40 +90,40 @@ public class DragonAltarGUI extends Screen {
         this.guiLeft = (this.width - this.xSize / 2) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, "CAVE",
+        this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, new StringTextComponent("CAVE"),
                 button -> {
                     initiateDragonForm(DragonType.CAVE);
-                    minecraft.player.sendMessage(new TranslationTextComponent("ds.cave_dragon_choice"));
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.cave_dragon_choice"), minecraft.player.getUUID());
                 })
         );
 
-        this.addButton(new ExtendedButton(this.guiLeft + 58, this.guiTop + 6, 49, 147, "FOREST",
+        this.addButton(new ExtendedButton(this.guiLeft + 58, this.guiTop + 6, 49, 147, new StringTextComponent("FOREST"),
                 button -> {
                     initiateDragonForm(DragonType.FOREST);
-                    minecraft.player.sendMessage(new TranslationTextComponent("ds.forest_dragon_choice"));
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.forest_dragon_choice"), minecraft.player.getUUID());
                 })
 
         );
 
-        this.addButton(new ExtendedButton(this.guiLeft + 110, this.guiTop + 6, 49, 147, "SEA",
+        this.addButton(new ExtendedButton(this.guiLeft + 110, this.guiTop + 6, 49, 147, new StringTextComponent("SEA"),
                 button -> {
                     initiateDragonForm(DragonType.SEA);
-                    minecraft.player.sendMessage(new TranslationTextComponent("ds.sea_dragon_choice"));
+                    minecraft.player.sendMessage(new TranslationTextComponent("ds.sea_dragon_choice"), minecraft.player.getUUID());
                 })
 
         );
 
-        addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, "Human", b -> {
+        addButton(new ExtendedButton(guiLeft + 162, guiTop + 6, 49, 147, new StringTextComponent("Human"), b -> {
             DragonStateProvider.getCap(minecraft.player).ifPresent(playerStateHandler -> {
                 playerStateHandler.setIsDragon(false);
                 playerStateHandler.setIsHiding(false);
                 playerStateHandler.setLevel(DragonLevel.BABY);
                 playerStateHandler.setType(DragonType.NONE);
                 playerStateHandler.setHasWings(false);
-                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getEntityId(), false, DragonType.NONE, DragonLevel.BABY, false, 20, false));
+                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, DragonLevel.BABY, false, 20, false));
                 DragonSurvivalMod.CHANNEL.sendToServer(new ResetPlayer());
-                minecraft.player.closeScreen();
-                minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"));
+                minecraft.player.closeContainer();
+                minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"), minecraft.player.getUUID());
             });
         }));
     }
@@ -127,17 +132,17 @@ public class DragonAltarGUI extends Screen {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null)
             return;
-        player.closeScreen();
+        player.closeContainer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getEntityId(), false, type, DragonLevel.BABY, true, DragonLevel.BABY.initialHealth, false));
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, DragonLevel.BABY, true, DragonLevel.BABY.initialHealth, false));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
-            player.world.playSound(player, player.getPosition(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getEntityId(), 0, 0, 0));
+            player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setLevel(DragonLevel.BABY);
             cap.setHasWings(false);
-            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
+            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
 //                    Random random = player.world.rand;
 //                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
 //                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));

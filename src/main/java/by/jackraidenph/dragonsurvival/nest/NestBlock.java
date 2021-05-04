@@ -36,17 +36,17 @@ import java.util.UUID;
 
 public class NestBlock extends HorizontalBlock {
 
-    public static final VoxelShape SHAPE = VoxelShapes.create(0, 0, 0, 1, 0.1, 1);
-    public static final VoxelShape OUTLINE = VoxelShapes.create(0, 0, 0, 1, 0.5, 1);
+    public static final VoxelShape SHAPE = VoxelShapes.box(0, 0, 0, 1, 0.1, 1);
+    public static final VoxelShape OUTLINE = VoxelShapes.box(0, 0, 0, 1, 0.5, 1);
 
     public NestBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
-        builder.add(HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(FACING);
     }
 
     @Override
@@ -60,84 +60,85 @@ public class NestBlock extends HorizontalBlock {
     }
 
     public NestEntity getBlockEntity(World world, BlockPos pos) {
-        return (NestEntity) world.getTileEntity(pos);
+        return (NestEntity) world.getBlockEntity(pos);
     }
 
     /**
      * Prevent anyone from breaking the nest
      */
     @Override
-    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
+    public float getDestroyProgress(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
         return 0;
     }
 
+    
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        UUID uuid = player.getUniqueID();
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        UUID uuid = player.getUUID();
         DragonStateHandler dragonStateHandler = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
         DragonLevel dragonLevel = dragonStateHandler.getLevel();
         DragonType dragonType = dragonStateHandler.getType();
-        TileEntity blockEntity = worldIn.getTileEntity(pos);
+        TileEntity blockEntity = worldIn.getBlockEntity(pos);
         if (blockEntity instanceof NestEntity && uuid.equals(((NestEntity) blockEntity).ownerUUID)) {
-            final Direction playerHorizontalFacing = player.getHorizontalFacing();
+            final Direction playerHorizontalFacing = player.getDirection();
             final Direction placementDirection = playerHorizontalFacing.getOpposite();
             if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
 
-                if (worldIn.isAirBlock(pos.offset(playerHorizontalFacing)) &&
-                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing.rotateYCCW())) &&
-                        worldIn.isAirBlock(pos.offset(playerHorizontalFacing).offset(playerHorizontalFacing.rotateYCCW()))) {
-                    CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+                if (worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing)) &&
+                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing.getCounterClockWise())) &&
+                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing).relative(playerHorizontalFacing.getCounterClockWise()))) {
+                    CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:
-                            worldIn.setBlockState(pos, BlockInit.mediumSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.mediumSeaNest.defaultBlockState().setValue(FACING, placementDirection));
                             break;
                         case FOREST:
-                            worldIn.setBlockState(pos, BlockInit.mediumForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.mediumForestNest.defaultBlockState().setValue(FACING, placementDirection));
                             break;
                         case CAVE:
-                            worldIn.setBlockState(pos, BlockInit.mediumCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.mediumCaveNest.defaultBlockState().setValue(FACING, placementDirection));
                     }
                     NestEntity nestEntity = getBlockEntity(worldIn, pos);
-                    nestEntity.read(compoundNBT);
                     BlockState blockState = worldIn.getBlockState(pos);
-                    blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+                    nestEntity.load(blockState, compoundNBT);
+                    blockState.getBlock().setPlacedBy(worldIn, pos, blockState, player, player.getItemInHand(handIn));
                     return ActionResultType.SUCCESS;
                 } else {
-                    if (worldIn.isRemote) {
-                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
+                    if (worldIn.isClientSide) {
+                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"), player.getUUID());
                     }
                     return ActionResultType.CONSUME;
                 }
             } else if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.ADULT) {
-                if (worldIn.isAirBlock(pos.north()) && worldIn.isAirBlock(pos.south()) &&
-                        worldIn.isAirBlock(pos.west()) && worldIn.isAirBlock(pos.east())
-                        && worldIn.isAirBlock(pos.north().west()) && worldIn.isAirBlock(pos.north().east())
-                        && worldIn.isAirBlock(pos.south().east()) && worldIn.isAirBlock(pos.south().west())) {
-                    CompoundNBT compoundNBT = blockEntity.write(new CompoundNBT());
+                if (worldIn.isEmptyBlock(pos.north()) && worldIn.isEmptyBlock(pos.south()) &&
+                        worldIn.isEmptyBlock(pos.west()) && worldIn.isEmptyBlock(pos.east())
+                        && worldIn.isEmptyBlock(pos.north().west()) && worldIn.isEmptyBlock(pos.north().east())
+                        && worldIn.isEmptyBlock(pos.south().east()) && worldIn.isEmptyBlock(pos.south().west())) {
+                    CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:
-                            worldIn.setBlockState(pos, BlockInit.bigSeaNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.bigSeaNest.defaultBlockState().setValue(FACING, placementDirection));
                             break;
                         case FOREST:
-                            worldIn.setBlockState(pos, BlockInit.bigForestNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.bigForestNest.defaultBlockState().setValue(FACING, placementDirection));
                             break;
                         case CAVE:
-                            worldIn.setBlockState(pos, BlockInit.bigCaveNest.getDefaultState().with(HORIZONTAL_FACING, placementDirection));
+                            worldIn.setBlockAndUpdate(pos, BlockInit.bigCaveNest.defaultBlockState().setValue(FACING, placementDirection));
                     }
                     NestEntity nestEntity = getBlockEntity(worldIn, pos);
-                    nestEntity.read(compoundNBT);
                     BlockState blockState = worldIn.getBlockState(pos);
-                    blockState.getBlock().onBlockPlacedBy(worldIn, pos, blockState, player, player.getHeldItem(handIn));
+                    nestEntity.load(blockState, compoundNBT);
+                    blockState.getBlock().setPlacedBy(worldIn, pos, blockState, player, player.getItemInHand(handIn));
                     return ActionResultType.SUCCESS;
                 } else {
-                    if (worldIn.isRemote) {
-                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"));
+                    if (worldIn.isClientSide) {
+                        player.sendMessage(new TranslationTextComponent("ds.space.occupied"), player.getUUID());
                     }
                     return ActionResultType.CONSUME;
                 }
             }
         }
-        if (player instanceof ServerPlayerEntity && player.getUniqueID().equals(getBlockEntity(worldIn, pos).ownerUUID)) {
+        if (player instanceof ServerPlayerEntity && player.getUUID().equals(getBlockEntity(worldIn, pos).ownerUUID)) {
             NetworkHooks.openGui((ServerPlayerEntity) player, getBlockEntity(worldIn, pos), packetBuffer -> packetBuffer.writeBlockPos(pos));
         }
         return ActionResultType.SUCCESS;
@@ -147,13 +148,13 @@ public class NestBlock extends HorizontalBlock {
      * Setting owner and type
      */
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         NestEntity nestEntity = getBlockEntity(worldIn, pos);
         if (placer != null) {
             DragonStateProvider.getCap(placer).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     if (nestEntity.ownerUUID == null) {
-                        nestEntity.ownerUUID = placer.getUniqueID();
+                        nestEntity.ownerUUID = placer.getUUID();
                     }
                     if (nestEntity.type == DragonType.NONE) {
                         nestEntity.type = dragonStateHandler.getType();
@@ -174,9 +175,9 @@ public class NestBlock extends HorizontalBlock {
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+    public boolean triggerEvent(BlockState state, World worldIn, BlockPos pos, int id, int param) {
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Override
@@ -185,7 +186,7 @@ public class NestBlock extends HorizontalBlock {
     }
 
     @Override
-    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
 
     }
 }

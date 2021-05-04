@@ -48,7 +48,7 @@ public class PredatorStarTileEntity extends TileEntity implements ITickableTileE
                 }
         }*/
 
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             ++this.activeRotation;
         }
     }

@@ -1,13 +1,13 @@
 package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketType;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -41,19 +41,20 @@ public class SetRespawnPosition implements IMessage<SetRespawnPosition> {
     @Override
     public void handle(SetRespawnPosition message, Supplier<NetworkEvent.Context> supplier) {
         ServerPlayerEntity serverPlayerEntity = supplier.get().getSender();
-        BlockPos.Mutable spawnPosition = new BlockPos.Mutable(message.position);
-        ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-        serverWorld.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, new ChunkPos(spawnPosition), 1, serverPlayerEntity.getEntityId());
+        BlockPos.Mutable spawnPosition = new BlockPos.Mutable(message.position.getX(), message.position.getY(), message.position.getZ());
+        ServerWorld serverWorld = serverPlayerEntity.getLevel();
+        serverWorld.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(spawnPosition), 1, serverPlayerEntity.getId());
         spawnPosition.setY(250);
         IChunk chunk = serverWorld.getChunk(spawnPosition);
         while (serverWorld.getBlockState(spawnPosition).isAir(serverWorld, spawnPosition)) {
             spawnPosition.setY(spawnPosition.getY() - 1);
         }
         //correct, do not change
-        spawnPosition.add(0, 1, 0);
+        spawnPosition.set(0, 1, 0);
         //TODO prevent damage
-        serverPlayerEntity.connection.setPlayerLocation(spawnPosition.getX() + 0.5, spawnPosition.getY() + 1, spawnPosition.getZ() + 0.5, 0, 0);
-        serverPlayerEntity.setSpawnPoint(spawnPosition.up(), true, false, DimensionType.OVERWORLD);
-        serverPlayerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
+        serverPlayerEntity.connection.teleport(spawnPosition.getX() + 0.5, spawnPosition.getY() + 1, spawnPosition.getZ() + 0.5, 0, 0);
+        serverPlayerEntity.setRespawnPosition(serverPlayerEntity.getLevel().dimension(), spawnPosition.above(), 0.0F, true, false); // Float is respawnAngle
+        // check these boolean values, might need to be switched.
+        serverPlayerEntity.getAttribute(Attributes.MAX_HEALTH).setBaseValue(DragonLevel.BABY.initialHealth);
     }
 }
