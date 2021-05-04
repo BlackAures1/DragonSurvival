@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "dragonsurvival:cooked_meats"
+  },
+  "result": "dragonsurvival:charred_meat",
+  "cookingtime": 200
+}
