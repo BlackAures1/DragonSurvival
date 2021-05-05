@@ -1,13 +1,16 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -18,6 +21,8 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.DoorHingeSide;
+import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -93,23 +98,26 @@ public class DragonDoor extends Block {
     }
 
     public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        Part part = state.getValue(PART);
-        BlockPos blockpos = part == Part.BOTTOM ? pos.above() : pos.below();
-        BlockState blockstate = worldIn.getBlockState(blockpos);
-        if (blockstate.getBlock() == this && blockstate.getValue(PART) != part) {
-            worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
-            ItemStack itemstack = player.getMainHandItem();
-            if (!worldIn.isClientSide && !player.isCreative() && player.hasCorrectToolForDrops(blockstate)) {
-                Block.dropResources(state, worldIn, pos, null, player, itemstack);
-            }
-        }
-        if ((part == Part.TOP || part == Part.MIDDLE) && !worldIn.isClientSide && !player.isCreative() && player.hasCorrectToolForDrops(state)) {
-            Block.dropResources(BlockInit.dragonDoor.defaultBlockState(), worldIn, pos, null, player, player.getMainHandItem());
-        }
-
-        super.playerWillDestroy(worldIn, pos, state, player);
-    }
+    	if (!worldIn.isClientSide) {
+    		Part part = state.getValue(PART);
+        	if (part != Part.MIDDLE && !player.isCreative()) {
+        		BlockPos middlePos = part == Part.BOTTOM ? pos.above() : pos.below();
+        		BlockState middleState = worldIn.getBlockState(middlePos);
+        		if (middleState.getBlock() == state.getBlock()) {
+        			worldIn.setBlock(middlePos, Blocks.AIR.defaultBlockState(), 35);
+        			worldIn.levelEvent(player, 2001, middlePos, Block.getId(middleState));
+            	}
+        	} else if (part != Part.BOTTOM && player.isCreative()) {
+    			BlockPos bottomPos = part == Part.MIDDLE ? pos.below() : pos.below(2);
+    			BlockState bottomState = worldIn.getBlockState(bottomPos);
+    			if (bottomState.getBlock() == state.getBlock()) {
+        			worldIn.setBlock(bottomPos, Blocks.AIR.defaultBlockState(), 35);
+        			worldIn.levelEvent(player, 2001, bottomPos, Block.getId(bottomState));
+            	}
+        	}
+    	}
+		super.playerWillDestroy(worldIn, pos, state, player);
+     }
 
     public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         switch (type) {
@@ -129,7 +137,7 @@ public class DragonDoor extends Block {
         return this.material == Material.METAL ? 1005 : 1006;
     }
 
-    private DoorHingeSide getHingeSide(BlockItemUseContext blockItemUseContext) {
+    private DoorHingeSide getHinge(BlockItemUseContext blockItemUseContext) {
         //TODO
         IBlockReader iblockreader = blockItemUseContext.getLevel();
         BlockPos blockpos = blockItemUseContext.getClickedPos();
@@ -170,7 +178,7 @@ public class DragonDoor extends Block {
         if (blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context) && context.getLevel().getBlockState(blockpos.above(2)).canBeReplaced(context)) {
             World world = context.getLevel();
             boolean flag = world.hasNeighborSignal(blockpos) || world.hasNeighborSignal(blockpos.above());
-            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HINGE, this.getHingeSide(context)).setValue(POWERED, flag).setValue(OPEN, flag).setValue(PART, Part.BOTTOM);
+            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HINGE, this.getHinge(context)).setValue(POWERED, flag).setValue(OPEN, flag).setValue(PART, Part.BOTTOM);
         } else {
             return null;
         }
