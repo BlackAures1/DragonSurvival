@@ -240,10 +240,6 @@ public class DragonDoor extends Block {
 
             worldIn.setBlock(pos, state.setValue(POWERED, flag).setValue(OPEN, flag), 2);
         }
-        BlockState blockStateDown = worldIn.getBlockState(pos.below());
-        if (state.getValue(PART) == Part.TOP && blockStateDown.getBlock() == this) {
-            worldIn.setBlock(pos.below(), blockStateDown.setValue(OPEN, flag), 2);
-        }
     }
 
     public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
