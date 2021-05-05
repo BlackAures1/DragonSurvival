@@ -29,10 +29,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 
 public class DragonDoor extends Block {
     enum Part implements IStringSerializable {
@@ -135,7 +133,7 @@ public class DragonDoor extends Block {
     }
 
     private DoorHingeSide getHinge(BlockItemUseContext blockItemUseContext) {
-        //TODO
+        //TODO Logic handling aligning doors
         IBlockReader iblockreader = blockItemUseContext.getLevel();
         BlockPos blockpos = blockItemUseContext.getClickedPos();
         Direction direction = blockItemUseContext.getHorizontalDirection();
@@ -151,8 +149,8 @@ public class DragonDoor extends Block {
         BlockPos blockpos5 = blockpos1.relative(direction2);
         BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
         int i = (blockstate.isCollisionShapeFullBlock(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.isCollisionShapeFullBlock(iblockreader, blockpos3) ? -1 : 0) + (blockstate2.isCollisionShapeFullBlock(iblockreader, blockpos4) ? 1 : 0) + (blockstate3.isCollisionShapeFullBlock(iblockreader, blockpos5) ? 1 : 0);
-        boolean flag = blockstate.getBlock() == this && blockstate.getValue(PART) == Part.BOTTOM;
-        boolean flag1 = blockstate2.getBlock() == this && blockstate2.getValue(PART) == Part.BOTTOM;
+        boolean flag = blockstate.is(this) && blockstate.getValue(PART) == Part.BOTTOM;
+        boolean flag1 = blockstate2.is(this) && blockstate2.getValue(PART) == Part.BOTTOM;
         if ((!flag || flag1) && i <= 0) {
             if ((!flag1 || flag) && i >= 0) {
                 int j = direction.getStepX();
@@ -160,7 +158,7 @@ public class DragonDoor extends Block {
                 Vector3d vec3d = blockItemUseContext.getClickLocation();
                 double d0 = vec3d.x - (double) blockpos.getX();
                 double d1 = vec3d.z - (double) blockpos.getZ();
-                return (j >= 0 || !(d1 < 0.5D)) && (j <= 0 || !(d1 > 0.5D)) && (k >= 0 || !(d0 > 0.5D)) && (k <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
+                return (j >= 0 || !(d1 < 0.5D)) && (j <= 0 || !(d1 > 0.5D)) && (k >= 0 || !(d0 > 0.5D)) && (k <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT; 
             } else {
                 return DoorHingeSide.LEFT;
             }
