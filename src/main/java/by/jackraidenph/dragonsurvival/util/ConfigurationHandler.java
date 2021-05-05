@@ -21,8 +21,7 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.DoubleValue dragonOreDustChance;
     public static ForgeConfigSpec.DoubleValue humanOreBoneChance;
     public static ForgeConfigSpec.DoubleValue dragonOreBoneChance;
-    //public static ForgeConfigSpec.DoubleValue predatorDustChance;
-    //public static ForgeConfigSpec.DoubleValue predatorBoneChance;
+    public static ForgeConfigSpec.ConfigValue<String> oreBlocksTag;
 
     public static class General {
 
@@ -36,8 +35,7 @@ public class ConfigurationHandler {
             dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
             humanOreBoneChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
             dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
-            //predatorDustChance = builder.defineInRange("Predator dust chance", 0.3, 0.0, 1.0);
-            //predatorBoneChance = builder.defineInRange("Predator bone chance", 0.0, 0.0, 1.0);
+            oreBlocksTag = builder.define("Ore blocks tag", "forge:ores");
             builder.pop();
 
         }
