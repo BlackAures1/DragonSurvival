@@ -9,12 +9,15 @@ import by.jackraidenph.dragonsurvival.network.DiggingStatus;
 import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RedstoneOreBlock;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -36,11 +39,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootContext.Builder;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -321,9 +329,9 @@ public class EventHandler {
         if (world.isNight() && world.getBlockEntity(sleepingLocation) instanceof NestEntity)
             sleepingLocationCheckEvent.setResult(Event.Result.ALLOW);
     }
-
+    
     @SubscribeEvent
-    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) {
+    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) { // FIXME This is not how loot modifiers should be handled. This should be done as a GlobalLootModifier
         if (!breakEvent.isCanceled()) {
             IWorld world = breakEvent.getWorld();
             if (world instanceof ServerWorld) {
@@ -331,21 +339,33 @@ public class EventHandler {
                 BlockPos blockPos = breakEvent.getPos();
                 PlayerEntity playerEntity = breakEvent.getPlayer();
                 Block block = blockState.getBlock();
-                int random;
-                final boolean suitableOre = block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE;
-                if (suitableOre) {
+                ItemStack mainHandItem = playerEntity.getItemInHand(Hand.MAIN_HAND);
+                double random;
+                // Modded Ore Support
+                ResourceLocation ores = new ResourceLocation("forge", "ores");
+                // Checks to make sure the ore does not drop itself (so you can't go infinite with this unless you get enough of the drop to craft the ore or something)
+                final boolean suitableOre = ItemTags.getAllTags().getTag(ores).contains(block.asItem()) && 
+                		!block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
+                				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                				.withParameter(LootParameters.TOOL, mainHandItem))
+                		.stream().anyMatch(item -> item.getItem() == block.asItem()); 
+                //final boolean suitableOre = block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE;
+                if (suitableOre ) {//&& EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, mainHandItem) == 0) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
-                        random = playerEntity.getRandom().nextInt(100);
-                        if (random < 80) {
+                        random = playerEntity.getRandom().nextDouble();
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
-                        if (random == 0) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreBoneChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
-                    } else
-                        random = playerEntity.getRandom().nextInt(300);
-                    if (random == 0) {
-                        world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                    } else {
+                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreDustChance.get()) {
+                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+                        }
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreBoneChance.get()) {
+                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
+                        }
                     }
                 }
             }

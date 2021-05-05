@@ -17,6 +17,12 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
+    public static ForgeConfigSpec.DoubleValue humanOreDustChance;
+    public static ForgeConfigSpec.DoubleValue dragonOreDustChance;
+    public static ForgeConfigSpec.DoubleValue humanOreBoneChance;
+    public static ForgeConfigSpec.DoubleValue dragonOreBoneChance;
+    //public static ForgeConfigSpec.DoubleValue predatorDustChance;
+    //public static ForgeConfigSpec.DoubleValue predatorBoneChance;
 
     public static class General {
 
@@ -26,6 +32,12 @@ public class ConfigurationHandler {
             predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
+            humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
+            dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
+            humanOreDustChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
+            dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
+            //predatorDustChance = builder.defineInRange("Predator dust chance", 0.3, 0.0, 1.0);
+            //predatorBoneChance = builder.defineInRange("Predator bone chance", 0.0, 0.0, 1.0);
             builder.pop();
 
         }
