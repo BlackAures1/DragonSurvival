@@ -34,7 +34,7 @@ public class ConfigurationHandler {
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
             humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
             dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
-            humanOreDustChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
+            humanOreBoneChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
             dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
             //predatorDustChance = builder.defineInRange("Predator dust chance", 0.3, 0.0, 1.0);
             //predatorBoneChance = builder.defineInRange("Predator bone chance", 0.0, 0.0, 1.0);
