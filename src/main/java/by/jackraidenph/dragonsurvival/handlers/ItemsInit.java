@@ -100,7 +100,7 @@ public class ItemsInit {
         elderDragonDust = new Item(new Item.Properties().tab(items)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_dust");
         elderDragonBone = new Item(new Item.Properties().tab(items)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_bone");
 
-        chargedCoal = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(5).saturationMod(0.8F).build())) {
+        chargedCoal = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(5).saturationMod(0.7F).build())) {
             @Override
             public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
                 DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
@@ -109,7 +109,7 @@ public class ItemsInit {
                 return ActionResult.pass(playerIn.getItemInHand(handIn));
             }
         }.setRegistryName(DragonSurvivalMod.MODID, "charged_coal");
-        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(10).saturationMod(0.6F).meat().build())) {
+        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(10).saturationMod(0.65F).meat().build())) {
             @Override
             public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
                 DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
