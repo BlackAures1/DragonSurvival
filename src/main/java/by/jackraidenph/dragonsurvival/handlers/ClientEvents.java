@@ -33,7 +33,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -382,7 +381,12 @@ public class ClientEvents {
                 texture += "gold_";
             } else if (armorMaterial == ArmorMaterial.CHAIN) {
                 texture += "chainmail_";
+            } else if (armorMaterial == ArmorMaterial.TURTLE)
+                texture += "turtle_";
+            else {
+                return texture + "empty_armor.png";
             }
+
             texture += "dragon_";
             switch (equipmentSlot) {
                 case HEAD:
