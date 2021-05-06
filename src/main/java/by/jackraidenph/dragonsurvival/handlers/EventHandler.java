@@ -331,7 +331,7 @@ public class EventHandler {
     }
     
     @SubscribeEvent
-    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) { // FIXME This is not how loot modifiers should be handled. This should be done as a GlobalLootModifier
+    public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) {
         if (!breakEvent.isCanceled()) {
             IWorld world = breakEvent.getWorld();
             if (world instanceof ServerWorld) {
@@ -342,28 +342,28 @@ public class EventHandler {
                 ItemStack mainHandItem = playerEntity.getItemInHand(Hand.MAIN_HAND);
                 double random;
                 // Modded Ore Support
-                ResourceLocation ores = new ResourceLocation("forge", "ores");
+                String[] tagStringSplit = ConfigurationHandler.ORE_LOOT.oreBlocksTag.get().split(":");
+                ResourceLocation ores = new ResourceLocation(tagStringSplit[0], tagStringSplit[1]);
                 // Checks to make sure the ore does not drop itself (so you can't go infinite with this unless you get enough of the drop to craft the ore or something)
                 final boolean suitableOre = ItemTags.getAllTags().getTag(ores).contains(block.asItem()) && 
                 		!block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
                 				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                 				.withParameter(LootParameters.TOOL, mainHandItem))
                 		.stream().anyMatch(item -> item.getItem() == block.asItem()); 
-                //final boolean suitableOre = block instanceof RedstoneOreBlock || block == Blocks.EMERALD_ORE || block == Blocks.DIAMOND_ORE || block == Blocks.LAPIS_ORE || block == Blocks.COAL_ORE || block == Blocks.NETHER_QUARTZ_ORE;
-                if (suitableOre ) {//&& EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, mainHandItem) == 0) {
+                if (suitableOre ) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
                         random = playerEntity.getRandom().nextDouble();
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreDustChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreBoneChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreBoneChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
                     } else {
-                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreDustChance.get()) {
+                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreBoneChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
                     }

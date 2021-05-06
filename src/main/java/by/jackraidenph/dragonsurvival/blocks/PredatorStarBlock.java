@@ -1,14 +1,18 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,12 +22,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
 import java.util.Random;
 
@@ -81,14 +87,11 @@ public class PredatorStarBlock extends Block {
 
     @Override
     public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        super.attack(state, worldIn, pos, player);
-        this.blockBehaviour(player, worldIn, pos);
+    	// TODO Should be able to do "player.getMainHandItem().isCorrectToolForDrops(state)" but always returns false for some reason
+        if (!ConfigurationHandler.mineStarBlock.get() || !(player.getMainHandItem().getToolTypes().contains(ToolType.HOE) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem()) > 0)) { 
+        	this.blockBehaviour(player, worldIn, pos); 
+        }
     }
-
-    /*@Override
-    public int tickRate(IWorldReader worldIn) { // This was totally removed in 1.16
-        return 1;
-    }*/
 
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {

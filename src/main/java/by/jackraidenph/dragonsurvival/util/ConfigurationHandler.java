@@ -1,10 +1,9 @@
 package by.jackraidenph.dragonsurvival.util;
 
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.Arrays;
 import java.util.List;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
@@ -12,17 +11,13 @@ public class ConfigurationHandler {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Spawn SPAWN = new Spawn(BUILDER);
+    public static final OreLoot ORE_LOOT = new OreLoot(BUILDER);
     public static final ForgeConfigSpec SPEC = BUILDER.build();
     public static ForgeConfigSpec.DoubleValue maxFlightSpeed;
     public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
-    public static ForgeConfigSpec.DoubleValue humanOreDustChance;
-    public static ForgeConfigSpec.DoubleValue dragonOreDustChance;
-    public static ForgeConfigSpec.DoubleValue humanOreBoneChance;
-    public static ForgeConfigSpec.DoubleValue dragonOreBoneChance;
-    //public static ForgeConfigSpec.DoubleValue predatorDustChance;
-    //public static ForgeConfigSpec.DoubleValue predatorBoneChance;
+    public static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
 
     public static class General {
 
@@ -32,15 +27,29 @@ public class ConfigurationHandler {
             predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
-            humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
-            dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
-            humanOreBoneChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
-            dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
-            //predatorDustChance = builder.defineInRange("Predator dust chance", 0.3, 0.0, 1.0);
-            //predatorBoneChance = builder.defineInRange("Predator bone chance", 0.0, 0.0, 1.0);
+            mineStarBlock = builder.define("Silk hoe mines stars", false);
             builder.pop();
 
         }
+    }
+    
+    public static class OreLoot {
+    	public final ForgeConfigSpec.DoubleValue humanOreDustChance;
+        public final ForgeConfigSpec.DoubleValue dragonOreDustChance;
+        public final ForgeConfigSpec.DoubleValue humanOreBoneChance;
+        public final ForgeConfigSpec.DoubleValue dragonOreBoneChance;
+        public final ForgeConfigSpec.ConfigValue<String> oreBlocksTag;
+        
+    	OreLoot(ForgeConfigSpec.Builder builder) {
+    		builder.push("Ore bonus loot");
+    		humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
+            dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
+            humanOreBoneChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
+            dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
+            oreBlocksTag = builder.define("Ores tag", "forge:ores");
+            builder.pop();
+    	}
+    	
     }
 
     public static class Spawn {

@@ -8,6 +8,7 @@ import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import by.jackraidenph.dragonsurvival.nest.BigNestBlock;
 import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
 import by.jackraidenph.dragonsurvival.nest.NestBlock;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -53,13 +54,13 @@ public class BlockInit {
         PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties
                 .of(Material.EGG)
                 .noCollission()
-                .strength(9999)
+                .strength(10F, 9999F)
                 .randomTicks()
-                .noDrops()
+                .harvestTool(ToolType.HOE)
+                .requiresCorrectToolForDrops()
                 .sound(SoundType.NETHER_WART));
         forgeRegistry.register(PREDATOR_STAR_BLOCK.setRegistryName(DragonSurvivalMod.MODID, "predator_star"));
         dragonDoor = new DragonDoor(Block.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
-
         smallCaveNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
         smallSeaNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
         smallForestNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
