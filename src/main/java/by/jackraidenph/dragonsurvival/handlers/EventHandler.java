@@ -342,7 +342,7 @@ public class EventHandler {
                 ItemStack mainHandItem = playerEntity.getItemInHand(Hand.MAIN_HAND);
                 double random;
                 // Modded Ore Support
-                String[] tagStringSplit = ConfigurationHandler.oreBlocksTag.get().split(":");
+                String[] tagStringSplit = ConfigurationHandler.ORE_LOOT.oreBlocksTag.get().split(":");
                 ResourceLocation ores = new ResourceLocation(tagStringSplit[0], tagStringSplit[1]);
                 // Checks to make sure the ore does not drop itself (so you can't go infinite with this unless you get enough of the drop to craft the ore or something)
                 final boolean suitableOre = ItemTags.getAllTags().getTag(ores).contains(block.asItem()) && 
@@ -353,17 +353,17 @@ public class EventHandler {
                 if (suitableOre ) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
                         random = playerEntity.getRandom().nextDouble();
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreDustChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.dragonOreBoneChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreBoneChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
                     } else {
-                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreDustChance.get()) {
+                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.humanOreBoneChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
                     }
