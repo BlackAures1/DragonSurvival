@@ -1,0 +1,46 @@
+{
+  "itemGroup.dragon.survival.blocks": "Dragons Survival",
+
+  "entity.dragonsurvival.magical_predator_entity": "Prédateur Magique",
+
+  "item.dragonsurvival.magical_predator_entity_spawn_egg": "Oeuf Prédateur Magique",
+  "item.dragonsurvival.heart_element": "Coeur Élémentaire",
+  "item.dragonsurvival.star_bone": "Ossements D'Étoiles",
+  "item.dragonsurvival.elder_dragon_bone": "Anciens Ossements De Dragon",
+  "item.dragonsurvival.charged_coal": "Charbon Énergisé",
+  "item.dragonsurvival.charred_meat": "Viande Carbonisée",
+  "item.dragonsurvival.elder_dragon_dust": "Poussière De Dragon Ancien",
+
+  "block.dragonsurvival.dragon_gate": "Porte de Dragon",
+  "block.dragonsurvival.predator_star": "Étoile De Dragon",
+  "block.dragonsurvival.dragon_altar": "Autel Des Dragons",
+  "block.dragonsurvival.cave_nest_small": "Petit Nid De Caverne",
+  "block.dragonsurvival.forest_nest_small": "Petit Nid De Forêt",
+  "block.dragonsurvival.water_nest_small": "Petit Nid Océanique",
+  "block.dragonsurvival.medium_sea_nest": "Nid Océanique Moyen",
+  "block.dragonsurvival.medium_cave_nest": "Nid De Caverne Moyen",
+  "block.dragonsurvival.medium_forest_nest": "Nid De Forêt Moyen",
+  "block.dragonsurvival.big_forest_nest": "Grand Nid De Forêt",
+  "block.dragonsurvival.big_sea_nest": "Grand Nid Océanique",
+  "block.dragonsurvival.big_cave_nest": "Grand Nid De Caverne",
+  "block.dragonsurvival.dragon_altar1": "Autel De Dragon En Chêne",
+  "block.dragonsurvival.dragon_altar2": "Autel De Dragon En Pierre",
+  "block.dragonsurvival.dragon_altar3": "Autel De Dragon En Grès",
+  "block.dragonsurvival.dragon_altar0": "Autel De Dragon Moussu",
+
+  "dragonsurvival:config.category.general.tooltip": "Configuration générales de dragon survival",
+  "dragonsurvival:config.category.spawnchances.tooltip": "Taux d'apparition des entités",
+
+  "death.attack.dryout": "Vous etes mort désséché",
+
+  "ds.cave_dragon_choice": "Vous avez choisis d'être un dragon des cavernes.",
+  "ds.forest_dragon_choice": "Vous avez choisis d'être un dragon des forêts.",
+  "ds.sea_dragon_choice": "Vous avez choisis d'être un dragon des océans.",
+  "ds.choice_human": "Vous avez choisis d'être un humain.",
+  "ds.wings.enabled": "Vous avez déployé vos ailes",
+  "ds.wings.disabled": "Vous avez replié vos ailes",
+  "ds.you.have.no.wings": "Vous n'avez pas d'ailes",
+  "ds.dragon.grants.wings": "<Ender dragon> Je t'octroie des ailes. Maintenant dégerpis !",
+  "ds.space.occupied": "Pas assez d'espace disponible",
+  "ds.cooldown.active": "L'autel est en cours de rechargement"
+}
