@@ -1,9 +1,10 @@
 package by.jackraidenph.dragonsurvival.util;
 
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.ForgeConfigSpec;
+
 import java.util.Arrays;
 import java.util.List;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
@@ -27,7 +28,7 @@ public class ConfigurationHandler {
             predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
-            mineStarBlock = builder.define("Silk hoe mines stars", false);
+            mineStarBlock = builder.define("Silk hoe mines Predator stars", false);
             builder.pop();
 
         }
