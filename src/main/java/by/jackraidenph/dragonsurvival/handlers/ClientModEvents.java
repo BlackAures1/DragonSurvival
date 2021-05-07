@@ -8,12 +8,9 @@ import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -28,17 +25,11 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 @SuppressWarnings("unused")
@@ -91,32 +82,6 @@ public class ClientModEvents {
                 }
             }
         }*/
-    }
-
-    /**
-     * Loads a custom image for skin from the repository. The image name must be [player's UUID]_[stage].png
-     */
-    public static ResourceLocation loadCustomSkin(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
-        UUID uuid = playerEntity.getUUID();
-        URL url;
-        switch (dragonStage) {
-            case BABY:
-                url = new URL(SKINS + uuid + "_newborn.png");
-                break;
-            case YOUNG:
-                url = new URL(SKINS + uuid + "_young.png");
-                break;
-            case ADULT:
-                url = new URL(SKINS + uuid + "_adult.png");
-                break;
-            default:
-                url = null;
-        }
-        InputStream inputStream = url.openConnection().getInputStream();
-        NativeImage customTexture = NativeImage.read(inputStream);
-        ResourceLocation resourceLocation;
-        Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, dragonStage.name), new DynamicTexture(customTexture));
-        return resourceLocation;
     }
 
     /**
