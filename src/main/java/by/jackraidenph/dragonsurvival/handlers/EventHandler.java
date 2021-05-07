@@ -15,9 +15,6 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneOreBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -37,10 +34,8 @@ import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -104,21 +99,6 @@ public class EventHandler {
                 }
             });
 
-        }
-    }
-
-    @Deprecated
-    public static void setPlayerContainer(PlayerEntity playerEntity) {
-        Field field = PlayerEntity.class.getDeclaredFields()[15];
-        if (field.getType() == PlayerContainer.class) {
-            field.setAccessible(true);
-            try {
-                PlayerContainer playerContainer = new PlayerContainer(playerEntity.inventory, playerEntity.level.isClientSide, playerEntity);
-                field.set(playerEntity, playerContainer);
-                playerEntity.containerMenu = playerContainer;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
         }
     }
 
