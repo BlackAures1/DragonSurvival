@@ -1,11 +1,16 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import java.util.HashMap;
+
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -25,18 +30,9 @@ public class DragonSizeHandler {
     			return;
     		float health = (float)player.getAttribute(Attributes.MAX_HEALTH).getValue();
     		// Calculate base values
-    		float height = ((float)health + 4.0F) / 20.0F; // 0.9 -> 2.2 (Config limit to 1.8)
-    		float width = (3.0F * (float)health + 62.0F) / 260.0F; // 0.4 -> 0.7 (Config limit to 0.6)
-    		float eyeHeight = (11.0F * (float)health + 54.0F) / 260.0F; // 0.8 -> 1.9 (Config limit to 1.62)
-    		// Limit Values
-    		if (!ConfigurationHandler.hitboxGrowsPastHuman.get()) {
-    			if (height > 1.8F)
-    				height = 1.8F;
-    			if (width > 0.6F)
-    				width = 0.6F;
-    			if (eyeHeight > 1.62F)
-    				eyeHeight = 1.62F;
-    		}
+    		float height = calculateDragonHeight(health, ConfigurationHandler.hitboxGrowsPastHuman.get());
+    		float width = calculateDragonWidth(health, ConfigurationHandler.hitboxGrowsPastHuman.get());
+    		float eyeHeight = calculateDragonEyeHeight(health, ConfigurationHandler.hitboxGrowsPastHuman.get());
     		// Handle Pose stuff
     		Pose overridePose = overridePose(player);
     		height = calculateModifiedHeight(height, overridePose);
@@ -49,11 +45,32 @@ public class DragonSizeHandler {
         });
     }
     
+	private static float calculateDragonHeight(float health, boolean growsPastHuman) {
+		float height = ((float)health + 4.0F) / 20.0F; // 0.9 -> 2.2
+		if (!growsPastHuman && height > 1.8F)
+			height = 1.8F;
+		return height;
+	}
+	
+	private static float calculateDragonWidth(float health, boolean growsPastHuman) {
+		float width = (3.0F * (float)health + 62.0F) / 260.0F; // 0.4 -> 0.7
+		if (!growsPastHuman && width > 0.6F)
+			width = 0.6F;
+		return width;
+	}
+	
+	private static float calculateDragonEyeHeight(float health, boolean growsPastHuman) {
+		float eyeHeight = (11.0F * (float)health + 54.0F) / 260.0F; // 0.8 -> 1.9
+		if (!growsPastHuman && eyeHeight > 1.62F)
+			eyeHeight = 1.62F;
+		return eyeHeight;
+	}
+	
     private static float calculateModifiedHeight(float height, Pose pose) {
     	if (pose == Pose.CROUCHING) {
 			height *= 5.0F / 6.0F; 
 		} else if (pose == Pose.SWIMMING || pose == Pose.FALL_FLYING || pose == Pose.SPIN_ATTACK) {
-			height *= 2.0F / 3.0F;
+			height *= 7.0F / 12.0F;
 		}
     	return height;
     }
@@ -62,9 +79,19 @@ public class DragonSizeHandler {
     	if (pose == Pose.CROUCHING) {
     		eyeHeight *= 5.0F / 6.0F;
 		} else if (pose == Pose.SWIMMING || pose == Pose.FALL_FLYING || pose == Pose.SPIN_ATTACK) {
-			eyeHeight *= 2.0F / 3.0F;
+			eyeHeight *= 7.0F / 12.0F;
 		}
     	return eyeHeight;
+    }
+    
+    public static boolean canPoseFit(PlayerEntity player, Pose pose) {
+    	float health = (float)player.getAttribute(Attributes.MAX_HEALTH).getValue();
+		float height = calculateModifiedHeight(calculateDragonHeight(health, ConfigurationHandler.hitboxGrowsPastHuman.get()), pose);
+		float width = calculateDragonWidth(health, ConfigurationHandler.hitboxGrowsPastHuman.get());
+		return player.level.getBlockCollisions(null, new AxisAlignedBB(
+				player.position().subtract(width * 0.5D, 0.0D, width * 0.5D), 
+				player.position().add(width * 0.5D, height, width * 0.5D)))
+		.count() == 0;
     }
     
     private static Pose overridePose(PlayerEntity player) {
@@ -75,39 +102,42 @@ public class DragonSizeHandler {
     }
     
     private static Pose getOverridePose(PlayerEntity player) {
-    	boolean swim = player.isInWaterOrBubble() && player.isAffectedByFluids(); // TODO This needs more work to avoid bobbing
-		boolean fly = !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings();
-		boolean spin = player.isAutoSpinAttack();
-		boolean crouch = player.isShiftKeyDown(); // TODO This might need more work
-		if (fly)
+    	boolean swimming = player.isInWaterOrBubble() && player.isAffectedByFluids(); // TODO This needs more work to avoid bobbing
+		boolean flying = !player.isOnGround() && !player.isInWater() && FlightController.wingsEnabled && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings() ;
+		boolean spinning = player.isAutoSpinAttack();
+		boolean crouching = player.isShiftKeyDown(); // TODO This might need more work
+		if (flying)
 			return Pose.FALL_FLYING;
-		else if (swim)
+		else if (swimming)
 			return Pose.SWIMMING;
-		else if (spin)
+		else if (spinning)
 			return Pose.SPIN_ATTACK;
-		else if (crouch)
-			return Pose.CROUCHING; // TODO Set crouching pose if block is above your head (going to need to do calculations based on pose sizes)
+		else {
+			if (crouching || (!canPoseFit(player, Pose.STANDING) && canPoseFit(player, Pose.CROUCHING)))
+				return Pose.CROUCHING;
+		}
 		return Pose.STANDING;
     }
     
-    private static boolean wasDragon;
+    private static HashMap<Integer, Boolean> wasDragon = new HashMap<Integer, Boolean>();
     
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void playerTick(TickEvent.PlayerTickEvent event) {
-    	if (event.player == null || event.phase == TickEvent.Phase.END)
+    	if (event.player == null || event.phase == TickEvent.Phase.END || Minecraft.getInstance().getCameraEntity() != event.player)
     		return;
     	DragonStateProvider.getCap(event.player).ifPresent(dragonStateHandler -> {
     		if (dragonStateHandler.isDragon()) {
     			overridePose(event.player);
-    			if (!wasDragon) {
-    				event.player.refreshDimensions();
-    				wasDragon = true;
+    			event.player.refreshDimensions(); // FIXME Yowch is there a way to implement this without running it every tick?
+    			if (!wasDragon.getOrDefault(event.player.getId(), false)) {
+    				wasDragon.put(event.player.getId(), true);
+    				
     			}
-    		} else if (wasDragon) {
+    		} else if (wasDragon.getOrDefault(event.player.getId(), false)) {
 				event.player.setForcedPose(null);
 				event.player.refreshDimensions();
-				wasDragon = false;
+				wasDragon.put(event.player.getId(), false);
 			}
     	});
     }

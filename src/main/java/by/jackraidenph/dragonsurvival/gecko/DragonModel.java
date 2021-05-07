@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -36,7 +37,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
             if (player.isInWaterOrBubble() && (playerMotion.x != 0 || playerMotion.z != 0))
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
-            if (player.isShiftKeyDown()) {
+            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
                 if ((playerMotion.z() != 0 || playerMotion.x() != 0) && player.animationSpeed != 0f) {
                     return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
                 } else if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
