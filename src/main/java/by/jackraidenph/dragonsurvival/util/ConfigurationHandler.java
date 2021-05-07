@@ -29,7 +29,7 @@ public class ConfigurationHandler {
             predatorDamageFactor = builder.defineInRange("Predator damage factor", 1, 0.5, 10);
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
-            mineStarBlock = builder.define("Silk hoe mines stars", false);
+            mineStarBlock = builder.define("Silk hoe mines Predator stars", false);
             sizeChangesHitbox = builder.define("Dragon size changes hitbox", true);
             hitboxGrowsPastHuman = builder.define("Hitbox grows larger than human", true);
             builder.pop();

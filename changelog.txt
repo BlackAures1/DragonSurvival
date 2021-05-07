@@ -7,10 +7,10 @@ updated recipes to use tags;
 added additional recipe options for charred meat;
 fixed issues with dragon doors;
 added reverse recipes for elder dragon bone and heart element;
+non-vanilla armor will show no texture
 
 0.0.31-1.16.5:
 update;
-
 fixed crash with 'trap' skeleton horses;
 
 0.0.30:

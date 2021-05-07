@@ -16,12 +16,9 @@ import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,7 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -88,14 +84,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        this.level.addParticle(
-                ParticleTypes.SMOKE,
-                this.getX() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
-                this.getY() + this.getBbHeight() / 1.5F * scale,
-                this.getZ() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
-                0,
-                this.level.getRandom().nextFloat() / 12.5f,
-                0);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
+                this.getY() + this.getBbHeight() / 1.5F * scale, this.getZ() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
+                0, this.level.getRandom().nextFloat() / 12.5f, 0);
         if (teleportationCoolDown > 0)
             teleportationCoolDown--;
     }

@@ -52,7 +52,6 @@ public class ClientEvents {
     public static float bodyYaw;
     public static DragonModel dragonModel;
     static boolean showingInventory;
-    static HashMap<UUID, Boolean> warnings = new HashMap<>();
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     /**
      * Default skins
@@ -88,8 +87,6 @@ public class ClientEvents {
         }
     }
 
-    public static boolean isRenderingFirstPerson;
-    
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -97,7 +94,6 @@ public class ClientEvents {
             dummyDragon2 = new AtomicReference<>(EntityTypesInit.dragonEntity.create(player.level));
             dummyDragon2.get().player = player.getId();
         }
-        isRenderingFirstPerson = true;
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 if (renderHandEvent.getItemStack().isEmpty())
@@ -153,7 +149,6 @@ public class ClientEvents {
 
             }
         });
-        isRenderingFirstPerson = false;
     }
 
     @SubscribeEvent
@@ -202,7 +197,6 @@ public class ClientEvents {
         }
     }
 
-    public static boolean isRenderingThirdPerson;
     /**
      * Called for every player.
      */
@@ -215,7 +209,6 @@ public class ClientEvents {
             dummyDragon.player = player.getId();
             playerDragonHashMap.put(player.getId(), new AtomicReference<>(dummyDragon));
         }
-        isRenderingThirdPerson = true;
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
@@ -297,7 +290,6 @@ public class ClientEvents {
                 }
             }
         });
-        isRenderingThirdPerson = false;
     }
 
     private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
