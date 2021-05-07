@@ -18,6 +18,8 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
     public static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
+    public static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
+    public static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
 
     public static class General {
 
@@ -28,8 +30,9 @@ public class ConfigurationHandler {
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
             mineStarBlock = builder.define("Silk hoe mines stars", false);
+            sizeChangesHitbox = builder.define("Dragon size changes hitbox", true);
+            hitboxGrowsPastHuman = builder.define("Hitbox grows larger than human", true);
             builder.pop();
-
         }
     }
     
