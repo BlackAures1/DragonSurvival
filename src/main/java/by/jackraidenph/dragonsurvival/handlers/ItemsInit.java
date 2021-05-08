@@ -48,6 +48,7 @@ public class ItemsInit {
                             ModifiableAttributeInstance currentHealth = playerIn.getAttribute(Attributes.MAX_HEALTH);
                             currentHealth.setBaseValue(currentHealth.getBaseValue() + 2);
                             playerIn.getItemInHand(handIn).shrink(1);
+                            playerIn.refreshDimensions();
 
                             if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth) {
                                 dragonStateHandler.setLevel(DragonLevel.ADULT);
@@ -88,6 +89,7 @@ public class ItemsInit {
                                     DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getId(), DragonLevel.YOUNG));
                             }
                             playerIn.getItemInHand(handIn).shrink(1);
+                            playerIn.refreshDimensions();
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }

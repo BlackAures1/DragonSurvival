@@ -37,7 +37,7 @@ public class DragonSizeHandler {
     		float eyeHeight = calculateDragonEyeHeight(health, ConfigurationHandler.hitboxGrowsPastHuman.get());
     		// Handle Pose stuff
     		Pose overridePose = overridePose(player);
-    		player.sendMessage(new StringTextComponent(("Tick1 for " + player.getDisplayName().getString() + ": hp(" + health + "), p(" + overridePose.toString() + ")")), player.getUUID());
+    		//player.sendMessage(new StringTextComponent(("Tick1 for " + player.getDisplayName().getString() + ": hp(" + health + "), p(" + overridePose.toString() + ")")), player.getUUID());
     		height = calculateModifiedHeight(height, overridePose);
     		eyeHeight = calculateModifiedEyeHeight(eyeHeight, overridePose);
     		// Apply changes
@@ -101,7 +101,7 @@ public class DragonSizeHandler {
     	Pose overridePose = getOverridePose(player);
     	if (player.getForcedPose() != overridePose) {
     		player.setForcedPose(overridePose);
-    		player.sendMessage(new StringTextComponent(("Tick2 for " + player.getDisplayName().getString() + ": p(" + overridePose.toString() + ")")), player.getUUID());
+    		//player.sendMessage(new StringTextComponent(("Tick2 for " + player.getDisplayName().getString() + ": p(" + overridePose.toString() + ")")), player.getUUID());
     		if (player.level.isClientSide() && Minecraft.getInstance().cameraEntity != player)
     			player.refreshDimensions();
     	}
@@ -141,13 +141,13 @@ public class DragonSizeHandler {
     			Pose pose = overridePose(player);
     			if (!wasDragon.getOrDefault(player.getId(), false)) {
     				player.refreshDimensions();
-    				player.sendMessage(new StringTextComponent(("Tick3 for " + player.getDisplayName().getString() + ": p(" + pose.toString() + ")")), player.getUUID());
+    				//player.sendMessage(new StringTextComponent(("Tick3 for " + player.getDisplayName().getString() + ": p(" + pose.toString() + ")")), player.getUUID());
     				wasDragon.put(player.getId(), true);
     			}
     		} else if (wasDragon.getOrDefault(player.getId(), false)) {
     			player.setForcedPose(null);
     			player.refreshDimensions();
-    			player.sendMessage(new StringTextComponent(("Tick4 for " + player.getDisplayName().getString())), player.getUUID());
+    			//player.sendMessage(new StringTextComponent(("Tick4 for " + player.getDisplayName().getString())), player.getUUID());
     			wasDragon.put(player.getId(), false);
 			}
     	});
