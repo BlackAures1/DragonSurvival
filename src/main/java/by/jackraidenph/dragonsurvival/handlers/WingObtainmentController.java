@@ -26,34 +26,34 @@ import java.util.ArrayList;
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
 
-    static ArrayList<String> dragonPhrases;
-    static ArrayList<String> englishPhrases;
+    static ArrayList<TranslationTextComponent> dragonPhrases;
+    static ArrayList<TranslationTextComponent> englishPhrases;
 
     static {
         dragonPhrases = new ArrayList<>(18);
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.1").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.2").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.3").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.4").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.5").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.6").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.7").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.8").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.9").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.10").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.11").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.12").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.13").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.14").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.15").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.16").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.17").getString());
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.18").getString());
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.1"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.2"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.3"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.4"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.5"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.6"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.7"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.8"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.9"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.10"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.11"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.12"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.13"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.14"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.15"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.16"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.17"));
+        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.18"));
 
         englishPhrases = new ArrayList<>(18);
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.1").getString());
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.2").getString());
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.3").getString());
+        englishPhrases.add(new TranslationTextComponent("ds.endmessage.1"));
+        englishPhrases.add(new TranslationTextComponent("ds.endmessage.2"));
+        englishPhrases.add(new TranslationTextComponent("ds.endmessage.3"));
     }
 
     @SubscribeEvent
@@ -67,13 +67,13 @@ public class WingObtainmentController {
                             Thread.sleep(3000);
                             Language language = Minecraft.getInstance().getLanguageManager().getSelected();
 
-                            String randomPhrase;
+                            TranslationTextComponent randomPhrase;
                             if (language.getCode().equals("ru_ru")) {
                                 randomPhrase = dragonPhrases.get(playerEntity.getRandom().nextInt(dragonPhrases.size()));
                             } else
                                 randomPhrase = englishPhrases.get(playerEntity.getRandom().nextInt(englishPhrases.size()));
-                            randomPhrase = randomPhrase.replace("()", playerEntity.getDisplayName().getString());
-                            playerEntity.sendMessage(new StringTextComponent(randomPhrase), playerEntity.getUUID());
+                            String phrase = randomPhrase.getString().replace("()", playerEntity.getDisplayName().getString());
+                            playerEntity.sendMessage(new StringTextComponent(phrase), playerEntity.getUUID());
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
