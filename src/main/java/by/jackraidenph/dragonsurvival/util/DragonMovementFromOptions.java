@@ -29,7 +29,7 @@ public class DragonMovementFromOptions extends MovementInputFromOptions {
       this.jumping = this.options.keyJump.isDown();
       this.shiftKeyDown = this.options.keyShift.isDown();
       if ((player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) && 
-    		  !player.isSwimming() && !player.isAutoSpinAttack()) {
+    		  !player.isInWaterOrBubble() && !player.isAutoSpinAttack()) {
          this.leftImpulse = (float)((double)this.leftImpulse * 0.3D);
          this.forwardImpulse = (float)((double)this.forwardImpulse * 0.3D);
       }
