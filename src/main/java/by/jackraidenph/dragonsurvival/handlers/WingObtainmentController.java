@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.Language;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,49 +13,29 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
-
-    static ArrayList<TranslationTextComponent> dragonPhrases;
-    static ArrayList<TranslationTextComponent> englishPhrases;
-
-    static {
-        dragonPhrases = new ArrayList<>(18);
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.1"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.2"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.3"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.4"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.5"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.6"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.7"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.8"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.9"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.10"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.11"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.12"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.13"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.14"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.15"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.16"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.17"));
-        dragonPhrases.add(new TranslationTextComponent("ds.endmessage.18"));
-
-        englishPhrases = new ArrayList<>(18);
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.1"));
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.2"));
-        englishPhrases.add(new TranslationTextComponent("ds.endmessage.3"));
-    }
+	
+	private static HashMap<String, Integer> dragonPhrases;
+	static {
+		dragonPhrases = new HashMap<String, Integer>();
+		dragonPhrases.put("en_us", 3);
+		dragonPhrases.put("ru_ru", 18);
+		dragonPhrases.put("fr_fr", 0);
+		dragonPhrases.put("zh_cn", 0);
+	}
+	private static UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
 
     @SubscribeEvent
     public static void inTheEnd(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
@@ -65,15 +46,7 @@ public class WingObtainmentController {
                     Thread thread = new Thread(() -> {
                         try {
                             Thread.sleep(3000);
-                            Language language = Minecraft.getInstance().getLanguageManager().getSelected();
-
-                            TranslationTextComponent randomPhrase;
-                            if (language.getCode().equals("ru_ru")) {
-                                randomPhrase = dragonPhrases.get(playerEntity.getRandom().nextInt(dragonPhrases.size()));
-                            } else
-                                randomPhrase = englishPhrases.get(playerEntity.getRandom().nextInt(englishPhrases.size()));
-                            String phrase = randomPhrase.getString().replace("()", playerEntity.getDisplayName().getString());
-                            playerEntity.sendMessage(new StringTextComponent(phrase), playerEntity.getUUID());
+                            playerEntity.sendMessage(new StringTextComponent("ds.endmessage"), enderDragonUUID);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -84,6 +57,22 @@ public class WingObtainmentController {
         }
     }
 
+    @SubscribeEvent
+    public static void clientMessageRecieved(ClientChatReceivedEvent event) {
+    	DragonSurvivalMod.LOGGER.info(event.getMessage().getString());
+    	if (event.getSenderUUID().equals(enderDragonUUID)) { 
+			if (event.getMessage().getString().equals("ds.endmessage")) {
+	    		Language language = Minecraft.getInstance().getLanguageManager().getSelected();
+	    		ClientPlayerEntity player = Minecraft.getInstance().player;
+	    		int messageId = player.getRandom().nextInt(dragonPhrases.getOrDefault(language.getCode(), 1)) + 1;
+	    		event.setMessage(new StringTextComponent((new TranslationTextComponent("ds.endmessage." + messageId)).getString().replace("()", player.getDisplayName().getString())));
+			} else if (event.getMessage().getString().equals("ds.dragon.grants.wings")) {
+				event.setMessage(new TranslationTextComponent("ds.dragon.grants.wings"));
+			}
+    	}
+    }
+    
+    
     @SubscribeEvent
     public static void serverChatEvent(ServerChatEvent chatEvent) {
         String message = chatEvent.getMessage();
@@ -97,7 +86,7 @@ public class WingObtainmentController {
                             Thread thread = new Thread(() -> {
                                 try {
                                     Thread.sleep(2000);
-                                    playerEntity.sendMessage(new TranslationTextComponent("ds.dragon.grants.wings"), playerEntity.getUUID());
+                                    playerEntity.sendMessage(new StringTextComponent("ds.dragon.grants.wings"), enderDragonUUID);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
