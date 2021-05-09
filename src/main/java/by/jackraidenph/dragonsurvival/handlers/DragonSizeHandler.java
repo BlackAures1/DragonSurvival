@@ -85,13 +85,15 @@ public class DragonSizeHandler {
     }
     
     public static boolean canPoseFit(PlayerEntity player, Pose pose) {
-    	float size = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getSize();
+    	if (!DragonStateProvider.getCap(player).isPresent())
+    		return false;
+		float size = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getSize();
 		float height = calculateModifiedHeight(calculateDragonHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get()), pose);
 		float width = calculateDragonWidth(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
-		return player.level.getBlockCollisions(null, new AxisAlignedBB(
+		return (player.level.getBlockCollisions(null, new AxisAlignedBB(
 				player.position().subtract(width * 0.5D, 0.0D, width * 0.5D), 
 				player.position().add(width * 0.5D, height, width * 0.5D)))
-		.count() == 0;
+		.count() == 0);
     }
     
     private static Pose overridePose(PlayerEntity player) {
@@ -157,9 +159,11 @@ public class DragonSizeHandler {
     public static void clientPlayerTick(TickEvent.PlayerTickEvent event) { // SOMEONE PLEASE FIND A BETTER WAY THIS PHYSICALLY HURTS ME
     	PlayerEntity player = event.player;
     	if (player == Minecraft.getInstance().cameraEntity) {
-    		if (player instanceof ClientPlayerEntity && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
-    			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player);
-    		}
+    		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+    			if (player instanceof ClientPlayerEntity && dragonStateHandler.isDragon() && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
+        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player);
+        		}
+    		});
     	}
     }
     
