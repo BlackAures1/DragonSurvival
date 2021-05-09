@@ -117,7 +117,6 @@ public class DragonSurvivalMod {
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
 
-        //TODO synchronize health (I might have done size instead?)
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
@@ -133,7 +132,7 @@ public class DragonSurvivalMod {
             boolean isDragon = packetBuffer.readBoolean();
             float size = packetBuffer.readFloat();
             return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean());
-        }, (synchronizeDragonCap, contextSupplier) -> {
+        }, (synchronizeDragonCap, contextSupplier) -> { 
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
                 ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
@@ -143,6 +142,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                     dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                    serverPlayerEntity.refreshDimensions();
                 });
             } else {
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().refreshInstances(synchronizeDragonCap, contextSupplier));

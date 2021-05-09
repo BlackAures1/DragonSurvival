@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -241,17 +242,28 @@ public class ClientEvents {
 	                if (neckHead != null)
 	                    neckHead.setHidden(false);
 	                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
-	                if (player.isCrouching()) {
-	                    switch (dragonStage) {
+	                if (player.isCrouching()) { // FIXME why does this exist... Why do the models auto-crouch align perfectly but when shift key is down they break?
+	                	switch (dragonStage) {
 	                        case ADULT:
-	                            matrixStack.translate(0, 0.2, 0);
+	                            matrixStack.translate(0, 0.125, 0);
 	                            break;
 	                        case YOUNG:
 	                            matrixStack.translate(0, 0.25, 0);
 	                            break;
 	                        case BABY:
-	                            matrixStack.translate(0, 0.3, 0);
+	                            matrixStack.translate(0, 0.325, 0);
 	                    }
+	                } else if (player.isSwimming()) { // FIXME yea this too, I just copied what was up there to shift the model for swimming but I swear this should be done differently...
+	                	switch (dragonStage) {
+                        case ADULT:
+                            matrixStack.translate(0, -0.35, 0);
+                            break;
+                        case YOUNG:
+                            matrixStack.translate(0, -0.25, 0);
+                            break;
+                        case BABY:
+                            matrixStack.translate(0, -0.15, 0);
+	                	}
 	                }
                 
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);

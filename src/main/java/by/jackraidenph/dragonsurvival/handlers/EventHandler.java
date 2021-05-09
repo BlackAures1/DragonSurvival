@@ -160,6 +160,8 @@ public class EventHandler {
                         if (oldMod != null) {
                         	DragonStateHandler.updateHealthModifier(e.getPlayer(), oldMod);
                         }
+                        
+                        e.getPlayer().refreshDimensions();
                     }
                 }));
     }

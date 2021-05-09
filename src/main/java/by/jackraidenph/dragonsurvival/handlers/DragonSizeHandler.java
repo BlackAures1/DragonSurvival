@@ -11,6 +11,7 @@ import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +34,6 @@ public class DragonSizeHandler {
     		float eyeHeight = calculateDragonEyeHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
     		// Handle Pose stuff
     		Pose overridePose = overridePose(player);
-    		//player.sendMessage(new StringTextComponent(("Tick1 for " + player.getDisplayName().getString() + ": hp(" + health + "), p(" + overridePose.toString() + ")")), player.getUUID());
     		height = calculateModifiedHeight(height, overridePose);
     		eyeHeight = calculateModifiedEyeHeight(eyeHeight, overridePose);
     		// Apply changes
@@ -97,7 +97,6 @@ public class DragonSizeHandler {
     	Pose overridePose = getOverridePose(player);
     	if (player.getForcedPose() != overridePose) {
     		player.setForcedPose(overridePose);
-    		//player.sendMessage(new StringTextComponent(("Tick2 for " + player.getDisplayName().getString() + ": p(" + overridePose.toString() + ")")), player.getUUID());
     		if (player.level.isClientSide() && Minecraft.getInstance().cameraEntity != player)
     			player.refreshDimensions();
     	}
@@ -109,14 +108,14 @@ public class DragonSizeHandler {
     public static ConcurrentHashMap<Integer, Boolean> serverWingsEnabled = new ConcurrentHashMap<>(20);
     
     private static Pose getOverridePose(PlayerEntity player) {
-    	boolean swimming = player.isInWaterOrBubble() && player.isAffectedByFluids(); // TODO This needs more work to avoid bobbing
+    	boolean swimming = player.isInWaterOrBubble() && player.isSprinting() && !player.isPassenger();
     	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
     	boolean spinning = player.isAutoSpinAttack();
 		boolean crouching = player.isShiftKeyDown();
 		if (flying)
 			return Pose.FALL_FLYING;
-		else if (swimming)
+		else if (swimming || (player.isInWaterOrBubble() && !canPoseFit(player, Pose.STANDING) && canPoseFit(player, Pose.SWIMMING)))
 			return Pose.SWIMMING;
 		else if (spinning)
 			return Pose.SPIN_ATTACK;
