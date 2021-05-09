@@ -1,5 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.ToggleWings;
@@ -21,7 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @SuppressWarnings("unused")
 public class FlightController {
-
+	
     public static boolean wingsEnabled;
     static double ax, ay, az;
 

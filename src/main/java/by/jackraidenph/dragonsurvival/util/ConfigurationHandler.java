@@ -1,10 +1,9 @@
 package by.jackraidenph.dragonsurvival.util;
 
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.Arrays;
 import java.util.List;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
@@ -19,6 +18,8 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
     public static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
+    public static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
+    public static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
 
     public static class General {
 
@@ -29,8 +30,9 @@ public class ConfigurationHandler {
             predatorHealthFactor = builder.defineInRange("Predator health factor", 1, 0.2, 5);
             //disableClientHandlerSpam = builder.define("Disable \"Unknown custom packet identifier: dragonsurvival:main\" spam", true);
             mineStarBlock = builder.define("Silk hoe mines Predator stars", false);
+            sizeChangesHitbox = builder.define("Dragon size changes hitbox", true);
+            hitboxGrowsPastHuman = builder.define("Hitbox grows larger than human", true);
             builder.pop();
-
         }
     }
     

@@ -82,7 +82,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
     public static final Logger LOGGER = LogManager.getLogger("Dragon Survival");
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"),
             () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
@@ -112,40 +112,37 @@ public class DragonSurvivalMod {
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SetRespawnPosition.class, new SetRespawnPosition());
-        register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
-        register(SyncLevel.class, new SyncLevel());
+        register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
 
-        //TODO synchronize health
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
-            packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
             packetBuffer.writeBoolean(synchronizeDragonCap.hiding);
             packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
-            packetBuffer.writeFloat(synchronizeDragonCap.health);
+            packetBuffer.writeFloat(synchronizeDragonCap.size);
             packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
 
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
-            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
-            return new SynchronizeDragonCap(id, hiding, type, level, isDragon, packetBuffer.readFloat(), packetBuffer.readBoolean());
-        }, (synchronizeDragonCap, contextSupplier) -> {
+            float size = packetBuffer.readFloat();
+            return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean());
+        }, (synchronizeDragonCap, contextSupplier) -> { 
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
                 ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
                 DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
                     dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                    dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel, serverPlayerEntity);
                     dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                    dragonStateHandler.setHealth(synchronizeDragonCap.health);
+                    dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                    serverPlayerEntity.refreshDimensions();
                 });
             } else {
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().refreshInstances(synchronizeDragonCap, contextSupplier));
@@ -329,10 +326,11 @@ public class DragonSurvivalMod {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
                 dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel, true, dragonLevel.initialHealth, wings));
+                dragonStateHandler.setSize(dragonLevel.initialHealth, serverPlayerEntity);
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings));
+                serverPlayerEntity.refreshDimensions();
             });
             return 1;
         }).build();

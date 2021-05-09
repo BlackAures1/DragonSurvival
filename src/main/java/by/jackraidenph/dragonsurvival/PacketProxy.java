@@ -6,7 +6,7 @@ import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.SyncLevel;
+import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -47,12 +47,15 @@ public class PacketProxy {
         }
     }
 
-    public DistExecutor.SafeRunnable updateLevel(SyncLevel syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
+    public DistExecutor.SafeRunnable updateLevel(SyncSize syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
         return () -> {
             Minecraft minecraft = Minecraft.getInstance();
             Entity entity = minecraft.level.getEntity(syncLevel.playerId);
             if (entity instanceof PlayerEntity) {
-                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> dragonStateHandler.setLevel(syncLevel.level));
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setSize(syncLevel.size, (PlayerEntity)entity);
+                });
+                
                 contextSupplier.get().setPacketHandled(true);
             }
         };
@@ -72,10 +75,10 @@ public class PacketProxy {
                 if (thatPlayer != null) {
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
                         dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                        dragonStateHandler.setSize(synchronizeDragonCap.size);
                         if (!dragonStateHandler.hasWings())
                             FlightController.wingsEnabled = false;
                     });
@@ -85,6 +88,7 @@ public class PacketProxy {
                         dragonEntity.player = thatPlayer.getId();
                         ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                     }
+                    thatPlayer.refreshDimensions();
                 }
                 context.get().setPacketHandled(true);
             }

@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
@@ -55,7 +56,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
             } else if (player.isSprinting())
                 animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
-            else if (player.isShiftKeyDown()) {
+            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
                 if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f)
                     animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false)) {
