@@ -222,8 +222,8 @@ public class ClientEvents {
                 try {
 	                matrixStack.pushPose();
 	                matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
-	                float maxHealth = player.getMaxHealth();
-	                float scale = Math.max(maxHealth / 40, DragonLevel.BABY.maxWidth);
+	                float size = cap.getSize();
+	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
 	                int eventLight = renderPlayerEvent.getLight();
 	

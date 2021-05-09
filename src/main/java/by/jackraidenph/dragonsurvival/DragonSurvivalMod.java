@@ -112,39 +112,36 @@ public class DragonSurvivalMod {
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SetRespawnPosition.class, new SetRespawnPosition());
-        register(ResetPlayer.class, new ResetPlayer());
         register(SynchronizeNest.class, new SynchronizeNest());
         register(OpenDragonInventory.class, new OpenDragonInventory());
-        register(SyncLevel.class, new SyncLevel());
+        register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
 
-        //TODO synchronize health
+        //TODO synchronize health (I might have done size instead?)
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
-            packetBuffer.writeByte(synchronizeDragonCap.dragonLevel.ordinal());
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
             packetBuffer.writeBoolean(synchronizeDragonCap.hiding);
             packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
-            packetBuffer.writeFloat(synchronizeDragonCap.health);
+            packetBuffer.writeFloat(synchronizeDragonCap.size);
             packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
 
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
-            DragonLevel level = DragonLevel.values()[packetBuffer.readByte()];
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
-            return new SynchronizeDragonCap(id, hiding, type, level, isDragon, packetBuffer.readFloat(), packetBuffer.readBoolean());
+            float size = packetBuffer.readFloat();
+            return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean());
         }, (synchronizeDragonCap, contextSupplier) -> {
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
                 ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
                 DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
                     dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                    dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel, serverPlayerEntity);
                     dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
-                    dragonStateHandler.setHealth(synchronizeDragonCap.health);
+                    dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                 });
             } else {
@@ -329,10 +326,10 @@ public class DragonSurvivalMod {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
                 dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setLevel(dragonLevel, serverPlayerEntity);
                 dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel, true, dragonLevel.initialHealth, wings));
+                dragonStateHandler.setSize(dragonLevel.initialHealth, serverPlayerEntity);
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings));
             });
             return 1;
         }).build();

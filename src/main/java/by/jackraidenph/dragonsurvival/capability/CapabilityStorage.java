@@ -35,12 +35,10 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             tag.putDouble("bodyYaw", movementData.bodyYaw);
             tag.putDouble("headYaw", movementData.headYaw);
             tag.putDouble("headPitch", movementData.headPitch);
-
             tag.putBoolean("isHiding", instance.isHiding());
             tag.putString("type", instance.getType().toString());
-            tag.putString("level", instance.getLevel().toString());
-            tag.putFloat("Health", instance.getHealth());
-            tag.putBoolean("Has wings", instance.hasWings());
+            tag.putFloat("size", instance.getSize());
+            tag.putBoolean("hasWings", instance.hasWings());
         }
         return tag;
     }
@@ -54,13 +52,10 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
                     tag.getDouble("headPitch"));
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
-            String level = tag.getString("level");
-            if (level.isEmpty())
-                instance.setLevel(DragonLevel.BABY);
-            else
-                instance.setLevel(DragonLevel.valueOf(level));
-            instance.setHealth(tag.getFloat("Health"));
-            instance.setHasWings(tag.getBoolean("Has wings"));
+            instance.setSize(tag.getFloat("size"));
+            if (instance.getSize() == 0)
+                instance.setSize(DragonLevel.BABY.initialHealth);
+            instance.setHasWings(tag.getBoolean("hasWings"));
         }
     }
 }

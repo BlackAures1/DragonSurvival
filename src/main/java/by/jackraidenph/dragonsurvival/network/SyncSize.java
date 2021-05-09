@@ -10,35 +10,35 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * Synchronizes dragon level
+ * Synchronizes dragon level and size
  */
-public class SyncLevel implements IMessage<SyncLevel> {
+public class SyncSize implements IMessage<SyncSize> {
 
     public int playerId;
-    public DragonLevel level;
+    public float size;
 
-    public SyncLevel(int playerId, DragonLevel level) {
+    public SyncSize(int playerId, float size) {
         this.playerId = playerId;
-        this.level = level;
+        this.size = size;
     }
 
-    public SyncLevel() {
+    public SyncSize() {
 
     }
 
     @Override
-    public void encode(SyncLevel message, PacketBuffer buffer) {
+    public void encode(SyncSize message, PacketBuffer buffer) {
         buffer.writeInt(message.playerId);
-        buffer.writeEnum(message.level);
+        buffer.writeFloat(message.size);
     }
 
     @Override
-    public SyncLevel decode(PacketBuffer buffer) {
-        return new SyncLevel(buffer.readInt(), buffer.readEnum(DragonLevel.class));
+    public SyncSize decode(PacketBuffer buffer) {
+        return new SyncSize(buffer.readInt(), buffer.readFloat());
     }
 
     @Override
-    public void handle(SyncLevel message, Supplier<NetworkEvent.Context> supplier) {
+    public void handle(SyncSize message, Supplier<NetworkEvent.Context> supplier) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().updateLevel(message, supplier));
     }
 }

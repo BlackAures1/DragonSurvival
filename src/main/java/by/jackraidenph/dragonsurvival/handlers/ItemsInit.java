@@ -3,7 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.network.SyncLevel;
+import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -43,23 +43,13 @@ public class ItemsInit {
                 if (dragonStateHandlerLazyOptional.isPresent()) {
                     DragonStateHandler dragonStateHandler = dragonStateHandlerLazyOptional.orElseGet(() -> null);
                     if (dragonStateHandler.isDragon()) {
-                        float maxHealth = playerIn.getMaxHealth();
-                        if (maxHealth < 40) {
-                            ModifiableAttributeInstance currentHealth = playerIn.getAttribute(Attributes.MAX_HEALTH);
-                            currentHealth.setBaseValue(currentHealth.getBaseValue() + 2);
+                    	float size = dragonStateHandler.getSize();
+                        if (size < 40) {
+                        	size += 2;
+                        	dragonStateHandler.setSize(size, playerIn);
                             playerIn.getItemInHand(handIn).shrink(1);
-                            playerIn.refreshDimensions();
-
-                            if (currentHealth.getBaseValue() >= DragonLevel.ADULT.initialHealth) {
-                                dragonStateHandler.setLevel(DragonLevel.ADULT);
-                                if (!worldIn.isClientSide)
-                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getId(), DragonLevel.ADULT));
-                            } else if (currentHealth.getBaseValue() >= DragonLevel.YOUNG.initialHealth) {
-                                dragonStateHandler.setLevel(DragonLevel.YOUNG);
-                                if (!worldIn.isClientSide)
-                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getId(), DragonLevel.YOUNG));
-                            }
-
+                            if (!worldIn.isClientSide)
+                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }
@@ -76,20 +66,13 @@ public class ItemsInit {
                 if (playerStateProvider.isPresent()) {
                     DragonStateHandler dragonStateHandler = playerStateProvider.orElse(null);
                     if (dragonStateHandler.isDragon()) {
-                    	ModifiableAttributeInstance health = playerIn.getAttribute(Attributes.MAX_HEALTH);
-                        if (health.getValue() > 14) {
-                            health.setBaseValue(health.getBaseValue() - 2);
-                            if (health.getValue() < DragonLevel.YOUNG.initialHealth) {
-                                dragonStateHandler.setLevel(DragonLevel.BABY);
-                                if (!worldIn.isClientSide)
-                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getId(), DragonLevel.BABY));
-                            } else if (health.getValue() < DragonLevel.ADULT.initialHealth) {
-                                dragonStateHandler.setLevel(DragonLevel.YOUNG);
-                                if (!worldIn.isClientSide)
-                                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncLevel(playerIn.getId(), DragonLevel.YOUNG));
-                            }
+                    	float size = dragonStateHandler.getSize();
+                        if (size > 14) {
+                        	size -= 2;
+                        	dragonStateHandler.setSize(size, playerIn);
+                            if (!worldIn.isClientSide)
+                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             playerIn.getItemInHand(handIn).shrink(1);
-                            playerIn.refreshDimensions();
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }
