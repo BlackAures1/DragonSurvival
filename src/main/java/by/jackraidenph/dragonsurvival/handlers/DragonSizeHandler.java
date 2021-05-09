@@ -2,16 +2,17 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
+import by.jackraidenph.dragonsurvival.util.DragonMovementFromOptions;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -150,4 +151,18 @@ public class DragonSizeHandler {
 			}
     	});
     }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void clientPlayerTick(TickEvent.PlayerTickEvent event) { // SOMEONE PLEASE FIND A BETTER WAY THIS PHYSICALLY HURTS ME
+    	PlayerEntity player = event.player;
+    	if (player == Minecraft.getInstance().cameraEntity) {
+    		if (player instanceof ClientPlayerEntity && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
+    			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player);
+    		}
+    	}
+    }
+    
 }
+
+
