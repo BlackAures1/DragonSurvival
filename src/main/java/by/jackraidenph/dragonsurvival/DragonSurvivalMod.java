@@ -330,6 +330,7 @@ public class DragonSurvivalMod {
                 dragonStateHandler.setHasWings(wings);
                 dragonStateHandler.setSize(dragonLevel.initialHealth, serverPlayerEntity);
                 CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings));
+                serverPlayerEntity.refreshDimensions();
             });
             return 1;
         }).build();

@@ -117,11 +117,12 @@ public class WingObtainmentController {
         LivingEntity livingEntity = damageEvent.getEntityLiving();
         if (livingEntity instanceof PlayerEntity) {
             DamageSource damageSource = damageEvent.getSource();
-            if (livingEntity.level.dimension() == World.END && damageSource == DamageSource.OUT_OF_WORLD) {
+            if (livingEntity.level.dimension() == World.END && damageSource == DamageSource.OUT_OF_WORLD && livingEntity.position().y < -60) {
                 DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
                     if (dragonStateHandler.isDragon()) {
                         livingEntity.changeDimension(livingEntity.getServer().overworld());
                         DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(livingEntity.getId()));
+                        damageEvent.setCanceled(true);
                     }
                 });
             }
