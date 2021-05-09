@@ -82,7 +82,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DragonSurvivalMod {
     public static final String MODID = "dragonsurvival";
     public static final Logger LOGGER = LogManager.getLogger("Dragon Survival");
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "main"),
             () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
