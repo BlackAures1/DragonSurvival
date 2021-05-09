@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonMovementFromOptions;
@@ -34,43 +35,50 @@ public class DragonSizeHandler {
     		float width = calculateDragonWidth(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
     		float eyeHeight = calculateDragonEyeHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
     		// Handle Pose stuff
+    		if (ConfigurationHandler.sizeChangesHitbox.get()) {
     		Pose overridePose = overridePose(player);
-    		height = calculateModifiedHeight(height, overridePose);
+    		height = calculateModifiedHeight(height, overridePose, true);
     		eyeHeight = calculateModifiedEyeHeight(eyeHeight, overridePose);
     		// Apply changes
-    		if (ConfigurationHandler.sizeChangesHitbox.get()) {
-    			event.setNewEyeHeight(eyeHeight);
-        		event.setNewSize(new EntitySize(width, height, false));
+			event.setNewEyeHeight(eyeHeight);
+    		event.setNewSize(new EntitySize(width, height, false));
     		}
+    		
         });
     }
     
 	private static float calculateDragonHeight(float size, boolean growsPastHuman) {
-		float height = ((float)size + 4.0F) / 20.0F; // 0.9 -> 2.2
-		if (!growsPastHuman && height > 1.8F)
-			height = 1.8F;
+		float height = (size + 4.0F) / 20.0F; // 0.9 -> 2.2
+		if (!growsPastHuman)
+			height = 9F * (size + 12F) / 260F; // 0.9 -> 1.8
 		return height;
 	}
 	
 	private static float calculateDragonWidth(float size, boolean growsPastHuman) {
-		float width = (3.0F * (float)size + 62.0F) / 260.0F; // 0.4 -> 0.7
-		if (!growsPastHuman && width > 0.6F)
-			width = 0.6F;
+		float width = (3.0F * size + 62.0F) / 260.0F; // 0.4 -> 0.7
+		if (!growsPastHuman)
+			width = (size + 38) / 130F; // 0.4 -> 0.6
 		return width;
 	}
 	
 	private static float calculateDragonEyeHeight(float size, boolean growsPastHuman) {
-		float eyeHeight = (11.0F * (float)size + 54.0F) / 260.0F; // 0.8 -> 1.9
-		if (!growsPastHuman && eyeHeight > 1.62F)
-			eyeHeight = 1.62F;
+		float eyeHeight = (11.0F * size + 54.0F) / 260.0F; // 0.8 -> 1.9
+		if (!growsPastHuman)
+			eyeHeight = (41F * size + 466F) / 1300F; // 14, 0.8 -> 40, 1.62
 		return eyeHeight;
 	}
 	
-    private static float calculateModifiedHeight(float height, Pose pose) {
+    private static float calculateModifiedHeight(float height, Pose pose, boolean sizeChangesHitbox) {
     	if (pose == Pose.CROUCHING) {
-			height *= 5.0F / 6.0F; 
+    		if (sizeChangesHitbox)
+    			height *= 5.0F / 6.0F;
+    		else
+    			height = 1.5F;
 		} else if (pose == Pose.SWIMMING || pose == Pose.FALL_FLYING || pose == Pose.SPIN_ATTACK) {
-			height *= 7.0F / 12.0F;
+			if (sizeChangesHitbox)
+				height *= 7.0F / 12.0F;
+			else
+				height = 0.6F;
 		}
     	return height;
     }
@@ -88,7 +96,7 @@ public class DragonSizeHandler {
     	if (!DragonStateProvider.getCap(player).isPresent())
     		return false;
 		float size = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getSize();
-		float height = calculateModifiedHeight(calculateDragonHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get()), pose);
+		float height = calculateModifiedHeight(calculateDragonHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get()), pose,  ConfigurationHandler.sizeChangesHitbox.get());
 		float width = calculateDragonWidth(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
 		return (player.level.getBlockCollisions(null, new AxisAlignedBB(
 				player.position().subtract(width * 0.5D, 0.0D, width * 0.5D), 
@@ -103,6 +111,7 @@ public class DragonSizeHandler {
     		if (player.level.isClientSide() && Minecraft.getInstance().cameraEntity != player)
     			player.refreshDimensions();
     	}
+    	
 			
     	return overridePose;
     }
@@ -133,7 +142,7 @@ public class DragonSizeHandler {
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
     	PlayerEntity player = event.player;
-    	if (player == null || event.phase == TickEvent.Phase.END)
+    	if (player == null || event.phase == TickEvent.Phase.END || !ConfigurationHandler.sizeChangesHitbox.get())
     		return;
     	DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
     		if (dragonStateHandler.isDragon()) {
@@ -158,10 +167,10 @@ public class DragonSizeHandler {
     @OnlyIn(Dist.CLIENT)
     public static void clientPlayerTick(TickEvent.PlayerTickEvent event) { // SOMEONE PLEASE FIND A BETTER WAY THIS PHYSICALLY HURTS ME
     	PlayerEntity player = event.player;
-    	if (player == Minecraft.getInstance().cameraEntity) {
+    	if (player == Minecraft.getInstance().cameraEntity && ConfigurationHandler.sizeChangesHitbox.get()) {
     		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
     			if (player instanceof ClientPlayerEntity && dragonStateHandler.isDragon() && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
-        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player);
+        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player, ConfigurationHandler.sizeChangesHitbox.get());
         		}
     		});
     	}
