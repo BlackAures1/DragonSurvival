@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.Language;
@@ -139,6 +140,8 @@ public class WingObtainmentController {
 
     @SubscribeEvent
     public static void teleportAway(LivingDamageEvent damageEvent) {
+    	if (!ConfigurationHandler.endVoidTeleport.get())
+    		return;
         LivingEntity livingEntity = damageEvent.getEntityLiving();
         if (livingEntity instanceof PlayerEntity) {
             DamageSource damageSource = damageEvent.getSource();
