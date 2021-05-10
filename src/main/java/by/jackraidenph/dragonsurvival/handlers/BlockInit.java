@@ -32,7 +32,7 @@ public class BlockInit {
     public static Block dragon_altar3;
     public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
-    public static DragonDoor spruceDragonDoor, acaciaDoor;
+    public static DragonDoor spruceDragonDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
     public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
 
@@ -50,13 +50,8 @@ public class BlockInit {
         forgeRegistry.register(dragon_altar3.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar2"));
         dragon_altar4 = new DragonAltarBlock(Block.Properties.copy(dragon_altar));
         forgeRegistry.register(dragon_altar4.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar3"));
-        PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties
-                .of(Material.EGG)
-                .noCollission()
-                .strength(10F, 9999F)
-                .randomTicks()
-                .harvestTool(ToolType.HOE)
-                .requiresCorrectToolForDrops()
+        PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties.of(Material.EGG).noCollission()
+                .strength(10F, 9999F).randomTicks().harvestTool(ToolType.HOE).requiresCorrectToolForDrops()
                 .sound(SoundType.NETHER_WART));
         forgeRegistry.register(PREDATOR_STAR_BLOCK.setRegistryName(DragonSurvivalMod.MODID, "predator_star"));
         spruceDragonDoor = new DragonDoor(Block.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
@@ -69,7 +64,10 @@ public class BlockInit {
 
         forgeRegistry.register(spruceDragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
         acaciaDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(spruceDragonDoor)), "acacia_dragon_door", forgeRegistry);
-
+        birchDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "birch_dragon_door", forgeRegistry);
+        jungleDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "jungle_dragon_door", forgeRegistry);
+        oakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "oak_dragon_door", forgeRegistry);
+        darkOakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "dark_oak_dragon_door", forgeRegistry);
 
         mediumSeaNest = new MediumNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
@@ -99,7 +97,10 @@ public class BlockInit {
         Item dragonDoorItem = new DragonDoorItem(spruceDragonDoor, new Item.Properties().tab(ItemsInit.items)).setRegistryName(spruceDragonDoor.getRegistryName());
         forgeRegistry.register(dragonDoorItem);
         registerDoor(acaciaDoor, new Item.Properties(), forgeRegistry);
-
+        registerDoor(jungleDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(oakDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(darkOakDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(birchDoor, new Item.Properties(), forgeRegistry);
 
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().tab(ItemsInit.items)).setRegistryName("predator_star"));
 
