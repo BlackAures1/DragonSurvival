@@ -40,7 +40,11 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             if (instance.getSize() == 0)
                 instance.setSize(DragonLevel.BABY.initialHealth);
             instance.setHasWings(tag.getBoolean("hasWings"));
-            instance.setBaseDamage(tag.getInt("Base damage"));
+            int base_damage = tag.getInt("Base damage");
+            if (base_damage == 0)
+                instance.setBaseDamage(instance.getLevel().baseDamage);
+            else
+                instance.setBaseDamage(base_damage);
         }
     }
 }
