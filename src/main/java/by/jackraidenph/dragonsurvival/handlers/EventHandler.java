@@ -40,6 +40,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
@@ -48,6 +49,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -97,6 +99,30 @@ public class EventHandler {
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
+                        }
+                    }
+                    if (!playerEntity.level.isClientSide) {
+                        World world = playerEntity.level;
+                        BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
+                        Block block = blockUnder.getBlock();
+                        switch (dragonStateHandler.getType()) {
+                            case CAVE:
+                                if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
+                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                break;
+                            case FOREST:
+                                if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
+                                        || block.is(Tags.Blocks.DIRT)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                break;
+                            case SEA:
+                                if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
+                                        || block.is(BlockTags.CORAL_BLOCKS)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
                         }
                     }
                 }
