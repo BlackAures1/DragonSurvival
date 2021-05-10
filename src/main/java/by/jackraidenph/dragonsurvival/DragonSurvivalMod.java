@@ -3,12 +3,10 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.SynchronizationController;
 import by.jackraidenph.dragonsurvival.handlers.WingObtainmentController;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
@@ -33,7 +31,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -41,7 +38,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.server.ServerWorld;
@@ -59,25 +55,22 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
-
-import static net.minecraft.command.Commands.argument;
-import static net.minecraft.command.Commands.literal;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static net.minecraft.command.Commands.argument;
+import static net.minecraft.command.Commands.literal;
 
 @Mod(DragonSurvivalMod.MODID)
 public class DragonSurvivalMod {
@@ -126,14 +119,14 @@ public class DragonSurvivalMod {
             packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
             packetBuffer.writeFloat(synchronizeDragonCap.size);
             packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
-
+            packetBuffer.writeInt(synchronizeDragonCap.baseDamage);
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
             boolean isDragon = packetBuffer.readBoolean();
             float size = packetBuffer.readFloat();
-            return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean());
+            return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean(), packetBuffer.readInt());
         }, (synchronizeDragonCap, contextSupplier) -> { 
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
@@ -144,6 +137,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                     dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                    dragonStateHandler.setBaseDamage(synchronizeDragonCap.baseDamage, serverPlayerEntity);
                     serverPlayerEntity.refreshDimensions();
                 });
             } else {
@@ -331,7 +325,8 @@ public class DragonSurvivalMod {
                 dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
                 dragonStateHandler.setSize(dragonLevel.initialHealth, serverPlayerEntity);
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings));
+                dragonStateHandler.setBaseDamage(dragonLevel.baseDamage, serverPlayerEntity);
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings, dragonStateHandler.getBaseDamage()));
                 serverPlayerEntity.refreshDimensions();
             });
             return 1;

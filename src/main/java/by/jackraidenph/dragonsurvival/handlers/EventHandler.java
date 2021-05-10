@@ -157,6 +157,7 @@ public class EventHandler {
                         capNew.setSize(capOld.getSize());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
+                        capNew.setBaseDamage(capOld.getBaseDamage());
                         
                         AttributeModifier oldMod = DragonStateHandler.getHealthModifier(e.getOriginal());
                         if (oldMod != null) {
@@ -172,7 +173,7 @@ public class EventHandler {
     public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
         PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getBaseDamage()));
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(playerEntity.getId()));
         });
     }

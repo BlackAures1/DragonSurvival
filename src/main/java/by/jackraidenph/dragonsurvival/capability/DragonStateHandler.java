@@ -20,16 +20,33 @@ public class DragonStateHandler {
     private final DragonMovementData data = new DragonMovementData(0, 0, 0);
     private boolean hasWings;
     private float size;
-    
-    public float getSize() {
-    	return size;
+    /**
+     * Base damage
+     */
+    private int baseDamage;
+
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
     }
-    
+
+    public void setBaseDamage(int baseDamage, PlayerEntity playerEntity) {
+        setBaseDamage(baseDamage);
+        playerEntity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(baseDamage);
+    }
+
+    public int getBaseDamage() {
+        return baseDamage;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
     /**
      * Sets the size and initial health
      */
     public void setSize(float size, PlayerEntity playerEntity) {
-    	setSize(size);
+        setSize(size);
     	AttributeModifier mod = buildHealthMod(size);
         updateHealthModifier(playerEntity, mod);
     }
