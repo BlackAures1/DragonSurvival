@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonMovementFromOptions;
@@ -31,11 +30,11 @@ public class DragonSizeHandler {
     			return;
     		float size = dragonStateHandler.getSize();
     		// Calculate base values
-    		float height = calculateDragonHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
-    		float width = calculateDragonWidth(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
-    		float eyeHeight = calculateDragonEyeHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
+    		float height = calculateDragonHeight(size, ConfigurationHandler.NetworkedConfig.getHitboxGrowsPastHuman());
+    		float width = calculateDragonWidth(size, ConfigurationHandler.NetworkedConfig.getHitboxGrowsPastHuman());
+    		float eyeHeight = calculateDragonEyeHeight(size, ConfigurationHandler.NetworkedConfig.getHitboxGrowsPastHuman());
     		// Handle Pose stuff
-    		if (ConfigurationHandler.sizeChangesHitbox.get()) {
+    		if (ConfigurationHandler.NetworkedConfig.getSizeChangesHitbox()) {
     		Pose overridePose = overridePose(player);
     		height = calculateModifiedHeight(height, overridePose, true);
     		eyeHeight = calculateModifiedEyeHeight(eyeHeight, overridePose);
@@ -96,8 +95,8 @@ public class DragonSizeHandler {
     	if (!DragonStateProvider.getCap(player).isPresent())
     		return false;
 		float size = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getSize();
-		float height = calculateModifiedHeight(calculateDragonHeight(size, ConfigurationHandler.hitboxGrowsPastHuman.get()), pose,  ConfigurationHandler.sizeChangesHitbox.get());
-		float width = calculateDragonWidth(size, ConfigurationHandler.hitboxGrowsPastHuman.get());
+		float height = calculateModifiedHeight(calculateDragonHeight(size, ConfigurationHandler.NetworkedConfig.getHitboxGrowsPastHuman()), pose,  ConfigurationHandler.NetworkedConfig.getSizeChangesHitbox());
+		float width = calculateDragonWidth(size, ConfigurationHandler.NetworkedConfig.getHitboxGrowsPastHuman());
 		return (player.level.getBlockCollisions(null, new AxisAlignedBB(
 				player.position().subtract(width * 0.5D, 0.0D, width * 0.5D), 
 				player.position().add(width * 0.5D, height, width * 0.5D)))
@@ -142,7 +141,7 @@ public class DragonSizeHandler {
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
     	PlayerEntity player = event.player;
-    	if (player == null || event.phase == TickEvent.Phase.END || !ConfigurationHandler.sizeChangesHitbox.get())
+    	if (player == null || event.phase == TickEvent.Phase.END || !ConfigurationHandler.NetworkedConfig.getSizeChangesHitbox())
     		return;
     	DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
     		if (dragonStateHandler.isDragon()) {
@@ -167,10 +166,10 @@ public class DragonSizeHandler {
     @OnlyIn(Dist.CLIENT)
     public static void clientPlayerTick(TickEvent.PlayerTickEvent event) { // SOMEONE PLEASE FIND A BETTER WAY THIS PHYSICALLY HURTS ME
     	PlayerEntity player = event.player;
-    	if (player == Minecraft.getInstance().cameraEntity && ConfigurationHandler.sizeChangesHitbox.get()) {
+    	if (player == Minecraft.getInstance().cameraEntity && ConfigurationHandler.NetworkedConfig.getSizeChangesHitbox()) {
     		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
     			if (player instanceof ClientPlayerEntity && dragonStateHandler.isDragon() && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
-        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player, ConfigurationHandler.sizeChangesHitbox.get());
+        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player, ConfigurationHandler.NetworkedConfig.getSizeChangesHitbox());
         		}
     		});
     	}
