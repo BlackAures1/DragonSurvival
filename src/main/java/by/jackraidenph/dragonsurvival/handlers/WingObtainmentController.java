@@ -21,22 +21,58 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
 	
-	private static HashMap<String, Integer> dragonPhrases;
-	static {
-		dragonPhrases = new HashMap<String, Integer>();
-		dragonPhrases.put("en_us", 3);
-		dragonPhrases.put("ru_ru", 18);
-		dragonPhrases.put("fr_fr", 0);
-		dragonPhrases.put("zh_cn", 0);
-	}
+	private static Map<String, Integer> dragonPhrases = new HashMap<String, Integer>();
+
 	private static UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
 
+	public static void loadDragonPhrases() {
+		try {
+			List<String> langs = new ArrayList<>();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/dragonsurvival/lang")));
+			String file;
+			while ((file = reader.readLine()) != null) {
+				langs.add(file);
+	        }
+			reader.close();
+			Gson gson = new Gson();
+			Type type = new TypeToken<Map<String, String>>(){}.getType();
+			for (String langFile : langs) {
+				URL resource = Thread.currentThread().getContextClassLoader().getResource("assets/dragonsurvival/lang/" + langFile);
+				Map<String, String> langData = gson.fromJson(new String(Files.readAllBytes(Paths.get(resource.toURI()))), type);
+				int phraseCount = 0;
+				for (String key : langData.keySet()) {
+					if (key.contains("ds.endmessage"))
+						phraseCount++;
+				}
+				if (phraseCount > 0)
+					dragonPhrases.put(langFile.replace(".json", ""), phraseCount);
+			}
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
+	
     @SubscribeEvent
     public static void inTheEnd(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
         PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
@@ -64,7 +100,7 @@ public class WingObtainmentController {
 			if (event.getMessage().getString().equals("ds.endmessage")) {
 	    		Language language = Minecraft.getInstance().getLanguageManager().getSelected();
 	    		ClientPlayerEntity player = Minecraft.getInstance().player;
-	    		int messageId = player.getRandom().nextInt(dragonPhrases.getOrDefault(language.getCode(), 1)) + 1;
+	    		int messageId = player.getRandom().nextInt(dragonPhrases.getOrDefault(language.getCode(), dragonPhrases.getOrDefault("en_us", 1))) + 1;
 	    		event.setMessage(new StringTextComponent((new TranslationTextComponent("ds.endmessage." + messageId)).getString().replace("()", player.getDisplayName().getString())));
 			} else if (event.getMessage().getString().equals("ds.dragon.grants.wings")) {
 				event.setMessage(new TranslationTextComponent("ds.dragon.grants.wings"));
