@@ -7,6 +7,7 @@ health system is now compatible with other mods;
 implemented different mining speeds for dragons;
 changed base damage of dragon stages;
 implemented speedup from appropriate blocks;
+implemented natural resistance to appropriate damage sources;
 
 0.0.32-1.16.5:
 added netherite armor textures;

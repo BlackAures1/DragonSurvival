@@ -82,6 +82,7 @@ public class EventHandler {
                 if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR) {
                     if (dragonStateHandler.getType() == DragonType.CAVE) {
                         livingDamageEvent.setCanceled(true);
+
                     }
                 } else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST)
                     livingDamageEvent.setCanceled(true);
@@ -129,6 +130,7 @@ public class EventHandler {
                                 }
                                 if (playerEntity.isOnFire()) {
                                     playerEntity.clearFire();
+                                    playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
                                 }
                                 break;
                             case FOREST:
