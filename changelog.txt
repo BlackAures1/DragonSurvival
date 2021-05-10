@@ -3,7 +3,9 @@ added hitbox and eye position adjustments according to dragon growth.
 overrode and rewrote minecraft auto-crouch functionality.
 fixed the French lang file.
 fixed the Ender Dragon messages from lang files.
-health system is now compatible with other mods
+health system is now compatible with other mods;
+implemented different mining speeds for dragons;
+changed base damage of dragon stages;
 
 0.0.32-1.16.5:
 added netherite armor textures;

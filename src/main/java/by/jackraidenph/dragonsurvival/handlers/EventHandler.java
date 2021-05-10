@@ -242,10 +242,7 @@ public class EventHandler {
                 if (item.isEdible()) {
                     Food food = item.getFoodProperties();
                     assert food != null;
-                    boolean bad = false;
-                    if (item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE) {
-                        bad = true;
-                    }
+                    boolean bad = item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE;
                     switch (dragonStateHandler.getType()) {
                         case FOREST:
                             if (food == Foods.RABBIT || food == Foods.ROTTEN_FLESH || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
@@ -366,10 +363,10 @@ public class EventHandler {
                 ITag<Item> oresTag = ItemTags.getAllTags().getTag(ores);
                 if (!oresTag.contains(block.asItem()))
                 	return;
-                List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
-        				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-        				.withParameter(LootParameters.TOOL, mainHandItem));
-                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && !drops.stream().anyMatch(item -> oresTag.contains(item.getItem()));
+                List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld) world)
+                        .withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                        .withParameter(LootParameters.TOOL, mainHandItem));
+                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
                 if (suitableOre && !playerEntity.isCreative()) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
                         random = playerEntity.getRandom().nextDouble();
