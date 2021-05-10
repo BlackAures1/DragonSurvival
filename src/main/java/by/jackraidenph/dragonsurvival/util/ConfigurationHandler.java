@@ -20,6 +20,8 @@ public class ConfigurationHandler {
     public static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
     public static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
     public static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
+    public static ForgeConfigSpec.ConfigValue<Boolean> startWithWings;
+    public static ForgeConfigSpec.ConfigValue<Boolean> endVoidTeleport;
 
     public static class General {
 
@@ -32,6 +34,8 @@ public class ConfigurationHandler {
             mineStarBlock = builder.define("Silk hoe mines Predator stars", false);
             sizeChangesHitbox = builder.define("Dragon size changes hitbox", true);
             hitboxGrowsPastHuman = builder.define("Hitbox grows larger than human", true);
+            startWithWings = builder.define("Dragons start with wings", false);
+            endVoidTeleport = builder.define("End void teleports to overworld", true);
             builder.pop();
         }
     }

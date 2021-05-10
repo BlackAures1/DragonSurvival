@@ -20,7 +20,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -41,6 +40,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +66,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber
@@ -331,13 +332,15 @@ public class EventHandler {
                 // Modded Ore Support
                 String[] tagStringSplit = ConfigurationHandler.ORE_LOOT.oreBlocksTag.get().split(":");
                 ResourceLocation ores = new ResourceLocation(tagStringSplit[0], tagStringSplit[1]);
-                // Checks to make sure the ore does not drop itself (so you can't go infinite with this unless you get enough of the drop to craft the ore or something)
-                final boolean suitableOre = ItemTags.getAllTags().getTag(ores).contains(block.asItem()) && 
-                		!block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
-                				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                				.withParameter(LootParameters.TOOL, mainHandItem))
-                		.stream().anyMatch(item -> item.getItem() == block.asItem()); 
-                if (suitableOre ) {
+                // Checks to make sure the ore does not drop itself or another ore from the tag (no going infinite with ores)
+                ITag<Item> oresTag = ItemTags.getAllTags().getTag(ores);
+                if (!oresTag.contains(block.asItem()))
+                	return;
+                List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
+        				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+        				.withParameter(LootParameters.TOOL, mainHandItem));
+                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && !drops.stream().anyMatch(item -> oresTag.contains(item.getItem()));
+                if (suitableOre && !playerEntity.isCreative()) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
                         random = playerEntity.getRandom().nextDouble();
                         if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {

@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.SynchronizationController;
+import by.jackraidenph.dragonsurvival.handlers.WingObtainmentController;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.SleepInNest;
@@ -105,6 +106,7 @@ public class DragonSurvivalMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+    	WingObtainmentController.loadDragonPhrases();
         Capabilities.register();
         LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
 
