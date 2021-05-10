@@ -48,6 +48,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -182,8 +183,36 @@ public class EventHandler {
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 ItemStack mainStack = playerEntity.getMainHandItem();
+                BlockState blockState = breakSpeedEvent.getState();
                 Item item = mainStack.getItem();
-                if (item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) {
+                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
+                    switch (dragonStateHandler.getLevel()) {
+                        case BABY:
+                            breakSpeedEvent.setNewSpeed(2);
+                            break;
+                        case YOUNG:
+                        case ADULT:
+                            switch (dragonStateHandler.getType()) {
+                                case FOREST:
+                                    if (blockState.isToolEffective(ToolType.AXE)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    break;
+                                case CAVE:
+                                    if (blockState.isToolEffective(ToolType.PICKAXE)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    break;
+                                case SEA:
+                                    if (blockState.isToolEffective(ToolType.SHOVEL)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    break;
+                            }
+                            break;
+
+                    }
+                } else {
                     breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
                 }
             }
