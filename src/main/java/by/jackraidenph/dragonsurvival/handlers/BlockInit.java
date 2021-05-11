@@ -74,6 +74,13 @@ public class BlockInit {
         forestDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "forest_dragon_door", forgeRegistry);
         seaDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "sea_dragon_door", forgeRegistry);
 
+        ironDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.METAL, MaterialColor.COLOR_BROWN).strength(3.0F).sound(SoundType.METAL).noOcclusion()), "iron_dragon_door", forgeRegistry);
+        murdererDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "murderer_dragon_door", forgeRegistry);
+        warpedDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "warped_dragon_door", forgeRegistry);
+        crimsonDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "crimson_dragon_door", forgeRegistry);
+        sleeperDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "sleeper_dragon_door", forgeRegistry);
+        stoneDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "stone_dragon_door", forgeRegistry);
+
         mediumSeaNest = new MediumNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
         mediumCaveNest = new MediumNestBlock(Block.Properties.copy(smallCaveNest));
