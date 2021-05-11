@@ -116,6 +116,12 @@ public class BlockInit {
         registerDoor(caveDoor, new Item.Properties(), forgeRegistry);
         registerDoor(seaDoor, new Item.Properties(), forgeRegistry);
         registerDoor(forestDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(ironDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(murdererDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(warpedDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(crimsonDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(sleeperDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(stoneDoor, new Item.Properties(), forgeRegistry);
 
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().tab(ItemsInit.items)).setRegistryName("predator_star"));
 
