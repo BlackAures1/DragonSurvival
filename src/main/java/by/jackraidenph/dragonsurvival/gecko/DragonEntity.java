@@ -1,9 +1,9 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
@@ -46,10 +46,10 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         final PlayerEntity player = getPlayer();
+        final AnimationController animationController = animationEvent.getController();
+        AnimationBuilder builder = new AnimationBuilder();
         if (player != null) {
             Vector3d motio = player.getDeltaMovement();
-            final AnimationController animationController = animationEvent.getController();
-            AnimationBuilder builder = new AnimationBuilder();
             if (player.getPose() == Pose.SWIMMING)
             	builder.addAnimation("animation.dragon.swim_fast", true);
             else if (player.isInWaterOrBubble() && (motio.x != 0 || motio.z != 0)) {
@@ -77,9 +77,10 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
                 builder.addAnimation("animation.dragon.dig", true);
             } else
                 builder.addAnimation("animation.dragon.idle", true);
-            //DragonSurvivalMod.LOGGER.info("Tick: {}", builder.getRawAnimationList().get(0).animationName);
-            animationController.setAnimation(builder);
+        }else {
+        	 builder.addAnimation("animation.dragon.idle", true);
         }
+        animationController.setAnimation(builder);
         return PlayState.CONTINUE;
     }
 
@@ -104,6 +105,6 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     PlayerEntity getPlayer() {
-        return (PlayerEntity) level.getEntity(player);
+        return (PlayerEntity)Minecraft.getInstance().player.clientLevel.getEntity(player);
     }
 }
