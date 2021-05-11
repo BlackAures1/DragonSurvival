@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bd"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:prismarine"
+    },
+    "d": {
+      "item": "dragonsurvival:dragon_gate"
+    }
+  },
+  "result": {
+    "item": "dragonsurvival:sea_dragon_door",
+    "count": 1
+  }
+}
