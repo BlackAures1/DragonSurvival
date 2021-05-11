@@ -131,7 +131,7 @@ public class DragonAltarGUI extends Screen {
             return;
         player.closeContainer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.startWithWings.get(), 2));
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings(),2));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
             DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0));

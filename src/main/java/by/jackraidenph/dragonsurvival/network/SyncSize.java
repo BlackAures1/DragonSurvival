@@ -1,11 +1,5 @@
 package by.jackraidenph.dragonsurvival.network;
-
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.PacketProxy;
-import by.jackraidenph.dragonsurvival.util.DragonLevel;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -43,6 +37,6 @@ public class SyncSize implements IMessage<SyncSize> {
 
     @Override
     public void handle(SyncSize message, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().updateLevel(message, supplier));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().updateSize(message, supplier));
     }
 }

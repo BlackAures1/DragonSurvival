@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler.DragonMovementData;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
@@ -23,11 +24,11 @@ public class SynchronizationController {
     @SubscribeEvent
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent loggedInEvent) {
         PlayerEntity player = loggedInEvent.getPlayer();
-        //send the capability to everyone
+        // send the capability to everyone
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(player.getId(), cap.isHiding(), cap.getType(), cap.isDragon(), cap.getSize(), cap.hasWings(), cap.getBaseDamage()));
         });
-        //receive capability from others
+        // receive capability from others
         loggedInEvent.getPlayer().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> {
             DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SynchronizeDragonCap(serverPlayerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getBaseDamage()));
@@ -54,24 +55,6 @@ public class SynchronizationController {
         });
     }
 
-    /**
-     * Synchronizes dragon model rotations among players
-     */
-    @SubscribeEvent
-    public static void onTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        PlayerEntity playerEntity = playerTickEvent.player;
-        if (playerEntity instanceof ServerPlayerEntity) {
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
-            serverPlayerEntity.getServer().getPlayerList().getPlayers().forEach(otherPlayerEntity -> {
-                if (otherPlayerEntity != playerEntity) {
-                    DragonStateProvider.getCap(otherPlayerEntity).ifPresent(dragonStateHandler -> {
-                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new PacketSyncCapabilityMovement(otherPlayerEntity.getId(), otherPlayerEntity.getViewYRot(1), otherPlayerEntity.yHeadRot, otherPlayerEntity.xRot));
-                    });
-                }
-            });
-        }
-    }
-
     @SubscribeEvent
     public static void onTrackingStart(PlayerEvent.StartTracking startTracking) {
         PlayerEntity trackingPlayer = startTracking.getPlayer();
@@ -79,7 +62,10 @@ public class SynchronizationController {
             Entity trackedEntity = startTracking.getTarget();
             if (trackedEntity instanceof ServerPlayerEntity) {
                 DragonStateProvider.getCap(trackedEntity).ifPresent(dragonStateHandler -> {
-                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) trackingPlayer), new SynchronizeDragonCap(trackedEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getBaseDamage()));
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)trackingPlayer), new SynchronizeDragonCap(trackedEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(),dragonStateHandler.getBaseDamage()));
+                    DragonMovementData data = dragonStateHandler.getMovementData();
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)trackingPlayer), new PacketSyncCapabilityMovement(trackedEntity.getId(), data.bodyYaw, data.headYaw, data.headPitch));
+
                 });
             }
         }

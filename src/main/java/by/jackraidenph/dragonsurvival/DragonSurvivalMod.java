@@ -111,6 +111,7 @@ public class DragonSurvivalMod {
         register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
+        register(SyncConfig.class, new SyncConfig());
 
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
