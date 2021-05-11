@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ddd"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:crimson_door"
+    }
+  },
+  "result": {
+    "item": "dragonsurvival:crimson_dragon_door",
+    "count": 2
+  }
+}

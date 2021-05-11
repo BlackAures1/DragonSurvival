@@ -28,6 +28,21 @@
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
 
+  "block.dragonsurvival.acacia_dragon_door": "Acacia Dragon Door",
+  "block.dragonsurvival.jungle_dragon_door": "Jungle Dragon Door",
+  "block.dragonsurvival.oak_dragon_door": "Oak Dragon Door",
+  "block.dragonsurvival.dark_oak_dragon_door": "Dark Oak Dragon Door",
+  "block.dragonsurvival.birch_dragon_door": "Birch Dragon Door",
+  "block.dragonsurvival.cave_dragon_door": "Cave Dragon Door",
+  "block.dragonsurvival.sea_dragon_door": "Sea Dragon Door",
+  "block.dragonsurvival.forest_dragon_door": "Forest Dragon Door",
+  "block.dragonsurvival.iron_dragon_door": "Iron Dragon Door",
+  "block.dragonsurvival.murderer_dragon_door": "Skyrim Dragon Door",
+  "block.dragonsurvival.warped_dragon_door": "Warped Dragon Door",
+  "block.dragonsurvival.crimson_dragon_door": "Crimson Dragon Door",
+  "block.dragonsurvival.sleeper_dragon_door": "Gothic Dragon Door",
+  "block.dragonsurvival.stone_dragon_door": "Stone Dragon Door",
+
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
 

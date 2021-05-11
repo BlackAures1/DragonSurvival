@@ -40,6 +40,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
@@ -48,14 +49,13 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
@@ -71,6 +71,26 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 public class EventHandler {
+
+    @SubscribeEvent
+    public static void onDamage(LivingDamageEvent livingDamageEvent) {
+        LivingEntity livingEntity = livingDamageEvent.getEntityLiving();
+        DamageSource damageSource = livingDamageEvent.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+
+                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR) {
+                    if (dragonStateHandler.getType() == DragonType.CAVE) {
+                        livingDamageEvent.setCanceled(true);
+
+                    }
+                } else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST)
+                    livingDamageEvent.setCanceled(true);
+            }
+        });
+
+
+    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
@@ -98,6 +118,38 @@ public class EventHandler {
                             }
                         }
                     }
+                    if (!playerEntity.level.isClientSide) {
+                        World world = playerEntity.level;
+                        BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
+                        Block block = blockUnder.getBlock();
+                        switch (dragonStateHandler.getType()) {
+                            case CAVE:
+                                if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
+                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                if (playerEntity.isOnFire()) {
+                                    playerEntity.clearFire();
+                                    playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                }
+                                break;
+                            case FOREST:
+                                if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
+                                        || block.is(Tags.Blocks.DIRT)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                break;
+                            case SEA:
+                                if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
+                                        || block.is(BlockTags.CORAL_BLOCKS)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                if (playerEntity.isInWaterOrBubble()) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1));
+                                    playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
+                                }
+                        }
+                    }
                 }
             });
 
@@ -111,7 +163,8 @@ public class EventHandler {
     public static void onJoin(EntityJoinWorldEvent joinWorldEvent) {
         Entity entity = joinWorldEvent.getEntity();
         if (!(entity instanceof MonsterEntity || entity instanceof VillagerEntity || entity instanceof GolemEntity || entity instanceof HorseEntity || entity instanceof SkeletonHorseEntity) & entity instanceof CreatureEntity) {
-            ((MobEntity) entity).goalSelector.addGoal(2, new AvoidEntityGoal(
+
+            ((MobEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
                     (CreatureEntity) entity, PlayerEntity.class,
                     livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity),
                     20.0F, 1.3F, 1.5F, EntityPredicates.ATTACK_ALLOWED));
@@ -156,12 +209,13 @@ public class EventHandler {
                         capNew.setSize(capOld.getSize());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
-                        
+                        capNew.setBaseDamage(capOld.getBaseDamage());
+
                         AttributeModifier oldMod = DragonStateHandler.getHealthModifier(e.getOriginal());
                         if (oldMod != null) {
-                        	DragonStateHandler.updateHealthModifier(e.getPlayer(), oldMod);
+                            DragonStateHandler.updateHealthModifier(e.getPlayer(), oldMod);
                         }
-                        
+
                         e.getPlayer().refreshDimensions();
                     }
                 }));
@@ -171,7 +225,7 @@ public class EventHandler {
     public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
         PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getBaseDamage()));
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(playerEntity.getId()));
         });
     }
@@ -182,8 +236,39 @@ public class EventHandler {
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 ItemStack mainStack = playerEntity.getMainHandItem();
+                BlockState blockState = breakSpeedEvent.getState();
                 Item item = mainStack.getItem();
-                if (item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) {
+                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
+                    switch (dragonStateHandler.getLevel()) {
+                        case BABY:
+                            breakSpeedEvent.setNewSpeed(2);
+                            break;
+                        case YOUNG:
+                        case ADULT:
+                            switch (dragonStateHandler.getType()) {
+                                case FOREST:
+                                    if (blockState.isToolEffective(ToolType.AXE)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    break;
+                                case CAVE:
+                                    if (blockState.isToolEffective(ToolType.PICKAXE)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    break;
+                                case SEA:
+                                    if (blockState.isToolEffective(ToolType.SHOVEL)) {
+                                        breakSpeedEvent.setNewSpeed(4);
+                                    } else breakSpeedEvent.setNewSpeed(2);
+                                    if (playerEntity.isInWaterOrBubble()) {
+                                        breakSpeedEvent.setNewSpeed(breakSpeedEvent.getNewSpeed() * 1.4f);
+                                    }
+                                    break;
+                            }
+                            break;
+
+                    }
+                } else {
                     breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
                 }
             }
@@ -195,7 +280,7 @@ public class EventHandler {
         Entity mounting = mountEvent.getEntityMounting();
         DragonStateProvider.getCap(mounting).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-            	if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity || mountEvent.getEntityBeingMounted() instanceof PigEntity || mountEvent.getEntityBeingMounted() instanceof StriderEntity)
+                if (mountEvent.getEntityBeingMounted() instanceof AbstractHorseEntity || mountEvent.getEntityBeingMounted() instanceof PigEntity || mountEvent.getEntityBeingMounted() instanceof StriderEntity)
                     mountEvent.setCanceled(true);
             }
         });
@@ -212,10 +297,7 @@ public class EventHandler {
                 if (item.isEdible()) {
                     Food food = item.getFoodProperties();
                     assert food != null;
-                    boolean bad = false;
-                    if (item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE) {
-                        bad = true;
-                    }
+                    boolean bad = item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE;
                     switch (dragonStateHandler.getType()) {
                         case FOREST:
                             if (food == Foods.RABBIT || food == Foods.ROTTEN_FLESH || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
@@ -317,7 +399,7 @@ public class EventHandler {
         if (world.isNight() && world.getBlockEntity(sleepingLocation) instanceof NestEntity)
             sleepingLocationCheckEvent.setResult(Event.Result.ALLOW);
     }
-    
+
     @SubscribeEvent
     public static void dropDragonDust(BlockEvent.BreakEvent breakEvent) {
         if (!breakEvent.isCanceled()) {
@@ -335,11 +417,11 @@ public class EventHandler {
                 // Checks to make sure the ore does not drop itself or another ore from the tag (no going infinite with ores)
                 ITag<Item> oresTag = ItemTags.getAllTags().getTag(ores);
                 if (!oresTag.contains(block.asItem()))
-                	return;
-                List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld)world)
-        				.withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-        				.withParameter(LootParameters.TOOL, mainHandItem));
-                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && !drops.stream().anyMatch(item -> oresTag.contains(item.getItem()));
+                    return;
+                List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld) world)
+                        .withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                        .withParameter(LootParameters.TOOL, mainHandItem));
+                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
                 if (suitableOre && !playerEntity.isCreative()) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
                         random = playerEntity.getRandom().nextDouble();
@@ -350,7 +432,7 @@ public class EventHandler {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
                         }
                     } else {
-                    	if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
+                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
                         if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
@@ -397,12 +479,16 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void reduceFallDistance(LivingFallEvent livingFallEvent) {
-    	//TODO prevent death from falling
         LivingEntity livingEntity = livingFallEvent.getEntityLiving();
-        if (DragonStateProvider.isDragon(livingEntity))
-            livingFallEvent.setDistance(livingFallEvent.getDistance() - 1);
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                if (dragonStateHandler.getType() == DragonType.FOREST) {
+                    livingFallEvent.setDistance(livingFallEvent.getDistance() - 5);
+                }
+            }
+        });
     }
-    
-    
-    
+
+
+
 }

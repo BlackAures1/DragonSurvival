@@ -5,25 +5,9 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class CapabilityStorage implements Capability.IStorage<DragonStateHandler> {
-    private static CompoundNBT writeVec3d(Vector3d vec) {
-        CompoundNBT comp = new CompoundNBT();
-        comp.putDouble("X", vec.x);
-        comp.putDouble("Y", vec.y);
-        comp.putDouble("Z", vec.z);
-        return comp;
-    }
-
-    private static Vector3d getVec3d(INBT nbt) {
-        CompoundNBT tag = (CompoundNBT) nbt;
-        Vector3d vec = Vector3d.ZERO;
-        if (tag != null && tag.contains("X"))
-            vec = new Vector3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z"));
-        return vec;
-    }
 
     @Override
     public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {
@@ -31,7 +15,7 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
         tag.putBoolean("isDragon", instance.isDragon());
         if (instance.isDragon()) {
             DragonStateHandler.DragonMovementData movementData = instance.getMovementData();
-
+            tag.putInt("Base damage", instance.getBaseDamage());
             tag.putDouble("bodyYaw", movementData.bodyYaw);
             tag.putDouble("headYaw", movementData.headYaw);
             tag.putDouble("headPitch", movementData.headPitch);
@@ -56,6 +40,11 @@ public class CapabilityStorage implements Capability.IStorage<DragonStateHandler
             if (instance.getSize() == 0)
                 instance.setSize(DragonLevel.BABY.initialHealth);
             instance.setHasWings(tag.getBoolean("hasWings"));
+            int base_damage = tag.getInt("Base damage");
+            if (base_damage == 0)
+                instance.setBaseDamage(instance.getLevel().baseDamage);
+            else
+                instance.setBaseDamage(base_damage);
         }
     }
 }

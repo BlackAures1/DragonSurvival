@@ -10,7 +10,6 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -119,7 +118,7 @@ public class DragonAltarGUI extends Screen {
                 playerStateHandler.setType(DragonType.NONE);
                 playerStateHandler.setHasWings(false);
                 playerStateHandler.setSize(20F);
-                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, false, 20, false));
+                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, false, 20, false, 1));
                 minecraft.player.closeContainer();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"), minecraft.player.getUUID());
             });
@@ -132,17 +131,14 @@ public class DragonAltarGUI extends Screen {
             return;
         player.closeContainer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings()));
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings(),2));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
             DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setSize(DragonLevel.BABY.initialHealth, player);
-            cap.setHasWings(false);
-//                    Random random = player.world.rand;
-//                    BlockPos.Mutable pos = new BlockPos.Mutable(random.nextInt(2000) - 1000, player.getPosY(), random.nextInt(2000) - 1000);
-//                    DragonSurvivalMod.INSTANCE.sendToServer(new SetRespawnPosition(pos));
+            cap.setHasWings(false);//
         });
     }
 }

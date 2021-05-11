@@ -3,7 +3,12 @@ added hitbox and eye position adjustments according to dragon growth.
 overrode and rewrote minecraft auto-crouch functionality.
 fixed the French lang file.
 fixed the Ender Dragon messages from lang files.
-health system is now compatible with other mods
+health system is now compatible with other mods;
+implemented different mining speeds for dragons;
+changed base damage of dragon stages;
+implemented speedup from appropriate blocks;
+implemented natural resistance to appropriate damage sources;
+added new Dragon doors;
 
 0.0.32-1.16.5:
 added netherite armor textures;
@@ -18,7 +23,7 @@ non-vanilla armor will show no texture
 
 0.0.31-1.16.5:
 update;
-fixed crash with 'trap' skeleton horses;
+fixed crash happening when skeleton horses are spawned by lightning
 
 0.0.30:
 disabled NPE spam;

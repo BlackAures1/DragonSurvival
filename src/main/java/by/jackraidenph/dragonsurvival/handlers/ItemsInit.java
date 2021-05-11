@@ -4,10 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
-import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -29,7 +26,7 @@ public class ItemsInit {
     public static ItemGroup items = new ItemGroup("dragon.survival.blocks") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(elderDragonDust);
+            return new ItemStack(elderDragonBone);
         }
     };
     public static Item charredMeat, chargedCoal;
@@ -51,6 +48,7 @@ public class ItemsInit {
                             if (!worldIn.isClientSide)
                                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             playerIn.refreshDimensions();
+                            dragonStateHandler.setBaseDamage(dragonStateHandler.getLevel().baseDamage, playerIn);
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }
@@ -75,6 +73,7 @@ public class ItemsInit {
                             if (!worldIn.isClientSide)
                                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             playerIn.refreshDimensions();
+                            dragonStateHandler.setBaseDamage(dragonStateHandler.getLevel().baseDamage, playerIn);
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }

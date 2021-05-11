@@ -1,39 +1,52 @@
 package by.jackraidenph.dragonsurvival.capability;
 
-import java.util.Objects;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.UUID;
 
 
 public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-    /**
-     * Current health, must be equal to the player's health
-     */
+
     private final DragonMovementData data = new DragonMovementData(0, 0, 0);
     private boolean hasWings;
     private float size;
-    
-    public float getSize() {
-    	return size;
+    /**
+     * Base damage
+     */
+    private int baseDamage;
+
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
     }
-    
+
+    public void setBaseDamage(int baseDamage, PlayerEntity playerEntity) {
+        setBaseDamage(baseDamage);
+        playerEntity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(baseDamage);
+    }
+
+    public int getBaseDamage() {
+        return baseDamage;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
     /**
      * Sets the size and initial health
      */
     public void setSize(float size, PlayerEntity playerEntity) {
-    	setSize(size);
+        setSize(size);
     	AttributeModifier mod = buildHealthMod(size);
         updateHealthModifier(playerEntity, mod);
     }
@@ -74,8 +87,7 @@ public class DragonStateHandler {
         else
         	return DragonLevel.ADULT;
     }
-    
-    
+
     @Nullable
     public static AttributeModifier getHealthModifier(PlayerEntity player) {
     	return Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH)).getModifier(UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446"));
@@ -122,37 +134,18 @@ public class DragonStateHandler {
         public double headYaw;
         public double headPitch;
 
-        public Vector3d headPosLastTick;
-        public Vector3d tailPosLastTick;
         public double headYawLastTick;
         public double headPitchLastTick;
         public double bodyYawLastTick;
 
-        public DragonMovementData(
-                double bodyYaw,
-                double headYaw,
-                double headPitch) {
-
+        public DragonMovementData(double bodyYaw, double headYaw, double headPitch) {
             this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
-
             this.headYawLastTick = headYaw;
             this.headPitchLastTick = headPitch;
             this.bodyYawLastTick = bodyYaw;
         }
 
-        void setMovementData(double bodyYaw, double headYaw, double headPitch) {
-            this.setMovementLastTick(this.bodyYaw, this.headYaw, this.headPitch);
-            this.bodyYaw = bodyYaw;
-            this.headYaw = headYaw;
-            this.headPitch = headPitch;
-        }
-
-        void setMovementLastTick(double bodyYawLastTick, double headYawLastTick, double headPitchLastTick) {
-            this.bodyYawLastTick = bodyYawLastTick;
-            this.headYawLastTick = headYawLastTick;
-            this.headPitchLastTick = headPitchLastTick;
-        }
     }
 }
