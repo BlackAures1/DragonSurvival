@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
+import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
@@ -36,6 +37,8 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
@@ -189,13 +192,13 @@ public class ClientEvents {
 		                    if (Math.abs(bodyAndHeadYawDiff) > 170) {
 		                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 170F, 1.5F) / 30F, 50F);
 		                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot);
-		                        DragonSurvivalMod.LOGGER.info("View Adjustment"); // THIS NEEDS TO BE SHARED WITH OTHER CLIENTS AND SERVER!!!!
+		                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot));
 		                    }
 		                }
 		
 		                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
 		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot);
-		                    DragonSurvivalMod.LOGGER.info("Move Adjustment"); // THIS NEEDS TO BE SHARED WITH OTHER CLIENTS AND SERVER!!!!
+		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot));
 		
 		                }
             		}
