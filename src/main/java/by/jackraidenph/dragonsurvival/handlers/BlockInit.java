@@ -33,6 +33,7 @@ public class BlockInit {
     public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor spruceDragonDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor;
+    public static DragonDoor caveDoor, ironDoor, crimsonDoor, forestDoor, murdererDoor, seaDoor, sleeperDoor, stoneDoor, warpedDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
     public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
 
@@ -69,6 +70,10 @@ public class BlockInit {
         oakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "oak_dragon_door", forgeRegistry);
         darkOakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "dark_oak_dragon_door", forgeRegistry);
 
+        caveDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "cave_dragon_door", forgeRegistry);
+        forestDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "forest_dragon_door", forgeRegistry);
+        seaDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "sea_dragon_door", forgeRegistry);
+
         mediumSeaNest = new MediumNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
         mediumCaveNest = new MediumNestBlock(Block.Properties.copy(smallCaveNest));
@@ -101,6 +106,9 @@ public class BlockInit {
         registerDoor(oakDoor, new Item.Properties(), forgeRegistry);
         registerDoor(darkOakDoor, new Item.Properties(), forgeRegistry);
         registerDoor(birchDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(caveDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(seaDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(forestDoor, new Item.Properties(), forgeRegistry);
 
         forgeRegistry.register(new BlockItem(PREDATOR_STAR_BLOCK, new Item.Properties().tab(ItemsInit.items)).setRegistryName("predator_star"));
 
