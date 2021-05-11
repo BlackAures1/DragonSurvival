@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("unused")
 public class ClientEvents {
 
-    public static float bodyYaw;
     public static DragonModel dragonModel;
     static boolean showingInventory;
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
@@ -109,12 +108,12 @@ public class ClientEvents {
 	                eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
 	                eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
 	                eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(player.yRot));
-	                eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(-bodyYaw));
+	                eventMatrixStack.mulPose(Vector3f.YN.rotationDegrees((float)playerStateHandler.getMovementData().bodyYaw));
 	                eventMatrixStack.translate(0, -2, -1);
 	                IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
 	//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
 	                int light = renderHandEvent.getLight();
-	
+	                
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
 	                dummyDragon2.get().copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
@@ -182,18 +181,25 @@ public class ClientEvents {
             Minecraft minecraft = Minecraft.getInstance();
             ClientPlayerEntity player = minecraft.player;
             if (player != null) {
-                float bodyAndHeadYawDiff = bodyYaw - player.yHeadRot;
-                if (minecraft.options.getCameraType() == PointOfView.FIRST_PERSON) { // Not 100% on this, but First_Person is value 0 of the enum
-                    if (Math.abs(bodyAndHeadYawDiff) > 170) {
-                        bodyYaw -= Math.signum(bodyAndHeadYawDiff) * 2;
-                    }
-                }
-
-                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
-                    DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> dragonStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot));
-                    //align body when moving
-                    bodyYaw = player.yHeadRot;
-                }
+            	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+            		if (playerStateHandler.isDragon()) {
+	            		float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F;
+	            		
+		                if (minecraft.options.getCameraType() == PointOfView.FIRST_PERSON) {
+		                    if (Math.abs(bodyAndHeadYawDiff) > 170) {
+		                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 170F, 1.5F) / 30F, 50F);
+		                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot);
+		                        DragonSurvivalMod.LOGGER.info("View Adjustment"); // THIS NEEDS TO BE SHARED WITH OTHER CLIENTS AND SERVER!!!!
+		                    }
+		                }
+		
+		                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
+		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot);
+		                    DragonSurvivalMod.LOGGER.info("Move Adjustment"); // THIS NEEDS TO BE SHARED WITH OTHER CLIENTS AND SERVER!!!!
+		
+		                }
+            		}
+            	});
             }
         }
     }
@@ -222,7 +228,7 @@ public class ClientEvents {
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 try {
 	                matrixStack.pushPose();
-	                matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) -cap.getMovementData().bodyYaw));
+	                matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)cap.getMovementData().bodyYaw));
 	                float size = cap.getSize();
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
