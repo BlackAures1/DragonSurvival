@@ -1,26 +1,37 @@
 package by.jackraidenph.dragonsurvival.util;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import java.util.Arrays;
 import java.util.List;
+
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.network.SyncConfig;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
+@Mod.EventBusSubscriber
 public class ConfigurationHandler {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final General GENERAL = new General(BUILDER);
     public static final Spawn SPAWN = new Spawn(BUILDER);
     public static final OreLoot ORE_LOOT = new OreLoot(BUILDER);
     public static final ForgeConfigSpec SPEC = BUILDER.build();
-    public static ForgeConfigSpec.DoubleValue maxFlightSpeed;
+    private static ForgeConfigSpec.DoubleValue maxFlightSpeed;
     public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
     public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
-    public static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
-    public static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
-    public static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
-    public static ForgeConfigSpec.ConfigValue<Boolean> startWithWings;
+    private static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
+    private static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
+    private static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
+    private static ForgeConfigSpec.ConfigValue<Boolean> startWithWings;
     public static ForgeConfigSpec.ConfigValue<Boolean> endVoidTeleport;
 
     public static class General {
@@ -80,5 +91,72 @@ public class ConfigurationHandler {
             exclude = builder.defineList("exclude", Arrays.asList(MOUNTAIN.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
             builder.pop();
         }
+    }
+    
+    public static class NetworkedConfig{
+    	private static boolean serverConnection = false;
+    	private static Double serverMaxFlightSpeed;
+    	private static Boolean serverMineStarBlock;
+    	private static Boolean serverSizeChangesHitbox;
+        private static Boolean serverHitboxGrowsPastHuman;
+        private static Boolean serverStartWithWings;
+    	
+        public static void setServerConnection(boolean connection) {
+        	serverConnection = connection;
+        }
+        
+        public static void saveServerConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings) {
+        	serverMaxFlightSpeed = maxFlightSpeed;
+        	serverMineStarBlock = mineStarBlock;
+        	serverSizeChangesHitbox = sizeChangesHitbox;
+        	serverHitboxGrowsPastHuman = hitboxGrowsPastHuman;
+        	serverStartWithWings = startWithWings;
+        }
+        
+    	public static double getMaxFlightSpeed() {
+    		if (!serverConnection)
+    			return ConfigurationHandler.maxFlightSpeed.get();
+    		return serverMaxFlightSpeed == null ? ConfigurationHandler.maxFlightSpeed.get() : serverMaxFlightSpeed;
+    	}
+    	
+    	public static boolean getMineStarBlock() {
+    		if (!serverConnection)
+    			return ConfigurationHandler.mineStarBlock.get();
+    		return serverMineStarBlock == null ? ConfigurationHandler.mineStarBlock.get() : serverMineStarBlock;
+    	}
+    	
+    	public static boolean getSizeChangesHitbox() {
+    		if (!serverConnection)
+    			return ConfigurationHandler.sizeChangesHitbox.get();
+    		return serverSizeChangesHitbox == null ? ConfigurationHandler.sizeChangesHitbox.get() : serverSizeChangesHitbox;
+    	}
+    	
+    	
+    	public static boolean getHitboxGrowsPastHuman() {
+    		if (!serverConnection)
+    			return ConfigurationHandler.hitboxGrowsPastHuman.get();
+    		return serverHitboxGrowsPastHuman == null ? ConfigurationHandler.hitboxGrowsPastHuman.get() : serverHitboxGrowsPastHuman;
+    	}
+    	
+    	
+    	public static boolean getStartWithWings() {
+    		if (!serverConnection)
+    			return ConfigurationHandler.startWithWings.get();
+    		return serverStartWithWings == null ? ConfigurationHandler.startWithWings.get() : serverStartWithWings;
+    	}
+
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    public static void ServerPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    	ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
+    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncConfig(maxFlightSpeed.get(), mineStarBlock.get(), sizeChangesHitbox.get(), hitboxGrowsPastHuman.get(), startWithWings.get()));
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void ClientPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    	NetworkedConfig.setServerConnection(false);
     }
 }

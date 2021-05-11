@@ -6,8 +6,10 @@ import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SyncConfig;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -37,28 +39,45 @@ public class PacketProxy {
             World world = thisPlayer.level;
             Entity entity = world.getEntity(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
-                if (entity != thisPlayer) {
-                    DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch);
-                    });
-                }
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch);
+                });
             }
             context.setPacketHandled(true);
         }
     }
 
-    public DistExecutor.SafeRunnable updateLevel(SyncSize syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
+    public DistExecutor.SafeRunnable updateSize(SyncSize syncSize, Supplier<NetworkEvent.Context> contextSupplier) {
         return () -> {
             Minecraft minecraft = Minecraft.getInstance();
-            Entity entity = minecraft.level.getEntity(syncLevel.playerId);
+            Entity entity = minecraft.level.getEntity(syncSize.playerId);
             if (entity instanceof PlayerEntity) {
                 DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                    dragonStateHandler.setSize(syncLevel.size, (PlayerEntity)entity);
+                    dragonStateHandler.setSize(syncSize.size, (PlayerEntity)entity);
                 });
                 
                 contextSupplier.get().setPacketHandled(true);
             }
         };
+    }
+    
+    public DistExecutor.SafeRunnable saveServerConfig(SyncConfig syncConfig, Supplier<NetworkEvent.Context> contextSupplier){
+    	return () -> {
+    		ConfigurationHandler.NetworkedConfig.setServerConnection(true);
+    		ConfigurationHandler.NetworkedConfig.saveServerConfig(
+    				syncConfig.serverMaxFlightSpeed, 
+    				syncConfig.serverMineStarBlock,
+    				syncConfig.serverSizeChangesHitbox, 
+    				syncConfig.serverHitboxGrowsPastHuman, 
+    				syncConfig.serverStartWithWings);
+    		contextSupplier.get().enqueueWork(() -> {
+    			ClientPlayerEntity player = Minecraft.getInstance().player;
+    			player.setForcedPose(null);
+    			player.refreshDimensions();
+    		});
+    		contextSupplier.get().setPacketHandled(true);
+    		
+    	};
     }
 
     public DistExecutor.SafeRunnable refreshInstances(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> context) {

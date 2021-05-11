@@ -72,7 +72,7 @@ public class FlightController {
                             az *= 0.99;
                             ay = lookVec.y / 8;
                         }
-                        double speedLimit = ConfigurationHandler.maxFlightSpeed.get();
+                        double speedLimit = ConfigurationHandler.NetworkedConfig.getMaxFlightSpeed();
                         ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
                         az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
                         if (lookY < 0) {

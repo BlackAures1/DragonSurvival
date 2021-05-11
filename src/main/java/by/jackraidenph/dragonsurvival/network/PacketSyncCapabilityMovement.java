@@ -1,11 +1,18 @@
 package by.jackraidenph.dragonsurvival.network;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.PacketProxy;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -60,6 +67,19 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
 
     @Override
     public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
+    	NetworkEvent.Context context = supplier.get();
+    	ServerPlayerEntity player = context.getSender();
+        if (FMLEnvironment.dist.isDedicatedServer()) {
+        	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), syncCapabilityMovement);
+            Entity entity = player.level.getEntity(syncCapabilityMovement.playerId);
+            if (entity instanceof PlayerEntity) {
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch);
+                });
+            }
+        	supplier.get().setPacketHandled(true);
+        	return;
+        }
+    	DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
     }
 }

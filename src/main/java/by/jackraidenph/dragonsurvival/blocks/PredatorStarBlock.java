@@ -88,7 +88,7 @@ public class PredatorStarBlock extends Block {
     @Override
     public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
     	// TODO Should be able to do "player.getMainHandItem().isCorrectToolForDrops(state)" but always returns false for some reason
-        if (!ConfigurationHandler.mineStarBlock.get() || !(player.getMainHandItem().getToolTypes().contains(ToolType.HOE) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem()) > 0)) { 
+        if (!ConfigurationHandler.NetworkedConfig.getMineStarBlock() || !(player.getMainHandItem().getToolTypes().contains(ToolType.HOE) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem()) > 0)) { 
         	this.blockBehaviour(player, worldIn, pos); 
         }
     }
