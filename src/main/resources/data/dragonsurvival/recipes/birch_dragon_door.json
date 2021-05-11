@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ddd"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:birch_door"
+    }
+  },
+  "result": {
+    "item": "dragonsurvival:birch_dragon_door",
+    "count": 2
+  }
+}
