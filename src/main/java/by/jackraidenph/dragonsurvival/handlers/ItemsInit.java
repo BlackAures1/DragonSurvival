@@ -26,7 +26,7 @@ public class ItemsInit {
     public static ItemGroup items = new ItemGroup("dragon.survival.blocks") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(elderDragonDust);
+            return new ItemStack(elderDragonBone);
         }
     };
     public static Item charredMeat, chargedCoal;
