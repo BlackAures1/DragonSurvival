@@ -259,6 +259,9 @@ public class EventHandler {
                                     if (blockState.isToolEffective(ToolType.SHOVEL)) {
                                         breakSpeedEvent.setNewSpeed(4);
                                     } else breakSpeedEvent.setNewSpeed(2);
+                                    if (playerEntity.isInWaterOrBubble()) {
+                                        breakSpeedEvent.setNewSpeed(breakSpeedEvent.getNewSpeed() * 1.4f);
+                                    }
                                     break;
                             }
                             break;
