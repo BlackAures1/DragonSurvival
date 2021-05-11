@@ -8,7 +8,12 @@ import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.builder.Animation;
+import software.bernie.geckolib3.file.AnimationFile;
+import software.bernie.geckolib3.geo.exception.GeckoLibException;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
@@ -29,42 +34,64 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(DragonEntity dragonEntity) {
-        final PlayerEntity player = dragonEntity.getPlayer();
-        if (player != null) {
-            Vector3d playerMotion = player.getDeltaMovement();
-            if (player.getPose() == Pose.SWIMMING)
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
-            if (player.isInWaterOrBubble() && (playerMotion.x != 0 || playerMotion.z != 0))
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
-            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
-                if ((playerMotion.z() != 0 || playerMotion.x() != 0) && player.animationSpeed != 0f) {
-                    return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
-                } else if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
-                    return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking_stand.animation.json");
-            }
+	public Animation getAnimation(String name, IAnimatable animatable) {
+    	DragonEntity dragonEntity = (DragonEntity)animatable;
+    	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
+    	final PlayerEntity player = dragonEntity.getPlayer();
+    	if (player != null) {
+    		switch (name) {
+	    		case "animation.dragon.idle":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
+	    			break;
+	    		case "animation.dragon.walk":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
+	    			break;
+	    		case "animation.dragon.run":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
+	    			break;
+	    		case "animation.dragon.sneak":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking_stand.animation.json");
+	    			break;
+	    		case "animation.dragon.sneak_walk":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
+	    			break;
+	    		case "animation.dragon.jump":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
+	    			break;
+	    		case "animation.dragon.fly_slow":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
+	    			break;
+	    		case "animation.dragon.bite":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
+	    			break;
+	    		case "animation.dragon.dig":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging.animation.json");
+	    			break;
+	    		case "animation.dragon.dig_sneak":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
+	    			break;
+	    		case "animation.dragon.swim":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
+	    			break;
+	    		case "animation.dragon.swim_fast":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
+	    			break;
+	    		case "animation.dragon.sleep":
+	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sleep.animation.json");
+	    			break;
+    		}
+    	}
+    	AnimationFile animation = GeckoLibCache.getInstance().getAnimations().get(animLocation);
+    	if (animation == null) {
+			throw new GeckoLibException(animLocation, "Could not find animation file. Please double check name.");
+		}
+		return animation.getAnimation(name);
+	}
 
-            boolean flyingEnabled = ClientEvents.dragonsFlying.getOrDefault(player.getId(), false);
-            if ((flyingEnabled || player.abilities.flying) && !player.isInWater() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
-
-            if (player.isSprinting())
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
-            if (player.swinging && player.getAttackStrengthScale(-3f) != 1) {
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
-            }
-            if (ClientEvents.dragonsJumpingTicks.getOrDefault(dragonEntity.player, 0) > 0)
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
-            //motion variables alone are not reliable
-            if ((playerMotion.z != 0 || playerMotion.x != 0) && player.animationSpeed != 0f) {
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
-            }
-            if (player.isSleeping())
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sleep.animation.json");
-            if (ClientEvents.dragonsDigging.getOrDefault(dragonEntity.player, false))
-                return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging.animation.json");
-        }
-        return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
-    }
+	@Override
+	public ResourceLocation getAnimationFileLocation(DragonEntity animatable) {
+		return null;
+	}
+    
+    
 }
