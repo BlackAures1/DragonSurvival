@@ -57,6 +57,8 @@ public class ClientModEvents {
         RenderTypeLookup.setRenderLayer(BlockInit.bigCaveNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.bigForestNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.bigSeaNest, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.birchDoor, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.acaciaDoor, RenderType.cutout());
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();
@@ -68,20 +70,7 @@ public class ClientModEvents {
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
-        
-        /*if (ConfigurationHandler.disableClientHandlerSpam.get()) {
-            Field loggerfield = ClientPlayNetHandler.class.getDeclaredFields()[0];
-            loggerfield.setAccessible(true);
-            if (loggerfield.getType() == Logger.class) {
-                try {
-                    Logger logger = (Logger) loggerfield.get(ClientPlayNetHandler.class);
-                    if (logger instanceof org.apache.logging.log4j.core.Logger)
-                        ((org.apache.logging.log4j.core.Logger) logger).setLevel(Level.ERROR);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
+
     }
 
     /**
