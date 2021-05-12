@@ -11,14 +11,14 @@ import net.minecraft.util.ResourceLocation;
 
 @JeiPlugin
 @SuppressWarnings("unused")
-public class InventoryFix implements IModPlugin, IRecipeTransferHandler {
+public class InventoryFix implements IModPlugin, IRecipeTransferHandler<DragonContainer> {
     @Override
     public ResourceLocation getPluginUid() {
         return new ResourceLocation(DragonSurvivalMod.MODID, "fix");
     }
 
     @Override
-    public Class getContainerClass() {
+    public Class<DragonContainer> getContainerClass() {
         return DragonContainer.class;
     }
 
