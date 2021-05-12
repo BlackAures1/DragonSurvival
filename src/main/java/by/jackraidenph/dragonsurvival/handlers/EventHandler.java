@@ -143,6 +143,9 @@ public class EventHandler {
                                         || block.is(Tags.Blocks.DIRT)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && world.getLightEmission(playerEntity.blockPosition()) < 3) {
+
+                                }
                                 break;
                             case SEA:
                                 if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
