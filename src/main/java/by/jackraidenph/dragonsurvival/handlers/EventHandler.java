@@ -319,10 +319,39 @@ public class EventHandler {
                                     break;
                             }
                             break;
-
                     }
                 } else {
                     breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
+                }
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void dropBlocksMinedByPaw(PlayerEvent.HarvestCheck harvestCheck) {
+        PlayerEntity playerEntity = harvestCheck.getPlayer();
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                ItemStack stack = playerEntity.getMainHandItem();
+                Item item = stack.getItem();
+                BlockState blockState = harvestCheck.getTargetBlock();
+                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
+                    if (!harvestCheck.canHarvest()) {
+                        switch (dragonStateHandler.getType()) {
+                            case SEA:
+                                if (blockState.isToolEffective(ToolType.SHOVEL))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                            case CAVE:
+                                if (blockState.isToolEffective(ToolType.PICKAXE))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                            case FOREST:
+                                if (blockState.isToolEffective(ToolType.AXE))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                        }
+                    }
                 }
             }
         });
