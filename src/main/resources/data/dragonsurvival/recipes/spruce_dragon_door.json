@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "DD"
+    "ddd"
   ],
   "key": {
-    "D": {
+    "d": {
       "item": "minecraft:spruce_door"
     }
   },
   "result": {
-    "item": "dragonsurvival:dragon_gate",
+    "item": "dragonsurvival:spruce_dragon_door",
     "count": 1
   }
 }

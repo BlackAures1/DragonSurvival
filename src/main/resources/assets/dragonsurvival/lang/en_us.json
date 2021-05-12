@@ -11,7 +11,7 @@
   "item.dragonsurvival.charred_meat": "Charred Meat",
   "item.dragonsurvival.elder_dragon_dust": "Elder Dragon Dust",
 
-  "block.dragonsurvival.dragon_gate": "Dragon Door",
+  
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragons' Altar",
   "block.dragonsurvival.cave_nest_small": "Small Cave Nest",
@@ -28,6 +28,7 @@
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
 
+  "block.dragonsurvival.spruce_dragon_door": "Spruce Dragon Door",
   "block.dragonsurvival.acacia_dragon_door": "Acacia Dragon Door",
   "block.dragonsurvival.jungle_dragon_door": "Jungle Dragon Door",
   "block.dragonsurvival.oak_dragon_door": "Oak Dragon Door",
