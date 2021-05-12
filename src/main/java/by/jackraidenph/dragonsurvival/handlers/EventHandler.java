@@ -220,12 +220,6 @@ public class EventHandler {
             horseEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(horseEntity, PlayerEntity.class, 0, true, false, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElseGet(null).getLevel() != DragonLevel.ADULT));
             horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT, 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
         }
-        DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon()) {
-                PlayerEntity playerEntity = (PlayerEntity) entity;
-                dragonStateHandler.setBaseDamage(dragonStateHandler.getBaseDamage(), playerEntity);
-            }
-        });
     }
 
     @SubscribeEvent
@@ -263,7 +257,6 @@ public class EventHandler {
                         capNew.setSize(capOld.getSize());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
-                        capNew.setBaseDamage(capOld.getBaseDamage());
 
                         AttributeModifier oldMod = DragonStateHandler.getHealthModifier(e.getOriginal());
                         if (oldMod != null) {
@@ -279,7 +272,7 @@ public class EventHandler {
     public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
         PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getBaseDamage()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings()));
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(playerEntity.getId()));
         });
     }

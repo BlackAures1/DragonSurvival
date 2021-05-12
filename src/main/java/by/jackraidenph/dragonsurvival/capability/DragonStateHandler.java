@@ -16,39 +16,27 @@ public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-
     private final DragonMovementData data = new DragonMovementData(0, 0, 0);
     private boolean hasWings;
     private float size;
-    /**
-     * Base damage
-     */
-    private int baseDamage;
-
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
-    }
-
-    public void setBaseDamage(int baseDamage, PlayerEntity playerEntity) {
-        setBaseDamage(baseDamage);
-        playerEntity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(baseDamage);
-    }
-
-    public int getBaseDamage() {
-        return baseDamage;
-    }
-
+    
+    public static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446");
+    public static final UUID DAMAGE_MODIFIER_UUID = UUID.fromString("5bd3cebc-132e-4f9d-88ef-b686c7ad1e2c");
+    
+    
     public float getSize() {
         return size;
     }
 
     /**
-     * Sets the size and initial health
+     * Sets the size, health and base damage
      */
     public void setSize(float size, PlayerEntity playerEntity) {
         setSize(size);
-    	AttributeModifier mod = buildHealthMod(size);
-        updateHealthModifier(playerEntity, mod);
+    	AttributeModifier healthMod = buildHealthMod(size);
+        updateHealthModifier(playerEntity, healthMod);
+        AttributeModifier damageMod = buildDamageMod(getLevel());
+        updateDamageModifier(playerEntity, damageMod);
     }
     
     public void setSize(float size) {
@@ -90,14 +78,28 @@ public class DragonStateHandler {
 
     @Nullable
     public static AttributeModifier getHealthModifier(PlayerEntity player) {
-    	return Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH)).getModifier(UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446"));
+    	return Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH)).getModifier(HEALTH_MODIFIER_UUID);
+    }
+    
+    @Nullable
+    public static AttributeModifier getDamageModifier(PlayerEntity player) {
+    	return Objects.requireNonNull(player.getAttribute(Attributes.ATTACK_DAMAGE)).getModifier(DAMAGE_MODIFIER_UUID);
     }
     
     public static AttributeModifier buildHealthMod(Float size) {
     	return new AttributeModifier(
-        		UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446"),
+    			HEALTH_MODIFIER_UUID,
     			"Dragon Health Adjustment",
     			(size - 20),
+    			AttributeModifier.Operation.ADDITION
+    		);
+    }
+    
+    public static AttributeModifier buildDamageMod(DragonLevel level) {
+    	return new AttributeModifier(
+    			DAMAGE_MODIFIER_UUID,
+    			"Dragon Damage Adjustment",
+    			(level.baseDamage - 1),
     			AttributeModifier.Operation.ADDITION
     		);
     }
@@ -109,6 +111,12 @@ public class DragonStateHandler {
     	max.addPermanentModifier(mod);
     	float newHealth = player.getHealth() * player.getMaxHealth() / oldMax;
     	player.setHealth(newHealth);
+    }
+    
+    public static void updateDamageModifier(PlayerEntity player, AttributeModifier mod) {
+    	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(Attributes.ATTACK_DAMAGE));
+    	max.removeModifier(mod);
+    	max.addPermanentModifier(mod);
     }
     
     public void setMovementData(double bodyYaw, double headYaw, double headPitch) {
