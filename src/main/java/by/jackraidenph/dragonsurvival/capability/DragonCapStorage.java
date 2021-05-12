@@ -7,7 +7,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class CapabilityStorage implements Capability.IStorage<DragonStateHandler> {
+public class DragonCapStorage implements Capability.IStorage<DragonStateHandler> {
 
     @Override
     public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {

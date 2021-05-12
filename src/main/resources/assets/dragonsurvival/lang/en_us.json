@@ -43,6 +43,8 @@
   "block.dragonsurvival.sleeper_dragon_door": "Gothic Dragon Door",
   "block.dragonsurvival.stone_dragon_door": "Stone Dragon Door",
 
+  "effect.dragonsurvival.stress": "Stress",
+
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
 

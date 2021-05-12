@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
@@ -101,7 +100,7 @@ public class DragonSurvivalMod {
     private void setup(final FMLCommonSetupEvent event) {
     	WingObtainmentController.loadDragonPhrases();
         Capabilities.register();
-        LOGGER.info("Successfully registered " + DragonStateHandler.class.getSimpleName() + "!");
+        LOGGER.info("Successfully registered capabilities!");
 
         register(PacketSyncCapabilityMovement.class, new PacketSyncCapabilityMovement());
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
