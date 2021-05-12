@@ -49,7 +49,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
@@ -145,7 +147,8 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
-                                    if (blockUnder.getLightValue(world, playerEntity.blockPosition().below()) < 3) {
+                                    WorldLightManager lightManager = world.getChunkSource().getLightEngine();
+                                    if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                         playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
                                             darknessFear.increaseTime();
                                             if (darknessFear.getTimeInDarkness() > 20 * 10) {

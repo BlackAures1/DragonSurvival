@@ -24,8 +24,13 @@ public class DragonEffects {
             if (livingEntity instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) livingEntity;
                 playerEntity.getFoodData().setSaturation(0);
-                playerEntity.getFoodData().addExhaustion(1);
+                playerEntity.causeFoodExhaustion(0.1f);
             }
+        }
+
+        @Override
+        public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
+            return true;
         }
     }
 
