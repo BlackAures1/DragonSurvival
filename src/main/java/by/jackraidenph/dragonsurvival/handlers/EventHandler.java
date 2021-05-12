@@ -39,6 +39,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
@@ -134,6 +135,7 @@ public class EventHandler {
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.IN_FIRE, 1);
+                                    world.addParticle(ParticleTypes.SMOKE, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), 0, 0, 0);
                                 } else {
                                     if (playerEntity.isOnFire()) {
                                         playerEntity.clearFire();
@@ -210,6 +212,12 @@ public class EventHandler {
             horseEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(horseEntity, PlayerEntity.class, 0, true, false, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElseGet(null).getLevel() != DragonLevel.ADULT));
             horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT, 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
         }
+        DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                PlayerEntity playerEntity = (PlayerEntity) entity;
+                dragonStateHandler.setBaseDamage(dragonStateHandler.getBaseDamage(), playerEntity);
+            }
+        });
     }
 
     @SubscribeEvent
