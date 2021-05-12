@@ -135,8 +135,8 @@ public class WingObtainmentController {
 
     @SubscribeEvent
     public static void teleportAway(LivingDamageEvent damageEvent) {
-    	if (!ConfigurationHandler.endVoidTeleport.get())
-    		return;
+        if (!ConfigurationHandler.GENERAL.endVoidTeleport.get())
+            return;
         LivingEntity livingEntity = damageEvent.getEntityLiving();
         if (livingEntity instanceof PlayerEntity) {
             DamageSource damageSource = damageEvent.getSource();

@@ -157,11 +157,11 @@ public class MagicalPredatorEntity extends MonsterEntity {
     
     public static AttributeModifierMap.MutableAttribute createMonsterAttributes() {
         return MobEntity.createMobAttributes()
-        		.add(Attributes.MOVEMENT_SPEED, 0.375D)
-        		.add(Attributes.ARMOR, 2.0F)
-        		.add(Attributes.ATTACK_DAMAGE, 2.0F * ConfigurationHandler.predatorDamageFactor.get())
-        		.add(Attributes.ATTACK_KNOCKBACK, 1.0F)
-        		.add(Attributes.MAX_HEALTH, 29.5F * ConfigurationHandler.predatorHealthFactor.get());
+                .add(Attributes.MOVEMENT_SPEED, 0.375D)
+                .add(Attributes.ARMOR, 2.0F)
+                .add(Attributes.ATTACK_DAMAGE, 2.0F * ConfigurationHandler.GENERAL.predatorDamageFactor.get())
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0F)
+                .add(Attributes.MAX_HEALTH, 29.5F * ConfigurationHandler.GENERAL.predatorHealthFactor.get());
     }
 
     public boolean hurt(DamageSource source, float damage) {

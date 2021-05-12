@@ -128,9 +128,13 @@ public class EventHandler {
                                         || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
-                                if (playerEntity.isOnFire()) {
-                                    playerEntity.clearFire();
-                                    playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                                    playerEntity.setSecondsOnFire(2);
+                                } else {
+                                    if (playerEntity.isOnFire()) {
+                                        playerEntity.clearFire();
+                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                    }
                                 }
                                 break;
                             case FOREST:
