@@ -123,7 +123,8 @@ public class EventHandler {
                             }
                         }
                     }
-                    if (!playerEntity.level.isClientSide) {
+                    //traits
+                    {
                         World world = playerEntity.level;
                         BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
                         Block block = blockUnder.getBlock();
@@ -135,7 +136,7 @@ public class EventHandler {
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.IN_FIRE, 1);
-                                    world.addParticle(ParticleTypes.SMOKE, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), 0, 0, 0);
+                                    world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
                                     if (playerEntity.isOnFire()) {
                                         playerEntity.clearFire();
@@ -153,8 +154,11 @@ public class EventHandler {
                                     if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                         playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
                                             darknessFear.increaseTime();
+
                                             if (darknessFear.getTimeInDarkness() > 20 * 10) {
                                                 playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
+                                            } else {
+                                                world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                             }
                                         });
                                     } else {
@@ -176,10 +180,13 @@ public class EventHandler {
                                     if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                                         playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
                                             hydration.increaseTime();
+                                            world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                             if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
-                                                playerEntity.addEffect(new EffectInstance(Effects.WITHER, 65, 2));
+                                                if (!playerEntity.hasEffect(Effects.WITHER))
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1));
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
-                                                playerEntity.addEffect(new EffectInstance(Effects.WITHER, 65, 1));
+                                                if (!playerEntity.hasEffect(Effects.WITHER))
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80));
                                             }
                                         });
                                     } else {
