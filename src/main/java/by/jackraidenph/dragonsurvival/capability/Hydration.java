@@ -26,6 +26,10 @@ public class Hydration {
         return timeWithoutWater;
     }
 
+    public void increaseTime() {
+        timeWithoutWater++;
+    }
+
     public static class Provider implements ICapabilitySerializable<CompoundNBT> {
         LazyOptional<Hydration> hydrationLazyOptional = LazyOptional.of(() -> Objects.requireNonNull(HYDRATION.getDefaultInstance()));
 

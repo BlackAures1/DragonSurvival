@@ -153,6 +153,19 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1));
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                                 }
+
+                                if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
+                                    playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
+                                        hydration.increaseTime();
+                                        if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
+                                            playerEntity.addEffect(new EffectInstance(Effects.WITHER, 65, 2));
+                                        } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
+                                            playerEntity.addEffect(new EffectInstance(Effects.WITHER, 65, 1));
+                                        }
+                                    });
+                                } else {
+                                    playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> hydration.setTimeWithoutWater(0));
+                                }
                         }
                     }
                 }
