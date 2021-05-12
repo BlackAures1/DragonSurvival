@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ddd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:birch_door"
+     },
+     {
+       "item": "minecraft:birch_door"
+     },
+     {
+       "item": "minecraft:birch_door"
+     }
   ],
-  "key": {
-    "d": {
-      "item": "minecraft:birch_door"
-    }
-  },
   "result": {
     "item": "dragonsurvival:birch_dragon_door",
     "count": 2

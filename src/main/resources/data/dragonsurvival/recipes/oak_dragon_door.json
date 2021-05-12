@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ddd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:oak_door"
+     },
+     {
+       "item": "minecraft:oak_door"
+     },
+     {
+       "item": "minecraft:oak_door"
+     }
   ],
-  "key": {
-    "d": {
-      "item": "minecraft:oak_door"
-    }
-  },
   "result": {
     "item": "dragonsurvival:oak_dragon_door",
     "count": 2

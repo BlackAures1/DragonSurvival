@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ddd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:jungle_door"
+     },
+     {
+       "item": "minecraft:jungle_door"
+     },
+     {
+       "item": "minecraft:jungle_door"
+     }
   ],
-  "key": {
-    "d": {
-      "item": "minecraft:jungle_door"
-    }
-  },
   "result": {
     "item": "dragonsurvival:jungle_dragon_door",
     "count": 2

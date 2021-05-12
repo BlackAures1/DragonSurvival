@@ -1,16 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "bd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:gilded_blackstone"
+     },
+     {
+       "tag": "dragonsurvival:wooden_dragon_doors"
+     }
   ],
-  "key": {
-    "b": {
-      "item": "minecraft:basalt"
-    },
-    "d": {
-      "item": "dragonsurvival:dragon_gate"
-    }
-  },
   "result": {
     "item": "dragonsurvival:cave_dragon_door",
     "count": 1
