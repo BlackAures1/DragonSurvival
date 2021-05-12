@@ -119,7 +119,7 @@ public class DragonSizeHandler {
     public static ConcurrentHashMap<Integer, Boolean> serverWingsEnabled = new ConcurrentHashMap<>(20);
     
     private static Pose getOverridePose(PlayerEntity player) {
-    	boolean swimming = player.isInWaterOrBubble() && player.isSprinting() && !player.isPassenger();
+    	boolean swimming = (player.isInWaterOrBubble() || player.isInLava()) && player.isSprinting() && !player.isPassenger();
     	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
     	boolean spinning = player.isAutoSpinAttack();

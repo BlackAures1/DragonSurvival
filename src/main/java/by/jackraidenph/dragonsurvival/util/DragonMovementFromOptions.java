@@ -31,20 +31,17 @@ public class DragonMovementFromOptions extends MovementInputFromOptions {
       this.leftImpulse = this.left == this.right ? 0.0F : (this.left ? 1.0F : -1.0F);
       this.jumping = this.options.keyJump.isDown();
       this.shiftKeyDown = this.options.keyShift.isDown();
-      if (!sizeChangesHitbox && p_225607_1_) {
-    	  this.leftImpulse = (float)((double)this.leftImpulse * 0.3D);
-          this.forwardImpulse = (float)((double)this.forwardImpulse * 0.3D);
-      }
-      else if (sizeChangesHitbox) {
-    	  DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+      DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 		    if (dragonStateHandler.isDragon()) {
-		    	if ((player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) && 
-		      		  !player.isInWaterOrBubble() && !player.isAutoSpinAttack()) {
-		           this.leftImpulse = (float)((double)this.leftImpulse * 0.3D);
-		           this.forwardImpulse = (float)((double)this.forwardImpulse * 0.3D);
-		    		}
-			  	}
-    	  });
-      }
+	    	if ((player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) && 
+	      		  !player.isInWaterOrBubble() && !player.isAutoSpinAttack()) {
+	           this.leftImpulse = (float)((double)this.leftImpulse * 0.3D);
+	           this.forwardImpulse = (float)((double)this.forwardImpulse * 0.3D);
+				}
+		    } else if (p_225607_1_) {
+	    		this.leftImpulse = (float)((double)this.leftImpulse * 0.3D);
+	            this.forwardImpulse = (float)((double)this.forwardImpulse * 0.3D);
+		    }
+      });
    }
 }

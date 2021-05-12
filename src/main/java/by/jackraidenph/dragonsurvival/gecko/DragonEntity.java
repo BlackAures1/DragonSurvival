@@ -52,7 +52,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
             Vector3d motio = player.getDeltaMovement();
             if (player.getPose() == Pose.SWIMMING)
             	builder.addAnimation("animation.dragon.swim_fast", true);
-            else if (player.isInWaterOrBubble() && (motio.x != 0 || motio.z != 0)) {
+            else if ((player.isInLava() || player.isInWaterOrBubble()) && (motio.x != 0 || motio.z != 0)) {
                 builder.addAnimation("animation.dragon.swim", true);
             } else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
                 builder.addAnimation("animation.dragon.fly_slow", true);
