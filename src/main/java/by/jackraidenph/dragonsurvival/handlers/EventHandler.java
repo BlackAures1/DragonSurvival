@@ -131,7 +131,7 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                                    playerEntity.setSecondsOnFire(2);
+                                    playerEntity.hurt(DamageSource.IN_FIRE, 1);
                                 } else {
                                     if (playerEntity.isOnFire()) {
                                         playerEntity.clearFire();
@@ -145,11 +145,11 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
-                                    if (world.getLightEmission(playerEntity.blockPosition()) < 3) {
+                                    if (blockUnder.getLightValue(world, playerEntity.blockPosition().below()) < 3) {
                                         playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
                                             darknessFear.increaseTime();
                                             if (darknessFear.getTimeInDarkness() > 20 * 10) {
-                                                playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10));
+                                                playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
                                             }
                                         });
                                     } else {
