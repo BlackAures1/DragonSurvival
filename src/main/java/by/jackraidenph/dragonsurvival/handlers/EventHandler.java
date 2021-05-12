@@ -131,7 +131,8 @@ public class EventHandler {
                         switch (dragonStateHandler.getType()) {
                             case CAVE:
                                 if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
-                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
+                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) ||
+                                        block.is(BlockTags.BEACON_BASE_BLOCKS) || block.is(BlockTags.SOUL_SPEED_BLOCKS)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
