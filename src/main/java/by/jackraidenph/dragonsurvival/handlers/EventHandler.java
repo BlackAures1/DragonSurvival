@@ -144,8 +144,17 @@ public class EventHandler {
                                         || block.is(Tags.Blocks.DIRT)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && world.getLightEmission(playerEntity.blockPosition()) < 3) {
-
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                    if (world.getLightEmission(playerEntity.blockPosition()) < 3) {
+                                        playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
+                                            darknessFear.increaseTime();
+                                            if (darknessFear.getTimeInDarkness() > 20 * 10) {
+                                                playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10));
+                                            }
+                                        });
+                                    } else {
+                                        playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> darknessFear.setTimeInDarkness(0));
+                                    }
                                 }
                                 break;
                             case SEA:
