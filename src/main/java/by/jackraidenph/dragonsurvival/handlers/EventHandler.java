@@ -132,7 +132,7 @@ public class EventHandler {
                             case CAVE:
                                 if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
                                         || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.IN_FIRE, 1);
@@ -140,14 +140,14 @@ public class EventHandler {
                                 } else {
                                     if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
                                         playerEntity.clearFire();
-                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3, false, false));
                                     }
                                 }
                                 break;
                             case FOREST:
                                 if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                         || block.is(Tags.Blocks.DIRT)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
                                     WorldLightManager lightManager = world.getChunkSource().getLightEngine();
@@ -169,10 +169,10 @@ public class EventHandler {
                             case SEA:
                                 if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
                                         || block.is(BlockTags.CORAL_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (playerEntity.isInWaterOrBubble()) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                                 }
 
@@ -183,10 +183,10 @@ public class EventHandler {
                                             world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                             if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1));
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80));
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
                                             }
                                         });
                                     } else {
