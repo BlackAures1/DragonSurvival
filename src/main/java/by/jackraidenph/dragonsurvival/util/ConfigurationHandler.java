@@ -1,19 +1,19 @@
 package by.jackraidenph.dragonsurvival.util;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.network.SyncConfig;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
-import java.util.Arrays;
-import java.util.List;
-
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.network.SyncConfig;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
@@ -24,17 +24,20 @@ public class ConfigurationHandler {
     public static final Spawn SPAWN = new Spawn(BUILDER);
     public static final OreLoot ORE_LOOT = new OreLoot(BUILDER);
     public static final ForgeConfigSpec SPEC = BUILDER.build();
+
     private static ForgeConfigSpec.DoubleValue maxFlightSpeed;
-    public static ForgeConfigSpec.DoubleValue predatorDamageFactor;
-    public static ForgeConfigSpec.DoubleValue predatorHealthFactor;
     //public static ForgeConfigSpec.BooleanValue disableClientHandlerSpam;
     private static ForgeConfigSpec.ConfigValue<Boolean> mineStarBlock;
     private static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
     private static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
     private static ForgeConfigSpec.ConfigValue<Boolean> startWithWings;
-    public static ForgeConfigSpec.ConfigValue<Boolean> endVoidTeleport;
 
     public static class General {
+
+        public ForgeConfigSpec.BooleanValue enableDragonDebuffs;
+        public ForgeConfigSpec.DoubleValue predatorDamageFactor;
+        public ForgeConfigSpec.DoubleValue predatorHealthFactor;
+        public ForgeConfigSpec.ConfigValue<Boolean> endVoidTeleport;
 
         General(ForgeConfigSpec.Builder builder) {
             builder.push("general");
@@ -47,27 +50,28 @@ public class ConfigurationHandler {
             hitboxGrowsPastHuman = builder.define("Hitbox grows larger than human", true);
             startWithWings = builder.define("Dragons start with wings", false);
             endVoidTeleport = builder.define("End void teleports to overworld", true);
+            enableDragonDebuffs = builder.define("Enable debuffs for dragons", true);
             builder.pop();
         }
     }
-    
+
     public static class OreLoot {
-    	public final ForgeConfigSpec.DoubleValue humanOreDustChance;
+        public final ForgeConfigSpec.DoubleValue humanOreDustChance;
         public final ForgeConfigSpec.DoubleValue dragonOreDustChance;
         public final ForgeConfigSpec.DoubleValue humanOreBoneChance;
         public final ForgeConfigSpec.DoubleValue dragonOreBoneChance;
         public final ForgeConfigSpec.ConfigValue<String> oreBlocksTag;
-        
-    	OreLoot(ForgeConfigSpec.Builder builder) {
-    		builder.push("Ore bonus loot");
-    		humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
+
+        OreLoot(ForgeConfigSpec.Builder builder) {
+            builder.push("Ore bonus loot");
+            humanOreDustChance = builder.defineInRange("Ore dust chance for human", 0.0033, 0.0, 1.0);
             dragonOreDustChance = builder.defineInRange("Ore dust chance for dragon", 0.4, 0.0, 1.0);
             humanOreBoneChance = builder.defineInRange("Ore bone chance for human", 0.0, 0.0, 1.0);
             dragonOreBoneChance = builder.defineInRange("Ore bone chance for dragon", 0.01, 0.0, 1.0);
             oreBlocksTag = builder.define("Ores tag", "forge:ores");
             builder.pop();
-    	}
-    	
+        }
+
     }
 
     public static class Spawn {
@@ -92,71 +96,71 @@ public class ConfigurationHandler {
             builder.pop();
         }
     }
-    
-    public static class NetworkedConfig{
-    	private static boolean serverConnection = false;
-    	private static Double serverMaxFlightSpeed;
-    	private static Boolean serverMineStarBlock;
-    	private static Boolean serverSizeChangesHitbox;
+
+    public static class NetworkedConfig {
+        private static boolean serverConnection = false;
+        private static Double serverMaxFlightSpeed;
+        private static Boolean serverMineStarBlock;
+        private static Boolean serverSizeChangesHitbox;
         private static Boolean serverHitboxGrowsPastHuman;
         private static Boolean serverStartWithWings;
-    	
+
         public static void setServerConnection(boolean connection) {
-        	serverConnection = connection;
+            serverConnection = connection;
         }
-        
+
         public static void saveServerConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings) {
-        	serverMaxFlightSpeed = maxFlightSpeed;
-        	serverMineStarBlock = mineStarBlock;
-        	serverSizeChangesHitbox = sizeChangesHitbox;
-        	serverHitboxGrowsPastHuman = hitboxGrowsPastHuman;
-        	serverStartWithWings = startWithWings;
+            serverMaxFlightSpeed = maxFlightSpeed;
+            serverMineStarBlock = mineStarBlock;
+            serverSizeChangesHitbox = sizeChangesHitbox;
+            serverHitboxGrowsPastHuman = hitboxGrowsPastHuman;
+            serverStartWithWings = startWithWings;
         }
-        
-    	public static double getMaxFlightSpeed() {
-    		if (!serverConnection)
-    			return ConfigurationHandler.maxFlightSpeed.get();
-    		return serverMaxFlightSpeed == null ? ConfigurationHandler.maxFlightSpeed.get() : serverMaxFlightSpeed;
-    	}
-    	
-    	public static boolean getMineStarBlock() {
-    		if (!serverConnection)
-    			return ConfigurationHandler.mineStarBlock.get();
-    		return serverMineStarBlock == null ? ConfigurationHandler.mineStarBlock.get() : serverMineStarBlock;
-    	}
-    	
-    	public static boolean getSizeChangesHitbox() {
-    		if (!serverConnection)
-    			return ConfigurationHandler.sizeChangesHitbox.get();
-    		return serverSizeChangesHitbox == null ? ConfigurationHandler.sizeChangesHitbox.get() : serverSizeChangesHitbox;
-    	}
-    	
-    	
-    	public static boolean getHitboxGrowsPastHuman() {
-    		if (!serverConnection)
-    			return ConfigurationHandler.hitboxGrowsPastHuman.get();
-    		return serverHitboxGrowsPastHuman == null ? ConfigurationHandler.hitboxGrowsPastHuman.get() : serverHitboxGrowsPastHuman;
-    	}
-    	
-    	
-    	public static boolean getStartWithWings() {
-    		if (!serverConnection)
-    			return ConfigurationHandler.startWithWings.get();
-    		return serverStartWithWings == null ? ConfigurationHandler.startWithWings.get() : serverStartWithWings;
-    	}
+
+        public static double getMaxFlightSpeed() {
+            if (!serverConnection)
+                return ConfigurationHandler.maxFlightSpeed.get();
+            return serverMaxFlightSpeed == null ? ConfigurationHandler.maxFlightSpeed.get() : serverMaxFlightSpeed;
+        }
+
+        public static boolean getMineStarBlock() {
+            if (!serverConnection)
+                return ConfigurationHandler.mineStarBlock.get();
+            return serverMineStarBlock == null ? ConfigurationHandler.mineStarBlock.get() : serverMineStarBlock;
+        }
+
+        public static boolean getSizeChangesHitbox() {
+            if (!serverConnection)
+                return ConfigurationHandler.sizeChangesHitbox.get();
+            return serverSizeChangesHitbox == null ? ConfigurationHandler.sizeChangesHitbox.get() : serverSizeChangesHitbox;
+        }
+
+
+        public static boolean getHitboxGrowsPastHuman() {
+            if (!serverConnection)
+                return ConfigurationHandler.hitboxGrowsPastHuman.get();
+            return serverHitboxGrowsPastHuman == null ? ConfigurationHandler.hitboxGrowsPastHuman.get() : serverHitboxGrowsPastHuman;
+        }
+
+
+        public static boolean getStartWithWings() {
+            if (!serverConnection)
+                return ConfigurationHandler.startWithWings.get();
+            return serverStartWithWings == null ? ConfigurationHandler.startWithWings.get() : serverStartWithWings;
+        }
 
     }
-    
+
     @SubscribeEvent
     @OnlyIn(Dist.DEDICATED_SERVER)
     public static void ServerPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    	ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
-    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncConfig(maxFlightSpeed.get(), mineStarBlock.get(), sizeChangesHitbox.get(), hitboxGrowsPastHuman.get(), startWithWings.get()));
+        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncConfig(maxFlightSpeed.get(), mineStarBlock.get(), sizeChangesHitbox.get(), hitboxGrowsPastHuman.get(), startWithWings.get()));
     }
-    
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void ClientPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    	NetworkedConfig.setServerConnection(false);
+        NetworkedConfig.setServerConnection(false);
     }
 }

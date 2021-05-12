@@ -1,8 +1,10 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DarknessFear;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.capability.Hydration;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.DiggingStatus;
@@ -37,6 +39,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.management.PlayerInteractionManager;
@@ -47,7 +50,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
@@ -118,7 +123,8 @@ public class EventHandler {
                             }
                         }
                     }
-                    if (!playerEntity.level.isClientSide) {
+                    //traits
+                    {
                         World world = playerEntity.level;
                         BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
                         Block block = blockUnder.getBlock();
@@ -128,15 +134,36 @@ public class EventHandler {
                                         || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
                                 }
-                                if (playerEntity.isOnFire()) {
-                                    playerEntity.clearFire();
-                                    playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                                    playerEntity.hurt(DamageSource.IN_FIRE, 1);
+                                    world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+                                } else {
+                                    if (playerEntity.isOnFire()) {
+                                        playerEntity.clearFire();
+                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                    }
                                 }
                                 break;
                             case FOREST:
                                 if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                         || block.is(Tags.Blocks.DIRT)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                }
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                    WorldLightManager lightManager = world.getChunkSource().getLightEngine();
+                                    if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
+                                        playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
+                                            darknessFear.increaseTime();
+
+                                            if (darknessFear.getTimeInDarkness() > 20 * 10) {
+                                                playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
+                                            } else {
+                                                world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+                                            }
+                                        });
+                                    } else {
+                                        playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> darknessFear.setTimeInDarkness(0));
+                                    }
                                 }
                                 break;
                             case SEA:
@@ -147,6 +174,24 @@ public class EventHandler {
                                 if (playerEntity.isInWaterOrBubble()) {
                                     playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1));
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
+                                }
+
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                    if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
+                                        playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
+                                            hydration.increaseTime();
+                                            world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+                                            if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
+                                                if (!playerEntity.hasEffect(Effects.WITHER))
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1));
+                                            } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
+                                                if (!playerEntity.hasEffect(Effects.WITHER))
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80));
+                                            }
+                                        });
+                                    } else {
+                                        playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> hydration.setTimeWithoutWater(0));
+                                    }
                                 }
                         }
                     }
@@ -174,13 +219,21 @@ public class EventHandler {
             horseEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(horseEntity, PlayerEntity.class, 0, true, false, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElseGet(null).getLevel() != DragonLevel.ADULT));
             horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT, 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
         }
+        DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                PlayerEntity playerEntity = (PlayerEntity) entity;
+                dragonStateHandler.setBaseDamage(dragonStateHandler.getBaseDamage(), playerEntity);
+            }
+        });
     }
 
     @SubscribeEvent
     public static void onCapabilityAttachment(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new DragonStateProvider());
-            DragonSurvivalMod.LOGGER.info("Successfully attached capability to the " + event.getObject().getClass().getSimpleName());
+            event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "hydration"), new Hydration.Provider());
+            event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "fear_of_darkness"), new DarknessFear.Provider());
+            DragonSurvivalMod.LOGGER.info("Successfully attached capabilities to the " + event.getObject().getClass().getSimpleName());
         }
     }
 
