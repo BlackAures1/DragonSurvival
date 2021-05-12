@@ -84,7 +84,7 @@ public class EventHandler {
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
 
-                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR) {
+                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR || damageSource == DamageSource.IN_FIRE) {
                     if (dragonStateHandler.getType() == DragonType.CAVE) {
                         livingDamageEvent.setCanceled(true);
 
@@ -138,7 +138,7 @@ public class EventHandler {
                                     playerEntity.hurt(DamageSource.IN_FIRE, 1);
                                     world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
-                                    if (playerEntity.isOnFire()) {
+                                    if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
                                         playerEntity.clearFire();
                                         playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
                                     }
