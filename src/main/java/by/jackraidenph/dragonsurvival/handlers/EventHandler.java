@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DarknessFear;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.capability.Hydration;
@@ -204,6 +205,7 @@ public class EventHandler {
         if (event.getObject() instanceof PlayerEntity) {
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "playerstatehandler"), new DragonStateProvider());
             event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "hydration"), new Hydration.Provider());
+            event.addCapability(new ResourceLocation(DragonSurvivalMod.MODID, "fear_of_darkness"), new DarknessFear.Provider());
             DragonSurvivalMod.LOGGER.info("Successfully attached capabilities to the " + event.getObject().getClass().getSimpleName());
         }
     }
