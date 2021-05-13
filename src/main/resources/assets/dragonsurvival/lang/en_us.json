@@ -49,7 +49,7 @@
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
 
-  "death.attack.dryout": "You died from dryout",
+  "death.attack.starDrain": "Your life and energy has been drained by magic.",
 
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
   "ds.forest_dragon_choice": "You have chosen to be a Forest dragon.",

@@ -74,7 +74,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (this.deathTime == 19 && !deathStar) {
+        if (this.deathTime == 19 && !deathStar && !level.isClientSide) {
         	deathStar = true;
             level.setBlockAndUpdate(this.blockPosition(), BlockInit.PREDATOR_STAR_BLOCK.defaultBlockState());
             this.spawnAnim();
