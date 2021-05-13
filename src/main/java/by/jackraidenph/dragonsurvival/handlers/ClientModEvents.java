@@ -70,7 +70,6 @@ public class ClientModEvents {
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
-
     }
 
     /**

@@ -21,7 +21,6 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -42,6 +41,8 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
@@ -415,6 +416,15 @@ public class EventHandler {
                     }
                     if (bad)
                         livingEntity.addEffect(new EffectInstance(Effects.HUNGER, 20 * 60, 0));
+                } else {
+                    if (item instanceof PotionItem) {
+                        PotionItem potionItem = (PotionItem) item;
+                        if (PotionUtils.getPotion(itemStack) == Potions.WATER) {
+                            if (dragonStateHandler.getType() == DragonType.SEA) {
+                                playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> hydration.setTimeWithoutWater(-20 * 60 * 20));//-20 minutes
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -498,7 +508,6 @@ public class EventHandler {
                 final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
                 if (suitableOre && !playerEntity.isCreative()) {
                     if (DragonStateProvider.isDragon(playerEntity)) {
-                        random = playerEntity.getRandom().nextDouble();
                         if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
                             world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
                         }
