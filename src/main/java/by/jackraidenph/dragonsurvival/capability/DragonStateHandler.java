@@ -104,6 +104,16 @@ public class DragonStateHandler {
     		);
     }
 
+    public static void updateModifiers(PlayerEntity oldPlayer, PlayerEntity newPlayer) {
+    	AttributeModifier oldMod = DragonStateHandler.getHealthModifier(oldPlayer);
+        if (oldMod != null)
+            DragonStateHandler.updateHealthModifier(newPlayer, oldMod);
+        oldMod = DragonStateHandler.getDamageModifier(oldPlayer);
+        if (oldMod != null)
+            DragonStateHandler.updateDamageModifier(newPlayer, oldMod);
+    }
+    
+    
     public static void updateHealthModifier(PlayerEntity player, AttributeModifier mod) {
     	float oldMax = player.getMaxHealth();
     	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH));

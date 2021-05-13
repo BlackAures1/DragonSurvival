@@ -258,10 +258,7 @@ public class EventHandler {
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
 
-                        AttributeModifier oldMod = DragonStateHandler.getHealthModifier(e.getOriginal());
-                        if (oldMod != null) {
-                            DragonStateHandler.updateHealthModifier(e.getPlayer(), oldMod);
-                        }
+                        DragonStateHandler.updateModifiers(e.getOriginal(), e.getPlayer());
 
                         e.getPlayer().refreshDimensions();
                     }
