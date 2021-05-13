@@ -14,15 +14,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -147,12 +144,6 @@ public class BlockInit {
         registerItem(dragon_altar2, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar3, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar4, new Item.Properties(), forgeRegistry);
-    }
-
-    @SubscribeEvent
-    public static void init(FMLClientSetupEvent event) {
-        RenderTypeLookup.setRenderLayer(acaciaDoor, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(birchDoor, RenderType.cutout());
     }
     
     @SuppressWarnings("ConstantConditions")
