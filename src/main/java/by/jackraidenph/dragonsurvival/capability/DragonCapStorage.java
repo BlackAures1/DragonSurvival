@@ -15,7 +15,6 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
         tag.putBoolean("isDragon", instance.isDragon());
         if (instance.isDragon()) {
             DragonStateHandler.DragonMovementData movementData = instance.getMovementData();
-            tag.putInt("Base damage", instance.getBaseDamage());
             tag.putDouble("bodyYaw", movementData.bodyYaw);
             tag.putDouble("headYaw", movementData.headYaw);
             tag.putDouble("headPitch", movementData.headPitch);
@@ -40,11 +39,6 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
             if (instance.getSize() == 0)
                 instance.setSize(DragonLevel.BABY.initialHealth);
             instance.setHasWings(tag.getBoolean("hasWings"));
-            int base_damage = tag.getInt("Base damage");
-            if (base_damage == 0)
-                instance.setBaseDamage(instance.getLevel().baseDamage);
-            else
-                instance.setBaseDamage(base_damage);
         }
     }
 }

@@ -48,7 +48,6 @@ public class ItemsInit {
                             if (!worldIn.isClientSide)
                                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             playerIn.refreshDimensions();
-                            dragonStateHandler.setBaseDamage(dragonStateHandler.getLevel().baseDamage, playerIn);
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }
@@ -73,7 +72,6 @@ public class ItemsInit {
                             if (!worldIn.isClientSide)
                                 DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
                             playerIn.refreshDimensions();
-                            dragonStateHandler.setBaseDamage(dragonStateHandler.getLevel().baseDamage, playerIn);
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
                     }

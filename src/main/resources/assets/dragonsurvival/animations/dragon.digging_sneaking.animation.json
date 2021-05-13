@@ -1,7 +1,7 @@
 {
   "format_version": "1.8.0",
   "animations": {
-    "animation.dragon.stand8": {
+    "animation.dragon.dig_sneak": {
       "loop": true,
       "animation_length": 4.2,
       "bones": {

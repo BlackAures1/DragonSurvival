@@ -188,24 +188,48 @@ public class ClientEvents {
             		if (playerStateHandler.isDragon()) {
 	            		float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F;
 	            		
-		                if (minecraft.options.getCameraType() == PointOfView.FIRST_PERSON) {
-		                    if (Math.abs(bodyAndHeadYawDiff) > 170) {
-		                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 170F, 1.5F) / 30F, 50F);
-		                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot);
-		                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot));
-		                    }
-		                }
-		
 		                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
 		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot);
-		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot));
-		
-		                }
+		                	/*
+		                	 * WIP stuff below to fix strafing issues.
+		                	 * Saving for next update because there are enough bugs to fix on this one as it is.
+		                	 */
+		                	double d0 = player.getDeltaMovement().x; // This now uses delta movement, mc uses delta position
+		                    double d1 = player.getDeltaMovement().z; // This now uses delta movement, mc uses delta position
+		                	float f = (float)(Math.pow(d0, 2) + Math.pow(d1, 2)); 
+		                	float f1 = (float)playerStateHandler.getMovementData().bodyYaw;
+		                    float f2 = 0.0F;
+		                    float f3 = 0.0F;
+		                    if (f > 0.0025000002F) { // wtf is this variable
+		                        f3 = 1.0F;
+		                        f2 = (float)Math.sqrt((double)f) * 3.0F;
+		                        float f4 = (float)MathHelper.atan2(d1, d0) * (180F / (float)Math.PI) - 90.0F;
+		                        //float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f4);
+		                        float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yHeadRot) - f4);
+		                        if (5.0F + 180F < f5 && f5 < 180 + 180F - 5.0F) {
+		                           f1 = f4 - 180.0F;
+		                           //DragonSurvivalMod.LOGGER.info("Tick1, {}, {}. {}", f1, bodyAndHeadYawDiff, player.yHeadRot);
+		                        } else {
+	                        		f1 = f4;
+	                        		//DragonSurvivalMod.LOGGER.info("Tick2, {}, {}, {}", f1, bodyAndHeadYawDiff, player.yHeadRot);
+		                        }
+		                    }
+		                	//playerStateHandler.setMovementData(f1, player.yHeadRot, player.xRot);
+		                	//DragonSurvivalMod.LOGGER.info("Tick2, {}, {}, {}", player.getViewYRot(1), bodyAndHeadYawDiff, player.yHeadRot);
+		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch));
+		                } else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
+	                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
+	                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot);
+	                    	//DragonSurvivalMod.LOGGER.info("Tick3, {}, {}, {}", playerStateHandler.getMovementData().bodyYaw, bodyAndHeadYawDiff, player.yHeadRot);
+	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch));
+	                    }
+		                
             		}
             	});
             }
         }
     }
+    
 
     /**
      * Called for every player.
@@ -249,7 +273,7 @@ public class ClientEvents {
 	                    rightWing.setHidden(!cap.hasWings());
 	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
 	                if (neckHead != null)
-	                    neckHead.setHidden(false);
+	                	 neckHead.setHidden(false);
 	                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
 	                if (player.isCrouching()) { // FIXME why does this exist... Why do the models auto-crouch align perfectly but when shift key is down they break?
 	                	switch (dragonStage) {
@@ -283,7 +307,7 @@ public class ClientEvents {
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
                     //scale to try to prevent texture fighting (problem is in consecutive renders)
-                    matrixStack.scale(1.08f, 1.02f, 1.02f);
+                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Causes issues with head turn
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));

@@ -10,15 +10,19 @@ import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
 import by.jackraidenph.dragonsurvival.nest.NestBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -32,8 +36,9 @@ public class BlockInit {
     public static Block dragon_altar3;
     public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
-    public static DragonDoor spruceDragonDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor;
-    public static DragonDoor caveDoor, ironDoor, crimsonDoor, forestDoor, murdererDoor, seaDoor, sleeperDoor, stoneDoor, warpedDoor;
+    public static DragonDoor spruceDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor, crimsonDoor, warpedDoor;
+    public static DragonDoor ironDoor, murdererDoor, sleeperDoor, stoneDoor;
+    public static DragonDoor caveDoor, forestDoor, seaDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
     public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
 
@@ -55,7 +60,7 @@ public class BlockInit {
                 .strength(10F, 9999F).randomTicks().harvestTool(ToolType.HOE).requiresCorrectToolForDrops()
                 .sound(SoundType.NETHER_WART));
         forgeRegistry.register(PREDATOR_STAR_BLOCK.setRegistryName(DragonSurvivalMod.MODID, "predator_star"));
-        spruceDragonDoor = new DragonDoor(Block.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(3.0F).sound(SoundType.WOOD).noOcclusion());
+        
         smallCaveNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
         smallSeaNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
         smallForestNest = new NestBlock(Block.Properties.of(Material.STONE).strength(3, 100).noOcclusion());
@@ -63,23 +68,25 @@ public class BlockInit {
         forgeRegistry.register(smallForestNest.setRegistryName(DragonSurvivalMod.MODID, "forest_nest_small"));
         forgeRegistry.register(smallSeaNest.setRegistryName(DragonSurvivalMod.MODID, "water_nest_small"));
 
-        forgeRegistry.register(spruceDragonDoor.setRegistryName(DragonSurvivalMod.MODID, "dragon_gate"));
-        acaciaDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(spruceDragonDoor)), "acacia_dragon_door", forgeRegistry);
-        birchDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "birch_dragon_door", forgeRegistry);
-        jungleDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "jungle_dragon_door", forgeRegistry);
-        oakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "oak_dragon_door", forgeRegistry);
-        darkOakDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "dark_oak_dragon_door", forgeRegistry);
+        oakDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.OAK_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "oak_dragon_door", forgeRegistry);
+        spruceDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.SPRUCE_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "spruce_dragon_door", forgeRegistry);
+        acaciaDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.ACACIA_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "acacia_dragon_door", forgeRegistry);
+        birchDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.BIRCH_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "birch_dragon_door", forgeRegistry);
+        jungleDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.JUNGLE_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "jungle_dragon_door", forgeRegistry);
+        darkOakDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.DARK_OAK_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "dark_oak_dragon_door", forgeRegistry);
+        warpedDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.WARPED_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "warped_dragon_door", forgeRegistry);
+        crimsonDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.CRIMSON_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "crimson_dragon_door", forgeRegistry);
+        
+        caveDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.STONE, Blocks.BLACKSTONE.defaultMaterialColor()).requiresCorrectToolForDrops().strength(7.0F).sound(SoundType.GILDED_BLACKSTONE).noOcclusion(), DragonDoor.OpenRequirement.CAVE), "cave_dragon_door", forgeRegistry);
+        forestDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.STONE, Blocks.DARK_PRISMARINE.defaultMaterialColor()).requiresCorrectToolForDrops().strength(7.0F).sound(SoundType.STONE).noOcclusion(), DragonDoor.OpenRequirement.FOREST), "forest_dragon_door", forgeRegistry);
+        seaDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).requiresCorrectToolForDrops().strength(7.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.SEA), "sea_dragon_door", forgeRegistry);
 
-        caveDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "cave_dragon_door", forgeRegistry);
-        forestDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "forest_dragon_door", forgeRegistry);
-        seaDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "sea_dragon_door", forgeRegistry);
-
-        ironDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.METAL, MaterialColor.COLOR_BROWN).strength(3.0F).sound(SoundType.METAL).noOcclusion()), "iron_dragon_door", forgeRegistry);
-        murdererDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "murderer_dragon_door", forgeRegistry);
-        warpedDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "warped_dragon_door", forgeRegistry);
-        crimsonDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "crimson_dragon_door", forgeRegistry);
-        sleeperDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "sleeper_dragon_door", forgeRegistry);
-        stoneDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(acaciaDoor)), "stone_dragon_door", forgeRegistry);
+        ironDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.METAL, MaterialColor.METAL).requiresCorrectToolForDrops().strength(5.0F).sound(SoundType.METAL).noOcclusion(), DragonDoor.OpenRequirement.POWER), "iron_dragon_door", forgeRegistry);
+        
+        // TODO set properties for these doors
+        murdererDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(oakDoor), DragonDoor.OpenRequirement.NONE), "murderer_dragon_door", forgeRegistry);
+        sleeperDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(oakDoor), DragonDoor.OpenRequirement.NONE), "sleeper_dragon_door", forgeRegistry);
+        stoneDoor = registerBlock(new DragonDoor(AbstractBlock.Properties.copy(oakDoor), DragonDoor.OpenRequirement.NONE), "stone_dragon_door", forgeRegistry);
 
         mediumSeaNest = new MediumNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(mediumSeaNest.setRegistryName(DragonSurvivalMod.MODID, "medium_sea_nest"));
@@ -106,11 +113,10 @@ public class BlockInit {
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
-        Item dragonDoorItem = new DragonDoorItem(spruceDragonDoor, new Item.Properties().tab(ItemsInit.items)).setRegistryName(spruceDragonDoor.getRegistryName());
-        forgeRegistry.register(dragonDoorItem);
+        registerDoor(oakDoor, new Item.Properties(), forgeRegistry);
+        registerDoor(spruceDoor, new Item.Properties(), forgeRegistry);
         registerDoor(acaciaDoor, new Item.Properties(), forgeRegistry);
         registerDoor(jungleDoor, new Item.Properties(), forgeRegistry);
-        registerDoor(oakDoor, new Item.Properties(), forgeRegistry);
         registerDoor(darkOakDoor, new Item.Properties(), forgeRegistry);
         registerDoor(birchDoor, new Item.Properties(), forgeRegistry);
         registerDoor(caveDoor, new Item.Properties(), forgeRegistry);
@@ -143,6 +149,12 @@ public class BlockInit {
         registerItem(dragon_altar4, new Item.Properties(), forgeRegistry);
     }
 
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(acaciaDoor, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(birchDoor, RenderType.cutout());
+    }
+    
     @SuppressWarnings("ConstantConditions")
     private static void registerItem(Block block, Item.Properties itemProperties, IForgeRegistry<Item> forgeRegistry) {
         forgeRegistry.register(new BlockItem(block, itemProperties.tab(ItemsInit.items)).setRegistryName(block.getRegistryName()));

@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
@@ -45,37 +46,41 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         final PlayerEntity player = getPlayer();
+        final AnimationController animationController = animationEvent.getController();
+        AnimationBuilder builder = new AnimationBuilder();
         if (player != null) {
             Vector3d motio = player.getDeltaMovement();
-            final AnimationController animationController = animationEvent.getController();
             if (player.getPose() == Pose.SWIMMING)
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim_fast", true));
-            else if (player.isInWaterOrBubble() && (motio.x != 0 || motio.z != 0)) {
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.swim", true));
+            	builder.addAnimation("animation.dragon.swim_fast", true);
+            else if ((player.isInLava() || player.isInWaterOrBubble()) && (motio.x != 0 || motio.z != 0)) {
+                builder.addAnimation("animation.dragon.swim", true);
             } else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings()) {
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.fly_slow", true));
+                builder.addAnimation("animation.dragon.fly_slow", true);
             } else if (player.isSprinting())
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.run", true));
+                builder.addAnimation("animation.dragon.run", true);
             else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
                 if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f)
-                    animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand5", true));
+                    builder.addAnimation("animation.dragon.sneak_walk", true);
                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false)) {
-                    animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand8", true));
+                    builder.addAnimation("animation.dragon.dig_sneak", true);
                 } else
-                    animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand6", true));
+                    builder.addAnimation("animation.dragon.sneak", true);
             } else if (player.swinging && player.getAttackStrengthScale(-3.0f) != 1)
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new"));
+                builder.addAnimation("animation.dragon.bite");
             else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.model.new2", true));
+                builder.addAnimation("animation.dragon.jump", true);
             else if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f)
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
+                builder.addAnimation("animation.dragon.walk", true);
             else if (player.isSleeping()) {
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.sleep", true));
+                builder.addAnimation("animation.dragon.sleep", true);
             } else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false)) {
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand7", true));
+                builder.addAnimation("animation.dragon.dig", true);
             } else
-                animationController.setAnimation(new AnimationBuilder().addAnimation("animation.dragon.stand3", true));
+                builder.addAnimation("animation.dragon.idle", true);
+        }else {
+        	 builder.addAnimation("animation.dragon.idle", true);
         }
+        animationController.setAnimation(builder);
         return PlayState.CONTINUE;
     }
 
@@ -100,6 +105,6 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
     }
 
     PlayerEntity getPlayer() {
-        return (PlayerEntity) level.getEntity(player);
+        return (PlayerEntity)Minecraft.getInstance().player.clientLevel.getEntity(player);
     }
 }
