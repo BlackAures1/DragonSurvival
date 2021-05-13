@@ -135,7 +135,7 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                                    playerEntity.hurt(DamageSource.IN_FIRE, 1);
+                                    playerEntity.hurt(DamageSource.ON_FIRE, 1);
                                     world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
                                     if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
