@@ -1,0 +1,7 @@
+{
+  "parent": "block/door_bottom",
+  "textures": {
+    "bottom": "dragonsurvival:block/spruce_dragon_door_bottom",
+    "top": "dragonsurvival:block/spruce_dragon_door_bottom"
+  }
+}

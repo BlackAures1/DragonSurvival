@@ -1,33 +1,27 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
-import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
+import by.jackraidenph.dragonsurvival.util.DamageSources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
@@ -52,7 +46,8 @@ public class PredatorStarBlock extends Block {
 
     public void blockBehaviour(Entity entity, World worldIn, BlockPos pos) {
         if (entity instanceof LivingEntity) {
-            entity.hurt(DamageSource.DRY_OUT, ((LivingEntity) entity).getHealth() + 1);
+        	LivingEntity target = (LivingEntity)entity;
+        	target.hurt(DamageSources.STAR_DRAIN, Float.MAX_VALUE);
             worldIn.destroyBlock(pos, false);
             if (new Random().nextInt(3) == 0) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);

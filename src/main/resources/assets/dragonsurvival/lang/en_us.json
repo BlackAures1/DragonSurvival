@@ -11,7 +11,7 @@
   "item.dragonsurvival.charred_meat": "Charred Meat",
   "item.dragonsurvival.elder_dragon_dust": "Elder Dragon Dust",
 
-  "block.dragonsurvival.dragon_gate": "Dragon Door",
+  
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragons' Altar",
   "block.dragonsurvival.cave_nest_small": "Small Cave Nest",
@@ -28,6 +28,7 @@
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
 
+  "block.dragonsurvival.spruce_dragon_door": "Spruce Dragon Door",
   "block.dragonsurvival.acacia_dragon_door": "Acacia Dragon Door",
   "block.dragonsurvival.jungle_dragon_door": "Jungle Dragon Door",
   "block.dragonsurvival.oak_dragon_door": "Oak Dragon Door",
@@ -43,12 +44,12 @@
   "block.dragonsurvival.sleeper_dragon_door": "Gothic Dragon Door",
   "block.dragonsurvival.stone_dragon_door": "Stone Dragon Door",
 
-  "effect.dragondurvival.stress": "Stress",
+  "effect.dragonsurvival.stress": "Stress",
 
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
 
-  "death.attack.dryout": "You died from dryout",
+  "death.attack.starDrain": "Your life and energy has been drained by magic.",
 
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
   "ds.forest_dragon_choice": "You have chosen to be a Forest dragon.",

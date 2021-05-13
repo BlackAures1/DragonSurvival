@@ -1,16 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "bd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "tag": "minecraft:beds"
+     },
+     {
+       "tag": "dragonsurvival:wooden_dragon_doors"
+     }
   ],
-  "key": {
-    "b": {
-      "tag": "minecraft:beds"
-    },
-    "d": {
-      "item": "dragonsurvival:dragon_gate"
-    }
-  },
   "result": {
     "item": "dragonsurvival:sleeper_dragon_door",
     "count": 1

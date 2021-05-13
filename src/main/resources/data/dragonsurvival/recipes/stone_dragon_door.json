@@ -1,16 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "sd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:stone_bricks"
+     },
+     {
+       "tag": "dragonsurvival:wooden_dragon_doors"
+     }
   ],
-  "key": {
-    "s": {
-      "item": "minecraft:stone_bricks"
-    },
-    "d": {
-      "item": "dragonsurvival:dragon_gate"
-    }
-  },
   "result": {
     "item": "dragonsurvival:stone_dragon_door",
     "count": 1

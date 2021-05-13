@@ -1,7 +1,7 @@
 {
   "format_version": "1.8.0",
   "animations": {
-    "animation.model.new2": {
+    "animation.dragon.jump": {
       "loop": true,
       "animation_length": 1.04,
       "bones": {

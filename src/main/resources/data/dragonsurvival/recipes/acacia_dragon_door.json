@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ddd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:acacia_door"
+     },
+     {
+       "item": "minecraft:acacia_door"
+     },
+     {
+       "item": "minecraft:acacia_door"
+     }
   ],
-  "key": {
-    "d": {
-      "item": "minecraft:acacia_door"
-    }
-  },
   "result": {
     "item": "dragonsurvival:acacia_dragon_door",
     "count": 2

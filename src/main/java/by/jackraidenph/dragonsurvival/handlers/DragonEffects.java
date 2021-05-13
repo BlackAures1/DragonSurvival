@@ -23,7 +23,7 @@ public class DragonEffects {
         public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
             if (livingEntity instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) livingEntity;
-                playerEntity.getFoodData().setSaturation(0);
+                playerEntity.getFoodData().eat(0, 0);
                 playerEntity.causeFoodExhaustion(0.1f);
             }
         }

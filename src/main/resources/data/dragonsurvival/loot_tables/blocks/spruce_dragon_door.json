@@ -9,13 +9,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "dragonsurvival:dragon_gate",
+              "block": "dragonsurvival:spruce_dragon_door",
               "properties": {
                 "part": "bottom"
               }
             }
           ],
-          "name": "dragonsurvival:dragon_gate"
+          "name": "dragonsurvival:spruce_dragon_door"
         }
       ],
       "conditions": [

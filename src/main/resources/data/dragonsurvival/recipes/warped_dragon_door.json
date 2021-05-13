@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ddd"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:warped_door"
+     },
+     {
+       "item": "minecraft:warped_door"
+     },
+     {
+       "item": "minecraft:warped_door"
+     }
   ],
-  "key": {
-    "d": {
-      "item": "minecraft:warped_door"
-    }
-  },
   "result": {
     "item": "dragonsurvival:warped_dragon_door",
     "count": 2
