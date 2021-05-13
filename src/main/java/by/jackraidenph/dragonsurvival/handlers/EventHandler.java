@@ -134,7 +134,7 @@ public class EventHandler {
                                         || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.IN_FIRE, 1);
                                     world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
@@ -149,7 +149,7 @@ public class EventHandler {
                                         || block.is(Tags.Blocks.DIRT)) {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                     WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                                     if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                         playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
@@ -176,7 +176,7 @@ public class EventHandler {
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                                 }
 
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                     if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                                         playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
                                             hydration.increaseTime();
