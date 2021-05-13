@@ -35,7 +35,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
             Vector3d playerMotion = player.getDeltaMovement();
             if (player.getPose() == Pose.SWIMMING)
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
-            if (player.isInWaterOrBubble() && (playerMotion.x != 0 || playerMotion.z != 0))
+            if ((player.isInWaterOrBubble() || player.isInLava()) && (playerMotion.x != 0 || playerMotion.z != 0))
                 return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
             else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
                 if ((playerMotion.z() != 0 || playerMotion.x() != 0) && player.animationSpeed != 0f) {
