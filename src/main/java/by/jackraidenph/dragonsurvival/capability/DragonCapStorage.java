@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class DragonCapStorage implements Capability.IStorage<DragonStateHandler> {
@@ -18,6 +19,10 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
             tag.putDouble("bodyYaw", movementData.bodyYaw);
             tag.putDouble("headYaw", movementData.headYaw);
             tag.putDouble("headPitch", movementData.headPitch);
+            tag.putDouble("deltaMovementX", movementData.deltaMovement.x);
+            tag.putDouble("deltaMovementY", movementData.deltaMovement.y);
+            tag.putDouble("deltaMovementZ", movementData.deltaMovement.z);
+            tag.putBoolean("bite", movementData.bite);
             tag.putBoolean("isHiding", instance.isHiding());
             tag.putString("type", instance.getType().toString());
             tag.putFloat("size", instance.getSize());
@@ -31,8 +36,8 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
         CompoundNBT tag = (CompoundNBT) base;
         instance.setIsDragon(tag.getBoolean("isDragon"));
         if (tag.getBoolean("isDragon")) {
-            instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"),
-                    tag.getDouble("headPitch"));
+            instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"), tag.getDouble("headPitch"), 
+            		new Vector3d(tag.getDouble("deltaMovementX"), tag.getDouble("deltaMovementY"), tag.getDouble("deltaMovementZ")), tag.getBoolean("bite"));
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setType(DragonType.valueOf(tag.getString("type")));
             instance.setSize(tag.getFloat("size"));

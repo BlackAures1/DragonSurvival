@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-    private final DragonMovementData data = new DragonMovementData(0, 0, 0);
+    private final DragonMovementData data = new DragonMovementData(0, 0, 0, new Vector3d(0, 0, 0), false);
     private boolean hasWings;
     private float size;
     
@@ -129,10 +130,12 @@ public class DragonStateHandler {
     	max.addPermanentModifier(mod);
     }
     
-    public void setMovementData(double bodyYaw, double headYaw, double headPitch) {
+    public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vector3d deltaMovement, boolean bite) {
         data.bodyYaw = bodyYaw;
         data.headYaw = headYaw;
         data.headPitch = headPitch;
+        data.deltaMovement = deltaMovement;
+        data.bite = bite;
     }
 
     public DragonMovementData getMovementData() {
@@ -156,13 +159,18 @@ public class DragonStateHandler {
         public double headPitchLastTick;
         public double bodyYawLastTick;
 
-        public DragonMovementData(double bodyYaw, double headYaw, double headPitch) {
+        public Vector3d deltaMovement;
+        public boolean bite;
+        
+        public DragonMovementData(double bodyYaw, double headYaw, double headPitch, Vector3d deltaMovement, boolean bite) {
             this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
             this.headYawLastTick = headYaw;
             this.headPitchLastTick = headPitch;
             this.bodyYawLastTick = bodyYaw;
+            this.deltaMovement = deltaMovement;
+            this.bite = bite;
         }
 
     }
