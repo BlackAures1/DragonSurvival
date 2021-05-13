@@ -2,12 +2,9 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
-import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -35,7 +32,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         return currentTexture;
     }
 
-  @Override
+    @Override
 	public Animation getAnimation(String name, IAnimatable animatable) {
     	DragonEntity dragonEntity = (DragonEntity)animatable;
     	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
