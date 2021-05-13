@@ -35,7 +35,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         return currentTexture;
     }
 
-    @Override
+  @Override
 	public Animation getAnimation(String name, IAnimatable animatable) {
     	DragonEntity dragonEntity = (DragonEntity)animatable;
     	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");

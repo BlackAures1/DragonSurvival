@@ -10,6 +10,7 @@ implemented speedup from appropriate blocks;
 implemented natural resistance to appropriate damage sources;
 added new Dragon doors;
 implemented natural debuffs;
+fixed JEI in dragon screen;
 
 0.0.32-1.16.5:
 added netherite armor textures;

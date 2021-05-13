@@ -84,7 +84,7 @@ public class EventHandler {
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
 
-                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR) {
+                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR || damageSource == DamageSource.IN_FIRE) {
                     if (dragonStateHandler.getType() == DragonType.CAVE) {
                         livingDamageEvent.setCanceled(true);
 
@@ -131,26 +131,25 @@ public class EventHandler {
                         switch (dragonStateHandler.getType()) {
                             case CAVE:
                                 if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
-                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) ||
-                                        block.is(BlockTags.BEACON_BASE_BLOCKS) || block.is(BlockTags.SOUL_SPEED_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                                    playerEntity.hurt(DamageSource.IN_FIRE, 1);
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                                    playerEntity.hurt(DamageSource.ON_FIRE, 1);
                                     world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
-                                    if (playerEntity.isOnFire()) {
+                                    if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
                                         playerEntity.clearFire();
-                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3));
+                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3, false, false));
                                     }
                                 }
                                 break;
                             case FOREST:
                                 if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                         || block.is(Tags.Blocks.DIRT)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                     WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                                     if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                         playerEntity.getCapability(DarknessFear.DARKNESSFEAR).ifPresent(darknessFear -> {
@@ -170,24 +169,26 @@ public class EventHandler {
                             case SEA:
                                 if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
                                         || block.is(BlockTags.CORAL_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (playerEntity.isInWaterOrBubble()) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1));
+                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                                 }
 
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get()) {
+                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                     if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                                         playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
                                             hydration.increaseTime();
-                                            world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+
                                             if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1));
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80));
+                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
+                                            } else if (hydration.getTimeWithoutWater() > 20 * 60) {
+                                                world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), playerEntity.getY() + 1, playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 0, 0, 0);
                                             }
                                         });
                                     } else {
@@ -310,10 +311,39 @@ public class EventHandler {
                                     break;
                             }
                             break;
-
                     }
                 } else {
                     breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 0.7f);
+                }
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void dropBlocksMinedByPaw(PlayerEvent.HarvestCheck harvestCheck) {
+        PlayerEntity playerEntity = harvestCheck.getPlayer();
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                ItemStack stack = playerEntity.getMainHandItem();
+                Item item = stack.getItem();
+                BlockState blockState = harvestCheck.getTargetBlock();
+                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
+                    if (!harvestCheck.canHarvest()) {
+                        switch (dragonStateHandler.getType()) {
+                            case SEA:
+                                if (blockState.isToolEffective(ToolType.SHOVEL))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                            case CAVE:
+                                if (blockState.isToolEffective(ToolType.PICKAXE))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                            case FOREST:
+                                if (blockState.isToolEffective(ToolType.AXE))
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                        }
+                    }
                 }
             }
         });

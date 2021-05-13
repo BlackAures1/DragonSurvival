@@ -30,6 +30,13 @@ processResources {
     }
 }
 
+repositories{
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -107,6 +114,10 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.16'
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.33')
+
+    compileOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}")
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
