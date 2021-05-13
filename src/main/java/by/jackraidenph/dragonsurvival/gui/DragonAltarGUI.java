@@ -8,7 +8,6 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -21,15 +20,12 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
-import java.util.HashMap;
-
 public class DragonAltarGUI extends Screen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar_texture.png");
     private final int xSize = 852 / 2;
     private final int ySize = 500 / 2;
     private int guiLeft;
     private int guiTop;
-    private HashMap<Integer, Integer> wtf = Maps.newHashMap();
 
     public DragonAltarGUI(ITextComponent title) {
         super(title);

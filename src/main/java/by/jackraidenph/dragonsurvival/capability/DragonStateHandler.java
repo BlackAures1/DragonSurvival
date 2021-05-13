@@ -35,7 +35,7 @@ public class DragonStateHandler {
         setSize(size);
     	AttributeModifier healthMod = buildHealthMod(size);
         updateHealthModifier(playerEntity, healthMod);
-        AttributeModifier damageMod = buildDamageMod(getLevel());
+        AttributeModifier damageMod = buildDamageMod(getLevel(), isDragon());
         updateDamageModifier(playerEntity, damageMod);
     }
     
@@ -95,11 +95,11 @@ public class DragonStateHandler {
     		);
     }
     
-    public static AttributeModifier buildDamageMod(DragonLevel level) {
+    public static AttributeModifier buildDamageMod(DragonLevel level, boolean isDragon) {
     	return new AttributeModifier(
     			DAMAGE_MODIFIER_UUID,
     			"Dragon Damage Adjustment",
-    			(level.baseDamage - 1),
+    			isDragon ? (level.baseDamage - 1) : 0,
     			AttributeModifier.Operation.ADDITION
     		);
     }
