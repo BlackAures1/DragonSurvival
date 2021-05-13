@@ -136,6 +136,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                     dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                    serverPlayerEntity.setForcedPose(null);
                     serverPlayerEntity.refreshDimensions();
                 });
             } else {

@@ -107,6 +107,7 @@ public class PacketProxy {
                         dragonEntity.player = thatPlayer.getId();
                         ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                     }
+                    thatPlayer.setForcedPose(null);
                     thatPlayer.refreshDimensions();
                 }
                 context.get().setPacketHandled(true);
