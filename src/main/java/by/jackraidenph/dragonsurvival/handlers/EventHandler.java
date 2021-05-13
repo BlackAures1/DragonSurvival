@@ -180,13 +180,15 @@ public class EventHandler {
                                     if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                                         playerEntity.getCapability(Hydration.HYDRATION).ifPresent(hydration -> {
                                             hydration.increaseTime();
-                                            world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+
                                             if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
                                                     playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
                                                 if (!playerEntity.hasEffect(Effects.WITHER))
                                                     playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
+                                            } else if (hydration.getTimeWithoutWater() > 20 * 60) {
+                                                world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), playerEntity.getY() + 1, playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 0, 0, 0);
                                             }
                                         });
                                     } else {
