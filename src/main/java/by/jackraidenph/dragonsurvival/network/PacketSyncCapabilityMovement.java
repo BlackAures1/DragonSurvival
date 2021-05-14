@@ -10,7 +10,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -68,20 +67,21 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     }
 
     @Override
-    public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
+    public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) { // TODO Clean this up
     	NetworkEvent.Context context = supplier.get();
     	ServerPlayerEntity player = context.getSender();
-        if (FMLEnvironment.dist.isDedicatedServer()) {
-        	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), syncCapabilityMovement);
-            Entity entity = player.level.getEntity(syncCapabilityMovement.playerId);
-            if (entity instanceof PlayerEntity) {
-                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.deltaMovement, syncCapabilityMovement.bite);
-                });
-            }
-        	supplier.get().setPacketHandled(true);
-        	return;
+    	if (player == null) {
+    		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
+    		return;
+    	}
+    	Entity entity = player.level.getEntity(syncCapabilityMovement.playerId);
+    	if (entity instanceof PlayerEntity) {
+            DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.deltaMovement, syncCapabilityMovement.bite);
+            });
         }
-    	DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
+    	if (!entity.level.isClientSide)
+    		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), syncCapabilityMovement);
+    	context.setPacketHandled(true);
     }
 }
