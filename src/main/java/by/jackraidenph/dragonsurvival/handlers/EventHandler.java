@@ -133,7 +133,8 @@ public class EventHandler {
                             case CAVE:
                                 if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
                                         || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                                    if (!world.isClientSide)
+                                        playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.ON_FIRE, 1);
@@ -141,14 +142,16 @@ public class EventHandler {
                                 } else {
                                     if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
                                         playerEntity.clearFire();
-                                        playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3, false, false));
+                                        if (!world.isClientSide)
+                                            playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3, false, false));
                                     }
                                 }
                                 break;
                             case FOREST:
                                 if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                         || block.is(Tags.Blocks.DIRT)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                                    if (!world.isClientSide)
+                                        playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                     WorldLightManager lightManager = world.getChunkSource().getLightEngine();
@@ -157,7 +160,8 @@ public class EventHandler {
                                             darknessFear.increaseTime();
 
                                             if (darknessFear.getTimeInDarkness() > 20 * 10) {
-                                                playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
+                                                if (!world.isClientSide)
+                                                    playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
                                             } else {
                                                 world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                             }
@@ -170,10 +174,12 @@ public class EventHandler {
                             case SEA:
                                 if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
                                         || block.is(BlockTags.CORAL_BLOCKS)) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                                    if (!world.isClientSide)
+                                        playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (playerEntity.isInWaterOrBubble()) {
-                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
+                                    if (!world.isClientSide)
+                                        playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
                                     playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                                 }
 
@@ -183,11 +189,15 @@ public class EventHandler {
                                             hydration.increaseTime();
 
                                             if (hydration.getTimeWithoutWater() > 20 * 60 * 10) {
-                                                if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
+                                                if (!playerEntity.hasEffect(Effects.WITHER)) {
+                                                    if (!world.isClientSide)
+                                                        playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
+                                                }
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60 * 2) {
-                                                if (!playerEntity.hasEffect(Effects.WITHER))
-                                                    playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
+                                                if (!playerEntity.hasEffect(Effects.WITHER)) {
+                                                    if (!world.isClientSide)
+                                                        playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
+                                                }
                                             } else if (hydration.getTimeWithoutWater() > 20 * 60) {
                                                 world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), playerEntity.getY() + 1, playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 0, 0, 0);
                                             }
@@ -330,20 +340,34 @@ public class EventHandler {
                 BlockState blockState = harvestCheck.getTargetBlock();
                 if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
                     if (!harvestCheck.canHarvest()) {
-                        switch (dragonStateHandler.getType()) {
-                            case SEA:
-                                if (blockState.isToolEffective(ToolType.SHOVEL))
+                        int harvestLevel = blockState.getHarvestLevel();
+                        switch (dragonStateHandler.getLevel()) {
+                            case BABY:
+                                if (harvestLevel <= 0)
                                     harvestCheck.setCanHarvest(true);
                                 break;
-                            case CAVE:
-                                if (blockState.isToolEffective(ToolType.PICKAXE))
-                                    harvestCheck.setCanHarvest(true);
-                                break;
-                            case FOREST:
-                                if (blockState.isToolEffective(ToolType.AXE))
+                            case YOUNG:
+                            case ADULT:
+                                if (harvestLevel == 1) {
+                                    switch (dragonStateHandler.getType()) {
+                                        case SEA:
+                                            if (blockState.isToolEffective(ToolType.SHOVEL))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                        case CAVE:
+                                            if (blockState.isToolEffective(ToolType.PICKAXE))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                        case FOREST:
+                                            if (blockState.isToolEffective(ToolType.AXE))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                    }
+                                } else if (harvestLevel <= 0)
                                     harvestCheck.setCanHarvest(true);
                                 break;
                         }
+
                     }
                 }
             }
