@@ -330,19 +330,22 @@ public class EventHandler {
                 BlockState blockState = harvestCheck.getTargetBlock();
                 if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
                     if (!harvestCheck.canHarvest()) {
-                        switch (dragonStateHandler.getType()) {
-                            case SEA:
-                                if (blockState.isToolEffective(ToolType.SHOVEL))
-                                    harvestCheck.setCanHarvest(true);
-                                break;
-                            case CAVE:
-                                if (blockState.isToolEffective(ToolType.PICKAXE))
-                                    harvestCheck.setCanHarvest(true);
-                                break;
-                            case FOREST:
-                                if (blockState.isToolEffective(ToolType.AXE))
-                                    harvestCheck.setCanHarvest(true);
-                                break;
+                        int harvestLevel = blockState.getHarvestLevel();
+                        if (harvestLevel <= 0) {
+                            switch (dragonStateHandler.getType()) {
+                                case SEA:
+                                    if (blockState.isToolEffective(ToolType.SHOVEL))
+                                        harvestCheck.setCanHarvest(true);
+                                    break;
+                                case CAVE:
+                                    if (blockState.isToolEffective(ToolType.PICKAXE))
+                                        harvestCheck.setCanHarvest(true);
+                                    break;
+                                case FOREST:
+                                    if (blockState.isToolEffective(ToolType.AXE))
+                                        harvestCheck.setCanHarvest(true);
+                                    break;
+                            }
                         }
                     }
                 }
