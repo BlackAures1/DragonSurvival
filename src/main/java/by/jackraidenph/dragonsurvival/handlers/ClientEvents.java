@@ -186,10 +186,11 @@ public class ClientEvents {
             if (player != null) {
             	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             		if (playerStateHandler.isDragon()) {
-	            		float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F;
+            			
+            			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F;
 	            		
 		                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
-		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot);
+		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
 		                	/*
 		                	 * WIP stuff below to fix strafing issues.
 		                	 * Saving for next update because there are enough bugs to fix on this one as it is.
@@ -216,12 +217,15 @@ public class ClientEvents {
 		                    }
 		                	//playerStateHandler.setMovementData(f1, player.yHeadRot, player.xRot);
 		                	//DragonSurvivalMod.LOGGER.info("Tick2, {}, {}, {}", player.getViewYRot(1), bodyAndHeadYawDiff, player.yHeadRot);
-		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch));
+		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
 		                } else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
 	                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
-	                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot);
+	                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
 	                    	//DragonSurvivalMod.LOGGER.info("Tick3, {}, {}, {}", playerStateHandler.getMovementData().bodyYaw, bodyAndHeadYawDiff, player.yHeadRot);
-	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch));
+	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
+	                    } else if (playerStateHandler.getMovementData().deltaMovement != player.getDeltaMovement() || playerStateHandler.getMovementData().bite != player.swinging && player.getAttackStrengthScale(-3.0f) != 1) {
+	                    	playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
+	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
 	                    }
 		                
             		}
@@ -260,7 +264,6 @@ public class ClientEvents {
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
 	                int eventLight = renderPlayerEvent.getLight();
-	
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
