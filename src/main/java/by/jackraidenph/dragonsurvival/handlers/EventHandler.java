@@ -341,22 +341,33 @@ public class EventHandler {
                 if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
                     if (!harvestCheck.canHarvest()) {
                         int harvestLevel = blockState.getHarvestLevel();
-                        if (harvestLevel <= 0) {
-                            switch (dragonStateHandler.getType()) {
-                                case SEA:
-                                    if (blockState.isToolEffective(ToolType.SHOVEL))
-                                        harvestCheck.setCanHarvest(true);
-                                    break;
-                                case CAVE:
-                                    if (blockState.isToolEffective(ToolType.PICKAXE))
-                                        harvestCheck.setCanHarvest(true);
-                                    break;
-                                case FOREST:
-                                    if (blockState.isToolEffective(ToolType.AXE))
-                                        harvestCheck.setCanHarvest(true);
-                                    break;
-                            }
+                        switch (dragonStateHandler.getLevel()) {
+                            case BABY:
+                                if (harvestLevel <= 0)
+                                    harvestCheck.setCanHarvest(true);
+                                break;
+                            case YOUNG:
+                            case ADULT:
+                                if (harvestLevel == 1) {
+                                    switch (dragonStateHandler.getType()) {
+                                        case SEA:
+                                            if (blockState.isToolEffective(ToolType.SHOVEL))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                        case CAVE:
+                                            if (blockState.isToolEffective(ToolType.PICKAXE))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                        case FOREST:
+                                            if (blockState.isToolEffective(ToolType.AXE))
+                                                harvestCheck.setCanHarvest(true);
+                                            break;
+                                    }
+                                } else if (harvestLevel <= 0)
+                                    harvestCheck.setCanHarvest(true);
+                                break;
                         }
+
                     }
                 }
             }
