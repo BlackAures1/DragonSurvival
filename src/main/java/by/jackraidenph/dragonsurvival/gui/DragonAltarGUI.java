@@ -8,7 +8,6 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -16,12 +15,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
-
-import java.util.HashMap;
 
 public class DragonAltarGUI extends Screen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar_texture.png");
@@ -29,7 +27,6 @@ public class DragonAltarGUI extends Screen {
     private final int ySize = 500 / 2;
     private int guiLeft;
     private int guiTop;
-    private HashMap<Integer, Integer> wtf = Maps.newHashMap();
 
     public DragonAltarGUI(ITextComponent title) {
         super(title);
@@ -134,7 +131,7 @@ public class DragonAltarGUI extends Screen {
             DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings()));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0));
+            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0, new Vector3d(0, 0, 0), false));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setSize(DragonLevel.BABY.initialHealth, player);

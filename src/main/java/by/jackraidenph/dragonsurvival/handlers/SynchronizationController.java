@@ -64,7 +64,7 @@ public class SynchronizationController {
                 DragonStateProvider.getCap(trackedEntity).ifPresent(dragonStateHandler -> {
                     DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)trackingPlayer), new SynchronizeDragonCap(trackedEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.isDragon(), dragonStateHandler.getSize(), dragonStateHandler.hasWings()));
                     DragonMovementData data = dragonStateHandler.getMovementData();
-                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)trackingPlayer), new PacketSyncCapabilityMovement(trackedEntity.getId(), data.bodyYaw, data.headYaw, data.headPitch));
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)trackingPlayer), new PacketSyncCapabilityMovement(trackedEntity.getId(), data.bodyYaw, data.headYaw, data.headPitch, data.deltaMovement, data.bite));
 
                 });
             }

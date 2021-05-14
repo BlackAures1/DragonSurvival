@@ -40,7 +40,7 @@ public class PacketProxy {
             Entity entity = world.getEntity(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
                 DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch);
+                    dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.deltaMovement, syncCapabilityMovement.bite);
                 });
             }
             context.setPacketHandled(true);
@@ -98,7 +98,7 @@ public class PacketProxy {
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                         dragonStateHandler.setSize(synchronizeDragonCap.size);
-                        if (!dragonStateHandler.hasWings())
+                        if (!dragonStateHandler.hasWings() && thatPlayer == myPlayer)
                             FlightController.wingsEnabled = false;
                     });
                     //refresh instances
