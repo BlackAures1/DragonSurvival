@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.network.SyncConfig;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
@@ -26,6 +27,28 @@ import java.util.function.Supplier;
  */
 public class PacketProxy {
 
+	 public DistExecutor.SafeRunnable handleCapabilityDebuff(SyncCapabilityDebuff syncCapabilityDebuff, Supplier<NetworkEvent.Context> supplier) {
+		 return () -> {
+	            NetworkEvent.Context context = supplier.get();
+	            context.enqueueWork(() -> handleDebuffs(syncCapabilityDebuff, context));
+	        };
+	 }
+	 
+	 private void handleDebuffs(SyncCapabilityDebuff syncCapabilityDebuff, NetworkEvent.Context context) {
+		 PlayerEntity thisPlayer = Minecraft.getInstance().player;
+		 if (thisPlayer != null) {
+	 		World world = thisPlayer.level;
+            Entity entity = world.getEntity(syncCapabilityDebuff.playerId);
+            if (entity instanceof PlayerEntity) {
+            	DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setDebuffData(syncCapabilityDebuff.timeWithoutWater, syncCapabilityDebuff.timeInDarkness);
+                });
+            }
+            context.setPacketHandled(true);
+		 }
+	 }
+	
+	
     public DistExecutor.SafeRunnable handleCapabilityMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
         return () -> {
             NetworkEvent.Context context = supplier.get();

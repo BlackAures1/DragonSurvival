@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.GiveNest;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -131,11 +132,10 @@ public class DragonAltarGUI extends Screen {
             DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, true, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings()));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
-            DragonSurvivalMod.CHANNEL.sendToServer(new PacketSyncCapabilityMovement(player.getId(), 0, 0, 0, false));
             cap.setIsDragon(true);
             cap.setType(type);
             cap.setSize(DragonLevel.BABY.initialHealth, player);
-            cap.setHasWings(false);//
+            cap.setHasWings(false);
         });
     }
 }
