@@ -34,7 +34,7 @@ public class ConfigurationHandler {
 
     public static class General {
 
-        public ForgeConfigSpec.BooleanValue enableDragonDebuffs;
+        private ForgeConfigSpec.BooleanValue enableDragonDebuffs;
         public ForgeConfigSpec.DoubleValue predatorDamageFactor;
         public ForgeConfigSpec.DoubleValue predatorHealthFactor;
         public ForgeConfigSpec.ConfigValue<Boolean> endVoidTeleport;
@@ -104,17 +104,19 @@ public class ConfigurationHandler {
         private static Boolean serverSizeChangesHitbox;
         private static Boolean serverHitboxGrowsPastHuman;
         private static Boolean serverStartWithWings;
+        private static Boolean serverDragonDebuffs;
 
         public static void setServerConnection(boolean connection) {
             serverConnection = connection;
         }
 
-        public static void saveServerConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings) {
+        public static void saveServerConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings, boolean enableDragonDebuffs) {
             serverMaxFlightSpeed = maxFlightSpeed;
             serverMineStarBlock = mineStarBlock;
             serverSizeChangesHitbox = sizeChangesHitbox;
             serverHitboxGrowsPastHuman = hitboxGrowsPastHuman;
             serverStartWithWings = startWithWings;
+            serverDragonDebuffs = enableDragonDebuffs;
         }
 
         public static double getMaxFlightSpeed() {
@@ -148,6 +150,13 @@ public class ConfigurationHandler {
                 return ConfigurationHandler.startWithWings.get();
             return serverStartWithWings == null ? ConfigurationHandler.startWithWings.get() : serverStartWithWings;
         }
+        
+        public static boolean getEnableDragonDebuffs() {
+            if (!serverConnection)
+                return ConfigurationHandler.startWithWings.get();
+            return serverDragonDebuffs == null ? ConfigurationHandler.GENERAL.enableDragonDebuffs.get() : serverDragonDebuffs;
+        }
+        
 
     }
 
@@ -155,7 +164,7 @@ public class ConfigurationHandler {
     @OnlyIn(Dist.DEDICATED_SERVER)
     public static void ServerPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncConfig(maxFlightSpeed.get(), mineStarBlock.get(), sizeChangesHitbox.get(), hitboxGrowsPastHuman.get(), startWithWings.get()));
+        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncConfig(maxFlightSpeed.get(), mineStarBlock.get(), sizeChangesHitbox.get(), hitboxGrowsPastHuman.get(), startWithWings.get(), GENERAL.enableDragonDebuffs.get()));
     }
 
     @SubscribeEvent

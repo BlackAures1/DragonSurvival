@@ -92,7 +92,8 @@ public class PacketProxy {
     				syncConfig.serverMineStarBlock,
     				syncConfig.serverSizeChangesHitbox, 
     				syncConfig.serverHitboxGrowsPastHuman, 
-    				syncConfig.serverStartWithWings);
+    				syncConfig.serverStartWithWings,
+    				syncConfig.serverDragonDebuffs);
     		contextSupplier.get().enqueueWork(() -> {
     			ClientPlayerEntity player = Minecraft.getInstance().player;
     			player.setForcedPose(null);

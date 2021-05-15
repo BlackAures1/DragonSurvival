@@ -138,7 +138,7 @@ public class EventHandler {
                                     if (!world.isClientSide)
                                         playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                                if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                                     playerEntity.hurt(DamageSource.ON_FIRE, 1);
                                     world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
@@ -155,7 +155,7 @@ public class EventHandler {
                                     if (!world.isClientSide)
                                         playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
-                                if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
+                                if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
                                     WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                                     if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                     	if (!world.isClientSide) {
@@ -185,7 +185,7 @@ public class EventHandler {
 	                                playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
 	                            }
 
-	                            if (ConfigurationHandler.GENERAL.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
+	                            if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
 	                                if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
 	                                	if (!world.isClientSide) {
 	                                		dragonStateHandler.getDebuffData().timeWithoutWater++;
