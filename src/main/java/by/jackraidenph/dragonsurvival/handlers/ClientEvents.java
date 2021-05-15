@@ -27,6 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -130,7 +131,8 @@ public class ClientEvents {
 	                    leftwing.setHidden(!playerStateHandler.hasWings());
 	                if (rightWing != null)
 	                    rightWing.setHidden(!playerStateHandler.hasWings());
-	                dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+	                if (!player.hasEffect(Effects.INVISIBILITY))
+	                	dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 	
 	                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
 	                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
@@ -286,8 +288,8 @@ public class ClientEvents {
                             matrixStack.translate(0, -0.15, 0);
 	                	}
 	                }
-                
-                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+	                if (!player.hasEffect(Effects.INVISIBILITY))
+	                	dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
                     String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
