@@ -215,7 +215,7 @@ public class EventHandler {
                         if (world.isClientSide) {
     	                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60)
     	                    	world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), playerEntity.getY() + 1, playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 0, 0, 0);
-    	                    if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10)
+    	                    if (dragonStateHandler.getDebuffData().timeInDarkness > 0 && dragonStateHandler.getDebuffData().timeInDarkness < 20 * 10)
                             	world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                         }
                     }
