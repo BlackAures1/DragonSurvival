@@ -124,7 +124,7 @@ public class DragonSizeHandler {
 				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
     	boolean spinning = player.isAutoSpinAttack();
 		boolean crouching = player.isShiftKeyDown();
-		if (flying)
+		if (flying && !player.isSleeping())
 			return Pose.FALL_FLYING;
 		else if (swimming || (player.isInWaterOrBubble() && !canPoseFit(player, Pose.STANDING) && canPoseFit(player, Pose.SWIMMING)))
 			return Pose.SWIMMING;
