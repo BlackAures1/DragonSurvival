@@ -186,48 +186,32 @@ public class ClientEvents {
             if (player != null) {
             	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             		if (playerStateHandler.isDragon()) {
-            			
-            			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F;
-	            		
-		                if (player.getDeltaMovement().x != 0 || player.getDeltaMovement().z != 0) {
-		                	playerStateHandler.setMovementData(player.getViewYRot(1), player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
-		                	/*
-		                	 * WIP stuff below to fix strafing issues.
-		                	 * Saving for next update because there are enough bugs to fix on this one as it is.
-		                	 */
-		                	double d0 = player.getDeltaMovement().x; // This now uses delta movement, mc uses delta position
-		                    double d1 = player.getDeltaMovement().z; // This now uses delta movement, mc uses delta position
-		                	float f = (float)(Math.pow(d0, 2) + Math.pow(d1, 2)); 
-		                	float f1 = (float)playerStateHandler.getMovementData().bodyYaw;
-		                    float f2 = 0.0F;
-		                    float f3 = 0.0F;
-		                    if (f > 0.0025000002F) { // wtf is this variable
-		                        f3 = 1.0F;
-		                        f2 = (float)Math.sqrt((double)f) * 3.0F;
-		                        float f4 = (float)MathHelper.atan2(d1, d0) * (180F / (float)Math.PI) - 90.0F;
-		                        //float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f4);
-		                        float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yHeadRot) - f4);
-		                        if (5.0F + 180F < f5 && f5 < 180 + 180F - 5.0F) {
-		                           f1 = f4 - 180.0F;
-		                           //DragonSurvivalMod.LOGGER.info("Tick1, {}, {}. {}", f1, bodyAndHeadYawDiff, player.yHeadRot);
-		                        } else {
-	                        		f1 = f4;
-	                        		//DragonSurvivalMod.LOGGER.info("Tick2, {}, {}, {}", f1, bodyAndHeadYawDiff, player.yHeadRot);
-		                        }
-		                    }
-		                	//playerStateHandler.setMovementData(f1, player.yHeadRot, player.xRot);
-		                	//DragonSurvivalMod.LOGGER.info("Tick2, {}, {}, {}", player.getViewYRot(1), bodyAndHeadYawDiff, player.yHeadRot);
+            			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
+            			double dx = player.getX() - player.xo;
+	                    double dz = player.getZ() - player.zo;
+	                    float f = (float)(Math.pow(dx, 2) + Math.pow(dz, 2));
+	                    if (f > 0.000028) {
+            				float f1 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90F;
+            				float f2 = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
+            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
+            				if (bodyAndHeadYawDiff > 180)
+            					playerStateHandler.getMovementData().bodyYaw -= 360;
+            				if (bodyAndHeadYawDiff <= -180)
+            					playerStateHandler.getMovementData().bodyYaw += 360;
+	                    	playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
 		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
-		                } else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
-	                    	float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
-	                    	playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
-	                    	//DragonSurvivalMod.LOGGER.info("Tick3, {}, {}, {}", playerStateHandler.getMovementData().bodyYaw, bodyAndHeadYawDiff, player.yHeadRot);
+	                	} else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
+	                    	if (Math.abs(bodyAndHeadYawDiff) > 360F)
+	                    		playerStateHandler.getMovementData().bodyYaw -= bodyAndHeadYawDiff;
+	                    	else {
+	                    		float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
+	                    		playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
+	                    	}
 	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
-	                    } else if (playerStateHandler.getMovementData().deltaMovement != player.getDeltaMovement() || playerStateHandler.getMovementData().bite != player.swinging && player.getAttackStrengthScale(-3.0f) != 1) {
+	                    } else if (Math.abs(playerStateHandler.getMovementData().deltaMovement.subtract(player.getDeltaMovement()).length()) > 0.005F || playerStateHandler.getMovementData().bite != (player.swinging && player.getAttackStrengthScale(-3.0f) != 1)) {
 	                    	playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.getDeltaMovement(), player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
 	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().deltaMovement, playerStateHandler.getMovementData().bite));
 	                    }
-		                
             		}
             	});
             }

@@ -53,14 +53,15 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	        	Vector3d motio = playerStateHandler.getMovementData().deltaMovement;
 	            if (motio == null)
 	            	motio = new Vector3d(0, 0, 0);
+	            boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
 	            // Main
 	            if (player.isSleeping())
 	            	builder.addAnimation("animation.dragon.sleep", true);
-	            else if (playerStateHandler.getMovementData().bite) // This is broken
+	            else if (playerStateHandler.getMovementData().bite)
 	                builder.addAnimation("animation.dragon.bite");
 	            else if (player.getPose() == Pose.SWIMMING)
 	            	builder.addAnimation("animation.dragon.swim_fast", true);
-	            else if ((player.isInLava() || player.isInWaterOrBubble()) && (motio.x() != 0 || motio.z() != 0)) // This is broken
+	            else if ((player.isInLava() || player.isInWaterOrBubble()) && isMovingHorizontal)
 	                builder.addAnimation("animation.dragon.swim", true);
 	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 	                builder.addAnimation("animation.dragon.fly_slow", true);
@@ -68,7 +69,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	                builder.addAnimation("animation.dragon.jump", true);
 	            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
 	            	// Player is Sneaking
-	            	 if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f) // This is broken
+	            	 if (isMovingHorizontal && player.animationSpeed != 0f)
 	                     builder.addAnimation("animation.dragon.sneak_walk", true);
 	                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
 	                     builder.addAnimation("animation.dragon.dig_sneak", true);
@@ -77,7 +78,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	            }
 	            else if (player.isSprinting())
 	                builder.addAnimation("animation.dragon.run", true);
-	            else if ((motio.x() != 0 || motio.z() != 0) && player.animationSpeed != 0f) // This is broken
+	            else if (isMovingHorizontal && player.animationSpeed != 0f)
 	                builder.addAnimation("animation.dragon.walk", true);
 	            else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
 	                builder.addAnimation("animation.dragon.dig", true);

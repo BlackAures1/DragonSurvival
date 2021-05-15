@@ -77,6 +77,19 @@ public class MediumNestBlock extends NestBlock {
             rootPos = ((NestPlaceHolder) tileEntity).rootPos;
         DragonType dragonType = dragonStateHandler.getType();
         NestEntity nest = (NestEntity) worldIn.getBlockEntity(rootPos);
+        if (!state.getValue(PRIMARY_BLOCK) || nest == null || nest.ownerUUID == null) {
+        	if (nest == null || nest.ownerUUID == null) {
+        		worldIn.destroyBlock(pos, false);
+                return ActionResultType.SUCCESS;
+        	}
+            NestPlaceHolder placeHolder = (NestPlaceHolder) worldIn.getBlockEntity(pos);
+            BlockPos root = placeHolder.rootPos;
+            if (worldIn.getBlockEntity(root) == null) {
+                worldIn.destroyBlock(pos, false);
+                return ActionResultType.SUCCESS;
+            } else
+                return super.use(worldIn.getBlockState(root), worldIn, root, player, handIn, hit);
+        }
         if (dragonStateHandler.isDragon() &&
                 dragonLevel == DragonLevel.ADULT && nest.ownerUUID.equals(player.getUUID())
                 && state.getBlock().getClass() == MediumNestBlock.class) {
@@ -110,15 +123,6 @@ public class MediumNestBlock extends NestBlock {
                     player.sendMessage(new TranslationTextComponent("ds.space.occupied"), player.getUUID());
                 return ActionResultType.CONSUME;
             }
-        }
-        if (!state.getValue(PRIMARY_BLOCK)) {
-            NestPlaceHolder placeHolder = (NestPlaceHolder) worldIn.getBlockEntity(pos);
-            BlockPos root = placeHolder.rootPos;
-            if (worldIn.getBlockEntity(root) == null) {
-                worldIn.destroyBlock(pos, false);
-                return ActionResultType.SUCCESS;
-            } else
-                return super.use(worldIn.getBlockState(root), worldIn, root, player, handIn, hit);
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
