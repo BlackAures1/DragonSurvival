@@ -98,8 +98,6 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 		
 		// TODO Replace temp head turn with system that includes vertical
 		PlayerEntity player = entity.getPlayer();
-		// TODO Temp movement check, remove when strafing is fixed.
-		//if ((player.getDeltaMovement().x == 0 || player.getDeltaMovement().z == 0) && !player.isSleeping() && player.getPose() != Pose.SWIMMING) {
 		if (!player.isSleeping()) {
 			DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
 				IBone neck0 = this.getAnimationProcessor().getBone("NeckandHead"); // rot(0, -22.5, 0)
@@ -114,7 +112,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				// neck3: rot(30, 0, 0), mov(-2, 22.7551, -13.1526)
 				// neck4: rot(10, 0, 0), mov(-3, 19.4825, -13.4911)
 				// head: rot(20, 0, 0), mov(2.1, 37.4402, -12.953)
-				float rotation = -1F * ((((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) % 360F) * (float)Math.PI / 180F;
+				float rotation = -1F * (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) * (float)Math.PI / 180F;
 				if (rotation > (float)Math.PI)
 					rotation = (float)Math.PI;
 				if (rotation < -(float)Math.PI)
