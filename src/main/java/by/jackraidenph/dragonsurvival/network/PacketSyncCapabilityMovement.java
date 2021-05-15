@@ -21,18 +21,16 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     public double bodyYaw;
     public double headYaw;
     public double headPitch;
-    public Vector3d deltaMovement;
     public boolean bite;
 
     public PacketSyncCapabilityMovement() {
     }
 
-    public PacketSyncCapabilityMovement(int playerId, double bodyYaw, double headYaw, double headPitch, Vector3d deltaMovement, boolean bite) {
+    public PacketSyncCapabilityMovement(int playerId, double bodyYaw, double headYaw, double headPitch, boolean bite) {
         this.bodyYaw = bodyYaw;
         this.headYaw = headYaw;
         this.headPitch = headPitch;
         this.playerId = playerId;
-        this.deltaMovement = deltaMovement;
         this.bite = bite;
     }
 
@@ -42,14 +40,12 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         b.writeDouble(m.bodyYaw);
         b.writeDouble(m.headYaw);
         b.writeDouble(m.headPitch);
-        writeVec3d(b, m.deltaMovement);
         b.writeBoolean(m.bite);
     }
 
     @Override
     public PacketSyncCapabilityMovement decode(PacketBuffer b) {
-        return new PacketSyncCapabilityMovement(b.readInt(), b.readDouble(), b.readDouble(), b.readDouble(), 
-        		readVec3d(b), b.readBoolean()
+        return new PacketSyncCapabilityMovement(b.readInt(), b.readDouble(), b.readDouble(), b.readDouble(), b.readBoolean()
         );
     }
 
@@ -77,7 +73,7 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     	Entity entity = player.level.getEntity(syncCapabilityMovement.playerId);
     	if (entity instanceof PlayerEntity) {
             DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.deltaMovement, syncCapabilityMovement.bite);
+                dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.bite);
             });
         }
     	if (!entity.level.isClientSide)

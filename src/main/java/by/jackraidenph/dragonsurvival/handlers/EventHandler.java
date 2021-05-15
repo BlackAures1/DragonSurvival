@@ -265,7 +265,7 @@ public class EventHandler {
                     if (capOld.isDragon()) {
                         capNew.setIsDragon(true);
                         DragonStateHandler.DragonMovementData movementData = capOld.getMovementData();
-                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.deltaMovement, movementData.bite);
+                        capNew.setMovementData(movementData.bodyYaw, movementData.headYaw, movementData.headPitch, movementData.bite);
                         capNew.setSize(capOld.getSize());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
