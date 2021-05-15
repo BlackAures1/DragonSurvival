@@ -193,7 +193,7 @@ public class ClientEvents {
             			double dx = player.getX() - player.xo;
 	                    double dz = player.getZ() - player.zo;
 	                    float f = (float)(Math.pow(dx, 2) + Math.pow(dz, 2));
-	                    if (f > 0.000028) {
+	                    if (f > 0.0025000002F) {
             				float f1 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90F;
             				float f2 = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
             				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
