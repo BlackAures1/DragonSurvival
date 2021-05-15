@@ -153,7 +153,7 @@ public class ConfigurationHandler {
         
         public static boolean getEnableDragonDebuffs() {
             if (!serverConnection)
-                return ConfigurationHandler.startWithWings.get();
+                return ConfigurationHandler.GENERAL.enableDragonDebuffs.get();
             return serverDragonDebuffs == null ? ConfigurationHandler.GENERAL.enableDragonDebuffs.get() : serverDragonDebuffs;
         }
         
