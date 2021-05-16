@@ -126,7 +126,6 @@ public class EventHandler {
                     }
                     //traits
                     // TODO: Clean this up, lots of extra math is being run on the client when only the server needs to be running it.
-                    // FIXME: This is a TON of unnecessary packets. The correct method would just be to sync a boolean with the clients on whether the particles should be visible.
                     {
                         World world = playerEntity.level;
                         BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
@@ -160,7 +159,8 @@ public class EventHandler {
                                     if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                     	if (!world.isClientSide) {
                                     		dragonStateHandler.getDebuffData().timeInDarkness++;
-                                	    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+                                    		if (dragonStateHandler.getDebuffData().timeInDarkness == 1 || dragonStateHandler.getDebuffData().timeInDarkness == 20 * 10)
+                                    			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                                     	}
                                     	if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10) {
                                                 if (!world.isClientSide)
@@ -189,7 +189,8 @@ public class EventHandler {
 	                                if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
 	                                	if (!world.isClientSide) {
 	                                		dragonStateHandler.getDebuffData().timeWithoutWater++;
-	                            	    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+	                                		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 60 + 1)
+	                                			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
 	                                	}
 	                                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 10) {
 	                                        if (!playerEntity.hasEffect(Effects.WITHER)) {
