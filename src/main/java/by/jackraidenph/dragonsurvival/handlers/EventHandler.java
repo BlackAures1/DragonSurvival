@@ -333,38 +333,9 @@ public class EventHandler {
                 ItemStack stack = playerEntity.getMainHandItem();
                 Item item = stack.getItem();
                 BlockState blockState = harvestCheck.getTargetBlock();
-                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
-                    if (!harvestCheck.canHarvest()) {
-                        int harvestLevel = blockState.getHarvestLevel();
-                        switch (dragonStateHandler.getLevel()) {
-                            case BABY:
-                                if (harvestLevel <= 0)
-                                    harvestCheck.setCanHarvest(true);
-                                break;
-                            case YOUNG:
-                            case ADULT:
-                                if (harvestLevel == 1) {
-                                    switch (dragonStateHandler.getType()) {
-                                        case SEA:
-                                            if (blockState.isToolEffective(ToolType.SHOVEL))
-                                                harvestCheck.setCanHarvest(true);
-                                            break;
-                                        case CAVE:
-                                            if (blockState.isToolEffective(ToolType.PICKAXE))
-                                                harvestCheck.setCanHarvest(true);
-                                            break;
-                                        case FOREST:
-                                            if (blockState.isToolEffective(ToolType.AXE))
-                                                harvestCheck.setCanHarvest(true);
-                                            break;
-                                    }
-                                } else if (harvestLevel <= 0)
-                                    harvestCheck.setCanHarvest(true);
-                                break;
-                        }
-
-                    }
-                }
+                if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem) && !harvestCheck.canHarvest()) {
+                	harvestCheck.setCanHarvest(dragonStateHandler.canHarvestWithPaw(blockState));
+            	}
             }
         });
     }
@@ -521,24 +492,28 @@ public class EventHandler {
                 List<ItemStack> drops = block.getDrops(blockState, new LootContext.Builder((ServerWorld) world)
                         .withParameter(LootParameters.ORIGIN, new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                         .withParameter(LootParameters.TOOL, mainHandItem));
-                final boolean suitableOre = playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) && drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
-                if (suitableOre && !playerEntity.isCreative()) {
-                    if (DragonStateProvider.isDragon(playerEntity)) {
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
-                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
-                        }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreBoneChance.get()) {
-                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
-                        }
-                    } else {
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
-                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
-                        }
-                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
-                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
-                        }
-                    }
-                }
+                DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+	                final boolean suitableOre = (playerEntity.getMainHandItem().isCorrectToolForDrops(blockState) || 
+	                		(dragonStateHandler.isDragon() && dragonStateHandler.canHarvestWithPaw(blockState))) 
+	                		&& drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
+	                if (suitableOre && !playerEntity.isCreative()) {
+	                    if (dragonStateHandler.isDragon()) {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
+	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+	                        }
+	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreBoneChance.get()) {
+	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
+	                        }
+	                    } else {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
+	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
+	                        }
+	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
+	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
+	                        }
+	                    }
+	                }
+	            });
             }
         }
     }

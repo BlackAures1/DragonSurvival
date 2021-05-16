@@ -2,11 +2,13 @@ package by.jackraidenph.dragonsurvival.capability;
 
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -78,6 +80,35 @@ public class DragonStateHandler {
         	return DragonLevel.ADULT;
     }
 
+    public boolean canHarvestWithPaw(BlockState state) {
+    	int harvestLevel = state.getHarvestLevel();
+    	switch(getLevel()) {
+    		case BABY:
+    			if (harvestLevel <= 0)
+    				return true;
+    			break;
+    		case YOUNG:
+            case ADULT:
+            	if (harvestLevel == 1) {
+                    switch (getType()) {
+                        case SEA:
+                            if (state.isToolEffective(ToolType.SHOVEL))
+                            	return true;
+                        case CAVE:
+                            if (state.isToolEffective(ToolType.PICKAXE))
+                            	return true;
+                            break;
+                        case FOREST:
+                            if (state.isToolEffective(ToolType.AXE))
+                                return true;
+                    }
+                } else if (harvestLevel <= 0)
+                	return true;
+            	break;
+    	}
+    	return false;
+    }
+    
     @Nullable
     public static AttributeModifier getHealthModifier(PlayerEntity player) {
     	return Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH)).getModifier(HEALTH_MODIFIER_UUID);
