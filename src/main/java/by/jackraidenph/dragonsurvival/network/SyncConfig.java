@@ -15,13 +15,15 @@ public class SyncConfig implements IMessage<SyncConfig> {
 	public boolean serverSizeChangesHitbox;
 	public boolean serverHitboxGrowsPastHuman;
     public boolean serverStartWithWings;
+    public boolean serverDragonDebuffs;
 	
-	public SyncConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings) {
+	public SyncConfig(double maxFlightSpeed, boolean mineStarBlock, boolean sizeChangesHitbox, boolean hitboxGrowsPastHuman, boolean startWithWings, boolean enableDragonDebuffs) {
 		this.serverMaxFlightSpeed = maxFlightSpeed;
 		this.serverMineStarBlock = mineStarBlock;
 		this.serverSizeChangesHitbox = sizeChangesHitbox;
 		this.serverHitboxGrowsPastHuman = hitboxGrowsPastHuman;
 		this.serverStartWithWings = startWithWings;
+		this.serverDragonDebuffs = enableDragonDebuffs;
 	}
     
 	public SyncConfig() {
@@ -34,11 +36,13 @@ public class SyncConfig implements IMessage<SyncConfig> {
 		buffer.writeBoolean(message.serverSizeChangesHitbox);
 		buffer.writeBoolean(message.serverHitboxGrowsPastHuman);
 		buffer.writeBoolean(message.serverStartWithWings);
+		buffer.writeBoolean(message.serverDragonDebuffs);
+		
 	}
 
 	@Override
 	public SyncConfig decode(PacketBuffer buffer) {
-		return new SyncConfig(buffer.readDouble(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean());
+		return new SyncConfig(buffer.readDouble(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean());
 	}
 
 	@Override

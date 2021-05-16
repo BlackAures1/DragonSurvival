@@ -17,9 +17,10 @@ public class DragonStateHandler {
     private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
-    private final DragonMovementData data = new DragonMovementData(0, 0, 0, new Vector3d(0, 0, 0), false);
+    private final DragonMovementData movementData = new DragonMovementData(0, 0, 0, false);
     private boolean hasWings;
     private float size;
+    private final DragonDebuffData debuffData = new DragonDebuffData(0, 0);
     
     public static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446");
     public static final UUID DAMAGE_MODIFIER_UUID = UUID.fromString("5bd3cebc-132e-4f9d-88ef-b686c7ad1e2c");
@@ -130,16 +131,24 @@ public class DragonStateHandler {
     	max.addPermanentModifier(mod);
     }
     
-    public void setMovementData(double bodyYaw, double headYaw, double headPitch, Vector3d deltaMovement, boolean bite) {
-        data.bodyYaw = bodyYaw;
-        data.headYaw = headYaw;
-        data.headPitch = headPitch;
-        data.deltaMovement = deltaMovement;
-        data.bite = bite;
+    public void setMovementData(double bodyYaw, double headYaw, double headPitch, boolean bite) {
+        movementData.bodyYaw = bodyYaw;
+        movementData.headYaw = headYaw;
+        movementData.headPitch = headPitch;
+        movementData.bite = bite;
     }
 
     public DragonMovementData getMovementData() {
-        return this.data;
+        return this.movementData;
+    }
+    
+    public void setDebuffData(int timeWithoutWater, int timeInDarkness) {
+    	debuffData.timeWithoutWater = timeWithoutWater;
+    	debuffData.timeInDarkness = timeInDarkness;
+    }
+    
+    public DragonDebuffData getDebuffData() {
+    	return this.debuffData;
     }
 
     public DragonType getType() {
@@ -159,19 +168,26 @@ public class DragonStateHandler {
         public double headPitchLastTick;
         public double bodyYawLastTick;
 
-        public Vector3d deltaMovement;
         public boolean bite;
         
-        public DragonMovementData(double bodyYaw, double headYaw, double headPitch, Vector3d deltaMovement, boolean bite) {
+        public DragonMovementData(double bodyYaw, double headYaw, double headPitch, boolean bite) {
             this.bodyYaw = bodyYaw;
             this.headYaw = headYaw;
             this.headPitch = headPitch;
             this.headYawLastTick = headYaw;
             this.headPitchLastTick = headPitch;
             this.bodyYawLastTick = bodyYaw;
-            this.deltaMovement = deltaMovement;
             this.bite = bite;
         }
-
+    }
+    
+    public static class DragonDebuffData {
+    	public int timeWithoutWater;
+    	public int timeInDarkness;
+    	
+    	public DragonDebuffData(int timeWithoutWater, int timeInDarkness) {
+    		this.timeWithoutWater = timeWithoutWater;
+    		this.timeInDarkness = timeInDarkness;
+    	}
     }
 }

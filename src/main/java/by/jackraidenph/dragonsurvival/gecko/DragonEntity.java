@@ -50,13 +50,13 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
         AnimationBuilder builder = new AnimationBuilder();
         if (player != null) {
         	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-	        	Vector3d motio = playerStateHandler.getMovementData().deltaMovement;
-	            if (motio == null)
-	            	motio = new Vector3d(0, 0, 0);
+	        	Vector3d motio = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
 	            boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
 	            // Main
 	            if (player.isSleeping())
 	            	builder.addAnimation("animation.dragon.sleep", true);
+	            if (player.isPassenger())
+	            	builder.addAnimation("animation.dragon.idle", true); // TODO: Passenger animation for riding entities
 	            else if (playerStateHandler.getMovementData().bite)
 	                builder.addAnimation("animation.dragon.bite");
 	            else if (player.getPose() == Pose.SWIMMING)
