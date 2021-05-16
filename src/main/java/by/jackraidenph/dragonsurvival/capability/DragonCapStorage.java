@@ -13,7 +13,6 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
     @Override
     public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
-        tag.putBoolean("isDragon", instance.isDragon());
         if (instance.isDragon()) {
             DragonStateHandler.DragonMovementData movementData = instance.getMovementData();
             tag.putDouble("bodyYaw", movementData.bodyYaw);
@@ -34,8 +33,7 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
     @Override
     public void readNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side, INBT base) {
         CompoundNBT tag = (CompoundNBT) base;
-        instance.setIsDragon(tag.getBoolean("isDragon"));
-        if (tag.getBoolean("isDragon")) {
+        if (DragonType.valueOf(tag.getString("type")) != DragonType.NONE) {
             instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"), tag.getDouble("headPitch"), tag.getBoolean("bite"));
             instance.setDebuffData(tag.getInt("timeWithoutWater"), tag.getInt("timeInDarkness"));
             instance.setIsHiding(tag.getBoolean("isHiding"));

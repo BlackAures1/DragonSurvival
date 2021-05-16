@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,6 @@ import java.util.UUID;
 
 
 public class DragonStateHandler {
-    private boolean isDragon;
     private boolean isHiding;
     private DragonType type = DragonType.NONE;
     private final DragonMovementData movementData = new DragonMovementData(0, 0, 0, false);
@@ -26,7 +26,7 @@ public class DragonStateHandler {
     
     public static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446");
     public static final UUID DAMAGE_MODIFIER_UUID = UUID.fromString("5bd3cebc-132e-4f9d-88ef-b686c7ad1e2c");
-    
+    public static final UUID SWIM_SPEED_MODIFIER_UUID = UUID.fromString("2a9341f3-d19e-446c-924b-7cf2e5259e10");
     
     public float getSize() {
         return size;
@@ -41,6 +41,8 @@ public class DragonStateHandler {
         updateHealthModifier(playerEntity, healthMod);
         AttributeModifier damageMod = buildDamageMod(getLevel(), isDragon());
         updateDamageModifier(playerEntity, damageMod);
+        AttributeModifier swimSpeedMod = buildSwimSpeedMod(getType());
+        updateSwimSpeedModifier(playerEntity, swimSpeedMod);
     }
     
     public void setSize(float size) {
@@ -56,11 +58,7 @@ public class DragonStateHandler {
     }
 
     public boolean isDragon() {
-        return this.isDragon;
-    }
-
-    public void setIsDragon(boolean isDragon) {
-        this.isDragon = isDragon;
+        return this.type != DragonType.NONE;
     }
 
     public boolean isHiding() {
@@ -119,6 +117,12 @@ public class DragonStateHandler {
     	return Objects.requireNonNull(player.getAttribute(Attributes.ATTACK_DAMAGE)).getModifier(DAMAGE_MODIFIER_UUID);
     }
     
+    @Nullable
+    public static AttributeModifier getSwimSpeedModifier(PlayerEntity player) {
+    	return Objects.requireNonNull(player.getAttribute(ForgeMod.SWIM_SPEED.get())).getModifier(SWIM_SPEED_MODIFIER_UUID);
+    }
+    
+    
     public static AttributeModifier buildHealthMod(Float size) {
     	return new AttributeModifier(
     			HEALTH_MODIFIER_UUID,
@@ -136,6 +140,15 @@ public class DragonStateHandler {
     			AttributeModifier.Operation.ADDITION
     		);
     }
+    
+    public static AttributeModifier buildSwimSpeedMod(DragonType dragonType) {
+    	return new AttributeModifier(
+    			SWIM_SPEED_MODIFIER_UUID,
+    			"Dragon Swim Speed Adjustment",
+    			dragonType == DragonType.SEA ? 1 : 0,
+    			AttributeModifier.Operation.ADDITION
+    		);
+    }
 
     public static void updateModifiers(PlayerEntity oldPlayer, PlayerEntity newPlayer) {
     	AttributeModifier oldMod = DragonStateHandler.getHealthModifier(oldPlayer);
@@ -144,6 +157,9 @@ public class DragonStateHandler {
         oldMod = DragonStateHandler.getDamageModifier(oldPlayer);
         if (oldMod != null)
             DragonStateHandler.updateDamageModifier(newPlayer, oldMod);
+        oldMod = DragonStateHandler.getSwimSpeedModifier(oldPlayer);
+        if (oldMod != null)
+        	DragonStateHandler.updateSwimSpeedModifier(newPlayer, oldMod);
     }
     
     
@@ -158,6 +174,12 @@ public class DragonStateHandler {
     
     public static void updateDamageModifier(PlayerEntity player, AttributeModifier mod) {
     	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(Attributes.ATTACK_DAMAGE));
+    	max.removeModifier(mod);
+    	max.addPermanentModifier(mod);
+    }
+    
+    public static void updateSwimSpeedModifier(PlayerEntity player, AttributeModifier mod) {
+    	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(ForgeMod.SWIM_SPEED.get()));
     	max.removeModifier(mod);
     	max.addPermanentModifier(mod);
     }

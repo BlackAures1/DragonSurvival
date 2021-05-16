@@ -120,7 +120,6 @@ public class PacketProxy {
 
                 if (thatPlayer != null) {
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
