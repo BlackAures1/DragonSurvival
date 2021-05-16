@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -112,7 +113,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				// neck3: rot(30, 0, 0), mov(-2, 22.7551, -13.1526)
 				// neck4: rot(10, 0, 0), mov(-3, 19.4825, -13.4911)
 				// head: rot(20, 0, 0), mov(2.1, 37.4402, -12.953)
-				float rotation = -1F * (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot) * (float)Math.PI / 180F;
+				float rotation = -1F * (((float)playerStateHandler.getMovementData().bodyYaw) - (float)playerStateHandler.getMovementData().headYaw) * (float)Math.PI / 180F;
 				if (rotation > (float)Math.PI)
 					rotation = (float)Math.PI;
 				if (rotation < -(float)Math.PI)
