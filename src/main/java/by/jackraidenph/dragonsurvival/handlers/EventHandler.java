@@ -158,7 +158,7 @@ public class EventHandler {
                             			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                             		else if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10)
                                         playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
-                                } else if (dragonStateHandler.getDebuffData().timeInDarkness != 0) {
+                                } else if (dragonStateHandler.getDebuffData().timeInDarkness > 0) {
                             		dragonStateHandler.getDebuffData().timeInDarkness = 0;
                             		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                                 	}
@@ -176,13 +176,13 @@ public class EventHandler {
                             if (!world.isClientSide && ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
                                 if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
-	                        		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 60 + 1)
+	                        		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 90 + 1)
 	                            			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
 	                                if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 10 && !playerEntity.hasEffect(Effects.WITHER))
 	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
 	                                else if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 2 && !playerEntity.hasEffect(Effects.WITHER))
 	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
-                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater != 0) {
+                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater > 0) {
                                 	dragonStateHandler.getDebuffData().timeWithoutWater = 0;
                             		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                             	}
@@ -193,7 +193,7 @@ public class EventHandler {
                     // Dragon Particles
                     // TODO: Randomize along dragon body
                     if (world.isClientSide) {
-	                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60)
+	                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 90)
 	                    	world.addParticle(ParticleTypes.WHITE_ASH,
 	                    			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
 	                    			playerEntity.getY() + 0.5F, 
