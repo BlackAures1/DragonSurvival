@@ -49,8 +49,10 @@
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
 
-  "death.attack.starDrain": "Your life and energy has been drained by magic.",
-
+  "death.attack.starDrain": "%1$s had their life and energy drained by magic.",
+  "death.attack.waterBurn": "%1$s tried to swim in water.",
+  "death.attack.waterBurn.player": "%1$s tried to swim in water to escape %2$s.",
+  
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
   "ds.forest_dragon_choice": "You have chosen to be a Forest dragon.",
   "ds.sea_dragon_choice": "You have chosen to be a Sea dragon.",

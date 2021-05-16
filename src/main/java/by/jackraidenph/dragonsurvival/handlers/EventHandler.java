@@ -12,6 +12,7 @@ import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
+import by.jackraidenph.dragonsurvival.util.DamageSources;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
@@ -84,7 +85,6 @@ public class EventHandler {
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-
                 if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR || damageSource == DamageSource.IN_FIRE) {
                     if (dragonStateHandler.getType() == DragonType.CAVE) {
                     	event.setCanceled(true);
@@ -93,8 +93,6 @@ public class EventHandler {
                 	event.setCanceled(true);
             }
         });
-
-
     }
 
     @SubscribeEvent
@@ -137,8 +135,12 @@ public class EventHandler {
                                         playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                                 }
                                 if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                                    playerEntity.hurt(DamageSource.ON_FIRE, 1);
-                                    world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+                                	if (playerEntity.tickCount % 10 == 0)
+                                		playerEntity.hurt(DamageSources.WATER_BURN, 1);
+                                	if (playerEntity.tickCount % 5 == 0)
+                                		playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
+                                    if (world.isClientSide)
+                                    	world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
                                 } else {
                                     if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
                                         playerEntity.clearFire();
