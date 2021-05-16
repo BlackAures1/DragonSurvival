@@ -391,7 +391,7 @@ public class EventHandler {
                 if (item.isEdible()) {
                     Food food = item.getFoodProperties();
                     assert food != null;
-                    boolean bad = item != Items.HONEY_BOTTLE && item != Items.CAKE && item != Items.GOLDEN_APPLE && item != Items.MILK_BUCKET && item != Items.ENCHANTED_GOLDEN_APPLE;
+                    boolean bad = !food.canAlwaysEat() && item != Items.HONEY_BOTTLE;
                     switch (dragonStateHandler.getType()) {
                         case FOREST:
                             if (food == Foods.RABBIT || food == Foods.ROTTEN_FLESH || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
