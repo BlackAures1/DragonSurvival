@@ -40,8 +40,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -451,6 +453,16 @@ public class ClientEvents {
     			event.setDensity(0.1F);
     			event.setCanceled(true);
     		}
+    	});
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void removeFireOverlay(RenderBlockOverlayEvent event) {
+    	ClientPlayerEntity player = Minecraft.getInstance().player;
+    	DragonStateProvider.getCap(player).ifPresent(cap -> {
+    		if (cap.isDragon() && cap.getType() == DragonType.CAVE && event.getOverlayType() == OverlayType.FIRE)
+    			event.setCanceled(true);
     	});
     }
     
