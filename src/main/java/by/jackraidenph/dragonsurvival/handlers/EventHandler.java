@@ -79,19 +79,18 @@ import java.util.List;
 public class EventHandler {
 
     @SubscribeEvent
-    public static void onDamage(LivingDamageEvent livingDamageEvent) {
-        LivingEntity livingEntity = livingDamageEvent.getEntityLiving();
-        DamageSource damageSource = livingDamageEvent.getSource();
+    public static void onDamage(LivingAttackEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
 
                 if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR || damageSource == DamageSource.IN_FIRE) {
                     if (dragonStateHandler.getType() == DragonType.CAVE) {
-                        livingDamageEvent.setCanceled(true);
-
+                    	event.setCanceled(true);
                     }
                 } else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST)
-                    livingDamageEvent.setCanceled(true);
+                	event.setCanceled(true);
             }
         });
 
