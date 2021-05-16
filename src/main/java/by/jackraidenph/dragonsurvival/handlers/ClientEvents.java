@@ -131,7 +131,7 @@ public class ClientEvents {
 	                    leftwing.setHidden(!playerStateHandler.hasWings());
 	                if (rightWing != null)
 	                    rightWing.setHidden(!playerStateHandler.hasWings());
-	                if (!player.hasEffect(Effects.INVISIBILITY))
+	                if (!player.isInvisible())
 	                	dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 	
 	                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
@@ -288,7 +288,7 @@ public class ClientEvents {
                             matrixStack.translate(0, -0.15, 0);
 	                	}
 	                }
-	                if (!player.hasEffect(Effects.INVISIBILITY))
+	                if (!player.isInvisible())
 	                	dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
