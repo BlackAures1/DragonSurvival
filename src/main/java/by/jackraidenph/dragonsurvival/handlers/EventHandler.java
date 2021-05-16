@@ -85,11 +85,9 @@ public class EventHandler {
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                if (damageSource == DamageSource.LAVA || damageSource == DamageSource.HOT_FLOOR || damageSource == DamageSource.IN_FIRE) {
-                    if (dragonStateHandler.getType() == DragonType.CAVE) {
+                if (damageSource.isFire() && dragonStateHandler.getType() == DragonType.CAVE)
                     	event.setCanceled(true);
-                    }
-                } else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST)
+                else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST)
                 	event.setCanceled(true);
             }
         });
@@ -97,134 +95,120 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        if (playerTickEvent.phase == TickEvent.Phase.START) {
-            PlayerEntity playerEntity = playerTickEvent.player;
-            DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-                if (dragonStateHandler.isDragon()) {
-                    for (int i = 0; i < playerEntity.inventory.getContainerSize(); i++) {
-                        ItemStack stack = playerEntity.inventory.getItem(i);
-                        Item item = stack.getItem();
-                        if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
-                            playerEntity.drop(playerEntity.inventory.removeItemNoUpdate(i), true, false);
-                        }
+		if (playerTickEvent.phase != TickEvent.Phase.START)
+			return;
+        PlayerEntity playerEntity = playerTickEvent.player;
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                for (int i = 0; i < playerEntity.inventory.getContainerSize(); i++) {
+                    ItemStack stack = playerEntity.inventory.getItem(i);
+                    Item item = stack.getItem();
+                    if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
+                        playerEntity.drop(playerEntity.inventory.removeItemNoUpdate(i), true, false);
                     }
-                    if (playerEntity instanceof ServerPlayerEntity) {
-                        PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).gameMode;
-                        Field field = PlayerInteractionManager.class.getDeclaredFields()[5];
-                        field.setAccessible(true);
-                        if (field.getType() == boolean.class) {
-                            try {
-                                boolean isMining = field.getBoolean(interactionManager);
-                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getId(), isMining));
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    //traits
-                    // TODO: Clean this up, lots of extra math is being run on the client when only the server needs to be running it.
-                    {
-                        World world = playerEntity.level;
-                        BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
-                        Block block = blockUnder.getBlock();
-                        switch (dragonStateHandler.getType()) {
-                            case CAVE:
-                                if (block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
-                                        || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS)) {
-                                    if (!world.isClientSide)
-                                        playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-                                }
-                                if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                                	if (playerEntity.tickCount % 10 == 0)
-                                		playerEntity.hurt(DamageSources.WATER_BURN, 1);
-                                	if (playerEntity.tickCount % 5 == 0)
-                                		playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
-                                    if (world.isClientSide)
-                                    	world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
-                                } else {
-                                    if (playerEntity.isOnFire() || block.is(Blocks.LAVA) || block.is(Blocks.MAGMA_BLOCK)) {
-                                        playerEntity.clearFire();
-                                        if (!world.isClientSide)
-                                            playerEntity.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 65, 3, false, false));
-                                    }
-                                }
-                                break;
-                            case FOREST:
-                                if (block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
-                                        || block.is(Tags.Blocks.DIRT)) {
-                                    if (!world.isClientSide)
-                                        playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-                                }
-                                if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
-                                    WorldLightManager lightManager = world.getChunkSource().getLightEngine();
-                                    if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
-                                    	if (!world.isClientSide) {
-                                    		dragonStateHandler.getDebuffData().timeInDarkness++;
-                                    		if (dragonStateHandler.getDebuffData().timeInDarkness == 1 || dragonStateHandler.getDebuffData().timeInDarkness == 20 * 10)
-                                    			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                                    	}
-                                    	if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10) {
-                                                if (!world.isClientSide)
-                                                    playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
-                                            }
-                                    } else if (dragonStateHandler.getDebuffData().timeInDarkness != 0){
-                                    	dragonStateHandler.getDebuffData().timeInDarkness = 0;
-                                    	if (!world.isClientSide)
-                                    		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                                    }
-                                }
-                                break;
-	                        case SEA:
-	                            if (block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
-	                                    || block.is(BlockTags.CORAL_BLOCKS)) {
-	                                if (!world.isClientSide)
-	                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-	                            }
-	                            if (playerEntity.isInWaterOrBubble()) {
-	                                if (!world.isClientSide)
-	                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
-	                                playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
-	                            }
-
-	                            if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
-	                                if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
-	                                	if (!world.isClientSide) {
-	                                		dragonStateHandler.getDebuffData().timeWithoutWater++;
-	                                		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 60 + 1)
-	                                			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-	                                	}
-	                                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 10) {
-	                                        if (!playerEntity.hasEffect(Effects.WITHER)) {
-	                                            if (!world.isClientSide)
-	                                                playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
-	                                        }
-	                                    } else if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 2) {
-	                                        if (!playerEntity.hasEffect(Effects.WITHER)) {
-	                                            if (!world.isClientSide)
-	                                                playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
-	                                        }
-	                                    }
-	                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater != 0) {
-	                                	dragonStateHandler.getDebuffData().timeWithoutWater = 0;
-	                                	if (!world.isClientSide)
-	                                		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-	                                }
-	                            }
-                            break;
-                        }
-                        
-                        // Dragon Particles
-                        if (world.isClientSide) {
-    	                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60)
-    	                    	world.addParticle(ParticleTypes.WHITE_ASH, playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), playerEntity.getY() + 1, playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 0, 0, 0);
-    	                    if (dragonStateHandler.getDebuffData().timeInDarkness > 0 && dragonStateHandler.getDebuffData().timeInDarkness < 20 * 10)
-                            	world.addParticle(ParticleTypes.LARGE_SMOKE, playerEntity.getX(), playerEntity.getY() + 1, playerEntity.getZ(), 0, 0, 0);
+                }
+                if (playerEntity instanceof ServerPlayerEntity) {
+                    PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).gameMode;
+                    Field field = PlayerInteractionManager.class.getDeclaredFields()[5];
+                    field.setAccessible(true);
+                    if (field.getType() == boolean.class) {
+                        try {
+                            boolean isMining = field.getBoolean(interactionManager);
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getId(), isMining));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-            });
-
-        }
+                //traits
+                // TODO: Clean this up, lots of extra math is being run on the client when only the server needs to be running it.
+                {
+                    World world = playerEntity.level;
+                    BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
+                    Block block = blockUnder.getBlock();
+                    switch (dragonStateHandler.getType()) {
+                        case CAVE:
+                            if (!world.isClientSide && block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
+                                    || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS))
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                            if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                            	if (playerEntity.tickCount % 10 == 0)
+                            		playerEntity.hurt(DamageSources.WATER_BURN, 1);
+                            	if (playerEntity.tickCount % 5 == 0)
+                            		playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
+                                if (world.isClientSide)
+                                	world.addParticle(ParticleTypes.POOF, 
+                                			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
+                                			playerEntity.getY() + 0.5F,
+                                			playerEntity.getZ() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
+                                			0, 0, 0);
+                            }
+                            if (playerEntity.isOnFire())
+                                playerEntity.clearFire();
+                            break;
+                        case FOREST:
+                            if (!world.isClientSide && block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
+                                    || block.is(Tags.Blocks.DIRT))
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                            if (!world.isClientSide && ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
+                                WorldLightManager lightManager = world.getChunkSource().getLightEngine();
+                                if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
+                            		dragonStateHandler.getDebuffData().timeInDarkness++;
+                            		if (dragonStateHandler.getDebuffData().timeInDarkness == 1 || dragonStateHandler.getDebuffData().timeInDarkness == 20 * 10)
+                            			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+                            		else if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10)
+                                        playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
+                                } else if (dragonStateHandler.getDebuffData().timeInDarkness != 0) {
+                            		dragonStateHandler.getDebuffData().timeInDarkness = 0;
+                            		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+                                	}
+                        		}
+                            break;
+                        case SEA:
+                            if (!world.isClientSide && block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
+                                    || block.is(BlockTags.CORAL_BLOCKS))
+                                    playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
+                            if (playerEntity.isInWaterOrBubble()) {
+                                if (!world.isClientSide)
+                                    playerEntity.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 65, 1, false, false));
+                                playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
+                            }
+                            if (!world.isClientSide && ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
+                                if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
+                            		dragonStateHandler.getDebuffData().timeWithoutWater++;
+	                        		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 60 + 1)
+	                            			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+	                                if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 10 && !playerEntity.hasEffect(Effects.WITHER))
+	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
+	                                else if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 2 && !playerEntity.hasEffect(Effects.WITHER))
+	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
+                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater != 0) {
+                                	dragonStateHandler.getDebuffData().timeWithoutWater = 0;
+                            		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
+                            	}
+                            }
+                        break;
+                    }
+                    
+                    // Dragon Particles
+                    // TODO: Randomize along dragon body
+                    if (world.isClientSide) {
+	                    if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60)
+	                    	world.addParticle(ParticleTypes.WHITE_ASH,
+	                    			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
+	                    			playerEntity.getY() + 0.5F, 
+	                    			playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 
+	                    			0, 0, 0);
+	                    if (dragonStateHandler.getDebuffData().timeInDarkness > 0 && dragonStateHandler.getDebuffData().timeInDarkness < 20 * 10)
+                        	world.addParticle(ParticleTypes.SMOKE,
+                        			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
+                        			playerEntity.getY() + 0.5F, 
+                        			playerEntity.getZ() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
+                        			0, 0, 0);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -451,15 +435,11 @@ public class EventHandler {
                     }
                     if (bad)
                         livingEntity.addEffect(new EffectInstance(Effects.HUNGER, 20 * 60, 0));
-                } else {
-                    if (item instanceof PotionItem) {
-                        PotionItem potionItem = (PotionItem) item;
-                        if (PotionUtils.getPotion(itemStack) == Potions.WATER) {
-                            if (dragonStateHandler.getType() == DragonType.SEA && !playerEntity.level.isClientSide) {
-                            	dragonStateHandler.getDebuffData().timeWithoutWater = 20 * 60 * 20; // -20 minutes
-                            	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                            }
-                        }
+                } else if (item instanceof PotionItem) {
+                    PotionItem potionItem = (PotionItem) item;
+                    if (PotionUtils.getPotion(itemStack) == Potions.WATER && dragonStateHandler.getType() == DragonType.SEA && !playerEntity.level.isClientSide) {
+                    	dragonStateHandler.getDebuffData().timeWithoutWater = -5 * 60 * 20; // -5 minutes
+                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                     }
                 }
             }
