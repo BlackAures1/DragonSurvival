@@ -292,25 +292,25 @@ public class EventHandler {
                 if (!(item instanceof ToolItem || item instanceof SwordItem || item instanceof ShearsItem)) {
                     switch (dragonStateHandler.getLevel()) {
                         case BABY:
-                            breakSpeedEvent.setNewSpeed(2);
+                            breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 2.0F);
                             break;
                         case YOUNG:
                         case ADULT:
                             switch (dragonStateHandler.getType()) {
                                 case FOREST:
                                     if (blockState.isToolEffective(ToolType.AXE)) {
-                                        breakSpeedEvent.setNewSpeed(4);
-                                    } else breakSpeedEvent.setNewSpeed(2);
+                                        breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 4.0F);
+                                    } else breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 2.0F);
                                     break;
                                 case CAVE:
                                     if (blockState.isToolEffective(ToolType.PICKAXE)) {
-                                        breakSpeedEvent.setNewSpeed(4);
-                                    } else breakSpeedEvent.setNewSpeed(2);
+                                        breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 4.0F);
+                                    } else breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 2.0F);
                                     break;
                                 case SEA:
                                     if (blockState.isToolEffective(ToolType.SHOVEL)) {
-                                        breakSpeedEvent.setNewSpeed(4);
-                                    } else breakSpeedEvent.setNewSpeed(2);
+                                        breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 4.0F);
+                                    } else breakSpeedEvent.setNewSpeed(breakSpeedEvent.getOriginalSpeed() * 2.0F);
                                     if (playerEntity.isInWaterOrBubble()) {
                                         breakSpeedEvent.setNewSpeed(breakSpeedEvent.getNewSpeed() * 1.4f);
                                     }
