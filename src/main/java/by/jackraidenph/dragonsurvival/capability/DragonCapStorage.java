@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class DragonCapStorage implements Capability.IStorage<DragonStateHandler> {
@@ -13,7 +12,7 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
     @Override
     public INBT writeNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
-        tag.putBoolean("isDragon", instance.isDragon());
+        tag.putString("type", instance.getType().toString());
         if (instance.isDragon()) {
             DragonStateHandler.DragonMovementData movementData = instance.getMovementData();
             tag.putDouble("bodyYaw", movementData.bodyYaw);
@@ -24,9 +23,9 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
             tag.putInt("timeWithoutWater", debuffData.timeWithoutWater);
             tag.putInt("timeInDarkness", debuffData.timeInDarkness);
             tag.putBoolean("isHiding", instance.isHiding());
-            tag.putString("type", instance.getType().toString());
             tag.putFloat("size", instance.getSize());
             tag.putBoolean("hasWings", instance.hasWings());
+            tag.putInt("lavaAirSupply", instance.getLavaAirSupply());
         }
         return tag;
     }
@@ -34,16 +33,20 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
     @Override
     public void readNBT(Capability<DragonStateHandler> capability, DragonStateHandler instance, Direction side, INBT base) {
         CompoundNBT tag = (CompoundNBT) base;
-        instance.setIsDragon(tag.getBoolean("isDragon"));
-        if (tag.getBoolean("isDragon")) {
+        if (tag.getString("type").equals(""))
+        	instance.setType(DragonType.NONE);
+        else
+        	instance.setType(DragonType.valueOf(tag.getString("type")));
+        if (instance.isDragon()) {
             instance.setMovementData(tag.getDouble("bodyYaw"), tag.getDouble("headYaw"), tag.getDouble("headPitch"), tag.getBoolean("bite"));
             instance.setDebuffData(tag.getInt("timeWithoutWater"), tag.getInt("timeInDarkness"));
             instance.setIsHiding(tag.getBoolean("isHiding"));
-            instance.setType(DragonType.valueOf(tag.getString("type")));
             instance.setSize(tag.getFloat("size"));
             if (instance.getSize() == 0)
                 instance.setSize(DragonLevel.BABY.initialHealth);
             instance.setHasWings(tag.getBoolean("hasWings"));
+            instance.setLavaAirSupply(tag.getInt("lavaAirSupply"));
+            
         }
     }
 }

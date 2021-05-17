@@ -8,6 +8,7 @@ import by.jackraidenph.dragonsurvival.util.DragonMovementFromOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -91,7 +92,7 @@ public class DragonSizeHandler {
     	return eyeHeight;
     }
     
-    public static boolean canPoseFit(PlayerEntity player, Pose pose) {
+    public static boolean canPoseFit(LivingEntity player, Pose pose) {
     	if (!DragonStateProvider.getCap(player).isPresent())
     		return false;
 		float size = player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getSize();
@@ -118,7 +119,7 @@ public class DragonSizeHandler {
     // Server Only
     public static ConcurrentHashMap<Integer, Boolean> serverWingsEnabled = new ConcurrentHashMap<>(20);
     
-    private static Pose getOverridePose(PlayerEntity player) {
+    public static Pose getOverridePose(LivingEntity player) {
     	boolean swimming = (player.isInWaterOrBubble() || player.isInLava()) && player.isSprinting() && !player.isPassenger();
     	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
@@ -126,7 +127,7 @@ public class DragonSizeHandler {
 		boolean crouching = player.isShiftKeyDown();
 		if (flying && !player.isSleeping())
 			return Pose.FALL_FLYING;
-		else if (swimming || (player.isInWaterOrBubble() && !canPoseFit(player, Pose.STANDING) && canPoseFit(player, Pose.SWIMMING)))
+		else if (swimming || ((player.isInWaterOrBubble() || player.isInLava()) && !canPoseFit(player, Pose.STANDING) && canPoseFit(player, Pose.SWIMMING)))
 			return Pose.SWIMMING;
 		else if (spinning)
 			return Pose.SPIN_ATTACK;

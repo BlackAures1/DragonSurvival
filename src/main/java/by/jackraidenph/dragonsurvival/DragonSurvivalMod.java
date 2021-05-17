@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.handlers.EventHandler;
 import by.jackraidenph.dragonsurvival.handlers.WingObtainmentController;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
@@ -117,26 +118,27 @@ public class DragonSurvivalMod {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
             packetBuffer.writeByte(synchronizeDragonCap.dragonType.ordinal());
             packetBuffer.writeBoolean(synchronizeDragonCap.hiding);
-            packetBuffer.writeBoolean(synchronizeDragonCap.isDragon);
             packetBuffer.writeFloat(synchronizeDragonCap.size);
             packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
+            packetBuffer.writeInt(synchronizeDragonCap.lavaAirSupply);
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
             DragonType type = DragonType.values()[packetBuffer.readByte()];
             boolean hiding = packetBuffer.readBoolean();
-            boolean isDragon = packetBuffer.readBoolean();
             float size = packetBuffer.readFloat();
-            return new SynchronizeDragonCap(id, hiding, type, isDragon, size, packetBuffer.readBoolean());
+            boolean hasWings = packetBuffer.readBoolean();
+            int lavaAirSupply = packetBuffer.readInt();
+            return new SynchronizeDragonCap(id, hiding, type, size, hasWings, lavaAirSupply);
         }, (synchronizeDragonCap, contextSupplier) -> { 
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
                 ServerPlayerEntity serverPlayerEntity = contextSupplier.get().getSender();
                 DragonStateProvider.getCap(serverPlayerEntity).ifPresent(dragonStateHandler -> {
                     dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
-                    dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
                     dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                     dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                    dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
                     serverPlayerEntity.setForcedPose(null);
                     serverPlayerEntity.refreshDimensions();
                 });
@@ -322,10 +324,9 @@ public class DragonSurvivalMod {
                 DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
                 dragonStateHandler.setType(dragonType1);
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setIsDragon(true);
                 dragonStateHandler.setHasWings(wings);
                 dragonStateHandler.setSize(dragonLevel.initialHealth, serverPlayerEntity);
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, true, dragonLevel.initialHealth, wings));
+                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.initialHealth, wings, EventHandler.maxLavaAirSupply));
                 serverPlayerEntity.refreshDimensions();
             });
             return 1;
