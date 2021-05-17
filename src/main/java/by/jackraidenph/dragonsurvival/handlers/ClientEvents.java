@@ -7,6 +7,7 @@ import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
+import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
@@ -18,8 +19,14 @@ import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.ViewFrustum;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -27,6 +34,7 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.particles.ParticleTypes;
@@ -43,7 +51,9 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,6 +62,7 @@ import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
@@ -59,7 +70,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+import org.lwjgl.opengl.GL11;
+
+@Mod.EventBusSubscriber(Dist.CLIENT)
 @SuppressWarnings("unused")
 public class ClientEvents {
 
@@ -100,6 +113,76 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onRenderOverlayPreTick(RenderGameOverlayEvent.Pre event) {
+    	ClientPlayerEntity player = Minecraft.getInstance().player;
+    	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && playerStateHandler.getType() == DragonType.SEA) {
+    			event.setCanceled(true);
+    			return;
+    		}
+    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && player.getAirSupply() >= player.getMaxAirSupply() && playerStateHandler.getLavaAirSupply() < EventHandler.maxLavaAirSupply) {
+    			GL11.glEnable(GL11.GL_BLEND);
+    			
+    			int right_height = 49; // 39
+
+                final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
+                final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;
+                final int full = MathHelper.ceil((double) (playerStateHandler.getLavaAirSupply() - 2) * 10.0D / EventHandler.maxLavaAirSupply);
+                final int partial = MathHelper.ceil((double) playerStateHandler.getLavaAirSupply() * 10.0D / EventHandler.maxLavaAirSupply) - full;
+
+                for (int i = 0; i < full + partial; ++i)
+                	Minecraft.getInstance().gui.blit(event.getMatrixStack(), left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
+                GL11.glDisable(GL11.GL_BLEND);
+        	}
+    	});
+    }
+    
+    private static boolean wasCaveDragon = false;
+    private static FluidBlockRenderer prevFluidRenderer;
+    
+    @SubscribeEvent
+    public static void onRenderWorldLastEvent(RenderWorldLastEvent event) { // TODO: clean up time :)
+    	ClientPlayerEntity player = Minecraft.getInstance().player;
+    	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+    		if (playerStateHandler.getType() == DragonType.CAVE) {
+    			if (!wasCaveDragon) {
+    				RenderType lavaType = RenderType.translucent();
+                    RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
+                    RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
+                    try {
+                    	Field field = BlockRendererDispatcher.class.getDeclaredFields()[2];
+                    	field.setAccessible(true);
+                    	FluidBlockRenderer fluidRenderer = (FluidBlockRenderer)field.get(Minecraft.getInstance().getBlockRenderer());
+                    	prevFluidRenderer = fluidRenderer;
+                    	field.set(Minecraft.getInstance().getBlockRenderer(), new CaveLavaFluidRenderer());
+                    } catch(Exception ex) {
+                    	ex.printStackTrace();
+                    }
+                    Minecraft.getInstance().levelRenderer.allChanged();
+    			}
+    		}else {
+    			if (wasCaveDragon) {
+    				if (prevFluidRenderer != null) {
+    					RenderType lavaType = RenderType.solid();
+                        RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
+                        RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
+                        try {
+                        	Field field = BlockRendererDispatcher.class.getDeclaredFields()[2];
+                        	field.setAccessible(true);
+                        	FluidBlockRenderer fluidRenderer = (FluidBlockRenderer)field.get(Minecraft.getInstance().getBlockRenderer());
+                        	field.set(Minecraft.getInstance().getBlockRenderer(), prevFluidRenderer);
+                        } catch(Exception ex) {
+                        	ex.printStackTrace();
+                        }
+    				}
+    				Minecraft.getInstance().levelRenderer.allChanged();
+    			}
+    		}
+    		wasCaveDragon = playerStateHandler.getType() == DragonType.CAVE;
+    	});
+    }
+    
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
         ClientPlayerEntity player = Minecraft.getInstance().player;

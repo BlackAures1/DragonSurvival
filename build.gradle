@@ -1,19 +1,29 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { 
+        	name = 'forge'
+        	url = 'https://files.minecraftforge.net/maven' 
+        }
+        maven { 
+            name = "SpongePowered"
+        	url = 'https://repo.spongepowered.org/repository/maven-public/' 
+        }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.33-1.16.5'
+version = '1.16.5-0.0.33'
 group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'DragonSurvival'
 
@@ -30,13 +40,6 @@ processResources {
     }
 }
 
-repositories{
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-}
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -60,6 +63,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
+			arg "-mixin.config=dragonsurvival.mixins.json"
+			
             mods {
                 dragonsurvival {
                     source sourceSets.main
@@ -75,6 +80,8 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
+
+			arg "-mixin.config=dragonsurvival.mixins.json"
 
             mods {
                 dragonsurvival {
@@ -103,8 +110,19 @@ minecraft {
     }
 }
 
-repositories{
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+mixin {
+    add sourceSets.main, "dragonsurvival.refmap.json"
+}
+
+repositories {
+    maven { 
+    	url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' 
+    }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
 }
 
 dependencies {
@@ -118,6 +136,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}")
 
+	annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -130,7 +149,8 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Dragon Survival Team",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "dragonsurvival.mixins.json"
         ])
     }
 }

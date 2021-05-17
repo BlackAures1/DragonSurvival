@@ -124,6 +124,7 @@ public class PacketProxy {
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                         dragonStateHandler.setSize(synchronizeDragonCap.size);
+                        dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
                         if (!dragonStateHandler.hasWings() && thatPlayer == myPlayer)
                             FlightController.wingsEnabled = false;
                     });

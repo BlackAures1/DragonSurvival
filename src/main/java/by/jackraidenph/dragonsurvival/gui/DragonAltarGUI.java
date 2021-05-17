@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gui;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.EventHandler;
 import by.jackraidenph.dragonsurvival.network.GiveNest;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
@@ -115,7 +116,7 @@ public class DragonAltarGUI extends Screen {
                 playerStateHandler.setType(DragonType.NONE);
                 playerStateHandler.setHasWings(false);
                 playerStateHandler.setSize(20F);
-                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, 20, false));
+                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, 20, false, EventHandler.maxLavaAirSupply));
                 minecraft.player.closeContainer();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"), minecraft.player.getUUID());
             });
@@ -128,7 +129,7 @@ public class DragonAltarGUI extends Screen {
             return;
         player.closeContainer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings()));
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, DragonLevel.BABY.initialHealth, ConfigurationHandler.NetworkedConfig.getStartWithWings(), EventHandler.maxLavaAirSupply));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
             cap.setType(type);

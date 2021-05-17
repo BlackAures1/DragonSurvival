@@ -18,10 +18,12 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -41,11 +43,13 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
@@ -62,6 +66,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
+import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -74,11 +79,14 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 public class EventHandler {
 
+	public static final int maxLavaAirSupply = 3 * 60 * 20; // 3 Minutes
+	
     @SubscribeEvent
     public static void onDamage(LivingAttackEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
@@ -92,6 +100,18 @@ public class EventHandler {
             }
         });
     }
+    
+    @SubscribeEvent
+    public static void onFootstepSound(PlaySoundAtEntityEvent event) {
+    	if (!(event.getEntity() instanceof PlayerEntity))
+    		return;
+    	PlayerEntity player = (PlayerEntity)event.getEntity();
+    	DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+    		if (dragonStateHandler.getType() == DragonType.CAVE && DragonSizeHandler.getOverridePose(player) == Pose.SWIMMING && event.getSound().getRegistryName().getPath().contains(".step"))
+    			event.setCanceled(true);
+    	});
+    }
+    
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
@@ -132,8 +152,10 @@ public class EventHandler {
                                     || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS))
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                             if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
-                            	if (playerEntity.tickCount % 10 == 0)
-                            		playerEntity.hurt(DamageSources.WATER_BURN, 1);
+                            	if (playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 10 == 0)
+                            		playerEntity.hurt(DamageSources.WATER_BURN, 1F);
+                            	else if (playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 40 == 0)
+                            		playerEntity.hurt(DamageSources.WATER_BURN, 1F);
                             	if (playerEntity.tickCount % 5 == 0)
                             		playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
                                 if (world.isClientSide)
@@ -145,6 +167,22 @@ public class EventHandler {
                             }
                             if (playerEntity.isOnFire())
                                 playerEntity.clearFire();
+                            if (playerEntity.isEyeInFluid(FluidTags.LAVA) && !playerEntity.level.isClientSide) {
+                                if (!playerEntity.canBreatheUnderwater() && !playerEntity.abilities.invulnerable) {
+                                	dragonStateHandler.setLavaAirSupply(dragonStateHandler.getLavaAirSupply() - 1);
+                                   if (dragonStateHandler.getLavaAirSupply() == -20) {
+                                	   dragonStateHandler.setLavaAirSupply(0);
+                                	   playerEntity.hurt(DamageSource.DROWN, 2F); //LAVA_YES
+                                   }
+                                   DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)playerEntity), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
+                                }
+                                if (!playerEntity.level.isClientSide && playerEntity.isPassenger() && playerEntity.getVehicle() != null && !playerEntity.getVehicle().canBeRiddenInWater(playerEntity)) {
+                                	playerEntity.stopRiding();
+                                }
+                             } else if (dragonStateHandler.getLavaAirSupply() < maxLavaAirSupply && !playerEntity.isEyeInFluid(FluidTags.WATER) && !playerEntity.level.isClientSide) {
+                            	 dragonStateHandler.setLavaAirSupply(Math.min(dragonStateHandler.getLavaAirSupply() + 8, maxLavaAirSupply));
+                            	 DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)playerEntity), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
+                             }
                             break;
                         case FOREST:
                             if (!world.isClientSide && block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
@@ -260,6 +298,7 @@ public class EventHandler {
                         capNew.setSize(capOld.getSize());
                         capNew.setType(capOld.getType());
                         capNew.setHasWings(capOld.hasWings());
+                        capNew.setLavaAirSupply(EventHandler.maxLavaAirSupply);
 
                         DragonStateHandler.updateModifiers(e.getOriginal(), e.getPlayer());
 
@@ -272,7 +311,7 @@ public class EventHandler {
     public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent changedDimensionEvent) {
         PlayerEntity playerEntity = changedDimensionEvent.getPlayer();
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings()));
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
             DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new RefreshDragons(playerEntity.getId()));
         });
     }
