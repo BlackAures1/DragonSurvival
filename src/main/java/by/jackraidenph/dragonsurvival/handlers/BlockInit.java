@@ -33,6 +33,7 @@ public class BlockInit {
     public static Block dragon_altar3;
     public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
+    public static DragonDoor dragonDoor; // O_O
     public static DragonDoor spruceDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor, crimsonDoor, warpedDoor;
     public static DragonDoor ironDoor, murdererDoor, sleeperDoor, stoneDoor;
     public static DragonDoor caveDoor, forestDoor, seaDoor;
@@ -65,6 +66,8 @@ public class BlockInit {
         forgeRegistry.register(smallForestNest.setRegistryName(DragonSurvivalMod.MODID, "forest_nest_small"));
         forgeRegistry.register(smallSeaNest.setRegistryName(DragonSurvivalMod.MODID, "water_nest_small"));
 
+        dragonDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.SPRUCE_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "dragon_door", forgeRegistry);
+        
         oakDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.OAK_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "oak_dragon_door", forgeRegistry);
         spruceDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.SPRUCE_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "spruce_dragon_door", forgeRegistry);
         acaciaDoor = registerBlock(new DragonDoor(Block.Properties.of(Material.WOOD, Blocks.ACACIA_PLANKS.defaultMaterialColor()).strength(3.0F).sound(SoundType.WOOD).noOcclusion(), DragonDoor.OpenRequirement.NONE), "acacia_dragon_door", forgeRegistry);
@@ -110,6 +113,7 @@ public class BlockInit {
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
+        registerDoor(dragonDoor, new Item.Properties(), forgeRegistry);
         registerDoor(oakDoor, new Item.Properties(), forgeRegistry);
         registerDoor(spruceDoor, new Item.Properties(), forgeRegistry);
         registerDoor(acaciaDoor, new Item.Properties(), forgeRegistry);
