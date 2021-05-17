@@ -9,13 +9,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "dragonsurvival:dragon_door",
+              "block": "dragonsurvival:legacy_dragon_door",
               "properties": {
                 "part": "bottom"
               }
             }
           ],
-          "name": "dragonsurvival:dragon_door"
+          "name": "dragonsurvival:legacy_dragon_door"
         }
       ],
       "conditions": [
