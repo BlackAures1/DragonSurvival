@@ -11,6 +11,11 @@ implemented natural resistance to appropriate damage sources;
 added new Dragon doors;
 implemented natural debuffs;
 fixed JEI in dragon screen;
+improved dragon jump animation;
+added first iteration dragon head turning animation;
+implemented lava vision and swimming for cave dragons;
+fixed issues with predator stars;
+added and improved many config options;
 
 0.0.32-1.16.5:
 added netherite armor textures;
