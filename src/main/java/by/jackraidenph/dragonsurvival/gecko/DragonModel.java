@@ -55,7 +55,9 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 	    		case "animation.dragon.sneak_walk":
 	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
 	    			break;
+	    		case "animation.dragon.jumpfull":
 	    		case "animation.dragon.jump":
+	    		case "animation.dragon.land":
 	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
 	    			break;
 	    		case "animation.dragon.fly_slow":

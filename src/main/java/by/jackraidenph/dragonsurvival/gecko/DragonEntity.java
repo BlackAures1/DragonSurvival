@@ -65,8 +65,10 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	                builder.addAnimation("animation.dragon.swim", true);
 	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 	                builder.addAnimation("animation.dragon.fly_slow", true);
-	            else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
-	                builder.addAnimation("animation.dragon.jump", true);
+	            else if (!player.isOnGround() && motio.y() < 0)
+	            	builder.addAnimation("animation.dragon.land", false);
+            	else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
+            		builder.addAnimation("animation.dragon.jump", false);
 	            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
 	            	// Player is Sneaking
 	            	 if (isMovingHorizontal && player.animationSpeed != 0f)
