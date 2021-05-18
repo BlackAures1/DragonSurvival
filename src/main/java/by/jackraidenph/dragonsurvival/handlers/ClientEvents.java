@@ -8,6 +8,8 @@ import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
+import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
+import by.jackraidenph.dragonsurvival.util.DragonBodyMovementType;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
@@ -281,13 +283,49 @@ public class ClientEvents {
             	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             		if (playerStateHandler.isDragon()) {
             			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
+            			
             			double dx = player.getX() - player.xo;
 	                    double dz = player.getZ() - player.zo;
 	                    float f = (float)(Math.pow(dx, 2) + Math.pow(dz, 2));
-	                    if (f > 0.000028) {
-            				float f1 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90F;
-            				float f2 = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
-            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
+	                    // Determine if walking into a wall (perpendicular)
+	                    boolean wallSliding = false;
+	                    
+	                    
+	                    if (f > 0.000028 && !wallSliding) {
+	                    	float f1 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90F;
+	                    	if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
+	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
+	            				float f2 = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
+	            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
+	                    	} else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
+	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
+	                    		
+	                    		float f4 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90.0F;
+	                    		float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f4);
+	                    		if (95.0F < f5 && f5 < 265.0F) {
+	                    			f1 = f4 - 180.0F;
+	                    		} else {
+	                    			f1 = f4;
+                             	}
+                    			
+                    			float _f = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
+                    			playerStateHandler.getMovementData().bodyYaw += _f * 0.3F;
+                    			float _f1 = MathHelper.wrapDegrees(player.yRot - (float)playerStateHandler.getMovementData().bodyYaw);
+                    			boolean flag = _f1 < -90.0F || _f1 >= 90.0F;
+                    			
+                    			if (_f1 < -75.0F) {
+                    				_f1 = -75.0F;
+                    			}
+
+                    			if (_f1 >= 75.0F) {
+                    				_f1 = 75.0F;
+                    			}
+
+                    			playerStateHandler.getMovementData().bodyYaw = player.yRot - _f1;
+                    			if (_f1 * _f1 > 2500.0F) {
+                    				playerStateHandler.getMovementData().bodyYaw += _f1 * 0.2F;
+                    			}
+	                    	}
             				if (bodyAndHeadYawDiff > 180)
             					playerStateHandler.getMovementData().bodyYaw -= 360;
             				if (bodyAndHeadYawDiff <= -180)
