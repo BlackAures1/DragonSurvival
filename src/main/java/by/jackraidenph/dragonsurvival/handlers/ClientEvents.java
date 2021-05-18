@@ -44,6 +44,8 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -274,6 +276,18 @@ public class ClientEvents {
         }
     }
 
+    private static Vector3d getInputVector(Vector3d movement, float fricSpeed, float yRot) {
+        double d0 = movement.lengthSqr();
+        if (d0 < 1.0E-7D) {
+           return Vector3d.ZERO;
+        } else {
+           Vector3d vector3d = (d0 > 1.0D ? movement.normalize() : movement).scale((double)fricSpeed);
+           float f = MathHelper.sin(yRot * ((float)Math.PI / 180F));
+           float f1 = MathHelper.cos(yRot * ((float)Math.PI / 180F));
+           return new Vector3d(vector3d.x * (double)f1 - vector3d.z * (double)f, vector3d.y, vector3d.z * (double)f1 + vector3d.x * (double)f);
+        }
+     }
+    
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent clientTickEvent) {
         if (clientTickEvent.phase == TickEvent.Phase.START) {
@@ -284,31 +298,24 @@ public class ClientEvents {
             		if (playerStateHandler.isDragon()) {
             			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
             			
-            			double dx = player.getX() - player.xo;
-	                    double dz = player.getZ() - player.zo;
-	                    float f = (float)(Math.pow(dx, 2) + Math.pow(dz, 2));
-	                    // Determine if walking into a wall (perpendicular)
-	                    boolean wallSliding = false;
+	                    Vector3d moveVector = getInputVector(new Vector3d(player.input.leftImpulse, 0, player.input.forwardImpulse), 1F, player.yRot);
+	                    float f = (float)MathHelper.atan2(moveVector.z, moveVector.x) * (180F / (float)Math.PI) - 90F;
+	                    float f1 = (float)(Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
 	                    
-	                    
-	                    if (f > 0.000028 && !wallSliding) {
-	                    	float f1 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90F;
+	                    if (f1 > 0.000028) {
 	                    	if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
 	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
-	            				float f2 = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
+	            				float f2 = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
 	            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
 	                    	} else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
 	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
 	                    		
-	                    		float f4 = (float)MathHelper.atan2(dz, dx) * (180F / (float)Math.PI) - 90.0F;
-	                    		float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f4);
+	                    		float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f);
 	                    		if (95.0F < f5 && f5 < 265.0F) {
-	                    			f1 = f4 - 180.0F;
-	                    		} else {
-	                    			f1 = f4;
-                             	}
+	                    			f -= 180.0F;
+	                    		}
                     			
-                    			float _f = MathHelper.wrapDegrees(f1 - (float)playerStateHandler.getMovementData().bodyYaw);
+                    			float _f = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
                     			playerStateHandler.getMovementData().bodyYaw += _f * 0.3F;
                     			float _f1 = MathHelper.wrapDegrees(player.yRot - (float)playerStateHandler.getMovementData().bodyYaw);
                     			boolean flag = _f1 < -90.0F || _f1 >= 90.0F;
