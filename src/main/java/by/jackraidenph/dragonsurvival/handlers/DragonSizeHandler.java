@@ -121,8 +121,8 @@ public class DragonSizeHandler {
     
     public static Pose getOverridePose(LivingEntity player) {
     	boolean swimming = (player.isInWaterOrBubble() || player.isInLava()) && player.isSprinting() && !player.isPassenger();
-    	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
-				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
+    	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
     	boolean spinning = player.isAutoSpinAttack();
 		boolean crouching = player.isShiftKeyDown();
 		if (flying && !player.isSleeping())

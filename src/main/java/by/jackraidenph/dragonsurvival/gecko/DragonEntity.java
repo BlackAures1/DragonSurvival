@@ -61,12 +61,14 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	                builder.addAnimation("animation.dragon.bite");
 	            else if (player.getPose() == Pose.SWIMMING)
 	            	builder.addAnimation("animation.dragon.swim_fast", true);
-	            else if ((player.isInLava() || player.isInWaterOrBubble()) && isMovingHorizontal)
+	            else if ((player.isInLava() || player.isInWaterOrBubble()) && !player.isOnGround())
 	                builder.addAnimation("animation.dragon.swim", true);
-	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
 	                builder.addAnimation("animation.dragon.fly_slow", true);
-	            else if (!player.isOnGround() && motio.y() < 0)
+	            else if (!player.isOnGround() && motio.y() < 0) {
 	            	builder.addAnimation("animation.dragon.land", false);
+	            	builder.addAnimation("animation.dragon.idle", true);
+	            }
             	else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
             		builder.addAnimation("animation.dragon.jump", false);
 	            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
