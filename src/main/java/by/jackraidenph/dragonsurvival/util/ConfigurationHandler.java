@@ -31,7 +31,11 @@ public class ConfigurationHandler {
     private static ForgeConfigSpec.ConfigValue<Boolean> sizeChangesHitbox;
     private static ForgeConfigSpec.ConfigValue<Boolean> hitboxGrowsPastHuman;
     private static ForgeConfigSpec.ConfigValue<Boolean> startWithWings;
+    public static ForgeConfigSpec.ConfigValue<DragonBodyMovementType> firstPersonBodyMovement;
+    public static ForgeConfigSpec.ConfigValue<DragonBodyMovementType> thirdPersonBodyMovement;
 
+    
+    
     public static class General {
 
         private ForgeConfigSpec.BooleanValue enableDragonDebuffs;
@@ -51,6 +55,8 @@ public class ConfigurationHandler {
             startWithWings = builder.define("Dragons start with wings", false);
             endVoidTeleport = builder.define("End void teleports to overworld", true);
             enableDragonDebuffs = builder.define("Enable debuffs for dragons", true);
+            firstPersonBodyMovement = builder.defineEnum("First person body movement type", DragonBodyMovementType.VANILLA, DragonBodyMovementType.values());
+            thirdPersonBodyMovement = builder.defineEnum("Third person body movement type", DragonBodyMovementType.DRAGON, DragonBodyMovementType.values());
             builder.pop();
         }
     }

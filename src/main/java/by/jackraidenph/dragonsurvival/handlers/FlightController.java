@@ -33,7 +33,7 @@ public class FlightController {
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 if (wingsEnabled) {
-                    if (!playerEntity.isOnGround() && !playerEntity.isInWater()) {
+                    if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
                         Vector3d motion = playerEntity.getDeltaMovement();
                         if (motion.y > -0.5D) {
                             playerEntity.fallDistance = 1.0F;
