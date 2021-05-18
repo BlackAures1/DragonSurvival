@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
@@ -14,8 +15,10 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -39,7 +42,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
     public float size;
     private final float scale;
     private boolean deathStar;
-    private int teleportationCoolDown;
+    private int teleportationCooldown;
 
     public MagicalPredatorEntity(EntityType<? extends MonsterEntity> entityIn, World worldIn) {
         super(entityIn, worldIn);
@@ -74,10 +77,25 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (this.deathTime == 19 && !deathStar && !level.isClientSide) {
+        if (this.deathTime == 19 && !deathStar) {
         	deathStar = true;
-            level.setBlockAndUpdate(this.blockPosition(), BlockInit.PREDATOR_STAR_BLOCK.defaultBlockState());
-            this.spawnAnim();
+        	for (int i = 1; i < 10; ++i)
+    		for (int r = 0; r < 5; ++r) {
+    			BlockPos blockpos = this.blockPosition().offset(level.random.nextInt(i) - level.random.nextInt(i), level.random.nextInt(i) - level.random.nextInt(i), level.random.nextInt(i) - level.random.nextInt(i));
+				if (level.getBlockState(blockpos).getBlockState().canBeReplaced(Fluids.LAVA) && level.getEntityCollisions(null, new AxisAlignedBB(blockpos), (entity) -> { 
+					return entity instanceof LivingEntity; }).count() == 0) {
+                	if (level.isClientSide)
+                		this.spawnAnim();
+                	else {
+                		BlockState starState = BlockInit.PREDATOR_STAR_BLOCK.defaultBlockState();
+                		starState.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(level.getFluidState(blockpos).getType() == Fluids.WATER));
+                		if (!level.getBlockState(blockpos).getMaterial().isLiquid())
+                			level.destroyBlock(blockpos, true);
+                		level.setBlockAndUpdate(blockpos, starState);
+                	}
+                   return;
+                }
+			}
         }
     }
 
@@ -87,8 +105,8 @@ public class MagicalPredatorEntity extends MonsterEntity {
         this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
                 this.getY() + this.getBbHeight() / 1.5F * scale, this.getZ() + this.level.getRandom().nextFloat() * 1.25 - 0.75F,
                 0, this.level.getRandom().nextFloat() / 12.5f, 0);
-        if (teleportationCoolDown > 0)
-            teleportationCoolDown--;
+        if (teleportationCooldown > 0)
+            teleportationCooldown--;
     }
 
     @Override
@@ -112,6 +130,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
+        
         if (worldIn.getRandom().nextInt(10) == 0) {
             SkeletonEntity skeletonentity = EntityType.SKELETON.create(this.level);
             skeletonentity.absMoveTo(this.getX(), this.getY(), this.getZ(), this.yRot, 0.0F);
@@ -145,13 +164,13 @@ public class MagicalPredatorEntity extends MonsterEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("Tele-cooldown", teleportationCoolDown);
+        compound.putInt("teleportationCooldown", teleportationCooldown);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
-        teleportationCoolDown = compound.getInt("Tele-cooldown");
+        teleportationCooldown = compound.getInt("teleportationCooldown");
     }
     
     
@@ -168,7 +187,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         if (this.isInvulnerableTo(source)) {
            return false;
         } else if (source.getEntity() instanceof LivingEntity) {
-        	teleportationCoolDown = 30;
+        	teleportationCooldown = 30;
         }
         return super.hurt(source, damage);
      }
@@ -177,7 +196,7 @@ public class MagicalPredatorEntity extends MonsterEntity {
         if (!super.doHurtTarget(target)) {
            return false;
         } else {
-        	teleportationCoolDown = 30;
+        	teleportationCooldown = 30;
            return true;
         }
      }
@@ -305,11 +324,11 @@ public class MagicalPredatorEntity extends MonsterEntity {
         public void tick() {
             if (this.target != null) {
                 if (this.target instanceof PlayerEntity) {
-                	if (beast.teleportationCoolDown == 0) {
+                	if (beast.teleportationCooldown == 0) {
                         float diff = getActualDistance((PlayerEntity) this.target) - beast.distanceTo(this.target);
                         if (diff <= 16 & diff >= -2) {
                             beast.teleportToEntity(this.target);
-                            beast.teleportationCoolDown = 10;
+                            beast.teleportationCooldown = 10;
                         }
                 	}
                 }
