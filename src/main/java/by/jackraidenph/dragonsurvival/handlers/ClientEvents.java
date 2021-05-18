@@ -299,11 +299,16 @@ public class ClientEvents {
             			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
             			
 	                    Vector3d moveVector = getInputVector(new Vector3d(player.input.leftImpulse, 0, player.input.forwardImpulse), 1F, player.yRot);
+	                    boolean isFlying = false;
+	                    if (FlightController.wingsEnabled && !player.isOnGround() && !player.isInWater() && !player.isInLava()) { // TODO: Remove this when fixing flight system
+	                    	moveVector = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
+	                    	isFlying = true;
+	                    }
 	                    float f = (float)MathHelper.atan2(moveVector.z, moveVector.x) * (180F / (float)Math.PI) - 90F;
 	                    float f1 = (float)(Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
 	                    
 	                    if (f1 > 0.000028) {
-	                    	if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
+	                    	if (isFlying || (minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
 	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
 	            				float f2 = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
 	            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
