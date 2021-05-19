@@ -17,12 +17,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.BufferedReader;
@@ -41,6 +43,8 @@ public class WingObtainmentController {
 	private static UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
 
 	public static void loadDragonPhrases() {
+		if (FMLLoader.getDist() != Dist.CLIENT)
+			return;
 		try {
 			List<String> langs = new ArrayList<>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/dragonsurvival/lang")));
@@ -132,7 +136,7 @@ public class WingObtainmentController {
             }
         });
     }
-
+    
     @SubscribeEvent
     public static void teleportAway(LivingDamageEvent damageEvent) {
         if (!ConfigurationHandler.GENERAL.endVoidTeleport.get())
@@ -151,4 +155,6 @@ public class WingObtainmentController {
             }
         }
     }
+    
+    
 }
