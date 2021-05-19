@@ -65,6 +65,9 @@
   "ds.space.occupied": "Not enough free space around",
   "ds.cooldown.active": "The altar is on cooldown",
   
+  "ds.regen.on": "Toggled nest regeneration on.",
+  "ds.regen.off": "Toggled nest regeneration off.",
+  
   "ds.endmessage.1": "Have you come here for the wings, ()? Get out, before it's too late.",
   "ds.endmessage.2": "This is my land, (), show some respect. Go away, but first answer, why have you come here. Is it for wings?",
   "ds.endmessage.3": "You have gone through lot to get here, (), what do you wish?"
