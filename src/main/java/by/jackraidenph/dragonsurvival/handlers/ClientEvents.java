@@ -3,13 +3,13 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
+import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
-import by.jackraidenph.dragonsurvival.util.DragonBodyMovementType;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
@@ -308,12 +308,12 @@ public class ClientEvents {
 	                    float f1 = (float)(Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
 	                    
 	                    if (f1 > 0.000028) {
-	                    	if (isFlying || (minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
-	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
+	                    	if (isFlying || (minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
+	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
 	            				float f2 = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
 	            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
-	                    	} else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigurationHandler.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
-	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigurationHandler.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
+	                    	} else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
+	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
 	                    		
 	                    		float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f);
 	                    		if (95.0F < f5 && f5 < 265.0F) {

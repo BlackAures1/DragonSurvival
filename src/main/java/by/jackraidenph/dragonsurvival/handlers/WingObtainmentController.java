@@ -2,9 +2,9 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
@@ -139,7 +139,7 @@ public class WingObtainmentController {
     
     @SubscribeEvent
     public static void teleportAway(LivingDamageEvent damageEvent) {
-        if (!ConfigurationHandler.GENERAL.endVoidTeleport.get())
+        if (!ConfigHandler.COMMON.endVoidTeleport.get())
             return;
         LivingEntity livingEntity = damageEvent.getEntityLiving();
         if (livingEntity instanceof PlayerEntity) {

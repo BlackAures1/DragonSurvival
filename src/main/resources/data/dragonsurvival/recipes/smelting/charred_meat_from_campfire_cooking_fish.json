@@ -1,7 +1,7 @@
 {
   "type": "minecraft:campfire_cooking",
   "ingredient": {
-    "tag": "forge:cooked_fishes"
+    "tag": "forge:cooked_meats"
   },
   "result": "dragonsurvival:charred_meat",
   "experience": 0.35,

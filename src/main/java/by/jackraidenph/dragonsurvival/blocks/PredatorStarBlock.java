@@ -1,10 +1,10 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DamageSources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -104,7 +104,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
     @Override
     public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
     	// TODO Should be able to do "player.getMainHandItem().isCorrectToolForDrops(state)" but always returns false for some reason
-        if (!ConfigurationHandler.NetworkedConfig.getMineStarBlock() || !(player.getMainHandItem().getToolTypes().contains(ToolType.HOE) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem()) > 0)) { 
+        if (!ConfigHandler.SERVER.mineStarBlock.get() || !(player.getMainHandItem().getToolTypes().contains(ToolType.HOE) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem()) > 0)) { 
         	this.blockBehaviour(player, worldIn, pos); 
         }
     }

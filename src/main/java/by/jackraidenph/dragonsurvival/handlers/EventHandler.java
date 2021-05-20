@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.network.DiggingStatus;
@@ -11,7 +12,6 @@ import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import by.jackraidenph.dragonsurvival.util.DamageSources;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -151,7 +151,7 @@ public class EventHandler {
                             if (!world.isClientSide && block.is(BlockTags.BASE_STONE_NETHER) || block.is(BlockTags.BASE_STONE_OVERWORLD)
                                     || block.is(BlockTags.STONE_BRICKS) || block.is(Blocks.NETHER_GOLD_ORE) || block.is(BlockTags.BEACON_BASE_BLOCKS))
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-                            if (ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
+                            if (ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative() && (playerEntity.isInWaterOrBubble() || playerEntity.isInWaterOrRain())) {
                             	if (playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 10 == 0)
                             		playerEntity.hurt(DamageSources.WATER_BURN, 1F);
                             	else if (playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 40 == 0)
@@ -188,7 +188,7 @@ public class EventHandler {
                             if (!world.isClientSide && block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                     || block.is(Tags.Blocks.DIRT))
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-                            if (!world.isClientSide && ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
+                            if (!world.isClientSide && ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                 WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                                 if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                             		dragonStateHandler.getDebuffData().timeInDarkness++;
@@ -208,7 +208,7 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                             if (playerEntity.isInWaterOrBubble())
                                 playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
-                            if (!world.isClientSide && ConfigurationHandler.NetworkedConfig.getEnableDragonDebuffs() && !playerEntity.isCreative()) {
+                            if (!world.isClientSide && ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                 if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
 	                        		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 90 + 1)
@@ -518,7 +518,7 @@ public class EventHandler {
                 ItemStack mainHandItem = playerEntity.getItemInHand(Hand.MAIN_HAND);
                 double random;
                 // Modded Ore Support
-                String[] tagStringSplit = ConfigurationHandler.ORE_LOOT.oreBlocksTag.get().split(":");
+                String[] tagStringSplit = ConfigHandler.SERVER.oresTag.get().split(":");
                 ResourceLocation ores = new ResourceLocation(tagStringSplit[0], tagStringSplit[1]);
                 // Checks to make sure the ore does not drop itself or another ore from the tag (no going infinite with ores)
                 ITag<Item> oresTag = ItemTags.getAllTags().getTag(ores);
@@ -533,17 +533,17 @@ public class EventHandler {
 	                		&& drops.stream().noneMatch(item -> oresTag.contains(item.getItem()));
 	                if (suitableOre && !playerEntity.isCreative()) {
 	                    if (dragonStateHandler.isDragon()) {
-	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreDustChance.get()) {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigHandler.SERVER.dragonOreDustChance.get()) {
 	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
 	                        }
-	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.dragonOreBoneChance.get()) {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigHandler.SERVER.dragonOreBoneChance.get()) {
 	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
 	                        }
 	                    } else {
-	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreDustChance.get()) {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigHandler.SERVER.humanOreDustChance.get()) {
 	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonDust)));
 	                        }
-	                        if (playerEntity.getRandom().nextDouble() < ConfigurationHandler.ORE_LOOT.humanOreBoneChance.get()) {
+	                        if (playerEntity.getRandom().nextDouble() < ConfigHandler.SERVER.humanOreBoneChance.get()) {
 	                            world.addFreshEntity(new ItemEntity((World) world, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, new ItemStack(ItemsInit.elderDragonBone)));
 	                        }
 	                    }

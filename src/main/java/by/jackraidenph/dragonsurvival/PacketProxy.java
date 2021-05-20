@@ -7,10 +7,8 @@ import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
-import by.jackraidenph.dragonsurvival.network.SyncConfig;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -85,26 +83,6 @@ public class PacketProxy {
                 contextSupplier.get().setPacketHandled(true);
             }
         };
-    }
-    
-    public DistExecutor.SafeRunnable saveServerConfig(SyncConfig syncConfig, Supplier<NetworkEvent.Context> contextSupplier){
-    	return () -> {
-    		ConfigurationHandler.NetworkedConfig.setServerConnection(true);
-    		ConfigurationHandler.NetworkedConfig.saveServerConfig(
-    				syncConfig.serverMaxFlightSpeed, 
-    				syncConfig.serverMineStarBlock,
-    				syncConfig.serverSizeChangesHitbox, 
-    				syncConfig.serverHitboxGrowsPastHuman, 
-    				syncConfig.serverStartWithWings,
-    				syncConfig.serverDragonDebuffs);
-    		contextSupplier.get().enqueueWork(() -> {
-    			ClientPlayerEntity player = Minecraft.getInstance().player;
-    			player.setForcedPose(null);
-    			player.refreshDimensions();
-    		});
-    		contextSupplier.get().setPacketHandled(true);
-    		
-    	};
     }
 
     public DistExecutor.SafeRunnable refreshInstances(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> context) {
