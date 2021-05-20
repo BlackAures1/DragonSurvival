@@ -4,10 +4,11 @@ buildscript {
         	name = 'forge'
         	url = 'https://files.minecraftforge.net/maven' 
         }
-        maven { 
+        maven {
             name = "SpongePowered"
         	url = 'https://repo.spongepowered.org/repository/maven-public/' 
         }
+        
         jcenter()
         mavenCentral()
     }
@@ -19,13 +20,12 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.33-1.16.5'
-group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'DragonSurvival'
+version = mc_version + "-" + mod_version
+group = mod_group
+archivesBaseName = mod_file
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -46,7 +46,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: mappings_channel, version: mc_version
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -63,7 +63,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
-			arg "-mixin.config=dragonsurvival.mixins.json"
+			arg "-mixin.config=" + mod_id + ".mixins.json"
 			
             mods {
                 dragonsurvival {
@@ -81,7 +81,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
-			arg "-mixin.config=dragonsurvival.mixins.json"
+			arg "-mixin.config=" + mod_id + ".mixins.json"
 
             mods {
                 dragonsurvival {
@@ -99,7 +99,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'dragonsurvival', '--all', '--output', file('src/generated/resources/')
+            args '--mod', mod_id, '--all', '--output', "-mixin.config=" + mod_id + ".mixins.json", file('src/generated/resources/')
 
             mods {
                 dragonsurvival {
@@ -111,12 +111,13 @@ minecraft {
 }
 
 mixin {
-    add sourceSets.main, "dragonsurvival.refmap.json"
+    add sourceSets.main, mod_id + ".refmap.json"
 }
 
 repositories {
     maven { 
-    	url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' 
+    	name = "Gecholib maven"
+    	url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
     }
     maven {
         // location of the maven that hosts JEI files
@@ -129,9 +130,9 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.23'
+    minecraft "net.minecraftforge:forge:" + mc_version + "-" + forge_version
 
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.35')
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${property('mc_version')}:${property('geckolib_version')}")
 
     compileOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}")
@@ -143,14 +144,14 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "dragonsurvival",
+            "Specification-Title": mod_id,
             "Specification-Vendor": "Dragon Survival Team",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Dragon Survival Team",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "dragonsurvival.mixins.json"
+            "MixinConfigs": mod_id + ".mixins.json"
         ])
     }
 }
