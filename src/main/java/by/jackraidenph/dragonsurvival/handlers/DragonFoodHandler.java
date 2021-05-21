@@ -62,13 +62,13 @@ public class DragonFoodHandler {
 		String[] configFood;
 		switch (type) {
 			case CAVE:
-				configFood = ConfigHandler.SERVER.caveDragonFoods.get().toArray(String[]::new);
+				configFood = ConfigHandler.SERVER.caveDragonFoods.get().toArray(new String[0]);
 				break;
 			case FOREST:
-				configFood = ConfigHandler.SERVER.forestDragonFoods.get().toArray(String[]::new);
+				configFood = ConfigHandler.SERVER.forestDragonFoods.get().toArray(new String[0]);
 				break;
 			case SEA:
-				configFood = ConfigHandler.SERVER.seaDragonFoods.get().toArray(String[]::new);
+				configFood = ConfigHandler.SERVER.seaDragonFoods.get().toArray(new String[0]);
 				break;
 			default:
 				configFood = new String[0];
