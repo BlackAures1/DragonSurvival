@@ -106,7 +106,7 @@ public abstract class MixinLivingEntity extends Entity{
 		});
 	}
 	
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getUseDuration", shift = Shift.AFTER), method = "onSyncedDataUpdated")
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getUseDuration()I", shift = Shift.AFTER), method = "onSyncedDataUpdated")
 	public void onDragonSyncedDataUpdated(DataParameter<?> data, CallbackInfo ci) {
 		DragonStateProvider.getCap(this).ifPresent(dragonStateHandler -> {
     		if (dragonStateHandler.isDragon())

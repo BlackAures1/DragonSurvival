@@ -23,11 +23,12 @@ public class MixinPlayerInteractionManager {
 
 	
 	@Inject(method = "useItem", at = @At(value = "INVOKE", 
-			target = "Lnet/minecraft/item/ItemStack;use", 
+			target = "Lnet/minecraft/item/ItemStack;getDamageValue()I",
 			ordinal = 0, shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	public void dragonUseItem(ServerPlayerEntity player, World level, ItemStack stack, Hand hand, CallbackInfoReturnable<ActionResultType> ci, ActionResultType cancelResult, int i, int j) {
+	public void dragonUseItem(ServerPlayerEntity player, World level, ItemStack stack, Hand hand, CallbackInfoReturnable<ActionResultType> ci, ActionResultType cancelResult, int i) {
 		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
     		if (dragonStateHandler.isDragon()) {
+    			int j = stack.getDamageValue();
     			ActionResult<ItemStack> actionresult = stack.use(level, player, hand);
     			ItemStack itemstack = actionresult.getObject();
     	         if (itemstack == stack && itemstack.getCount() == i && DragonFoodHandler.getUseDuration(itemstack, dragonStateHandler.getType()) <= 0 && itemstack.getDamageValue() == j) {

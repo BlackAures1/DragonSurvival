@@ -51,7 +51,7 @@ public class MixinFirstPersonRenderer {
 		});
 	}
 	
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;applyItemArmTransform", ordinal = 2), method = "renderArmWithItem", cancellable = true, expect = 1)
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/util/HandSide;F)V", ordinal = 2), method = "renderArmWithItem", cancellable = true, expect = 1)
 	public void renderDragonArmWithItem(AbstractClientPlayerEntity p_228405_1_, float p_228405_2_, float p_228405_3_, Hand p_228405_4_, float p_228405_5_, ItemStack p_228405_6_, float p_228405_7_, MatrixStack p_228405_8_, IRenderTypeBuffer p_228405_9_, int p_228405_10_, CallbackInfo ci) {
 		DragonStateProvider.getCap(minecraft.player).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon() && DragonFoodHandler.isDragonEdible(p_228405_6_.getItem(), dragonStateHandler.getType()))
