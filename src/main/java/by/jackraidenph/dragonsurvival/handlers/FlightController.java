@@ -4,8 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.network.ToggleWings;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
@@ -72,7 +72,7 @@ public class FlightController {
                             az *= 0.99;
                             ay = lookVec.y / 8;
                         }
-                        double speedLimit = ConfigurationHandler.NetworkedConfig.getMaxFlightSpeed();
+                        double speedLimit = ConfigHandler.SERVER.maxFlightSpeed.get();
                         ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
                         az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
                         if (lookY < 0) {

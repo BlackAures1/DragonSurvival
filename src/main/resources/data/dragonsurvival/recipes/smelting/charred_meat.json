@@ -1,8 +1,9 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "tag": "dragonsurvival:cooked_meats"
+    "tag": "forge:cooked_meats"
   },
   "result": "dragonsurvival:charred_meat",
+  "experience": 0.35,
   "cookingtime": 200
 }

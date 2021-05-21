@@ -3,9 +3,9 @@ package by.jackraidenph.dragonsurvival.entity;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.network.PacketSyncXPDevour;
-import by.jackraidenph.dragonsurvival.util.ConfigurationHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -178,9 +178,9 @@ public class MagicalPredatorEntity extends MonsterEntity {
         return MobEntity.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.375D)
                 .add(Attributes.ARMOR, 2.0F)
-                .add(Attributes.ATTACK_DAMAGE, 2.0F * ConfigurationHandler.GENERAL.predatorDamageFactor.get())
+                .add(Attributes.ATTACK_DAMAGE, 2.0F * ConfigHandler.COMMON.predatorDamageFactor.get())
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0F)
-                .add(Attributes.MAX_HEALTH, 29.5F * ConfigurationHandler.GENERAL.predatorHealthFactor.get());
+                .add(Attributes.MAX_HEALTH, 29.5F * ConfigHandler.COMMON.predatorHealthFactor.get());
     }
 
     public boolean hurt(DamageSource source, float damage) {

@@ -1,4 +1,7 @@
-0.0.33-1.16.5:
+1.16.5-0.0.34:
+
+
+1.16.5-0.0.33:
 added hitbox and eye position adjustments according to dragon growth.
 overrode and rewrote minecraft auto-crouch functionality.
 fixed the French lang file.
@@ -17,7 +20,7 @@ implemented lava vision and swimming for cave dragons;
 fixed issues with predator stars;
 added and improved many config options;
 
-0.0.32-1.16.5:
+1.16.5-0.0.32:
 added netherite armor textures;
 improved nest item consumption logic;
 added nest background transparency based on energy;
@@ -28,11 +31,11 @@ fixed issues with dragon doors;
 added reverse recipes for elder dragon bone and heart element;
 non-vanilla armor will show no texture
 
-0.0.31-1.16.5:
+1.16.5-0.0.31:
 update;
 fixed crash happening when skeleton horses are spawned by lightning
 
-0.0.30:
+1.15.2-0.0.30:
 disabled NPE spam;
 command 'dragon' requires permission 4;
 dragons can't ride pigs;
@@ -40,5 +43,5 @@ fixed crash when Shift + clicking in nest GUI;
 added teleportation cooldown to the Magical Predator;
 added usage cooldown to Dragon altar;
 
-0.0.29:
+1.15.2-0.0.29:
 neutralized crashes
