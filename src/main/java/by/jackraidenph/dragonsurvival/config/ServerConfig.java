@@ -86,7 +86,11 @@ public class ServerConfig {
 						"tag:minecraft:coals:1:1",
 						"item:minecraft:charcoal:1:2",
 						"item:dragonsurvival:charged_coal:5:7",
-						"item:dragonsurvival:charred_meat:9:12"
+						"item:dragonsurvival:charred_meat:9:12",
+						"item:minecraft:golden_apple",
+						"item:minecraft:enchanted_golden_apple",
+						"item:minecraft:honey_bottle",
+						"item:minecraft:milk_bucket"
 						), (food) -> isValidFoodConfig(food));
 		forestDragonFoods = builder
 				.defineList("forestDragon", Arrays.asList(
@@ -96,13 +100,21 @@ public class ServerConfig {
 						"item:minecraft:spider_eye:7:8",
 						"item:minecraft:rabbit:7:13",
 						"item:minecraft:poisonous_potato:7:10",
-						"item:minecraft:chorus_fruit:9:12"
+						"item:minecraft:chorus_fruit:9:12",
+						"item:minecraft:golden_apple",
+						"item:minecraft:enchanted_golden_apple",
+						"item:minecraft:honey_bottle",
+						"item:minecraft:milk_bucket"
 						), (food) -> isValidFoodConfig(food));
 		seaDragonFoods = builder
 				.defineList("seaDragon", Arrays.asList(
 						"tag:forge:raw_fishes:6:7",
 						"item:minecraft:dried_kelp:2:3",
-						"item:minecraft:pufferfish:10:15"
+						"item:minecraft:pufferfish:10:15",
+						"item:minecraft:golden_apple",
+						"item:minecraft:enchanted_golden_apple",
+						"item:minecraft:honey_bottle",
+						"item:minecraft:milk_bucket"
 						), (food) -> isValidFoodConfig(food));
 	}
 	
@@ -112,9 +124,9 @@ public class ServerConfig {
 			return false;
 		try {
 			if (foodSplit.length == 5) {
-				int value = Integer.parseInt(foodSplit[3]);
-				int saturation = Integer.parseInt(foodSplit[4]);
-				if (value > 20 || saturation > 20 || value < 1 || saturation < 1)
+				final int value = Integer.parseInt(foodSplit[3]);
+				final int saturation = Integer.parseInt(foodSplit[4]);
+				if (value > 20 || value < 1 || saturation < 1 || saturation > 20)
 					return false;
 			}
 		} catch (NumberFormatException ex) {

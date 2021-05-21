@@ -2,15 +2,20 @@ package by.jackraidenph.dragonsurvival.mixins;
 
 import java.util.UUID;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.handlers.DragonFoodHandler;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,10 +26,18 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.FoodStats;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -35,6 +48,7 @@ import net.minecraft.world.World;
 public abstract class MixinPlayerEntity extends LivingEntity{
 	
 	@Shadow
+	@Final
 	public final PlayerAbilities abilities = new PlayerAbilities();
 
 
@@ -79,7 +93,6 @@ public abstract class MixinPlayerEntity extends LivingEntity{
 		}
 	  
     }
-	
 	
 	public void dragonTravel(Vector3d p_213352_1_) {
 		if (!DragonStateProvider.isDragon(this)) {
@@ -260,7 +273,33 @@ public abstract class MixinPlayerEntity extends LivingEntity{
       this.calculateEntityAnimation(this, this instanceof IFlyingAnimal);
    }
 
+	@Inject(at = @At("HEAD"), method = "eat", cancellable = true)
+	public void dragonEat(World level, ItemStack itemStack, CallbackInfoReturnable<ItemStack> ci) {
+		DragonStateProvider.getCap(this).ifPresent(dragonStateHandler -> {
+			if (dragonStateHandler.isDragon()) {
+				DragonFoodHandler.dragonEat(this.getFoodData(), itemStack.getItem(), itemStack, dragonStateHandler.getType());
+				this.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
+				level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+				if ((PlayerEntity)(Object)this instanceof ServerPlayerEntity) {
+					CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)(Object)this, itemStack);
+				}
+		
+				ci.setReturnValue(super.eat(level, itemStack));
+			}
+		});
+	}
 	
+	@Shadow
+	public FoodStats getFoodData() {
+		throw new IllegalStateException("Mixin failed to shadow getFoodData()");
+	}
+
+
+	@Shadow
+	public void awardStat(Stat<Item> stat) {
+		throw new IllegalStateException("Mixin failed to shadow awardStat()");
+	}
+
 
 	@Shadow
 	public void checkMovementStatistics(double d, double e, double f) {

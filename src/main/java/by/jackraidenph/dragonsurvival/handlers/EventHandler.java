@@ -389,83 +389,14 @@ public class EventHandler {
     @SubscribeEvent
     public static void onItemDestroyed(LivingEntityUseItemEvent.Finish destroyItemEvent) {
         ItemStack itemStack = destroyItemEvent.getItem();
-        Item item = itemStack.getItem();
-        LivingEntity livingEntity = destroyItemEvent.getEntityLiving();
-        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+        DragonStateProvider.getCap(destroyItemEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                PlayerEntity playerEntity = (PlayerEntity) livingEntity;
-                if (item.isEdible()) {
-                    Food food = item.getFoodProperties();
-                    assert food != null;
-                    boolean bad = !food.canAlwaysEat() && item != Items.HONEY_BOTTLE;
-                    switch (dragonStateHandler.getType()) {
-                        case FOREST:
-                            if (food == Foods.RABBIT || food == Foods.ROTTEN_FLESH || food == Foods.CHICKEN || food == Foods.BEEF || food == Foods.PORKCHOP || food == Foods.MUTTON) {
-                                bad = false;
-                                livingEntity.removeEffect(Effects.HUNGER);
-                                if (food == Foods.CHICKEN) {
-                                    playerEntity.getFoodData().eat(0, 5.8f);
-                                } else if (food == Foods.PORKCHOP || food == Foods.BEEF) {
-                                    playerEntity.getFoodData().eat(-1, 6.4f);
-                                } else if (food == Foods.ROTTEN_FLESH) {
-                                    playerEntity.getFoodData().eat(-1, 2.2f);
-                                } else if (food == Foods.RABBIT) {
-                                    playerEntity.getFoodData().eat(2, 11.2f);
-                                }
-
-                            }
-                            break;
-                        case SEA:
-                            if (food == Foods.SALMON || food == Foods.TROPICAL_FISH || food == Foods.COD || food == Foods.PUFFERFISH || food == Foods.DRIED_KELP) {
-                                bad = false;
-                                livingEntity.removeEffect(Effects.HUNGER);
-                                livingEntity.removeEffect(Effects.CONFUSION);
-                                livingEntity.removeEffect(Effects.POISON);
-                                if (food == Foods.TROPICAL_FISH) {
-                                    playerEntity.getFoodData().eat(1, 6.8f);
-                                } else if (food == Foods.SALMON) {
-                                    playerEntity.getFoodData().eat(0, 6.8f);
-                                } else if (food == Foods.COD) {
-                                    playerEntity.getFoodData().eat(0, 6.6f);
-                                } else if (food == Foods.PUFFERFISH) {
-                                    playerEntity.getFoodData().eat(9, 12.8f);
-                                } else {
-                                    playerEntity.getFoodData().eat(1, 2.4f);
-                                }
-                            }
-                            break;
-                        case CAVE:
-                            if (item == ItemsInit.chargedCoal || item == ItemsInit.charredMeat)
-                                bad = false;
-                            break;
-                    }
-                    if (bad)
-                        livingEntity.addEffect(new EffectInstance(Effects.HUNGER, 20 * 60, 0));
-                } else if (item instanceof PotionItem) {
-                    PotionItem potionItem = (PotionItem) item;
+                PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
+                if (itemStack.getItem() instanceof PotionItem) {
+                    PotionItem potionItem = (PotionItem) itemStack.getItem();
                     if (PotionUtils.getPotion(itemStack) == Potions.WATER && dragonStateHandler.getType() == DragonType.SEA && !playerEntity.level.isClientSide) {
                     	dragonStateHandler.getDebuffData().timeWithoutWater = -3 * 60 * 20; // -3 minutes (5 minutes until wither)
                     	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                    }
-                }
-            }
-        });
-    }
-
-    @SubscribeEvent
-    public static void consumeSpecialFood(PlayerInteractEvent.RightClickItem rightClickItem) {
-        PlayerEntity playerEntity = rightClickItem.getPlayer();
-        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon() && playerEntity.getFoodData().needsFood()) {
-                ItemStack itemStack = rightClickItem.getItemStack();
-                Item item = itemStack.getItem();
-                if (dragonStateHandler.getType() == DragonType.CAVE) {
-                    if (item == Items.COAL) {
-                        itemStack.shrink(1);
-                        playerEntity.getFoodData().eat(1, 0.5F);
-                    } else if (item == Items.CHARCOAL) {
-                        itemStack.shrink(1);
-                        playerEntity.getFoodData().eat(1, 1.0F);
                     }
                 }
             }
