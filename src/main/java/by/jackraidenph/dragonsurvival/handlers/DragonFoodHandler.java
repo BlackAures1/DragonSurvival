@@ -13,6 +13,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -169,18 +174,46 @@ public class DragonFoodHandler {
 		});
 	}
 	
-	/*@SubscribeEvent
-	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+	@SubscribeEvent
+	@OnlyIn(Dist.DEDICATED_SERVER)
+	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) { 
 		DragonStateProvider.getCap(event.getEntityLiving()).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
+				ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
+				ServerWorld level = player.getLevel();
+				Hand hand = event.getHand();
+				ItemStack stack = player.getItemInHand(event.getHand());
 				
-				
-				//FIXME: Use this forge event to replace dragonUseItem and dragonUse mixins after understanding the methods they inject into.
-				
-				
+				int i = stack.getCount();
+				int j = stack.getDamageValue();
+				ActionResult<ItemStack> actionresult = stack.use(level, player, hand);
+				ItemStack itemstack = actionresult.getObject();
+				if (itemstack == stack && itemstack.getCount() == i && getUseDuration(itemstack, dragonStateHandler.getType()) <= 0 && itemstack.getDamageValue() == j) {
+					event.setCancellationResult(actionresult.getResult());
+				} else if (actionresult.getResult() == ActionResultType.FAIL && getUseDuration(itemstack, dragonStateHandler.getType()) > 0 && !player.isUsingItem()) {
+					event.setCancellationResult(actionresult.getResult());
+				} else {
+					player.setItemInHand(hand, itemstack);
+					if (player.isCreative()) {
+						itemstack.setCount(i);
+						if (itemstack.isDamageableItem() && itemstack.getDamageValue() != j) {
+							itemstack.setDamageValue(j);
+						}
+					}
+
+					if (itemstack.isEmpty()) {
+						player.setItemInHand(hand, ItemStack.EMPTY);
+					}
+
+					if (!player.isUsingItem()) {
+						player.refreshContainer(player.inventoryMenu);
+					}
+
+		            event.setCancellationResult(actionresult.getResult());
+				}
 			}
 		});
-	}*/
+	}
 	
 	
 	
