@@ -167,40 +167,34 @@ public class EventHandler {
                             }
                             if (playerEntity.isOnFire())
                                 playerEntity.clearFire();
-                            if (playerEntity.isEyeInFluid(FluidTags.LAVA) && !playerEntity.level.isClientSide) {
+                            if (playerEntity.isEyeInFluid(FluidTags.LAVA)) {
                                 if (!playerEntity.canBreatheUnderwater() && !playerEntity.abilities.invulnerable) {
                                 	dragonStateHandler.setLavaAirSupply(dragonStateHandler.getLavaAirSupply() - 1);
                                    if (dragonStateHandler.getLavaAirSupply() == -20) {
                                 	   dragonStateHandler.setLavaAirSupply(0);
-                                	   playerEntity.hurt(DamageSource.DROWN, 2F); //LAVA_YES
+                                	   if (!playerEntity.level.isClientSide)
+                                		   playerEntity.hurt(DamageSource.DROWN, 2F); //LAVA_YES
                                    }
-                                   DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)playerEntity), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
                                 }
                                 if (!playerEntity.level.isClientSide && playerEntity.isPassenger() && playerEntity.getVehicle() != null && !playerEntity.getVehicle().canBeRiddenInWater(playerEntity)) {
                                 	playerEntity.stopRiding();
                                 }
-                             } else if (dragonStateHandler.getLavaAirSupply() < maxLavaAirSupply && !playerEntity.isEyeInFluid(FluidTags.WATER) && !playerEntity.level.isClientSide) {
+                             } else if (dragonStateHandler.getLavaAirSupply() < maxLavaAirSupply && !playerEntity.isEyeInFluid(FluidTags.WATER))
                             	 dragonStateHandler.setLavaAirSupply(Math.min(dragonStateHandler.getLavaAirSupply() + 8, maxLavaAirSupply));
-                            	 DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)playerEntity), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
-                             }
                             break;
                         case FOREST:
                             if (!world.isClientSide && block.is(BlockTags.LOGS) || block.is(BlockTags.LEAVES) || block.is(BlockTags.PLANKS)
                                     || block.is(Tags.Blocks.DIRT))
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
-                            if (!world.isClientSide && ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
+                            if (ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                 WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                                 if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                             		dragonStateHandler.getDebuffData().timeInDarkness++;
-                            		if (dragonStateHandler.getDebuffData().timeInDarkness == 1 || dragonStateHandler.getDebuffData().timeInDarkness == 20 * 10)
-                            			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                            		else if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10)
-                                        playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 5));
-                                } else if (dragonStateHandler.getDebuffData().timeInDarkness > 0) {
+                            		if (dragonStateHandler.getDebuffData().timeInDarkness > 20 * 10 && !world.isClientSide && playerEntity.tickCount % 5 == 0)
+                                        playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, 20 * 10 + 9));
+                                } else if (dragonStateHandler.getDebuffData().timeInDarkness > 0)
                             		dragonStateHandler.getDebuffData().timeInDarkness = 0;
-                            		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                                	}
-                        		}
+                    		}
                             break;
                         case SEA:
                             if (!world.isClientSide && block.is(BlockTags.IMPERMEABLE) || block.is(BlockTags.ICE) || block.is(BlockTags.SAND)
@@ -208,19 +202,14 @@ public class EventHandler {
                                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, 1, false, false));
                             if (playerEntity.isInWaterOrBubble())
                                 playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
-                            if (!world.isClientSide && ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
+                            if (ConfigHandler.SERVER.enableDragonDebuffs.get() && !playerEntity.isCreative()) {
                                 if (!playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && !block.is(BlockTags.ICE) && !block.is(Blocks.SNOW) && !block.is(Blocks.SNOW_BLOCK)) {
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
-	                        		if (dragonStateHandler.getDebuffData().timeWithoutWater == 20 * 90 + 1)
-	                            			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-	                                if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 10 && !playerEntity.hasEffect(Effects.WITHER))
-	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 1, false, false));
-	                                else if (dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 2 && !playerEntity.hasEffect(Effects.WITHER))
+	                                if (!world.isClientSide && dragonStateHandler.getDebuffData().timeWithoutWater > 20 * 60 * 2 && 
+	                                		((playerEntity.hasEffect(Effects.WITHER) && playerEntity.getEffect(Effects.WITHER).getDuration() == 41) || !playerEntity.hasEffect(Effects.WITHER)))
 	                                	playerEntity.addEffect(new EffectInstance(Effects.WITHER, 80, 0, false, false));
-                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater > 0) {
+                                } else if (dragonStateHandler.getDebuffData().timeWithoutWater > 0)
                                 	dragonStateHandler.getDebuffData().timeWithoutWater = 0;
-                            		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                            	}
                             }
                         break;
                     }

@@ -52,7 +52,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DragonFoodHandler{
 
-	private static Map<DragonType, Map<Item, Pair<Integer, Integer>>> DRAGON_FOODS;
+	private static Map<DragonType, Map<Item, Food>> DRAGON_FOODS;
 	
 	public static boolean isDrawingOverlay;
 	
@@ -64,7 +64,7 @@ public class DragonFoodHandler{
 	public DragonFoodHandler() {
 		mc = Minecraft.getInstance();
 		rand = new Random();
-		FOOD_ICONS = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_foods.png");
+		FOOD_ICONS = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_hud.png");
 		isDrawingOverlay = false;
 	}
 	
@@ -81,15 +81,15 @@ public class DragonFoodHandler{
 	}
 	
 	private static void rebuildFoodMap() {
-		HashMap<DragonType, Map<Item, Pair<Integer, Integer>>> dragonMap = new HashMap<DragonType, Map<Item, Pair<Integer, Integer>>>();
+		HashMap<DragonType, Map<Item, Food>> dragonMap = new HashMap<DragonType, Map<Item, Food>>();
 		dragonMap.put(DragonType.CAVE, buildDragonFoodMap(DragonType.CAVE));
 		dragonMap.put(DragonType.FOREST, buildDragonFoodMap(DragonType.FOREST));
 		dragonMap.put(DragonType.SEA, buildDragonFoodMap(DragonType.SEA));
-		DRAGON_FOODS = new HashMap<DragonType, Map<Item, Pair<Integer, Integer>>>(dragonMap);
+		DRAGON_FOODS = new HashMap<DragonType, Map<Item, Food>>(dragonMap);
 	}
 	
-	private static Map<Item, Pair<Integer, Integer>> buildDragonFoodMap(DragonType type) {
-		HashMap<Item, Pair<Integer, Integer>> foodMap = new HashMap<Item, Pair<Integer, Integer>>();
+	private static Map<Item, Food> buildDragonFoodMap(DragonType type) {
+		HashMap<Item, Food> foodMap = new HashMap<Item, Food>();
 		String[] configFood;
 		switch (type) {
 			case CAVE:
@@ -113,36 +113,37 @@ public class DragonFoodHandler{
 				final ITag<Item> tag = ItemTags.getAllTags().getTag(rlEntry);
 				if (tag != null && tag.getValues().size() != 0)
 					for (Item item : tag.getValues())
-						foodMap.put(item, new Pair<Integer, Integer>(
-								sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? 
-										item.getFoodProperties().getNutrition() : 1, 
-								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? 
-										(int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1));
+						foodMap.put(item, calculateDragonFoodProperties(item, type, 
+								sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
+								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1, 
+								true));
 				else
 					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			} else {
 				final Item item = ForgeRegistries.ITEMS.getValue(rlEntry);
 				if (item != null)
-					foodMap.put(item, new Pair<Integer, Integer>(
-							sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? 
-									item.getFoodProperties().getNutrition() : 1, 
-							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? 
-									(int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1));
+					foodMap.put(item, calculateDragonFoodProperties(item, type, 
+							sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
+							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1,
+							true));
 				else
 					DragonSurvivalMod.LOGGER.error("Unknown item '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			}
 		}
-		return new HashMap<Item, Pair<Integer, Integer>>(foodMap);
+		for (Item item : ForgeRegistries.ITEMS.getValues())
+			if (!foodMap.containsKey(item) && item.isEdible())
+				foodMap.put(item, calculateDragonFoodProperties(item, type, 1, 1, false));
+		return new HashMap<Item, Food>(foodMap);
 	}
 
 	@Nullable
-	public static Food getDragonFoodProperties(Item item, DragonType type) {
-		if (DRAGON_FOODS == null || !ConfigHandler.SERVER.enableDragonFood.get() || type == DragonType.NONE)
+	private static Food calculateDragonFoodProperties(Item item, DragonType type, int nutrition, int saturation, boolean dragonFood) {
+		if (!ConfigHandler.SERVER.enableDragonFood.get() || type == DragonType.NONE)
 			return item.getFoodProperties();
 		Food.Builder builder = new Food.Builder();
-		if (DRAGON_FOODS.get(type).containsKey(item)) {
-			builder.nutrition(DRAGON_FOODS.get(type).get(item).getFirst())
-				.saturationMod((float)DRAGON_FOODS.get(type).get(item).getSecond() / (float)DRAGON_FOODS.get(type).get(item).getFirst());
+		if (dragonFood) {
+			builder.nutrition(nutrition)
+				.saturationMod((float)saturation / (float)nutrition);
 			if (item.getFoodProperties() != null) {
 				Food humanFood = item.getFoodProperties();
 				if (humanFood.isMeat())
@@ -156,7 +157,7 @@ public class DragonFoodHandler{
 						builder.effect(() -> effect.getFirst(), effect.getSecond());
 			}
 			return builder.build();
-		} else { // lmao
+		} else {
 			Food humanFood = item.getFoodProperties();
 			builder.nutrition(humanFood.getNutrition())
 				.saturationMod(humanFood.getSaturationModifier());
@@ -174,8 +175,19 @@ public class DragonFoodHandler{
 		}
 	}
 	
+	@Nullable
+	public static Food getDragonFoodProperties(Item item, DragonType type) {
+		if (DRAGON_FOODS == null || !ConfigHandler.SERVER.enableDragonFood.get() || type == DragonType.NONE)
+			return item.getFoodProperties();
+		if (DRAGON_FOODS.get(type).containsKey(item))
+			return DRAGON_FOODS.get(type).get(item);
+		return null;
+	}
+	
 	public static boolean isDragonEdible(Item item, DragonType type) {
-		return item.getFoodProperties() != null || DRAGON_FOODS.get(type).containsKey(item);
+		if (ConfigHandler.SERVER.enableDragonFood.get() && type != DragonType.NONE)
+			return DRAGON_FOODS.get(type).containsKey(item);
+		return item.getFoodProperties() != null;
 	}
 	
 	public static void dragonEat(FoodStats foodStats, Item item, ItemStack itemStack, DragonType type) {
@@ -245,18 +257,16 @@ public class DragonFoodHandler{
 	public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
 		ClientPlayerEntity player = this.mc.player;
 		
-		
-		
-		if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || player.isCreative() || player.isSpectator())
-			return;
-			
-		
 		isDrawingOverlay = !event.isCanceled();
 		if (!isDrawingOverlay)
 			return;
 		
 		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
+				
+				if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || player.isCreative() || player.isSpectator())
+					return;
+				
 				event.setCanceled(true);
 				
 				rand.setSeed((long)(player.tickCount * 312871));
