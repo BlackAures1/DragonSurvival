@@ -115,7 +115,7 @@ public class DragonFoodHandler{
 					for (Item item : tag.getValues())
 						foodMap.put(item, calculateDragonFoodProperties(item, type, 
 								sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
-								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1, 
+								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0, 
 								true));
 				else
 					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
@@ -124,7 +124,7 @@ public class DragonFoodHandler{
 				if (item != null)
 					foodMap.put(item, calculateDragonFoodProperties(item, type, 
 							sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
-							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() + 1.0F)) : 1,
+							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0,
 							true));
 				else
 					DragonSurvivalMod.LOGGER.error("Unknown item '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
@@ -132,7 +132,7 @@ public class DragonFoodHandler{
 		}
 		for (Item item : ForgeRegistries.ITEMS.getValues())
 			if (!foodMap.containsKey(item) && item.isEdible())
-				foodMap.put(item, calculateDragonFoodProperties(item, type, 1, 1, false));
+				foodMap.put(item, calculateDragonFoodProperties(item, type, 0, 0, false));
 		return new HashMap<Item, Food>(foodMap);
 	}
 
@@ -143,7 +143,7 @@ public class DragonFoodHandler{
 		Food.Builder builder = new Food.Builder();
 		if (dragonFood) {
 			builder.nutrition(nutrition)
-				.saturationMod(((float)saturation / (float)nutrition) - 1.0F);
+				.saturationMod(((float)saturation / (float)nutrition) / 2.0F);
 			if (item.getFoodProperties() != null) {
 				Food humanFood = item.getFoodProperties();
 				if (humanFood.isMeat())
