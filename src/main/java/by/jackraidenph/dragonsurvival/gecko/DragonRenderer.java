@@ -21,6 +21,8 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
     public RenderType getRenderType(DragonEntity animatable, float partialTicks, MatrixStack stack,
 			@Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn,
 			ResourceLocation textureLocation) {
-		return RenderType.entityCutoutNoCull(textureLocation);
+    	if (animatable.isArmorModel)
+    		return RenderType.entityCutoutNoCull(textureLocation);
+		return RenderType.entityCutout(textureLocation);
 	}
 }

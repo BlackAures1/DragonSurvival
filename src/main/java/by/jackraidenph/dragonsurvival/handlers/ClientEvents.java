@@ -266,6 +266,7 @@ public class ClientEvents {
 	//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
 	                int light = renderHandEvent.getLight();
 	                
+	                dummyDragon2.get().isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
 	                dummyDragon2.get().copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
@@ -281,6 +282,7 @@ public class ClientEvents {
 	                if (!player.isInvisible())
 	                	dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 	
+	                dummyDragon2.get().isArmorModel = true;
 	                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
 	                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
 	                dragonModel.setCurrentTexture(chestplate);
@@ -444,7 +446,9 @@ public class ClientEvents {
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
 	                int eventLight = renderPlayerEvent.getLight();
+	                
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
+	                dummyDragon.isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
@@ -489,6 +493,7 @@ public class ClientEvents {
                     String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
+                    dummyDragon.isArmorModel = true;
                     //scale to try to prevent texture fighting (problem is in consecutive renders)
                     matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Causes issues with head turn
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
