@@ -54,14 +54,18 @@ public class DragonFoodHandler{
 
 	private static Map<DragonType, Map<Item, Pair<Integer, Integer>>> DRAGON_FOODS;
 	
+	public static boolean isDrawingOverlay;
+	
 	private final Minecraft mc;
 	private final ResourceLocation FOOD_ICONS;
 	private final Random rand;
+	
 	
 	public DragonFoodHandler() {
 		mc = Minecraft.getInstance();
 		rand = new Random();
 		FOOD_ICONS = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_foods.png");
+		isDrawingOverlay = false;
 	}
 	
 	@SubscribeEvent
@@ -241,8 +245,16 @@ public class DragonFoodHandler{
 	public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
 		ClientPlayerEntity player = this.mc.player;
 		
+		
+		
 		if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || player.isCreative() || player.isSpectator())
 			return;
+			
+		
+		isDrawingOverlay = !event.isCanceled();
+		if (!isDrawingOverlay)
+			return;
+		
 		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
 				event.setCanceled(true);
@@ -286,7 +298,8 @@ public class DragonFoodHandler{
 				
                 
                 
-			}
+			} else
+				isDrawingOverlay = false;
 		});
 	}
 	
