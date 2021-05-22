@@ -384,7 +384,7 @@ public class EventHandler {
                 if (itemStack.getItem() instanceof PotionItem) {
                     PotionItem potionItem = (PotionItem) itemStack.getItem();
                     if (PotionUtils.getPotion(itemStack) == Potions.WATER && dragonStateHandler.getType() == DragonType.SEA && !playerEntity.level.isClientSide) {
-                    	dragonStateHandler.getDebuffData().timeWithoutWater = -3 * 60 * 20; // -3 minutes (5 minutes until wither)
+                    	dragonStateHandler.getDebuffData().timeWithoutWater = 0;
                     	DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
                     }
                 }
