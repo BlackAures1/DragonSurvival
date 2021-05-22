@@ -57,6 +57,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -125,10 +126,11 @@ public class ClientEvents {
     			event.setCanceled(true);
     			return;
     		}
-    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && player.getAirSupply() >= player.getMaxAirSupply() && playerStateHandler.getLavaAirSupply() < EventHandler.maxLavaAirSupply) {
+    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && playerStateHandler.getLavaAirSupply() < EventHandler.maxLavaAirSupply) {
     			GL11.glEnable(GL11.GL_BLEND);
     			
-    			int right_height = 49; // 39
+    			final int right_height = ForgeIngameGui.right_height;
+				ForgeIngameGui.right_height += 10;
 
                 final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
                 final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;

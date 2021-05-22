@@ -49,7 +49,7 @@ public abstract class MixinPlayerEntity extends LivingEntity{
 	
 	@Shadow
 	@Final
-	public final PlayerAbilities abilities = new PlayerAbilities();
+	public PlayerAbilities abilities;
 
 
 	protected MixinPlayerEntity(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {

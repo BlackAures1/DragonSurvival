@@ -7,7 +7,6 @@
         "MixinPlayerEntity",
         "MixinLivingEntity",
         "MixinItem",
-        "MixinPlayerInteractionManager",
         "MixinFirstPersonRenderer"
 	],
 	"minVersion": "0.8"

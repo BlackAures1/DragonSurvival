@@ -70,12 +70,12 @@ public abstract class MixinLivingEntity extends Entity{
         							switch (livingEntity.getEffect(Effects.HUNGER).getAmplifier()) {
         								case 0:
         									livingEntity.addEffect(new EffectInstance(Effects.HUNGER, pair.getFirst().getDuration(), pair.getFirst().getAmplifier() + 1));
-        									if (level.random.nextFloat() < 0.5F)
+        									if (level.random.nextFloat() < 0.25F)
         										livingEntity.addEffect(new EffectInstance(Effects.POISON, pair.getFirst().getDuration(), 0));
         									break;
         								case 1:
         									livingEntity.addEffect(new EffectInstance(Effects.HUNGER, pair.getFirst().getDuration(), pair.getFirst().getAmplifier() + 2));
-        									if (level.random.nextFloat() < 0.9F)
+        									if (level.random.nextFloat() < 0.5F)
         										livingEntity.addEffect(new EffectInstance(Effects.POISON, pair.getFirst().getDuration(), 0));
         									break;
         								default:

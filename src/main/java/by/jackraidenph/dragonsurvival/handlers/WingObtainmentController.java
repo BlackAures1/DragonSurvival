@@ -28,6 +28,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -47,7 +48,10 @@ public class WingObtainmentController {
 			return;
 		try {
 			List<String> langs = new ArrayList<>();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/dragonsurvival/lang")));
+			InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/dragonsurvival/lang");
+			if (stream == null)
+				return;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String file;
 			while ((file = reader.readLine()) != null) {
 				langs.add(file);
