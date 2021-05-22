@@ -143,7 +143,7 @@ public class DragonFoodHandler{
 		Food.Builder builder = new Food.Builder();
 		if (dragonFood) {
 			builder.nutrition(nutrition)
-				.saturationMod((float)saturation / (float)nutrition);
+				.saturationMod(((float)saturation / (float)nutrition) - 1.0F);
 			if (item.getFoodProperties() != null) {
 				Food humanFood = item.getFoodProperties();
 				if (humanFood.isMeat())
