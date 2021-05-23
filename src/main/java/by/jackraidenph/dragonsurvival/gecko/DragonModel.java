@@ -18,6 +18,8 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     private ResourceLocation currentTexture = new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon/cave_newborn.png");
+    
+    private int biteTicks;
 
     @Override
     public ResourceLocation getModelLocation(DragonEntity dragonEntity) {
@@ -36,53 +38,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
     @Override
 	public Animation getAnimation(String name, IAnimatable animatable) {
     	DragonEntity dragonEntity = (DragonEntity)animatable;
-    	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
-    	final PlayerEntity player = dragonEntity.getPlayer();
-    	if (player != null) {
-    		switch (name) {
-	    		case "animation.dragon.idle":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.stand.animation.json");
-	    			break;
-	    		case "animation.dragon.walk":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.walk.animation.json");
-	    			break;
-	    		case "animation.dragon.run":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.run.animation.json");
-	    			break;
-	    		case "animation.dragon.sneak":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking_stand.animation.json");
-	    			break;
-	    		case "animation.dragon.sneak_walk":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sneaking.animation.json");
-	    			break;
-	    		case "animation.dragon.jumpfull":
-	    		case "animation.dragon.jump":
-	    		case "animation.dragon.land":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.jump.animation.json");
-	    			break;
-	    		case "animation.dragon.fly_slow":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.fly.animation.json");
-	    			break;
-	    		case "animation.dragon.bite":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.bite.animation.json");
-	    			break;
-	    		case "animation.dragon.dig":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging.animation.json");
-	    			break;
-	    		case "animation.dragon.dig_sneak":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.digging_sneaking.animation.json");
-	    			break;
-	    		case "animation.dragon.swim":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim.animation.json");
-	    			break;
-	    		case "animation.dragon.swim_fast":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.swim_fast.animation.json");
-	    			break;
-	    		case "animation.dragon.sleep":
-	    			animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.sleep.animation.json");
-	    			break;
-    		}
-    	}
+    	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.animations.json");
     	AnimationFile animation = GeckoLibCache.getInstance().getAnimations().get(animLocation);
     	if (animation == null) {
 			throw new GeckoLibException(animLocation, "Could not find animation file. Please double check name.");
@@ -103,11 +59,11 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 		PlayerEntity player = entity.getPlayer();
 		if (!player.isSleeping()) {
 			DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-				IBone neck0 = this.getAnimationProcessor().getBone("NeckandHead"); // rot(0, -22.5, 0)
-				IBone neck1 = this.getAnimationProcessor().getBone("NeckandMain"); // rot(0, 0, -10)
-				IBone neck2 = this.getAnimationProcessor().getBone("Neckand_3"); // rot(12.5, -15, 30), mov(-0.25, 0, 0)
-				IBone neck3 = this.getAnimationProcessor().getBone("Neckand_2"); // rot(9.04, -5, 35.55), mov(0, 0.75, 0)
-				IBone neck4 = this.getAnimationProcessor().getBone("Neckand_1"); // rot(5, -17.5, 30), mov(0.25, -0.25, 0)
+				IBone neck0 = this.getAnimationProcessor().getBone("Neck"); // rot(0, -22.5, 0)
+				IBone neck1 = this.getAnimationProcessor().getBone("Neck4"); // rot(0, 0, -10)
+				IBone neck2 = this.getAnimationProcessor().getBone("Neck3"); // rot(12.5, -15, 30), mov(-0.25, 0, 0)
+				IBone neck3 = this.getAnimationProcessor().getBone("Neck2"); // rot(9.04, -5, 35.55), mov(0, 0.75, 0)
+				IBone neck4 = this.getAnimationProcessor().getBone("Neck1"); // rot(5, -17.5, 30), mov(0.25, -0.25, 0)
 				IBone head = this.getAnimationProcessor().getBone("Head"); // rot(-39.41, -35, 55), mov(2.25, -1.25, -1.25)
 				// neck0: rot(-115, 0, 0), mov(-4, 16, -15)
 				// neck1: rot(25, 0, 0), mov(-4, 16, -15)
@@ -141,6 +97,14 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				head.setPositionX(-1F * 0.716197F * rotation);
 				head.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation);
 				head.setPositionZ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation);
+				
+				if (playerStateHandler.getMovementData().bite) {
+					biteTicks++;
+					
+					
+				}
+				else
+					biteTicks = 0;
 			});
 		}
 		

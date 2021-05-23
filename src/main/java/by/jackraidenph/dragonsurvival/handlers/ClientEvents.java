@@ -270,11 +270,11 @@ public class ClientEvents {
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
 	                dummyDragon2.get().copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
-	                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+	                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckandHead != null)
 	                    neckandHead.setHidden(true);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
 	                if (leftwing != null)
 	                    leftwing.setHidden(!playerStateHandler.hasWings());
 	                if (rightWing != null)
@@ -452,13 +452,13 @@ public class ClientEvents {
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
 	                if (leftwing != null)
 	                    leftwing.setHidden(!cap.hasWings());
 	                if (rightWing != null)
 	                    rightWing.setHidden(!cap.hasWings());
-	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckHead != null)
 	                	 neckHead.setHidden(false);
 	                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
