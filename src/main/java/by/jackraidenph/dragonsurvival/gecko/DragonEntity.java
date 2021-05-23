@@ -25,6 +25,8 @@ import java.util.Collections;
 
 public class DragonEntity extends LivingEntity implements IAnimatable {
     AnimationFactory animationFactory = new AnimationFactory(this);
+    public boolean isArmorModel;
+    
     /**
      * This reference must be updated whenever player is remade, for example, when changing dimensions
      */
@@ -54,43 +56,43 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	            boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
 	            // Main
 	            if (player.isSleeping())
-	            	builder.addAnimation("animation.dragon.sleep", true);
+	            	builder.addAnimation("sleep", true);
 	            else if (player.isPassenger())
-	            	builder.addAnimation("animation.dragon.idle", true); // TODO: Passenger animation for riding entities
+	            	builder.addAnimation("idle", true); // TODO: Passenger animation for riding entities
 	            else if (playerStateHandler.getMovementData().bite)
-	                builder.addAnimation("animation.dragon.bite");
+	                builder.addAnimation("bite");
 	            else if (player.getPose() == Pose.SWIMMING)
-	            	builder.addAnimation("animation.dragon.swim_fast", true);
+	            	builder.addAnimation("swim_fast", true);
 	            else if ((player.isInLava() || player.isInWaterOrBubble()) && !player.isOnGround())
-	                builder.addAnimation("animation.dragon.swim", true);
+	                builder.addAnimation("swim", true);
 	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
-	                builder.addAnimation("animation.dragon.fly_slow", true);
+	                builder.addAnimation("fly", true);
 	            else if (!player.isOnGround() && motio.y() < 0) {
-	            	builder.addAnimation("animation.dragon.land", false);
-	            	builder.addAnimation("animation.dragon.idle", true);
+	            	builder.addAnimation("land", false);
+	            	builder.addAnimation("idle", true);
 	            }
             	else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
-            		builder.addAnimation("animation.dragon.jump", false);
+            		builder.addAnimation("jump", false);
 	            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
 	            	// Player is Sneaking
 	            	 if (isMovingHorizontal && player.animationSpeed != 0f)
-	                     builder.addAnimation("animation.dragon.sneak_walk", true);
+	                     builder.addAnimation("sneak_walk", true);
 	                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
-	                     builder.addAnimation("animation.dragon.dig_sneak", true);
+	                     builder.addAnimation("dig_sneak", true);
 	                 else
-	                     builder.addAnimation("animation.dragon.sneak", true);
+	                     builder.addAnimation("sneak", true);
 	            }
 	            else if (player.isSprinting())
-	                builder.addAnimation("animation.dragon.run", true);
+	                builder.addAnimation("run", true);
 	            else if (isMovingHorizontal && player.animationSpeed != 0f)
-	                builder.addAnimation("animation.dragon.walk", true);
+	                builder.addAnimation("walk", true);
 	            else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
-	                builder.addAnimation("animation.dragon.dig", true);
+	                builder.addAnimation("dig", true);
 	            else
-	            	builder.addAnimation("animation.dragon.idle", true);
+	            	builder.addAnimation("idle", true);
 	        });
         } else
-        	 builder.addAnimation("animation.dragon.idle", true);
+        	 builder.addAnimation("idle", true);
         animationController.setAnimation(builder);
         return PlayState.CONTINUE;
     }

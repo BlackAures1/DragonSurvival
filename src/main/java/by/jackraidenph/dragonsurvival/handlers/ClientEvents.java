@@ -20,6 +20,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.FluidBlockRenderer;
@@ -83,6 +84,9 @@ public class ClientEvents {
 
     public static DragonModel dragonModel;
     static boolean showingInventory;
+    
+    private static final ResourceLocation DRAGON_HUD = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_hud.png");
+    
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     /**
      * Default skins
@@ -120,27 +124,73 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderOverlayPreTick(RenderGameOverlayEvent.Pre event) {
-    	ClientPlayerEntity player = Minecraft.getInstance().player;
+    	Minecraft mc = Minecraft.getInstance();
+    	ClientPlayerEntity player = mc.player;
     	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && playerStateHandler.getType() == DragonType.SEA) {
-    			event.setCanceled(true);
-    			return;
+    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR) {
+    			if (playerStateHandler.getType() == DragonType.SEA)
+    				event.setCanceled(true);
+    			if (playerStateHandler.getDebuffData().timeWithoutWater > 0 && playerStateHandler.getType() == DragonType.SEA) {
+    				RenderSystem.enableBlend();
+        			mc.getTextureManager().bind(DRAGON_HUD);
+        			
+        			final int right_height = ForgeIngameGui.right_height;
+    				ForgeIngameGui.right_height += 10;
+
+    				final int maxTimeWithoutWater = 20 * 60 * 2;
+    				final int timeWithoutWater = maxTimeWithoutWater - Math.min(playerStateHandler.getDebuffData().timeWithoutWater, maxTimeWithoutWater);
+    				
+                    final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
+                    final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;
+                    final int full = MathHelper.ceil((double) (timeWithoutWater - 2) * 10.0D / maxTimeWithoutWater);
+                    final int partial = MathHelper.ceil((double) timeWithoutWater * 10.0D / maxTimeWithoutWater) - full;
+
+                    for (int i = 0; i < full + partial; ++i)
+                    	Minecraft.getInstance().gui.blit(event.getMatrixStack(), left - i * 8 - 9, top, (i < full ? 0 : 9), 36, 9, 9);
+                    
+                    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+                    RenderSystem.disableBlend();
+    			}
+    			if (playerStateHandler.getLavaAirSupply() < EventHandler.maxLavaAirSupply && playerStateHandler.getType() == DragonType.CAVE) {
+    				RenderSystem.enableBlend();
+        			mc.getTextureManager().bind(DRAGON_HUD);
+        			
+        			final int right_height = ForgeIngameGui.right_height;
+    				ForgeIngameGui.right_height += 10;
+
+                    final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
+                    final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;
+                    final int full = MathHelper.ceil((double) (playerStateHandler.getLavaAirSupply() - 2) * 10.0D / EventHandler.maxLavaAirSupply);
+                    final int partial = MathHelper.ceil((double) playerStateHandler.getLavaAirSupply() * 10.0D / EventHandler.maxLavaAirSupply) - full;
+
+                    for (int i = 0; i < full + partial; ++i)
+                    	Minecraft.getInstance().gui.blit(event.getMatrixStack(), left - i * 8 - 9, top, (i < full ? 0 : 9), 27, 9, 9);
+                    
+                    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+                    RenderSystem.disableBlend();
+    			}
+    			if (playerStateHandler.getDebuffData().timeInDarkness > 0 && playerStateHandler.getType() == DragonType.FOREST) {
+    				RenderSystem.enableBlend();
+        			mc.getTextureManager().bind(DRAGON_HUD);
+        			
+        			final int right_height = ForgeIngameGui.right_height;
+    				ForgeIngameGui.right_height += 10;
+
+    				final int maxTimeInDarkness = 20 * 10;
+    				final int timeInDarkness = maxTimeInDarkness - Math.min(playerStateHandler.getDebuffData().timeInDarkness, maxTimeInDarkness);
+    				
+                    final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
+                    final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;
+                    final int full = MathHelper.ceil((double) (timeInDarkness - 2) * 10.0D / maxTimeInDarkness);
+                    final int partial = MathHelper.ceil((double) timeInDarkness * 10.0D / maxTimeInDarkness) - full;
+
+                    for (int i = 0; i < full + partial; ++i)
+                    	Minecraft.getInstance().gui.blit(event.getMatrixStack(), left - i * 8 - 9, top, (i < full ? 0 : 9), 45, 9, 9);
+                    
+                    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+                    RenderSystem.disableBlend();
+    			}
     		}
-    		if (event.getType() == RenderGameOverlayEvent.ElementType.AIR && playerStateHandler.getLavaAirSupply() < EventHandler.maxLavaAirSupply) {
-    			GL11.glEnable(GL11.GL_BLEND);
-    			
-    			final int right_height = ForgeIngameGui.right_height;
-				ForgeIngameGui.right_height += 10;
-
-                final int left = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91;
-                final int top = Minecraft.getInstance().getWindow().getGuiScaledHeight() - right_height;
-                final int full = MathHelper.ceil((double) (playerStateHandler.getLavaAirSupply() - 2) * 10.0D / EventHandler.maxLavaAirSupply);
-                final int partial = MathHelper.ceil((double) playerStateHandler.getLavaAirSupply() * 10.0D / EventHandler.maxLavaAirSupply) - full;
-
-                for (int i = 0; i < full + partial; ++i)
-                	Minecraft.getInstance().gui.blit(event.getMatrixStack(), left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
-                GL11.glDisable(GL11.GL_BLEND);
-        	}
     	});
     }
     
@@ -216,14 +266,15 @@ public class ClientEvents {
 	//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
 	                int light = renderHandEvent.getLight();
 	                
+	                dummyDragon2.get().isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
 	                dummyDragon2.get().copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
-	                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+	                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckandHead != null)
 	                    neckandHead.setHidden(true);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
 	                if (leftwing != null)
 	                    leftwing.setHidden(!playerStateHandler.hasWings());
 	                if (rightWing != null)
@@ -231,6 +282,7 @@ public class ClientEvents {
 	                if (!player.isInvisible())
 	                	dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 	
+	                dummyDragon2.get().isArmorModel = true;
 	                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
 	                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
 	                dragonModel.setCurrentTexture(chestplate);
@@ -394,17 +446,19 @@ public class ClientEvents {
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
 	                int eventLight = renderPlayerEvent.getLight();
+	                
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
+	                dummyDragon.isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("Leftwing");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("Leftwing2");
+	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
 	                if (leftwing != null)
 	                    leftwing.setHidden(!cap.hasWings());
 	                if (rightWing != null)
 	                    rightWing.setHidden(!cap.hasWings());
-	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("NeckandHead");
+	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckHead != null)
 	                	 neckHead.setHidden(false);
 	                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
@@ -439,6 +493,7 @@ public class ClientEvents {
                     String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
+                    dummyDragon.isArmorModel = true;
                     //scale to try to prevent texture fighting (problem is in consecutive renders)
                     matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Causes issues with head turn
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));

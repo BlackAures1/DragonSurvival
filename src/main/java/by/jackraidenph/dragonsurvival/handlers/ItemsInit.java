@@ -10,6 +10,8 @@ import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -84,24 +86,15 @@ public class ItemsInit {
         elderDragonDust = new Item(new Item.Properties().tab(items)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_dust");
         elderDragonBone = new Item(new Item.Properties().tab(items)).setRegistryName(DragonSurvivalMod.MODID, "elder_dragon_bone");
 
-        chargedCoal = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(5).saturationMod(0.7F).build())) {
-            @Override
-            public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
-                if (dragonStateProvider.isDragon() && dragonStateProvider.getType() == DragonType.CAVE)
-                    return super.use(worldIn, playerIn, handIn);
-                return ActionResult.pass(playerIn.getItemInHand(handIn));
-            }
+        chargedCoal = new Item(new Item.Properties().tab(items)) {
+        	@Override
+        	public int getBurnTime(ItemStack itemStack) {
+        		return 3200;
+        	}
         }.setRegistryName(DragonSurvivalMod.MODID, "charged_coal");
-        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(10).saturationMod(0.65F).meat().build())) {
-            @Override
-            public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-                DragonStateHandler dragonStateProvider = playerIn.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null);
-                if (dragonStateProvider.isDragon() && dragonStateProvider.getType() == DragonType.CAVE)
-                    return super.use(worldIn, playerIn, handIn);
-                return ActionResult.pass(playerIn.getItemInHand(handIn));
-            }
-        }.setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
+        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(5).saturationMod(0.4F).meat()
+        		.effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
+        		.build())).setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
         event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, elderDragonDust);
     }
 }
