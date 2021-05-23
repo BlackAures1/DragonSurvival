@@ -6,7 +6,7 @@
 				"identifier": "geometry.unknown",
 				"texture_width": 256,
 				"texture_height": 256,
-				"visible_bounds_width": 10,
+				"visible_bounds_width": 13,
 				"visible_bounds_height": 8,
 				"visible_bounds_offset": [0, 0, 0]
 			},
@@ -20,7 +20,7 @@
 					]
 				},
 				{
-					"name": "FrontLegLeftProximal",
+					"name": "FrontLegLeftUpper",
 					"parent": "FrontLegLeft",
 					"pivot": [-4, 13, -5],
 					"rotation": [5, 0, 0],
@@ -29,8 +29,8 @@
 					]
 				},
 				{
-					"name": "FrontLegLeftDistal",
-					"parent": "FrontLegLeftProximal",
+					"name": "FrontLegLeftLower",
+					"parent": "FrontLegLeftUpper",
 					"pivot": [2.1, 8.26135, -2.83371],
 					"rotation": [85, 0, 0],
 					"cubes": [
@@ -40,7 +40,7 @@
 				},
 				{
 					"name": "FrontLegLeftHand",
-					"parent": "FrontLegLeftDistal",
+					"parent": "FrontLegLeftLower",
 					"pivot": [3.275, 14.88261, -10.35069],
 					"rotation": [-90, 0, 0],
 					"cubes": [
@@ -59,7 +59,7 @@
 					]
 				},
 				{
-					"name": "FrontLegRightProximal",
+					"name": "FrontLegRightUpper",
 					"parent": "FrontLegRight",
 					"pivot": [-4, 13, -5],
 					"rotation": [5, 0, 0],
@@ -68,8 +68,8 @@
 					]
 				},
 				{
-					"name": "FrontLegRightDistal",
-					"parent": "FrontLegRightProximal",
+					"name": "FrontLegRightLower",
+					"parent": "FrontLegRightUpper",
 					"pivot": [-4, 7.00381, -6.08716],
 					"rotation": [85, 0, 0],
 					"cubes": [
@@ -79,7 +79,7 @@
 				},
 				{
 					"name": "FrontLegRightHand",
-					"parent": "FrontLegRightDistal",
+					"parent": "FrontLegRightLower",
 					"pivot": [-4, 7.50761, -12.02569],
 					"rotation": [-90, 0, 0],
 					"cubes": [
@@ -90,7 +90,7 @@
 					]
 				},
 				{
-					"name": "BackLegLeftThigh",
+					"name": "BackLegLeft",
 					"pivot": [4, 18, 8],
 					"cubes": [
 						{"origin": [1.1, 11, 5.25], "size": [4, 9, 6], "uv": [0, 124]},
@@ -98,8 +98,8 @@
 					]
 				},
 				{
-					"name": "BackLegLeftProximal",
-					"parent": "BackLegLeftThigh",
+					"name": "BackLegLeftUpper",
+					"parent": "BackLegLeft",
 					"pivot": [3, 11, 8],
 					"rotation": [30, 0, 0],
 					"cubes": [
@@ -107,8 +107,8 @@
 					]
 				},
 				{
-					"name": "BackLegLeftDistal",
-					"parent": "BackLegLeftProximal",
+					"name": "BackLegLeftLower",
+					"parent": "BackLegLeftUpper",
 					"pivot": [3, 6.39747, 7.72448],
 					"rotation": [55, 0, 0],
 					"cubes": [
@@ -118,7 +118,7 @@
 				},
 				{
 					"name": "BackLegLeftFoot",
-					"parent": "BackLegLeftDistal",
+					"parent": "BackLegLeftLower",
 					"pivot": [3, 7.20033, 1.93018],
 					"rotation": [-85, 0, 0],
 					"cubes": [
@@ -137,7 +137,7 @@
 					]
 				},
 				{
-					"name": "BackLegRightProximal",
+					"name": "BackLegRightUpper",
 					"parent": "BackLegRight",
 					"pivot": [-3, 11, 8],
 					"rotation": [30, 0, 0],
@@ -146,8 +146,8 @@
 					]
 				},
 				{
-					"name": "BackLegRightDistal",
-					"parent": "BackLegRightProximal",
+					"name": "BackLegRightLower",
+					"parent": "BackLegRightUpper",
 					"pivot": [-3, 6.39747, 7.72448],
 					"rotation": [55, 0, 0],
 					"cubes": [
@@ -157,7 +157,7 @@
 				},
 				{
 					"name": "BackLegRightFoot",
-					"parent": "BackLegRightDistal",
+					"parent": "BackLegRightLower",
 					"pivot": [-3, 7.20033, 1.93018],
 					"rotation": [-85, 0, 0],
 					"cubes": [
