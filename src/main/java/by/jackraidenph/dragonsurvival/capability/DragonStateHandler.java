@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.capability;
 
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.BlockState;
@@ -83,12 +84,13 @@ public class DragonStateHandler {
     	int harvestLevel = state.getHarvestLevel();
     	switch(getLevel()) {
     		case BABY:
-    			if (harvestLevel <= 0)
+    			if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get() && ConfigHandler.SERVER.bonusUnlockedAt.get() != DragonLevel.BABY)
     				return true;
-    			break;
     		case YOUNG:
+    			if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get() && ConfigHandler.SERVER.bonusUnlockedAt.get() == DragonLevel.ADULT && getLevel() != DragonLevel.BABY)
+    				return true;
             case ADULT:
-            	if (harvestLevel == 1) {
+            	if (harvestLevel <= ConfigHandler.SERVER.bonusHarvestLevel.get()) {
                     switch (getType()) {
                         case SEA:
                             if (state.isToolEffective(ToolType.SHOVEL))
@@ -101,7 +103,7 @@ public class DragonStateHandler {
                             if (state.isToolEffective(ToolType.AXE))
                                 return true;
                     }
-                } else if (harvestLevel <= 0)
+                } else if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get())
                 	return true;
             	break;
     	}
@@ -124,11 +126,11 @@ public class DragonStateHandler {
     }
     
     
-    public static AttributeModifier buildHealthMod(Float size) {
+    public static AttributeModifier buildHealthMod(float size) {
     	return new AttributeModifier(
     			HEALTH_MODIFIER_UUID,
     			"Dragon Health Adjustment",
-    			(size - 20),
+    			((float)ConfigHandler.SERVER.minHealth.get() + (((size - 14) / 26F) * ((float)ConfigHandler.SERVER.maxHealth.get() - (float)ConfigHandler.SERVER.minHealth.get()))) - 20,
     			AttributeModifier.Operation.ADDITION
     		);
     }
@@ -137,7 +139,7 @@ public class DragonStateHandler {
     	return new AttributeModifier(
     			DAMAGE_MODIFIER_UUID,
     			"Dragon Damage Adjustment",
-    			isDragon ? (level.baseDamage - 1) : 0,
+    			isDragon ? (level == DragonLevel.ADULT ? ConfigHandler.SERVER.adultBonusDamage.get() : level == DragonLevel.YOUNG ? ConfigHandler.SERVER.youngBonusDamage.get() : ConfigHandler.SERVER.babyBonusDamage.get()) : 0,
     			AttributeModifier.Operation.ADDITION
     		);
     }
@@ -146,25 +148,27 @@ public class DragonStateHandler {
     	return new AttributeModifier(
     			SWIM_SPEED_MODIFIER_UUID,
     			"Dragon Swim Speed Adjustment",
-    			dragonType == DragonType.SEA ? 1 : 0,
+    			dragonType == DragonType.SEA && ConfigHandler.SERVER.seaSwimmingBonuses.get() ? 1 : 0,
     			AttributeModifier.Operation.ADDITION
     		);
     }
 
     public static void updateModifiers(PlayerEntity oldPlayer, PlayerEntity newPlayer) {
-    	AttributeModifier oldMod = DragonStateHandler.getHealthModifier(oldPlayer);
+    	AttributeModifier oldMod = getHealthModifier(oldPlayer);
         if (oldMod != null)
-            DragonStateHandler.updateHealthModifier(newPlayer, oldMod);
-        oldMod = DragonStateHandler.getDamageModifier(oldPlayer);
+            updateHealthModifier(newPlayer, oldMod);
+        oldMod = getDamageModifier(oldPlayer);
         if (oldMod != null)
-            DragonStateHandler.updateDamageModifier(newPlayer, oldMod);
-        oldMod = DragonStateHandler.getSwimSpeedModifier(oldPlayer);
+            updateDamageModifier(newPlayer, oldMod);
+        oldMod =getSwimSpeedModifier(oldPlayer);
         if (oldMod != null)
-        	DragonStateHandler.updateSwimSpeedModifier(newPlayer, oldMod);
+        	updateSwimSpeedModifier(newPlayer, oldMod);
     }
     
     
     public static void updateHealthModifier(PlayerEntity player, AttributeModifier mod) {
+    	if (!ConfigHandler.SERVER.healthAdjustments.get())
+    		return;
     	float oldMax = player.getMaxHealth();
     	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH));
     	max.removeModifier(mod);
@@ -174,12 +178,16 @@ public class DragonStateHandler {
     }
     
     public static void updateDamageModifier(PlayerEntity player, AttributeModifier mod) {
+    	if (!ConfigHandler.SERVER.bonuses.get() || !ConfigHandler.SERVER.attackDamage.get())
+    		return;
     	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(Attributes.ATTACK_DAMAGE));
     	max.removeModifier(mod);
     	max.addPermanentModifier(mod);
     }
     
     public static void updateSwimSpeedModifier(PlayerEntity player, AttributeModifier mod) {
+    	if (!ConfigHandler.SERVER.bonuses.get() || !ConfigHandler.SERVER.seaSwimmingBonuses.get())
+    		return;
     	ModifiableAttributeInstance max = Objects.requireNonNull(player.getAttribute(ForgeMod.SWIM_SPEED.get()));
     	max.removeModifier(mod);
     	max.addPermanentModifier(mod);

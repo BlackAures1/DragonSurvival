@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.handlers.DragonFoodHandler;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -66,7 +67,7 @@ public abstract class MixinPlayerEntity extends LivingEntity{
 			double d0 = this.getX();
 			double d1 = this.getY();
 			double d2 = this.getZ();
-			if ((DragonStateProvider.getCap(this).isPresent() && DragonStateProvider.getCap(this).orElseGet(null).getType() == DragonType.CAVE && DragonSizeHandler.getOverridePose(this) == Pose.SWIMMING) 
+			if ((DragonStateProvider.getCap(this).isPresent() && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get() && DragonStateProvider.getCap(this).orElseGet(null).getType() == DragonType.CAVE && DragonSizeHandler.getOverridePose(this) == Pose.SWIMMING) 
 					|| this.isSwimming() && !this.isPassenger()) {
 				double d3 = this.getLookAngle().y;
 				double d4 = d3 < -0.2D ? 0.085D : 0.06D;
@@ -148,7 +149,7 @@ public abstract class MixinPlayerEntity extends LivingEntity{
             if (this.horizontalCollision && this.isFree(vector3d2.x, vector3d2.y + (double)0.6F - this.getY() + d8, vector3d2.z)) {
                this.setDeltaMovement(vector3d2.x, (double)0.3F, vector3d2.z);
             }
-         } else if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(fluidstate.getType()) && (DragonStateProvider.getCap(this).isPresent() && DragonStateProvider.getCap(this).orElseGet(null).getType() == DragonType.CAVE)) {
+         } else if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(fluidstate.getType()) && (ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get() && DragonStateProvider.getCap(this).isPresent() && DragonStateProvider.getCap(this).orElseGet(null).getType() == DragonType.CAVE)) {
         	double d8 = this.getY();
             float f5 = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
             float f6 = 0.02F;

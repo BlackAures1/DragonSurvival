@@ -43,7 +43,7 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
             instance.setIsHiding(tag.getBoolean("isHiding"));
             instance.setSize(tag.getFloat("size"));
             if (instance.getSize() == 0)
-                instance.setSize(DragonLevel.BABY.initialHealth);
+                instance.setSize(DragonLevel.BABY.size);
             instance.setHasWings(tag.getBoolean("hasWings"));
             instance.setLavaAirSupply(tag.getInt("lavaAirSupply"));
             

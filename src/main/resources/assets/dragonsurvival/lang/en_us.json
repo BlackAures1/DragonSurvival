@@ -53,6 +53,8 @@
   "death.attack.starDrain": "%1$s had their life and energy drained by magic.",
   "death.attack.waterBurn": "%1$s tried to swim in water.",
   "death.attack.waterBurn.player": "%1$s tried to swim in water to escape %2$s.",
+  "death.attack.dehydration": "%1$s dried out.",
+  "death.attack.dehydration.player": "%1$s dried out to escape %2$s.",
   
   "ds.cave_dragon_choice": "You have chosen to be a Cave dragon.",
   "ds.forest_dragon_choice": "You have chosen to be a Forest dragon.",
