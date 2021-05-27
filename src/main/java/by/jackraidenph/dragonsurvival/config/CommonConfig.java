@@ -22,7 +22,8 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue predatorSpawnWeight;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> predatorBiomesInclude;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> predatorBiomesExclude;
-    
+    public final ForgeConfigSpec.DoubleValue predatorStarSpawnChance;
+    public final ForgeConfigSpec.DoubleValue predatorAnimalSpawnChance;
 	
 	CommonConfig(ForgeConfigSpec.Builder builder){
 		builder.push("common");
@@ -54,5 +55,12 @@ public class CommonConfig {
 		predatorBiomesExclude = builder
 				.comment("The predator cannot spawn in biomes with excluded types.")
 				.defineList("exclude", Arrays.asList(MOUNTAIN.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+		predatorStarSpawnChance = builder
+				.comment("Chance for predators to spawn from stars. Set to 0.0 to disable.")
+				.defineInRange("starSpawnChance", 0.3, 0, 1.0);
+		predatorAnimalSpawnChance = builder
+				.comment("Chance for predators to spawn when an animal dies. Set to 0.0 to disable.")
+				.defineInRange("animalSpawnChance", 0.03, 0.0, 1.0);
+		
 	}
 }

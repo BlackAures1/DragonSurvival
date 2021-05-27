@@ -70,7 +70,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         	LivingEntity target = (LivingEntity)entity;
         	target.hurt(DamageSources.STAR_DRAIN, Float.MAX_VALUE);
             worldIn.destroyBlock(pos, false);
-            if (new Random().nextInt(3) == 0) {
+            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get()) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addFreshEntity(beast);
                 beast.teleportTo(pos.getX(), pos.getY(), pos.getZ());

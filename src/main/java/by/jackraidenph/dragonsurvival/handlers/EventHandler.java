@@ -156,7 +156,7 @@ public class EventHandler {
         if (livingEntity instanceof PlayerEntity || livingEntity instanceof MagicalPredatorEntity)
             return;
 
-        if (livingEntity instanceof AnimalEntity && livingEntity.level.getRandom().nextInt(30) == 0) {
+        if (livingEntity instanceof AnimalEntity && livingEntity.level.getRandom().nextDouble() < ConfigHandler.COMMON.predatorAnimalSpawnChance.get()) {
             MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
             livingEntity.level.addFreshEntity(beast);
             beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
