@@ -96,6 +96,7 @@ public class DragonSurvivalMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.serverSpec);
         
         MinecraftForge.EVENT_BUS.register(this);
+        //this crashes the server
         MinecraftForge.EVENT_BUS.register(new DragonFoodHandler());
         MinecraftForge.EVENT_BUS.register(new SpecificsHandler());
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, this::biomeLoadingEvent);
