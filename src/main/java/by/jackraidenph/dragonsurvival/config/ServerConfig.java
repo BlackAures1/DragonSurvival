@@ -205,7 +205,7 @@ public class ServerConfig {
 				.defineInRange("ticksBeforeStressed", 200, 0, 10000);
 		forestStressEffectDuration = builder
 				.comment("The number of seconds the stress effect lasts for.")
-				.defineInRange("stressEffectDuration", 10, 2, 100000);
+				.defineInRange("stressEffectDuration", 30, 2, 100000);
 		stressExhaustion = builder
 				.comment("The amount of exhaustion applied per 10 ticks during the stress effect.")
 				.defineInRange("stressExhaustion", 1.0, 0.1, 4.0);

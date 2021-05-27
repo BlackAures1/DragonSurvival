@@ -259,7 +259,7 @@ public class SpecificsHandler {
                     mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
                     RenderSystem.disableBlend();
     			}
-    			if (playerStateHandler.getDebuffData().timeInDarkness > 0 && playerStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.forestStressTicks.get() != 0) {
+    			if (playerStateHandler.getDebuffData().timeInDarkness > 0 && playerStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.forestStressTicks.get() != 0 && !player.hasEffect(DragonEffects.STRESS)) {
     				RenderSystem.enableBlend();
         			mc.getTextureManager().bind(DRAGON_HUD);
         			
@@ -408,7 +408,7 @@ public class SpecificsHandler {
                         			dragonStateHandler.getDebuffData().timeInDarkness++;
                         		if (dragonStateHandler.getDebuffData().timeInDarkness == 1 && !playerEntity.level.isClientSide)
                         			DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), dragonStateHandler.getDebuffData().timeWithoutWater, dragonStateHandler.getDebuffData().timeInDarkness));
-                        		if (dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get() && !world.isClientSide && playerEntity.tickCount % 11 == 0)
+                        		if (dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get() && !world.isClientSide && playerEntity.tickCount % 21 == 0)
                                     playerEntity.addEffect(new EffectInstance(DragonEffects.STRESS, ConfigHandler.SERVER.forestStressEffectDuration.get() * 20));
                             } else if (dragonStateHandler.getDebuffData().timeInDarkness > 0) {
                            	 dragonStateHandler.getDebuffData().timeInDarkness = (Math.max(dragonStateHandler.getDebuffData().timeInDarkness - (int)Math.ceil( ConfigHandler.SERVER.forestStressTicks.get() * 0.02F), 0));
@@ -449,13 +449,13 @@ public class SpecificsHandler {
                 // Dragon Particles
                 // TODO: Randomize along dragon body
                 if (world.isClientSide) {
-                    if (dragonStateHandler.getDebuffData().timeWithoutWater > ConfigHandler.SERVER.seaTicksWithoutWater.get())
+                    if (dragonStateHandler.getDebuffData().timeWithoutWater >= ConfigHandler.SERVER.seaTicksWithoutWater.get())
                     	world.addParticle(ParticleTypes.WHITE_ASH,
                     			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
                     			playerEntity.getY() + 0.5F, 
                     			playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 
                     			0, 0, 0);
-                    if (dragonStateHandler.getDebuffData().timeInDarkness > 0)
+                    if (dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get())
                     	world.addParticle(ParticleTypes.SMOKE,
                     			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
                     			playerEntity.getY() + 0.5F, 
