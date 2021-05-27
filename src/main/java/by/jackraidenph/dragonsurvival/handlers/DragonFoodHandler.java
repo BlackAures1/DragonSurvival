@@ -47,6 +47,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -56,13 +58,14 @@ public class DragonFoodHandler{
 	
 	public static boolean isDrawingOverlay;
 	
-	private final Minecraft mc;
+	private Minecraft mc;
 	private final ResourceLocation FOOD_ICONS;
 	private final Random rand;
 	
 	
 	public DragonFoodHandler() {
-		mc = Minecraft.getInstance();
+		if (FMLLoader.getDist() == Dist.CLIENT)
+			mc = Minecraft.getInstance();
 		rand = new Random();
 		FOOD_ICONS = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_hud.png");
 		isDrawingOverlay = false;
@@ -138,7 +141,7 @@ public class DragonFoodHandler{
 
 	@Nullable
 	private static Food calculateDragonFoodProperties(Item item, DragonType type, int nutrition, int saturation, boolean dragonFood) {
-		if (!ConfigHandler.SERVER.enableDragonFood.get() || type == DragonType.NONE)
+		if (!ConfigHandler.SERVER.customDragonFoods.get() || type == DragonType.NONE)
 			return item.getFoodProperties();
 		Food.Builder builder = new Food.Builder();
 		if (dragonFood) {
@@ -177,7 +180,7 @@ public class DragonFoodHandler{
 	
 	@Nullable
 	public static Food getDragonFoodProperties(Item item, DragonType type) {
-		if (DRAGON_FOODS == null || !ConfigHandler.SERVER.enableDragonFood.get() || type == DragonType.NONE)
+		if (DRAGON_FOODS == null || !ConfigHandler.SERVER.customDragonFoods.get() || type == DragonType.NONE)
 			return item.getFoodProperties();
 		if (DRAGON_FOODS.get(type).containsKey(item))
 			return DRAGON_FOODS.get(type).get(item);
@@ -185,7 +188,7 @@ public class DragonFoodHandler{
 	}
 	
 	public static boolean isDragonEdible(Item item, DragonType type) {
-		if (ConfigHandler.SERVER.enableDragonFood.get() && type != DragonType.NONE)
+		if (ConfigHandler.SERVER.customDragonFoods.get() && type != DragonType.NONE)
 			return DRAGON_FOODS.get(type).containsKey(item);
 		return item.getFoodProperties() != null;
 	}
@@ -254,10 +257,11 @@ public class DragonFoodHandler{
 	}
 	
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
 		ClientPlayerEntity player = this.mc.player;
 		
-		isDrawingOverlay = !event.isCanceled();
+		isDrawingOverlay = !event.isCanceled() && ConfigHandler.SERVER.customDragonFoods.get();
 		if (!isDrawingOverlay)
 			return;
 		

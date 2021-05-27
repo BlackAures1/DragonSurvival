@@ -6,8 +6,10 @@
 	"mixins": [
         "MixinPlayerEntity",
         "MixinLivingEntity",
-        "MixinItem",
-        "MixinFirstPersonRenderer"
+        "MixinItem"
+	],
+	"client": [
+		"MixinFirstPersonRenderer"
 	],
 	"minVersion": "0.8"
 }
