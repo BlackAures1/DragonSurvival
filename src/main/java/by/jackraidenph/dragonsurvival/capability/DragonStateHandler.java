@@ -84,17 +84,24 @@ public class DragonStateHandler {
     	int harvestLevel = state.getHarvestLevel();
     	switch(getLevel()) {
     		case BABY:
-    			if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get() && ConfigHandler.SERVER.bonusUnlockedAt.get() != DragonLevel.BABY)
-    				return true;
+    			if (ConfigHandler.SERVER.bonusUnlockedAt.get() != DragonLevel.BABY){
+    			    if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get())
+                        return true;
+    			    break;
+                }
     		case YOUNG:
-    			if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get() && ConfigHandler.SERVER.bonusUnlockedAt.get() == DragonLevel.ADULT && getLevel() != DragonLevel.BABY)
-    				return true;
+    		    if (ConfigHandler.SERVER.bonusUnlockedAt.get() == DragonLevel.ADULT && getLevel() != DragonLevel.BABY){
+    		        if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get())
+                        return true;
+    		        break;
+                }
             case ADULT:
             	if (harvestLevel <= ConfigHandler.SERVER.bonusHarvestLevel.get()) {
                     switch (getType()) {
                         case SEA:
                             if (state.isToolEffective(ToolType.SHOVEL))
                             	return true;
+                            break;
                         case CAVE:
                             if (state.isToolEffective(ToolType.PICKAXE))
                             	return true;
@@ -103,9 +110,9 @@ public class DragonStateHandler {
                             if (state.isToolEffective(ToolType.AXE))
                                 return true;
                     }
-                } else if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get())
-                	return true;
-            	break;
+                }
+            	if (harvestLevel <= ConfigHandler.SERVER.baseHarvestLevel.get())
+                    return true;
     	}
     	return false;
     }
