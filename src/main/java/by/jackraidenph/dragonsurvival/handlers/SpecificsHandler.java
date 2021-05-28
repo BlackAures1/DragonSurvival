@@ -421,7 +421,7 @@ public class SpecificsHandler {
                         if (playerEntity.isEyeInFluid(FluidTags.WATER) && playerEntity.getAirSupply() < playerEntity.getMaxAirSupply())
                             playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                         if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.seaTicksWithoutWater.get() > 0 && !playerEntity.isCreative()) {
-                            if (!playerEntity.isInWaterRainOrBubble() && (SEA_DRAGON_HYDRATION_BLOCKS != null && !SEA_DRAGON_HYDRATION_BLOCKS.contains(block))) {
+                            if (!playerEntity.isInWaterRainOrBubble() && (SEA_DRAGON_HYDRATION_BLOCKS != null && !SEA_DRAGON_HYDRATION_BLOCKS.contains(block) && !SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock()))) {
                             	if (dragonStateHandler.getDebuffData().timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2)
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
                             	if (dragonStateHandler.getDebuffData().timeWithoutWater == ConfigHandler.SERVER.seaTicksWithoutWater.get() + 1 && !playerEntity.level.isClientSide)
