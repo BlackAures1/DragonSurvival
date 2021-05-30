@@ -18,8 +18,29 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     private ResourceLocation currentTexture = new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon/cave_newborn.png");
-    
-    private int biteTicks;
+
+	private IBone neck;
+	private IBone neck4;
+	private IBone neck3;
+	private IBone neck2;
+	private IBone neck1;
+	private IBone head;
+
+	private boolean hasBones;
+
+	public void setupBones() {
+		if (hasBones || this.getAnimationProcessor().getModelRendererList().size() == 0)
+			return;
+
+		neck = this.getAnimationProcessor().getBone("Neck");
+		neck4 = this.getAnimationProcessor().getBone("Neck4");
+		neck3 = this.getAnimationProcessor().getBone("Neck3");
+		neck2 = this.getAnimationProcessor().getBone("Neck2");
+		neck1 = this.getAnimationProcessor().getBone("Neck1");
+		head = this.getAnimationProcessor().getBone("Head");
+
+		hasBones = true;
+	}
 
     @Override
     public ResourceLocation getModelLocation(DragonEntity dragonEntity) {
@@ -50,24 +71,26 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 	public ResourceLocation getAnimationFileLocation(DragonEntity animatable) {
 		return null;
 	}
-    
+
+	private int biteTicks;
+
 	@Override
 	public void setLivingAnimations(DragonEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
 		super.setLivingAnimations(entity, uniqueID, customPredicate);
 		
-		if (customPredicate.getController() == null)
+		if (customPredicate.getController() == null || !hasBones)
 			return;
 		
 		// TODO Replace temp head turn with system that includes vertical
 		PlayerEntity player = entity.getPlayer();
 		if (!player.isSleeping()) {
 			DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-				IBone neck0 = this.getAnimationProcessor().getBone("Neck"); // rot(0, -22.5, 0)
-				IBone neck1 = this.getAnimationProcessor().getBone("Neck4"); // rot(0, 0, -10)
-				IBone neck2 = this.getAnimationProcessor().getBone("Neck3"); // rot(12.5, -15, 30), mov(-0.25, 0, 0)
-				IBone neck3 = this.getAnimationProcessor().getBone("Neck2"); // rot(9.04, -5, 35.55), mov(0, 0.75, 0)
-				IBone neck4 = this.getAnimationProcessor().getBone("Neck1"); // rot(5, -17.5, 30), mov(0.25, -0.25, 0)
-				IBone head = this.getAnimationProcessor().getBone("Head"); // rot(-39.41, -35, 55), mov(2.25, -1.25, -1.25)
+				/*IBone neck = this.getAnimationProcessor().getBone("Neck"); // rot(0, -22.5, 0)
+				IBone neck4 = this.getAnimationProcessor().getBone("Neck4"); // rot(0, 0, -10)
+				IBone neck3 = this.getAnimationProcessor().getBone("Neck3"); // rot(12.5, -15, 30), mov(-0.25, 0, 0)
+				IBone neck2 = this.getAnimationProcessor().getBone("Neck2"); // rot(9.04, -5, 35.55), mov(0, 0.75, 0)
+				IBone neck1 = this.getAnimationProcessor().getBone("Neck1"); // rot(5, -17.5, 30), mov(0.25, -0.25, 0)
+				IBone head = this.getAnimationProcessor().getBone("Head"); // rot(-39.41, -35, 55), mov(2.25, -1.25, -1.25)*/
 				// neck0: rot(-115, 0, 0), mov(-4, 16, -15)
 				// neck1: rot(25, 0, 0), mov(-4, 16, -15)
 				// neck2: rot(30, 0, 0), mov(-2.01, 27.92, -12.3163)
@@ -79,33 +102,34 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 					rotation = (float)Math.PI;
 				if (rotation < -(float)Math.PI)
 					rotation = -(float)Math.PI;
-				neck0.setRotationY(neck0.getRotationY() + (-0.125F * rotation));
-				neck1.setRotationZ(neck1.getRotationZ() + (-1F * -0.0555556F * rotation));
-				neck2.setRotationX(neck2.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.06944F * rotation));
-				neck2.setRotationY(neck2.getRotationY() + (-0.083333F * rotation));
-				neck2.setRotationZ(neck2.getRotationZ() + (-1F * 0.166667F * rotation));
-				
-				neck2.setPositionX(neck2.getPositionX() + (-1F * -0.07957F * rotation));
-				
-				neck3.setRotationX(neck3.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.0502222F * rotation));
-				neck3.setRotationY(neck3.getRotationY() + (-0.0277778F * rotation));
-				neck3.setRotationZ(neck3.getRotationZ() + (-1F * 0.1975F * rotation));
-				
-				neck3.setPositionY(neck3.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * 0.2387324F * rotation));
-				
-				neck4.setRotationX(neck4.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.02777763F * rotation));
-				neck4.setRotationY(neck4.getRotationY() + (-0.0972222F * rotation));
-				neck4.setRotationZ(neck4.getRotationZ() + (-1F * 0.1666667F * rotation));
-				
-				neck4.setPositionX(neck4.getPositionX() + (-1F * 0.0795775F * rotation));
-				neck4.setPositionY(neck4.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * -0.0795775F * rotation));
-				
+				neck.setRotationY(neck.getRotationY() + (-0.125F * rotation));
+				neck4.setRotationZ(neck4.getRotationZ() + (-1F * -0.0555556F * rotation));
+				neck3.setRotationX(neck3.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.06944F * rotation));
+				neck3.setRotationY(neck3.getRotationY() + (-0.083333F * rotation));
+				neck3.setRotationZ(neck3.getRotationZ() + (-1F * 0.166667F * rotation));
+
+				neck3.setPositionX(neck3.getPositionX() + (-1F * -0.07957F * rotation));
+
+				neck2.setRotationX(neck2.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.0502222F * rotation));
+				neck2.setRotationY(neck2.getRotationY() + (-0.0277778F * rotation));
+				neck2.setRotationZ(neck2.getRotationZ() + (-1F * 0.1975F * rotation));
+
+				neck2.setPositionY(neck2.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * 0.2387324F * rotation));
+
+				neck1.setRotationX(neck1.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.02777763F * rotation));
+				neck1.setRotationY(neck1.getRotationY() + (-0.0972222F * rotation));
+				neck1.setRotationZ(neck1.getRotationZ() + (-1F * 0.1666667F * rotation));
+
+				neck1.setPositionX(neck1.getPositionX() + (-1F * 0.0795775F * rotation));
+				neck1.setPositionY(neck1.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * -0.0795775F * rotation));
+
 				head.setRotationX(head.getRotationX() + ((rotation >= 0 ? -1F : 1F) * -0.2189445F * rotation));
 				head.setRotationY(head.getRotationY() + (-0.1944444F * rotation));
 				head.setRotationZ(head.getRotationZ() + (-1F * 0.3055555F * rotation));
 				head.setPositionX(head.getPositionX() + (-1F * 0.716197F * rotation));
 				head.setPositionY(head.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation));
 				head.setPositionZ(head.getPositionZ() + ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation));
+
 				
 				if (playerStateHandler.getMovementData().bite) {
 					biteTicks++;

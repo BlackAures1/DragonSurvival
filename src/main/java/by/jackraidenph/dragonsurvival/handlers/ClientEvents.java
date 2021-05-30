@@ -131,6 +131,7 @@ public class ClientEvents {
         }
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
+                dragonModel.setupBones();
                 if (renderHandEvent.getItemStack().isEmpty())
                     renderHandEvent.setCanceled(true);
                 MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
@@ -314,6 +315,7 @@ public class ClientEvents {
         }
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
+                dragonModel.setupBones();
                 renderPlayerEvent.setCanceled(true);
                 float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
                 float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.animationSpeedOld, player.animationSpeed);
