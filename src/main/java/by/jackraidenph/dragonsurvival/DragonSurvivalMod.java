@@ -120,6 +120,7 @@ public class DragonSurvivalMod {
         register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
+        register(OpenCrafting.class,new OpenCrafting());
 
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);

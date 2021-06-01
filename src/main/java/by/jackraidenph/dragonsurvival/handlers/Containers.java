@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.containers.CraftingContainer;
 import by.jackraidenph.dragonsurvival.containers.DragonContainer;
 import by.jackraidenph.dragonsurvival.nest.NestContainer;
 import net.minecraft.inventory.container.ContainerType;
@@ -15,6 +16,7 @@ public class Containers {
 
     public static ContainerType<NestContainer> nestContainer;
     public static ContainerType<DragonContainer> dragonContainer;
+    public static ContainerType<CraftingContainer> craftingContainer;
     @SubscribeEvent
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> register) {
         nestContainer = IForgeContainerType.create(NestContainer::new);
@@ -23,5 +25,8 @@ public class Containers {
 
         dragonContainer = IForgeContainerType.create((windowId, inv, data) -> new DragonContainer(windowId, inv, false));
         forgeRegistry.register(dragonContainer.setRegistryName(DragonSurvivalMod.MODID, "dragon_container"));
+
+        craftingContainer=new ContainerType<>(CraftingContainer::new);
+        forgeRegistry.register(craftingContainer.setRegistryName(DragonSurvivalMod.MODID,"extra_crafting"));
     }
 }
