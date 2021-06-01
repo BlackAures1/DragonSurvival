@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonCapStorage;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
@@ -193,35 +194,11 @@ public class ClientEvents {
         });
     }
 
-//    @SubscribeEvent
-//    public static void onOpenScreen(GuiOpenEvent openEvent) {
-//        ClientPlayerEntity player = Minecraft.getInstance().player;
-//        if (openEvent.getGui() instanceof InventoryScreen && !player.isCreative() && DragonStateProvider.isDragon(player)) {
-//            openEvent.setCanceled(true);
-//            showingInventory = false;
-//        }
-//
-//    }
-
-//    /**
-//     * The event stops being fired if jump key is pressed during movement
-//     */
-////    @SubscribeEvent
-//    public static void onKey(InputEvent.KeyInputEvent keyInputEvent) {
-//        Minecraft minecraft = Minecraft.getInstance();
-//        GameSettings gameSettings = minecraft.options;
-//        InputMappings.Input input = InputMappings.getKey(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-//        if (minecraft.screen == null && DragonStateProvider.isDragon(minecraft.player) && !minecraft.player.isCreative() && gameSettings.keyInventory.isActiveAndMatches(input) && !showingInventory) {
-//            DragonSurvivalMod.CHANNEL.sendToServer(new OpenDragonInventory());
-//            showingInventory = true;
-//        }
-//    }
-
     @SubscribeEvent
     public static void addCraftingButton(GuiScreenEvent.InitGuiEvent.Post initGuiEvent)
     {
         Screen screen=initGuiEvent.getGui();
-        if(screen instanceof InventoryScreen) {
+        if(screen instanceof InventoryScreen && DragonStateProvider.isDragon(Minecraft.getInstance().player)) {
             Button openCrafting = new Button(screen.width/2, screen.height-30, 60, 20, new StringTextComponent("Crafting"), p_onPress_1_ -> {
                 DragonSurvivalMod.CHANNEL.sendToServer(new OpenCrafting());
             });
