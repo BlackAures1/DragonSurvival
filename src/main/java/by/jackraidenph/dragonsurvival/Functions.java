@@ -25,6 +25,15 @@ public class Functions {
         return secondsToTicks(minutes)*60;
     }
 
+    public static int ticksToSeconds(int ticks) {
+        return ticks / 20;
+    }
+
+    public static int ticksToMinutes(int ticks)
+    {
+        return ticksToSeconds(ticks) / 60;
+    }
+
     public static float getDefaultXRightLimbRotation(float limbSwing, float swingAmount) {
         return MathHelper.cos((float) (limbSwing + Math.PI)) * swingAmount;
     }
