@@ -9,6 +9,7 @@ import net.minecraft.util.text.StringTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.exception.GeckoLibException;
@@ -19,12 +20,12 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     private ResourceLocation currentTexture = new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon/cave_newborn.png");
 
-	private IBone neck;
-	private IBone neck4;
-	private IBone neck3;
-	private IBone neck2;
-	private IBone neck1;
-	private IBone head;
+	public IBone neck;
+	public IBone neck1;
+	public IBone neck2;
+	public IBone neck3;
+	public IBone neck4;
+	public IBone head;
 
 	private boolean hasBones;
 
@@ -32,12 +33,14 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 		if (hasBones || this.getAnimationProcessor().getModelRendererList().size() == 0)
 			return;
 
-		neck = this.getAnimationProcessor().getBone("Neck");
-		neck4 = this.getAnimationProcessor().getBone("Neck4");
-		neck3 = this.getAnimationProcessor().getBone("Neck3");
-		neck2 = this.getAnimationProcessor().getBone("Neck2");
-		neck1 = this.getAnimationProcessor().getBone("Neck1");
-		head = this.getAnimationProcessor().getBone("Head");
+		AnimationProcessor<DragonEntity> ap = this.getAnimationProcessor();
+
+		neck = ap.getBone("Neck");
+		neck1 = ap.getBone("Neck1");
+		neck2 = ap.getBone("Neck2");
+		neck3 = ap.getBone("Neck3");
+		neck4 = ap.getBone("Neck4");
+		head = ap.getBone("Head");
 
 		hasBones = true;
 	}
@@ -102,45 +105,27 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 					rotation = (float)Math.PI;
 				if (rotation < -(float)Math.PI)
 					rotation = -(float)Math.PI;
-				neck.setRotationY(neck.getRotationY() + (-0.125F * rotation));
-				neck4.setRotationZ(neck4.getRotationZ() + (-1F * -0.0555556F * rotation));
-				neck3.setRotationX(neck3.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.06944F * rotation));
-				neck3.setRotationY(neck3.getRotationY() + (-0.083333F * rotation));
-				neck3.setRotationZ(neck3.getRotationZ() + (-1F * 0.166667F * rotation));
-
-				neck3.setPositionX(neck3.getPositionX() + (-1F * -0.07957F * rotation));
-
-				neck2.setRotationX(neck2.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.0502222F * rotation));
-				neck2.setRotationY(neck2.getRotationY() + (-0.0277778F * rotation));
-				neck2.setRotationZ(neck2.getRotationZ() + (-1F * 0.1975F * rotation));
-
-				neck2.setPositionY(neck2.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * 0.2387324F * rotation));
-
-				neck1.setRotationX(neck1.getRotationX() + ((rotation >= 0 ? -1F : 1F) * 0.02777763F * rotation));
-				neck1.setRotationY(neck1.getRotationY() + (-0.0972222F * rotation));
-				neck1.setRotationZ(neck1.getRotationZ() + (-1F * 0.1666667F * rotation));
-
-				neck1.setPositionX(neck1.getPositionX() + (-1F * 0.0795775F * rotation));
-				neck1.setPositionY(neck1.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * -0.0795775F * rotation));
-
-				head.setRotationX(head.getRotationX() + ((rotation >= 0 ? -1F : 1F) * -0.2189445F * rotation));
-				head.setRotationY(head.getRotationY() + (-0.1944444F * rotation));
-				head.setRotationZ(head.getRotationZ() + (-1F * 0.3055555F * rotation));
-				head.setPositionX(head.getPositionX() + (-1F * 0.716197F * rotation));
-				head.setPositionY(head.getPositionY() + (-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation));
-				head.setPositionZ(head.getPositionZ() + ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation));
-
-				
-				if (playerStateHandler.getMovementData().bite) {
-					biteTicks++;
-					
-					
-				}
-				else if (biteTicks > 0) {
-					biteTicks--;
-					
-					
-				}
+				neck.setRotationY(-0.125F * rotation);
+				neck4.setRotationZ(-1F * -0.0555556F * rotation);
+				neck3.setRotationX((rotation >= 0 ? -1F : 1F) * 0.06944F * rotation + 0.523599F);
+				neck3.setRotationY(-0.083333F * rotation);
+				neck3.setRotationZ(-1F * 0.166667F * rotation);
+				neck3.setPositionX(-1F * -0.07957F * rotation);
+				neck2.setRotationX((rotation >= 0 ? -1F : 1F) * 0.0502222F * rotation + 0.523599F);
+				neck2.setRotationY(-0.0277778F * rotation);
+				neck2.setRotationZ(-1F * 0.1975F * rotation);
+				neck2.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * 0.2387324F * rotation);
+				neck1.setRotationX((rotation >= 0 ? -1F : 1F) * 0.02777763F * rotation + 0.174533F);
+				neck1.setRotationY(-0.0972222F * rotation);
+				neck1.setRotationZ(-1F * 0.1666667F * rotation);
+				neck1.setPositionX(-1F * 0.0795775F * rotation);
+				neck1.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * -0.0795775F * rotation);
+				head.setRotationX((rotation >= 0 ? -1F : 1F) * -0.2189445F * rotation + 0.349066F);
+				head.setRotationY(-0.1944444F * rotation);
+				head.setRotationZ(-1F * 0.3055555F * rotation);
+				head.setPositionX(-1F * 0.716197F * rotation);
+				head.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation);
+				head.setPositionZ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation);
 					
 			});
 		}
