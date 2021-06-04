@@ -38,5 +38,6 @@ public class OpenCrafting implements IMessage<OpenCrafting>{
                 return new CraftingContainer(p_createMenu_1_,p_createMenu_2_);
             }
         });
+        context.setPacketHandled(true);
     }
 }
