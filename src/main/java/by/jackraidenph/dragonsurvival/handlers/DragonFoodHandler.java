@@ -273,7 +273,7 @@ public class DragonFoodHandler{
 				
 				event.setCanceled(true);
 				
-				rand.setSeed((long)(player.tickCount * 312871));
+				rand.setSeed(player.tickCount * 312871L);
 				
 				RenderSystem.enableBlend();
 				this.mc.getTextureManager().bind(FOOD_ICONS);

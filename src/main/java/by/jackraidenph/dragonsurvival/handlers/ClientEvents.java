@@ -1,12 +1,15 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.capability.DragonCapStorage;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
+import by.jackraidenph.dragonsurvival.containers.CraftingContainer;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
+import by.jackraidenph.dragonsurvival.network.OpenCrafting;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
@@ -21,7 +24,9 @@ import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -37,8 +42,11 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.*;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
@@ -48,18 +56,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -77,6 +80,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @SuppressWarnings("unused")
@@ -191,26 +196,14 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onOpenScreen(GuiOpenEvent openEvent) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (openEvent.getGui() instanceof InventoryScreen && !player.isCreative() && DragonStateProvider.isDragon(player)) {
-            openEvent.setCanceled(true);
-            showingInventory = false;
-        }
-
-    }
-
-    /**
-     * The event stops being fired if jump key is pressed during movement
-     */
-    @SubscribeEvent
-    public static void onKey(InputEvent.KeyInputEvent keyInputEvent) {
-        Minecraft minecraft = Minecraft.getInstance();
-        GameSettings gameSettings = minecraft.options;
-        InputMappings.Input input = InputMappings.getKey(keyInputEvent.getKey(), keyInputEvent.getScanCode());
-        if (minecraft.screen == null && DragonStateProvider.isDragon(minecraft.player) && !minecraft.player.isCreative() && gameSettings.keyInventory.isActiveAndMatches(input) && !showingInventory) {
-            DragonSurvivalMod.CHANNEL.sendToServer(new OpenDragonInventory());
-            showingInventory = true;
+    public static void addCraftingButton(GuiScreenEvent.InitGuiEvent.Post initGuiEvent)
+    {
+        Screen screen=initGuiEvent.getGui();
+        if(screen instanceof InventoryScreen && DragonStateProvider.isDragon(Minecraft.getInstance().player)) {
+            Button openCrafting = new Button(screen.width/2, screen.height-30, 60, 20, new StringTextComponent("Crafting"), p_onPress_1_ -> {
+                DragonSurvivalMod.CHANNEL.sendToServer(new OpenCrafting());
+            });
+            initGuiEvent.addWidget(openCrafting);
         }
     }
 

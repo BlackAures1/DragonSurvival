@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-
+@Deprecated
 public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftMatrix;
     private final CraftResultInventory craftResult = new CraftResultInventory();

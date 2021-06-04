@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.blocks;
 
 import javax.annotation.Nullable;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.gui.DragonAltarGUI;
 import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
@@ -27,7 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DragonAltarBlock extends Block {
-    VoxelShape SHAPE = VoxelShapes.block();
+    private final VoxelShape SHAPE = VoxelShapes.block();
 
     public DragonAltarBlock(Properties properties) {
         super(properties);
@@ -38,15 +39,16 @@ public class DragonAltarBlock extends Block {
     	TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof AltarEntity) {
             AltarEntity altarEntity = (AltarEntity) tileEntity;
-            if (altarEntity.usageCooldown > 0) {
+            int cooldown=altarEntity.usageCooldowns.getOrDefault(player.getUUID(),0);
+            if (cooldown > 0) {
                 if (worldIn.isClientSide)
-                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active"), player.getUUID());
-                return ActionResultType.FAIL;
+                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active").append(": "+ Functions.ticksToSeconds(cooldown)), player.getUUID());
+                return ActionResultType.CONSUME;
             } else {
                 if (worldIn.isClientSide) {
                     openGUi();
                 }
-                altarEntity.usageCooldown = 20 * 60 * 3; //3 minutes
+                altarEntity.usageCooldowns.put(player.getUUID(),Functions.minutesToTicks(3));
             }
         }
         return ActionResultType.SUCCESS;
@@ -66,11 +68,6 @@ public class DragonAltarBlock extends Block {
             }
 
         }));
-    }
-
-    @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 
     @Override

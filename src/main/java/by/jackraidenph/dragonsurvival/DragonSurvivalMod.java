@@ -89,8 +89,6 @@ public class DragonSurvivalMod {
         GeckoLib.initialize();
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
-        //modEventBus.addListener(EntityTypesInit::biomeLoadingEvent);
-        // MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHandler.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.serverSpec);
@@ -119,6 +117,7 @@ public class DragonSurvivalMod {
         register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
+        register(OpenCrafting.class,new OpenCrafting());
 
         CHANNEL.registerMessage(nextPacketId++, SynchronizeDragonCap.class, (synchronizeDragonCap, packetBuffer) -> {
             packetBuffer.writeInt(synchronizeDragonCap.playerId);
@@ -291,8 +290,6 @@ public class DragonSurvivalMod {
                     }
                 });
         LOGGER.info("Successfully registered packets!");
-        //EntityTypesInit.addSpawn();
-        //LOGGER.info("Successfully registered entity spawns!");
     }
     
     @SubscribeEvent
@@ -306,7 +303,7 @@ public class DragonSurvivalMod {
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
     	if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER) 
     			&& biomeTypes.stream().anyMatch(x -> includeList.contains(x) 
-    			&& !biomeTypes.stream().anyMatch(y -> excludeList.contains(y)))) {
+    			&& biomeTypes.stream().noneMatch(excludeList::contains))) {
     		spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
     	}
     }
