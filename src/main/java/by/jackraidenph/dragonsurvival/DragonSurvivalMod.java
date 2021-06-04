@@ -89,14 +89,11 @@ public class DragonSurvivalMod {
         GeckoLib.initialize();
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
-        //modEventBus.addListener(EntityTypesInit::biomeLoadingEvent);
-        // MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHandler.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.serverSpec);
         
         MinecraftForge.EVENT_BUS.register(this);
-        //this crashes the server
         MinecraftForge.EVENT_BUS.register(new DragonFoodHandler());
         MinecraftForge.EVENT_BUS.register(new SpecificsHandler());
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, this::biomeLoadingEvent);
@@ -293,8 +290,6 @@ public class DragonSurvivalMod {
                     }
                 });
         LOGGER.info("Successfully registered packets!");
-        //EntityTypesInit.addSpawn();
-        //LOGGER.info("Successfully registered entity spawns!");
     }
     
     @SubscribeEvent
@@ -308,7 +303,7 @@ public class DragonSurvivalMod {
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
     	if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER) 
     			&& biomeTypes.stream().anyMatch(x -> includeList.contains(x) 
-    			&& !biomeTypes.stream().anyMatch(y -> excludeList.contains(y)))) {
+    			&& biomeTypes.stream().noneMatch(excludeList::contains))) {
     		spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
     	}
     }
