@@ -1,5 +1,6 @@
 1.16.5-0.0.34:
-
+added button for opening 3x3 crafting;
+Dragon altar now tracks cooldowns separately for each player.
 
 1.16.5-0.0.33:
 added hitbox and eye position adjustments according to dragon growth.
