@@ -176,7 +176,7 @@ public class SpecificsHandler {
 				if (block != null)
 					hydrationBlocks.add(block);
 				else
-					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydraton block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			}
 		}
 		SEA_DRAGON_HYDRATION_BLOCKS = hydrationBlocks;
@@ -191,13 +191,13 @@ public class SpecificsHandler {
 					for (Item item : tag.getValues())
 						hydrationItems.add(item);
 				else
-					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in sea dragon hydraton block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			} else {
 				final Item item = ForgeRegistries.ITEMS.getValue(rlEntry);
 				if (item != null)
 					hydrationItems.add(item);
 				else
-					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydraton block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			}
 		}
 		SEA_DRAGON_HYDRATION_USE_ALTERNATIVES = hydrationItems;
@@ -421,7 +421,7 @@ public class SpecificsHandler {
                         if (playerEntity.isEyeInFluid(FluidTags.WATER) && playerEntity.getAirSupply() < playerEntity.getMaxAirSupply())
                             playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
                         if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.seaTicksWithoutWater.get() > 0 && !playerEntity.isCreative()) {
-                            if (!playerEntity.isInWaterRainOrBubble() && (SEA_DRAGON_HYDRATION_BLOCKS != null && !SEA_DRAGON_HYDRATION_BLOCKS.contains(block))) {
+                            if (!playerEntity.isInWaterRainOrBubble() && (SEA_DRAGON_HYDRATION_BLOCKS != null && !SEA_DRAGON_HYDRATION_BLOCKS.contains(block) && !SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock()))) {
                             	if (dragonStateHandler.getDebuffData().timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2)
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
                             	if (dragonStateHandler.getDebuffData().timeWithoutWater == ConfigHandler.SERVER.seaTicksWithoutWater.get() + 1 && !playerEntity.level.isClientSide)
