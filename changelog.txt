@@ -1,5 +1,14 @@
 1.16.5-0.0.34:
-
+many new (and perhaps unnecessary) config options
+revamped dragon diet system, completely configurable
+lowered chances of poison from eating incorrect food (50%, 90%, 100% to 25%, 50%, 100%)
+added custom food HUD for dragons
+added dragon penalty HUD icons
+adjusted many dragon specifics
+fixed render issues with armor for invisible dragons
+fixed spawn issues for magical predators
+added temp fix for the dragon inventory crafting
+tweaked dragon animations, item textures, dragon textures, and more
 
 1.16.5-0.0.33:
 added hitbox and eye position adjustments according to dragon growth.
