@@ -369,10 +369,10 @@ public class SpecificsHandler {
                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, ConfigHandler.SERVER.speedupEffectLevel.get() - 1, false, false));
                 switch (dragonStateHandler.getType()) {
                     case CAVE:
-                        if (ConfigHandler.SERVER.penalties.get() && !playerEntity.isCreative() && ((playerEntity.isInWaterOrBubble() && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0) || (playerEntity.isInWaterOrRain() && !playerEntity.isInWater() && ConfigHandler.SERVER.caveRainDamage.get() != 0.0))) {
+                        if (ConfigHandler.SERVER.penalties.get() && !playerEntity.isCreative() && !playerEntity.isSpectator() && ((playerEntity.isInWaterOrBubble() && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0) || (playerEntity.isInWaterOrRain() && !playerEntity.isInWater() && ConfigHandler.SERVER.caveRainDamage.get() != 0.0) || (SEA_DRAGON_HYDRATION_BLOCKS != null && (SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())) && ConfigHandler.SERVER.caveRainDamage.get() != 0.0))) {
                         	if (playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 10 == 0 && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0)
                         		playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveWaterDamage.get().floatValue());
-                        	else if (playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 40 == 0 && ConfigHandler.SERVER.caveRainDamage.get() != 0.0)
+                        	else if (((playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble()) || (SEA_DRAGON_HYDRATION_BLOCKS != null && (SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())))) && playerEntity.tickCount % 40 == 0 && ConfigHandler.SERVER.caveRainDamage.get() != 0.0)
                         		playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveRainDamage.get().floatValue());
                         	if (playerEntity.tickCount % 5 == 0)
                         		playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
@@ -401,7 +401,7 @@ public class SpecificsHandler {
                         	 dragonStateHandler.setLavaAirSupply(Math.min(dragonStateHandler.getLavaAirSupply() + (int)Math.ceil( ConfigHandler.SERVER.caveLavaSwimmingTicks.get() * 0.0133333F), ConfigHandler.SERVER.caveLavaSwimmingTicks.get()));
                         break;
                     case FOREST:
-                        if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.forestStressTicks.get() > 0 && !playerEntity.isCreative()) {
+                        if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.forestStressTicks.get() > 0 && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
                             WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                             if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                         		if (dragonStateHandler.getDebuffData().timeInDarkness < ConfigHandler.SERVER.forestStressTicks.get())
@@ -420,7 +420,7 @@ public class SpecificsHandler {
                     case SEA:
                         if (playerEntity.isEyeInFluid(FluidTags.WATER) && playerEntity.getAirSupply() < playerEntity.getMaxAirSupply())
                             playerEntity.setAirSupply(playerEntity.getMaxAirSupply());
-                        if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.seaTicksWithoutWater.get() > 0 && !playerEntity.isCreative()) {
+                        if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.seaTicksWithoutWater.get() > 0 && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
                             if (!playerEntity.isInWaterRainOrBubble() && (SEA_DRAGON_HYDRATION_BLOCKS != null && !SEA_DRAGON_HYDRATION_BLOCKS.contains(block) && !SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock()))) {
                             	if (dragonStateHandler.getDebuffData().timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2)
                             		dragonStateHandler.getDebuffData().timeWithoutWater++;
@@ -448,14 +448,14 @@ public class SpecificsHandler {
                 
                 // Dragon Particles
                 // TODO: Randomize along dragon body
-                if (world.isClientSide) {
-                    if (dragonStateHandler.getDebuffData().timeWithoutWater >= ConfigHandler.SERVER.seaTicksWithoutWater.get())
+                if (world.isClientSide && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
+                    if (dragonStateHandler.getType() == DragonType.SEA && dragonStateHandler.getDebuffData().timeWithoutWater >= ConfigHandler.SERVER.seaTicksWithoutWater.get())
                     	world.addParticle(ParticleTypes.WHITE_ASH,
                     			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
                     			playerEntity.getY() + 0.5F, 
                     			playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1), 
                     			0, 0, 0);
-                    if (dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get())
+                    if (dragonStateHandler.getType() == DragonType.FOREST && dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get())
                     	world.addParticle(ParticleTypes.SMOKE,
                     			playerEntity.getX() + world.random.nextDouble() *  (world.random.nextBoolean() ? 1 : -1), 
                     			playerEntity.getY() + 0.5F, 
