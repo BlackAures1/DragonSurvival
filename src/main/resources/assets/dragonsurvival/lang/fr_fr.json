@@ -1,21 +1,21 @@
 {
   "itemGroup.dragon.survival.blocks": "Dragons Survival",
 
-  "entity.dragonsurvival.magical_predator_entity": "Prédateur Magique",
+  "entity.dragonsurvival.magical_predator_entity": "Prédateur magique",
 
-  "item.dragonsurvival.magical_predator_entity_spawn_egg": "Oeuf Prédateur Magique",
+  "item.dragonsurvival.magical_predator_entity_spawn_egg": "Oeuf De Prédateur Magique",
   "item.dragonsurvival.heart_element": "Coeur Élémentaire",
-  "item.dragonsurvival.star_bone": "Ossements D'Étoiles",
-  "item.dragonsurvival.elder_dragon_bone": "Anciens Ossements De Dragon",
-  "item.dragonsurvival.charged_coal": "Charbon Énergisé",
+  "item.dragonsurvival.star_bone": "Étoile D'Os",
+  "item.dragonsurvival.elder_dragon_bone": "Ossement De Dragon Ancien",
+  "item.dragonsurvival.charged_coal": "Charbon Chargé",
   "item.dragonsurvival.charred_meat": "Viande Carbonisée",
-  "item.dragonsurvival.elder_dragon_dust": "Poussière De Dragon Ancien",
+  "item.dragonsurvival.elder_dragon_dust": "Poudre de dragon ancien",
 
-  "block.dragonsurvival.dragon_gate": "Porte de Dragon",
+  
   "block.dragonsurvival.predator_star": "Étoile De Dragon",
   "block.dragonsurvival.dragon_altar": "Autel Des Dragons",
   "block.dragonsurvival.cave_nest_small": "Petit Nid De Caverne",
-  "block.dragonsurvival.forest_nest_small": "Petit Nid De Forêt",
+  "block.dragonsurvival.forest_nest_small": "Petit Nid Forestier",
   "block.dragonsurvival.water_nest_small": "Petit Nid Océanique",
   "block.dragonsurvival.medium_sea_nest": "Nid Océanique Moyen",
   "block.dragonsurvival.medium_cave_nest": "Nid De Caverne Moyen",
@@ -28,11 +28,34 @@
   "block.dragonsurvival.dragon_altar3": "Autel De Dragon En Grès",
   "block.dragonsurvival.dragon_altar0": "Autel De Dragon Moussu",
 
-  "dragonsurvival:config.category.general.tooltip": "Configuration générales de dragon survival",
-  "dragonsurvival:config.category.spawnchances.tooltip": "Taux d'apparition des entités",
+  "block.dragonsurvival.spruce_dragon_door": "Porte De Dragon En Épicéa",
+  "block.dragonsurvival.acacia_dragon_door": "Porte De Dragon En Acacia",
+  "block.dragonsurvival.jungle_dragon_door": "Porte De Dragon De La Jungle",
+  "block.dragonsurvival.oak_dragon_door": "Porte De Dragon En Chêne",
+  "block.dragonsurvival.dark_oak_dragon_door": "Porte De Dragon En Chêne Sombre",
+  "block.dragonsurvival.birch_dragon_door": "Porte De Dragon En Bouleau",
+  "block.dragonsurvival.cave_dragon_door": "Porte De Dragon Des Cavernes",
+  "block.dragonsurvival.sea_dragon_door": "Porte De Dragon Des Océans",
+  "block.dragonsurvival.forest_dragon_door": "Porte De Dragon Des Forêts",
+  "block.dragonsurvival.iron_dragon_door": "Porte De Dragon En Fer",
+  "block.dragonsurvival.murderer_dragon_door": "Porte De Dragon Skyrim",
+  "block.dragonsurvival.warped_dragon_door": "Porte De Dragon Dépravé",
+  "block.dragonsurvival.crimson_dragon_door": "Porte De Dragon Cramoisie",
+  "block.dragonsurvival.sleeper_dragon_door": "Porte De Dragon Gothic",
+  "block.dragonsurvival.stone_dragon_door": "Porte De Dragon En Pierre",
+  "block.dragonsurvival.legacy_dragon_door": "Porte De Dragon Des Héritiers",
 
-  "death.attack.dryout": "Vous etes mort désséché",
+  "effect.dragonsurvival.stress": "Stress",
 
+  "dragonsurvival:config.category.general.tooltip": "Configuration générale pour Dragons Survival",
+  "dragonsurvival:config.category.spawnchances.tooltip": "Configuration du taux d'apparition des entitées",
+
+  "death.attack.starDrain": "%1$s a été drainé(e) de son énergie vitale.",
+  "death.attack.waterBurn": "%1$s n'etais pas étanche.",
+  "death.attack.waterBurn.player": "%1$s a tenté(e) de fuir %2$s en nageant.",
+  "death.attack.dehydration": "%1$s s'est désséché(e).",
+  "death.attack.dehydration.player": "%1$s s'est désséché(e) en essayant de fuir %2$s.",
+  
   "ds.cave_dragon_choice": "Vous avez choisis d'être un dragon des cavernes.",
   "ds.forest_dragon_choice": "Vous avez choisis d'être un dragon des forêts.",
   "ds.sea_dragon_choice": "Vous avez choisis d'être un dragon des océans.",
@@ -42,5 +65,12 @@
   "ds.you.have.no.wings": "Vous n'avez pas d'ailes",
   "ds.dragon.grants.wings": "<Ender dragon> Je t'octroie des ailes. Maintenant dégerpis !",
   "ds.space.occupied": "Pas assez d'espace disponible",
-  "ds.cooldown.active": "L'autel est en cours de rechargement"
+  "ds.cooldown.active": "L'autel est en cours de rechargement",
+  
+  "ds.regen.on": "Régénération au nid activée.",
+  "ds.regen.off": "Régénération au nid désactivée.",
+  
+  "ds.endmessage.1": "Vous êtes venu ici pour les ailes, ()? Va t'en, avant qu'il ne soit trop tard.",
+  "ds.endmessage.2": "Ceci sont mes terres, (), fait preuve de respect. Pars, mais avant cela réponds moi, pourquoi est tu venu ici, est-ce pour les ailes ?",
+  "ds.endmessage.3": "Vous avez traversé beaucoup pour arriver ici, (), que souhaitez vous ?"
 }
