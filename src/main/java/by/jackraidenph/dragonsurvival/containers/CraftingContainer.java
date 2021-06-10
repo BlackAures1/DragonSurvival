@@ -62,4 +62,18 @@ public class CraftingContainer extends WorkbenchContainer {
             }
         }
     }
+
+    @Override
+    public void removed(PlayerEntity playerEntity) {
+        super.removed(playerEntity);
+        Field fieldCrafting=WorkbenchContainer.class.getDeclaredFields()[0];
+        fieldCrafting.setAccessible(true);
+        if(fieldCrafting.getType()==CraftingInventory.class) {
+            try {
+                clearContainer(playerEntity,world, (IInventory) fieldCrafting.get(this));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
