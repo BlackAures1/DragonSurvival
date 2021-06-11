@@ -10,6 +10,7 @@ import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -84,4 +85,19 @@ public class SynchronizationController {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        PlayerEntity player = event.getPlayer();
+        if (player.level.isClientSide())
+            return;
+        DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new SynchronizeDragonCap(player.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply()));
+            DragonMovementData mData = dragonStateHandler.getMovementData();
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new PacketSyncCapabilityMovement(player.getId(), mData.bodyYaw, mData.headYaw, mData.headPitch, mData.bite));
+            DragonDebuffData dData = dragonStateHandler.getDebuffData();
+            DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new SyncCapabilityDebuff(player.getId(), dData.timeWithoutWater, dData.timeInDarkness));
+        });
+    }
+
 }
