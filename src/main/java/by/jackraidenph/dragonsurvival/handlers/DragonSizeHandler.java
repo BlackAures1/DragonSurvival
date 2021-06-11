@@ -4,17 +4,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
-import by.jackraidenph.dragonsurvival.util.DragonMovementFromOptions;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,32 +41,31 @@ public class DragonSizeHandler {
 			event.setNewEyeHeight(eyeHeight);
     		event.setNewSize(new EntitySize(width, height, false));
     		}
-    		
         });
     }
     
-	private static float calculateDragonHeight(float size, boolean growsPastHuman) {
+	public static float calculateDragonHeight(float size, boolean growsPastHuman) {
 		float height = (size + 4.0F) / 20.0F; // 0.9 -> 2.2
 		if (!growsPastHuman)
 			height = 9F * (size + 12F) / 260F; // 0.9 -> 1.8
 		return height;
 	}
-	
-	private static float calculateDragonWidth(float size, boolean growsPastHuman) {
+
+	public static float calculateDragonWidth(float size, boolean growsPastHuman) {
 		float width = (3.0F * size + 62.0F) / 260.0F; // 0.4 -> 0.7
 		if (!growsPastHuman)
 			width = (size + 38) / 130F; // 0.4 -> 0.6
 		return width;
 	}
-	
-	private static float calculateDragonEyeHeight(float size, boolean growsPastHuman) {
+
+	public static float calculateDragonEyeHeight(float size, boolean growsPastHuman) {
 		float eyeHeight = (11.0F * size + 54.0F) / 260.0F; // 0.8 -> 1.9
 		if (!growsPastHuman)
 			eyeHeight = (41F * size + 466F) / 1300F; // 14, 0.8 -> 40, 1.62
 		return eyeHeight;
 	}
-	
-    private static float calculateModifiedHeight(float height, Pose pose, boolean sizeChangesHitbox) {
+
+	public static float calculateModifiedHeight(float height, Pose pose, boolean sizeChangesHitbox) {
     	if (pose == Pose.CROUCHING) {
     		if (sizeChangesHitbox)
     			height *= 5.0F / 6.0F;
@@ -83,8 +79,8 @@ public class DragonSizeHandler {
 		}
     	return height;
     }
-    
-    private static float calculateModifiedEyeHeight(float eyeHeight, Pose pose) {
+
+	public static float calculateModifiedEyeHeight(float eyeHeight, Pose pose) {
     	if (pose == Pose.CROUCHING) {
     		eyeHeight *= 5.0F / 6.0F;
 		} else if (pose == Pose.SWIMMING || pose == Pose.FALL_FLYING || pose == Pose.SPIN_ATTACK) {
@@ -163,20 +159,6 @@ public class DragonSizeHandler {
 			}
     	});
     }
-    
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void clientPlayerTick(TickEvent.PlayerTickEvent event) { // FIXME: Use mixin instead
-    	PlayerEntity player = event.player;
-    	if (player == Minecraft.getInstance().cameraEntity && ConfigHandler.SERVER.sizeChangesHitbox.get()) {
-    		DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
-    			if (player instanceof ClientPlayerEntity && dragonStateHandler.isDragon() && !(((ClientPlayerEntity)player).input instanceof DragonMovementFromOptions)) {
-        			((ClientPlayerEntity)player).input = new DragonMovementFromOptions(Minecraft.getInstance().options, (ClientPlayerEntity)player, ConfigHandler.SERVER.sizeChangesHitbox.get());
-        		}
-    		});
-    	}
-    }
-    
 }
 
 

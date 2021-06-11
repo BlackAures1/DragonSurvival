@@ -4,12 +4,13 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "dragonsurvival.refmap.json",
 	"mixins": [
-		"AccessorEntityRenderer",
         "MixinPlayerEntity",
         "MixinLivingEntity",
-        "MixinItem"
+        "MixinItem",
+		"MixinEntity"
 	],
 	"client": [
+		"AccessorEntityRenderer",
 		"MixinFirstPersonRenderer"
 	],
 	"minVersion": "0.8"
