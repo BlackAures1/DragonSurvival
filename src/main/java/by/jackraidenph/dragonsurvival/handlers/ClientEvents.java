@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
 import by.jackraidenph.dragonsurvival.containers.CraftingContainer;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
+import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
 import by.jackraidenph.dragonsurvival.network.OpenCrafting;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
@@ -306,6 +307,7 @@ public class ClientEvents {
             dummyDragon.player = player.getId();
             playerDragonHashMap.put(player.getId(), new AtomicReference<>(dummyDragon));
         }
+
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 dragonModel.setupBones();
@@ -324,7 +326,9 @@ public class ClientEvents {
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
 	                matrixStack.scale(scale, scale, scale);
 	                int eventLight = renderPlayerEvent.getLight();
-	                
+
+                    ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius((3.0F * size + 62.0F) / 260.0F);
+
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
 	                dummyDragon.isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
@@ -400,6 +404,8 @@ public class ClientEvents {
                 	matrixStack.popPose();
                 }
             }
+            else
+                ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius(0.5F);
         });
     }
 
