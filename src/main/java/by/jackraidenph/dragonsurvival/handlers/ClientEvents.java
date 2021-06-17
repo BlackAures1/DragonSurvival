@@ -302,6 +302,14 @@ public class ClientEvents {
     public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
         PlayerEntity player = renderPlayerEvent.getPlayer();
+        Minecraft mc = Minecraft.getInstance();
+
+        // TODO come up with actual solution instead of just not rendering your passenger in first person.
+        if (mc.options.getCameraType() == PointOfView.FIRST_PERSON && mc.player.hasPassenger(player)){
+            renderPlayerEvent.setCanceled(true);
+            return;
+        }
+
         if (!playerDragonHashMap.containsKey(player.getId())) {
             DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.level);
             dummyDragon.player = player.getId();
@@ -331,7 +339,7 @@ public class ClientEvents {
 
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
 	                dummyDragon.isArmorModel = false;
-	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon);
+	                EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
 	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
@@ -355,7 +363,7 @@ public class ClientEvents {
 	                        case BABY:
 	                            matrixStack.translate(0, 0.325, 0);
 	                    }
-	                } else if (player.isSwimming()) { // FIXME yea this too, I just copied what was up there to shift the model for swimming but I swear this should be done differently...
+	                } else if (player.isSwimming() || player.isAutoSpinAttack() || (dragonsFlying.getOrDefault(player.getId(), false) && !player.isOnGround() && !player.isInWater() && !player.isInLava())) { // FIXME yea this too, I just copied what was up there to shift the model for swimming but I swear this should be done differently...
 	                	switch (dragonStage) {
                         case ADULT:
                             matrixStack.translate(0, -0.35, 0);
@@ -387,7 +395,7 @@ public class ClientEvents {
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                 
-	                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+	                ItemRenderer itemRenderer = mc.getItemRenderer();
 	                ItemStack right = player.getMainHandItem();
 	                matrixStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));
 	                matrixStack.translate(-0.45f, 1, 0);

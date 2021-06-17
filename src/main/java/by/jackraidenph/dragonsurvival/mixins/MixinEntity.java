@@ -3,7 +3,9 @@ package by.jackraidenph.dragonsurvival.mixins;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
+import com.mojang.realmsclient.gui.ListButton;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
@@ -16,9 +18,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity extends net.minecraftforge.common.capabilities.CapabilityProvider<Entity>{
+    @Shadow
+    private EntitySize dimensions;
+
     protected MixinEntity(Class<Entity> baseClass) {
         super(baseClass);
     }
+
+    @Inject(at = @At(value = "HEAD"), method = "Lnet/minecraft/entity/Entity;getPassengersRidingOffset()D", cancellable = true)
+    public void getDragonPassengersRidingOffset(CallbackInfoReturnable<Double> ci) {
+        if (DragonStateProvider.isDragon((Entity)(Object)this)){
+            switch (this.getPose()){
+                case FALL_FLYING:
+                case SWIMMING:
+                case SPIN_ATTACK:
+                    ci.setReturnValue((double)this.dimensions.height * 0.6D);
+                    break;
+                case CROUCHING:
+                    ci.setReturnValue((double)this.dimensions.height * 0.45D);
+                    break;
+                default:
+                    ci.setReturnValue((double)this.dimensions.height * 0.5D);
+            }
+        }
+    }
+
+
 
     @Inject(at = @At(value = "HEAD"), method = "Lnet/minecraft/entity/Entity;isVisuallyCrawling()Z", cancellable = true)
     public void isDragonVisuallyCrawling(CallbackInfoReturnable<Boolean> ci){
@@ -39,6 +64,11 @@ public abstract class MixinEntity extends net.minecraftforge.common.capabilities
             return new AxisAlignedBB(vector3d, vector3d1);
         } else
             return getBoundingBoxForPose(pose);
+    }
+
+    @Shadow
+    public Pose getPose(){
+        throw new IllegalStateException("Mixin failed to shadow getPose()");
     }
 
     @Shadow

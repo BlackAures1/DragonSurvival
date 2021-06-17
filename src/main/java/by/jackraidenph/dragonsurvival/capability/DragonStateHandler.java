@@ -25,6 +25,7 @@ public class DragonStateHandler {
     private float size;
     private final DragonDebuffData debuffData = new DragonDebuffData(0, 0);
     private int lavaAirSupply;
+    private int passengerId;
     
     public static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("03574e62-f9e4-4f1b-85ad-fde00915e446");
     public static final UUID DAMAGE_MODIFIER_UUID = UUID.fromString("5bd3cebc-132e-4f9d-88ef-b686c7ad1e2c");
@@ -234,6 +235,14 @@ public class DragonStateHandler {
     
     public void setLavaAirSupply(int lavaAirSupply) {
     	this.lavaAirSupply = lavaAirSupply;
+    }
+
+    public int getPassengerId() {
+        return this.passengerId;
+    }
+
+    public void setPassengerId( int passengerId){
+        this.passengerId = passengerId;
     }
 
     public static class DragonMovementData {

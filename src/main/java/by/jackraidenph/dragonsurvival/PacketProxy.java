@@ -103,6 +103,7 @@ public class PacketProxy {
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                         dragonStateHandler.setSize(synchronizeDragonCap.size);
                         dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
+                        dragonStateHandler.setPassengerId(synchronizeDragonCap.passengerId);
                         if (!dragonStateHandler.hasWings() && thatPlayer == myPlayer)
                             FlightController.wingsEnabled = false;
                     });

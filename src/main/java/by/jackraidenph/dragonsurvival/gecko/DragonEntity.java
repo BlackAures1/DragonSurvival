@@ -58,6 +58,8 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
 	            if (player.isSleeping())
 	            	builder.addAnimation("sleep", true);
 	            else if (player.isPassenger())
+                    builder.addAnimation("sit", true);
+	            else if (player.isPassenger())
 	            	builder.addAnimation("idle", true); // TODO: Passenger animation for riding entities
 	            else if (playerStateHandler.getMovementData().bite)
 	                builder.addAnimation("bite");

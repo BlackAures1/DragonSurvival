@@ -11,6 +11,7 @@
 	],
 	"client": [
 		"AccessorEntityRenderer",
+		"MixinProjectileHelper",
 		"MixinFirstPersonRenderer"
 	],
 	"minVersion": "0.8"

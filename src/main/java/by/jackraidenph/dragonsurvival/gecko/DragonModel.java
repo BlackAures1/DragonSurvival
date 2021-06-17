@@ -86,7 +86,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 		
 		// TODO Replace temp head turn with system that includes vertical
 		PlayerEntity player = entity.getPlayer();
-		if (!player.isSleeping()) {
+		if (!player.isSleeping() && !player.isPassenger()) {
 			DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
 				/*IBone neck = this.getAnimationProcessor().getBone("Neck"); // rot(0, -22.5, 0)
 				IBone neck4 = this.getAnimationProcessor().getBone("Neck4"); // rot(0, 0, -10)
