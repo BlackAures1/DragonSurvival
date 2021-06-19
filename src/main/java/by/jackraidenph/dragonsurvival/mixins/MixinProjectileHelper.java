@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.mixins;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
@@ -33,7 +34,8 @@ public abstract class MixinProjectileHelper {
                     AxisAlignedBB axisalignedbb = entity1.getBoundingBox().inflate((double) entity1.getPickRadius());
                     Optional<Vector3d> optional = axisalignedbb.clip(p_221273_1_, p_221273_2_);
                     if (axisalignedbb.contains(p_221273_1_)) {
-                        if (entity1.getId() == dragonStateHandler.getPassengerId() && entity1 instanceof PlayerEntity) {
+                        if ((entity1.getRootVehicle() == p_221273_0_.getRootVehicle() && !entity1.canRiderInteract())
+                                || (entity1.getId() == dragonStateHandler.getPassengerId() && entity1 instanceof PlayerEntity)){
                             if (d0 == 0.0D) {
                                 entity = entity1;
                                 vector3d = optional.orElse(p_221273_1_);
@@ -47,7 +49,8 @@ public abstract class MixinProjectileHelper {
                         Vector3d vector3d1 = optional.get();
                         double d1 = p_221273_1_.distanceToSqr(vector3d1);
                         if (d1 < d0 || d0 == 0.0D) {
-                            if (entity1.getRootVehicle() == p_221273_0_.getRootVehicle() && !entity1.canRiderInteract()) {
+                            if ((entity1.getRootVehicle() == p_221273_0_.getRootVehicle() && !entity1.canRiderInteract())
+                                || (entity1.getId() == dragonStateHandler.getPassengerId() && entity1 instanceof PlayerEntity)){
                                 if (d0 == 0.0D) {
                                     entity = entity1;
                                     vector3d = vector3d1;
