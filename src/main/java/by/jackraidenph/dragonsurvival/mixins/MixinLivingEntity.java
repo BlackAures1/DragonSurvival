@@ -39,6 +39,12 @@ public abstract class MixinLivingEntity extends Entity{
 		super(p_i48580_1_, p_i48580_2_);
 	}
 
+	@Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/LivingEntity;rideableUnderWater()Z", cancellable = true)
+	public void dragonRideableUnderWater(CallbackInfoReturnable<Boolean> ci){
+		if (DragonStateProvider.isDragon(this))
+			ci.setReturnValue(true);
+	}
+
 	@Inject(at = @At("HEAD"), method = "eat", cancellable = true)
 	public void dragonEat(World level, ItemStack itemStack, CallbackInfoReturnable<ItemStack> ci) {
 		DragonStateProvider.getCap(this).ifPresent(dragonStateHandler -> {

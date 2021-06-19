@@ -116,7 +116,7 @@ public class DragonAltarGUI extends Screen {
                 playerStateHandler.setType(DragonType.NONE);
                 playerStateHandler.setHasWings(false);
                 playerStateHandler.setSize(20F);
-                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, 20, false, ConfigHandler.SERVER.caveLavaSwimmingTicks.get()));
+                DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(minecraft.player.getId(), false, DragonType.NONE, 20, false, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), 0));
                 minecraft.player.closeContainer();
                 minecraft.player.sendMessage(new TranslationTextComponent("ds.choice_human"), minecraft.player.getUUID());
             });
@@ -129,7 +129,7 @@ public class DragonAltarGUI extends Screen {
             return;
         player.closeContainer();
         DragonStateProvider.getCap(player).ifPresent(cap -> {
-            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, DragonLevel.BABY.size, ConfigHandler.SERVER.startWithWings.get(), ConfigHandler.SERVER.caveLavaSwimmingTicks.get()));
+            DragonSurvivalMod.CHANNEL.sendToServer(new SynchronizeDragonCap(player.getId(), false, type, DragonLevel.BABY.size, ConfigHandler.SERVER.startWithWings.get(), ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), 0));
             DragonSurvivalMod.CHANNEL.sendToServer(new GiveNest(type));
             player.level.playSound(player, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 0.7f);
             cap.setType(type);

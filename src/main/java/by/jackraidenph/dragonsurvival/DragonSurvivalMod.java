@@ -126,6 +126,7 @@ public class DragonSurvivalMod {
             packetBuffer.writeFloat(synchronizeDragonCap.size);
             packetBuffer.writeBoolean(synchronizeDragonCap.hasWings);
             packetBuffer.writeInt(synchronizeDragonCap.lavaAirSupply);
+            packetBuffer.writeInt(synchronizeDragonCap.passengerId);
         }, packetBuffer -> {
             int id = packetBuffer.readInt();
             DragonType type = DragonType.values()[packetBuffer.readByte()];
@@ -133,7 +134,8 @@ public class DragonSurvivalMod {
             float size = packetBuffer.readFloat();
             boolean hasWings = packetBuffer.readBoolean();
             int lavaAirSupply = packetBuffer.readInt();
-            return new SynchronizeDragonCap(id, hiding, type, size, hasWings, lavaAirSupply);
+            int passengerId = packetBuffer.readInt();
+            return new SynchronizeDragonCap(id, hiding, type, size, hasWings, lavaAirSupply, passengerId);
         }, (synchronizeDragonCap, contextSupplier) -> { 
             if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
                 CHANNEL.send(PacketDistributor.ALL.noArg(), synchronizeDragonCap);
@@ -144,6 +146,7 @@ public class DragonSurvivalMod {
                     dragonStateHandler.setSize(synchronizeDragonCap.size, serverPlayerEntity);
                     dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
                     dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
+                    dragonStateHandler.setPassengerId(synchronizeDragonCap.passengerId);
                     serverPlayerEntity.setForcedPose(null);
                     serverPlayerEntity.refreshDimensions();
                 });
@@ -329,7 +332,8 @@ public class DragonSurvivalMod {
                 DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
                 dragonStateHandler.setHasWings(wings);
                 dragonStateHandler.setSize(dragonLevel.size, serverPlayerEntity);
-                CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get()));
+                dragonStateHandler.setPassengerId(0);
+                CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), dragonStateHandler.getPassengerId()));
                 serverPlayerEntity.refreshDimensions();
             });
             return 1;

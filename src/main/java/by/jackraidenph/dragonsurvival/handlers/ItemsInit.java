@@ -4,12 +4,16 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
+import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SSetPassengersPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
@@ -20,6 +24,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.core.jmx.Server;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemsInit {
@@ -47,8 +52,18 @@ public class ItemsInit {
                         	size += 2;
                         	dragonStateHandler.setSize(size, playerIn);
                             playerIn.getItemInHand(handIn).shrink(1);
-                            if (!worldIn.isClientSide)
-                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
+                            if (!worldIn.isClientSide){
+                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerIn), new SyncSize(playerIn.getId(), size));
+                                if (playerIn.getVehicle() != null && playerIn.getVehicle() instanceof ServerPlayerEntity){
+                                    ServerPlayerEntity vehicle = (ServerPlayerEntity) playerIn.getVehicle();
+                                    DragonStateProvider.getCap(vehicle).ifPresent(vehicleCap -> {
+                                        playerIn.stopRiding();
+                                        vehicle.connection.send(new SSetPassengersPacket(vehicle));
+                                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> vehicle), new SynchronizeDragonCap(vehicle.getId(), vehicleCap.isHiding(), vehicleCap.getType(), vehicleCap.getSize(), vehicleCap.hasWings(), vehicleCap.getLavaAirSupply(), 0));
+                                    });
+                                }
+                            }
+
                             playerIn.refreshDimensions();
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }
@@ -71,8 +86,18 @@ public class ItemsInit {
                         	size -= 2;
                         	dragonStateHandler.setSize(size, playerIn);
                         	playerIn.getItemInHand(handIn).shrink(1);
-                            if (!worldIn.isClientSide)
-                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncSize(playerIn.getId(), size));
+                            if (!worldIn.isClientSide){
+                                DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerIn), new SyncSize(playerIn.getId(), size));
+                                if (dragonStateHandler.getPassengerId() != 0){
+                                    Entity mount = worldIn.getEntity(dragonStateHandler.getPassengerId());
+                                    if (mount != null){
+                                        mount.stopRiding();
+                                        ((ServerPlayerEntity)playerIn).connection.send(new SSetPassengersPacket(playerIn));
+                                        DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new SynchronizeDragonCap(playerIn.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply(), 0));
+                                    }
+                                }
+                            }
+
                             playerIn.refreshDimensions();
                             return ActionResult.success(playerIn.getItemInHand(handIn));
                         }

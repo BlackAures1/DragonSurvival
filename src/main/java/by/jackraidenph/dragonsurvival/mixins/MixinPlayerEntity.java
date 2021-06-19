@@ -289,7 +289,16 @@ public abstract class MixinPlayerEntity extends LivingEntity{
 			}
 		});
 	}
-	
+
+
+    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/player/PlayerEntity;getMyRidingOffset()D", cancellable = true)
+	public void dragonRidingOffset(CallbackInfoReturnable<Double> ci){
+        DragonStateProvider.getCap(this).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon())
+                ci.setReturnValue(0.25D);
+        });
+    }
+
 	@Shadow
 	public FoodStats getFoodData() {
 		throw new IllegalStateException("Mixin failed to shadow getFoodData()");

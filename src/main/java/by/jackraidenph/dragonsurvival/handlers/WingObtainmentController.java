@@ -133,7 +133,7 @@ public class WingObtainmentController {
                             });
                             thread.start();
                             dragonStateHandler.setHasWings(true);
-                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), true, dragonStateHandler.getLavaAirSupply()));
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new SynchronizeDragonCap(playerEntity.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), true, dragonStateHandler.getLavaAirSupply(), dragonStateHandler.getPassengerId()));
                         }
                     }
                 }
