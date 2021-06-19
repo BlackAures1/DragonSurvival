@@ -142,8 +142,53 @@ public class EventHandler {
             }
         });
 	}
-    
-    
+
+    @SubscribeEvent
+    public static void onServerPlayerTick(TickEvent.PlayerTickEvent event) { // TODO: Find a better way of doing this.
+        if (!(event.player instanceof ServerPlayerEntity))
+            return;
+        ServerPlayerEntity player = (ServerPlayerEntity)event.player;
+        DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+            int passengerId = dragonStateHandler.getPassengerId();
+            Entity passenger = player.level.getEntity(passengerId);
+            boolean flag = false;
+            if (!dragonStateHandler.isDragon() && player.isVehicle()){
+                flag = true;
+                player.getPassengers().get(0).stopRiding();
+                player.connection.send(new SSetPassengersPacket(player));
+            } else if (player.isSpectator() && passenger != null){
+                flag = true;
+                player.getPassengers().get(0).stopRiding();
+                player.connection.send(new SSetPassengersPacket(player));
+            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()){
+                flag = true;
+                player.getPassengers().get(0).stopRiding();
+                player.connection.send(new SSetPassengersPacket(player));
+            } else if (player.isSleeping() && player.isVehicle()){
+                flag = true;
+                player.getPassengers().get(0).stopRiding();
+                player.connection.send(new SSetPassengersPacket(player));
+            }
+            if (passenger != null) {
+                DragonStateHandler passengerCap = DragonStateProvider.getCap(passenger).orElseGet(null);
+                if (passengerCap != null){
+                    if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY){
+                        flag = true;
+                        passenger.stopRiding();
+                        player.connection.send(new SSetPassengersPacket(player));
+                    }
+                }
+            }
+            if (flag || passenger == null || !player.hasPassenger(passenger) || passenger.isSpectator() || player.isSpectator()){
+                dragonStateHandler.setPassengerId(0);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SynchronizeDragonCap(player.getId(), dragonStateHandler.isHiding(), dragonStateHandler.getType(), dragonStateHandler.getSize(), dragonStateHandler.hasWings(), dragonStateHandler.getLavaAirSupply(), 0));
+            }
+
+        });
+    }
+
+
+
     /**
      * Adds dragon avoidance goal
      */
