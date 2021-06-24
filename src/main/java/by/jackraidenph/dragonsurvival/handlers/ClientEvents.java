@@ -153,7 +153,6 @@ public class ClientEvents {
 	                eventMatrixStack.mulPose(Vector3f.YN.rotationDegrees((float)playerStateHandler.getMovementData().bodyYaw));
 	                eventMatrixStack.translate(0, -2, -1);
 	                IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-	//                int packedOverlay = LivingRenderer.getPackedOverlay(player, 0);
 	                int light = renderHandEvent.getLight();
 	                
 	                dummyDragon2.get().isArmorModel = false;
@@ -477,7 +476,6 @@ public class ClientEvents {
         texture += ".png";
 
         return new ResourceLocation(DragonSurvivalMod.MODID, texture);
-
     }
 
     private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
@@ -522,7 +520,6 @@ public class ClientEvents {
             texture += ".png";
             return texture;
         }
-
         return texture + "empty_armor.png";
     }
 
@@ -547,6 +544,4 @@ public class ClientEvents {
     			event.setCanceled(true);
     	});
     }
-    
-    static ResourceLocation HUDTextures = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_hud.png");
 }
