@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.mixins;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.mojang.realmsclient.gui.ListButton;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -23,6 +24,14 @@ public abstract class MixinEntity extends net.minecraftforge.common.capabilities
 
     protected MixinEntity(Class<Entity> baseClass) {
         super(baseClass);
+    }
+
+    @Inject(at = @At(value = "HEAD"), method = "Lnet/minecraft/entity/Entity;displayFireAnimation()Z", cancellable = true)
+    private void hideCaveDragonFireAnimation(CallbackInfoReturnable<Boolean> ci){
+        DragonStateProvider.getCap((Entity)(Object)this).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.getType() == DragonType.CAVE)
+                ci.setReturnValue(false);
+        });
     }
 
     @Inject(at = @At(value = "HEAD"), method = "Lnet/minecraft/entity/Entity;getPassengersRidingOffset()D", cancellable = true)
