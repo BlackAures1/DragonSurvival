@@ -23,7 +23,7 @@ public abstract class MixinProjectileHelper {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (DragonStateProvider.getCap(player).isPresent() && entity instanceof PlayerEntity) {
             DragonStateHandler cap = DragonStateProvider.getCap(player).orElseGet(null);
-            if (cap.isDragon() && entity.getId() == cap.getPassengerId())
+            if ((player.getRootVehicle() == entity.getRootVehicle() && !entity.canRiderInteract()) || (cap.isDragon() && entity.getId() == cap.getPassengerId()))
                 return new AxisAlignedBB(0, -1000, 0, 0, -1000, 0);
         }
         return entity.getBoundingBox();
