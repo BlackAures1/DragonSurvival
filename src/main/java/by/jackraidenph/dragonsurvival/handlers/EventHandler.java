@@ -176,6 +176,10 @@ public class EventHandler {
                         flag = true;
                         passenger.stopRiding();
                         player.connection.send(new SSetPassengersPacket(player));
+                    } else if (passenger.getRootVehicle() != player.getRootVehicle()) {
+                        flag = true;
+                        passenger.stopRiding();
+                        player.connection.send(new SSetPassengersPacket(player));
                     }
                 }
             }
