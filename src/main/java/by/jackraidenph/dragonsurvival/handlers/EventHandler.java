@@ -152,24 +152,24 @@ public class EventHandler {
             int passengerId = dragonStateHandler.getPassengerId();
             Entity passenger = player.level.getEntity(passengerId);
             boolean flag = false;
-            if (!dragonStateHandler.isDragon() && player.isVehicle()){
+            if (!dragonStateHandler.isDragon() && player.isVehicle() && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSpectator() && passenger != null){
+            } else if (player.isSpectator() && passenger != null && player.getPassengers().get(0) instanceof ServerPlayerEntity) {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()){
+            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSleeping() && player.isVehicle()){
+            } else if (player.isSleeping() && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
             }
-            if (passenger != null) {
+            if (passenger != null && passenger instanceof ServerPlayerEntity) {
                 DragonStateHandler passengerCap = DragonStateProvider.getCap(passenger).orElseGet(null);
                 if (passengerCap != null){
                     if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY){
