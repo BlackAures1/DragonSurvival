@@ -150,7 +150,7 @@ public class EventHandler {
             return;
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
+            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
                 float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f);
                 float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
                 event.setAmount(dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage);
@@ -165,19 +165,15 @@ public class EventHandler {
             return;
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
+            if (damageSource == DamageSource.FALL && livingEntity.isPassenger() && DragonStateProvider.isDragon(livingEntity.getVehicle()))
+                event.setCanceled(true);
+            else if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
                 float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f <= 3f ? 0f : event.getAmount() / 2f);
                 float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
                 float damage = dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage;
                 if (damage <= 0)
                     event.setCanceled(true);
-            } else if (damageSource == DamageSource.FALL && livingEntity.isPassenger()){
-                DragonStateProvider.getCap(livingEntity.getVehicle()).ifPresent(vehicleCap -> {
-                    if (vehicleCap.isDragon() && vehicleCap.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getVehicle().getId()))
-                        event.setCanceled(true);
-                });
             }
-
         });
     }
 
