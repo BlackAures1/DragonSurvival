@@ -1,5 +1,11 @@
-0.0.35:
+1.16.5-0.0.35:
 fixed items in 3x3 crafting window not returning to player;
+implemented dragon riding - humans and baby dragons can now ride max size dragons
+fixed dragon inventory display
+removed fire render from cave dragons
+fixed specifics sync issues when traveling between dimensions
+dragon shadows now scale off dragon size
+fixed flying dragon fall damage
 
 1.16.5-0.0.34:
 many new (and perhaps unnecessary) config options

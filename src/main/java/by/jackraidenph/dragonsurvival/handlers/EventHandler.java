@@ -144,6 +144,40 @@ public class EventHandler {
 	}
 
     @SubscribeEvent
+    public static void reduceFlightFallDamage(LivingHurtEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                event.setAmount(dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void negateFlightFallDamage(LivingAttackEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && livingEntity.isPassenger() && DragonStateProvider.isDragon(livingEntity.getVehicle()))
+                event.setCanceled(true);
+            else if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f <= 3f ? 0f : event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                float damage = dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage;
+                if (damage <= 0)
+                    event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void onServerPlayerTick(TickEvent.PlayerTickEvent event) { // TODO: Find a better way of doing this.
         if (!(event.player instanceof ServerPlayerEntity))
             return;
@@ -152,27 +186,31 @@ public class EventHandler {
             int passengerId = dragonStateHandler.getPassengerId();
             Entity passenger = player.level.getEntity(passengerId);
             boolean flag = false;
-            if (!dragonStateHandler.isDragon() && player.isVehicle()){
+            if (!dragonStateHandler.isDragon() && player.isVehicle() && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSpectator() && passenger != null){
+            } else if (player.isSpectator() && passenger != null && player.getPassengers().get(0) instanceof ServerPlayerEntity) {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()){
+            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSleeping() && player.isVehicle()){
+            } else if (player.isSleeping() && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
             }
-            if (passenger != null) {
+            if (passenger != null && passenger instanceof ServerPlayerEntity) {
                 DragonStateHandler passengerCap = DragonStateProvider.getCap(passenger).orElseGet(null);
                 if (passengerCap != null){
                     if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY){
+                        flag = true;
+                        passenger.stopRiding();
+                        player.connection.send(new SSetPassengersPacket(player));
+                    } else if (passenger.getRootVehicle() != player.getRootVehicle()) {
                         flag = true;
                         passenger.stopRiding();
                         player.connection.send(new SSetPassengersPacket(player));
@@ -187,6 +225,21 @@ public class EventHandler {
         });
     }
 
+    @SubscribeEvent
+    public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
+        if (player.getVehicle() == null || !(player.getVehicle() instanceof ServerPlayerEntity))
+            return;
+        ServerPlayerEntity vehicle = (ServerPlayerEntity)player.getVehicle();
+        DragonStateProvider.getCap(player).ifPresent(playerCap -> {
+            DragonStateProvider.getCap(vehicle).ifPresent(vehicleCap -> {
+                player.stopRiding();
+                vehicle.connection.send(new SSetPassengersPacket(vehicle));
+                vehicleCap.setPassengerId(0);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> vehicle), new SynchronizeDragonCap(player.getId(), vehicleCap.isHiding(), vehicleCap.getType(), vehicleCap.getSize(), vehicleCap.hasWings(), vehicleCap.getLavaAirSupply(), 0));
+            });
+        });
+    }
 
 
     /**
