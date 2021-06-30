@@ -146,6 +146,8 @@ public class EventHandler {
     @SubscribeEvent
     public static void reduceFlightFallDamage(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
@@ -159,6 +161,8 @@ public class EventHandler {
     @SubscribeEvent
     public static void negateFlightFallDamage(LivingAttackEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
@@ -167,7 +171,13 @@ public class EventHandler {
                 float damage = dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage;
                 if (damage <= 0)
                     event.setCanceled(true);
+            } else if (damageSource == DamageSource.FALL && livingEntity.isPassenger()){
+                DragonStateProvider.getCap(livingEntity.getVehicle()).ifPresent(vehicleCap -> {
+                    if (vehicleCap.isDragon() && vehicleCap.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getVehicle().getId()))
+                        event.setCanceled(true);
+                });
             }
+
         });
     }
 
