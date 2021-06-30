@@ -191,6 +191,21 @@ public class EventHandler {
         });
     }
 
+    @SubscribeEvent
+    public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
+        if (player.getVehicle() == null || !(player.getVehicle() instanceof ServerPlayerEntity))
+            return;
+        ServerPlayerEntity vehicle = (ServerPlayerEntity)player.getVehicle();
+        DragonStateProvider.getCap(player).ifPresent(playerCap -> {
+            DragonStateProvider.getCap(vehicle).ifPresent(vehicleCap -> {
+                player.stopRiding();
+                vehicle.connection.send(new SSetPassengersPacket(vehicle));
+                vehicleCap.setPassengerId(0);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> vehicle), new SynchronizeDragonCap(player.getId(), vehicleCap.isHiding(), vehicleCap.getType(), vehicleCap.getSize(), vehicleCap.hasWings(), vehicleCap.getLavaAirSupply(), 0));
+            });
+        });
+    }
 
 
     /**
