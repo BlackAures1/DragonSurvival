@@ -11,12 +11,15 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,9 +38,6 @@ public class FlightController {
                 if (wingsEnabled) {
                     if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
                         Vector3d motion = playerEntity.getDeltaMovement();
-                        if (motion.y > -0.5D) {
-                            playerEntity.fallDistance = 1.0F;
-                        }
 
                         Vector3d lookVec = playerEntity.getLookAngle();
                         float f6 = playerEntity.xRot * ((float) Math.PI / 180F);
@@ -81,8 +81,6 @@ public class FlightController {
                             motion = motion.add(ax, ay, az);
                         }
                         playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
-                        playerEntity.fallDistance = 0;
-
                     } else {
                         ax = 0;
                         az = 0;

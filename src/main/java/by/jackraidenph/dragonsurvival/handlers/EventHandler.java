@@ -144,6 +144,34 @@ public class EventHandler {
 	}
 
     @SubscribeEvent
+    public static void reduceFlightFallDamage(LivingHurtEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                event.setAmount(dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void negateFlightFallDamage(LivingAttackEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f <= 3f ? 0f : event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                float damage = dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage;
+                if (damage <= 0)
+                    event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void onServerPlayerTick(TickEvent.PlayerTickEvent event) { // TODO: Find a better way of doing this.
         if (!(event.player instanceof ServerPlayerEntity))
             return;
