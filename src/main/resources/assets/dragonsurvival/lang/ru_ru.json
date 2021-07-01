@@ -30,7 +30,7 @@
 
   "block.dragonsurvival.spruce_dragon_door": "Еловая драконья дверь",
   "block.dragonsurvival.acacia_dragon_door": "Акациевая драконья дверь",
-  "block.dragonsurvival.jungle_dragon_door": "Джунглевая драконья дверь",
+  "block.dragonsurvival.jungle_dragon_door": "Драконья дверь из тропического дерева",
   "block.dragonsurvival.oak_dragon_door": "Дубовая драконья дверь",
   "block.dragonsurvival.dark_oak_dragon_door": "Драконья дверь из тёмного дуба",
   "block.dragonsurvival.birch_dragon_door": "Берёзовая драконья дверь",
@@ -51,7 +51,7 @@
   "dragonsurvival:config.category.spawnchances.tooltip": "Настройка спавна сущностей",
 
   "death.attack.starDrain": "%1$s иссушили с помощью магии.",
-  "death.attack.waterBurn": "%1$s попытался поплавать в лаве.",
+  "death.attack.waterBurn": "%1$s попытался поплавать в воде.",
   "death.attack.waterBurn.player": "%1$s пытался уплыть от %2$s.",
   "death.attack.dehydration": "%1$s иссушен солнцем.",
   "death.attack.dehydration.player": "%1$s иссушен при попытке убежать от %2$s.",
@@ -65,7 +65,7 @@
   "ds.you.have.no.wings": "У вас ещё нет крыльев.",
   "ds.dragon.grants.wings": "<Ender dragon> Я дарю тебе крылья. А теперь убирайся отсюда!",
   "ds.space.occupied": "Нет свободного места для увеличения размера",
-  "ds.cooldown.active": "Вы истощили магию алтаря. Нужно время, чтобы восстановить её.",
+  "ds.cooldown.active": "Вы истощили магию алтаря. Нужно время, чтобы восстановить её",
   
   "ds.regen.on": "Регенерация в гнезде включена.",
   "ds.regen.off": "Гнездо больше не восстанавливает здоровье.",

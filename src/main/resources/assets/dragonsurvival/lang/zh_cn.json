@@ -29,7 +29,7 @@
 
   "block.dragonsurvival.spruce_dragon_door": "云杉木龙门",
   "block.dragonsurvival.acacia_dragon_door": "金合欢木龙门",
-  "block.dragonsurvival.jungle_dragon_door": "从林木龙门",
+  "block.dragonsurvival.jungle_dragon_door": "丛林木龙门",
   "block.dragonsurvival.oak_dragon_door": "橡木龙门",
   "block.dragonsurvival.dark_oak_dragon_door": "深色橡木龙门",
   "block.dragonsurvival.birch_dragon_door": "白桦木龙门",
@@ -42,6 +42,7 @@
   "block.dragonsurvival.crimson_dragon_door": "绯红木龙门",
   "block.dragonsurvival.sleeper_dragon_door": "沉睡者龙门",
   "block.dragonsurvival.stone_dragon_door": "石质龙门",
+  "block.dragonsurvival.legacy_dragon_door": "遗迹龙门",
 
   "effect.dragonsurvival.stress": "压力",
 
@@ -51,7 +52,9 @@
   "death.attack.starDrain": "%1$s的生命与能量被魔法消耗殆尽",
   "death.attack.waterBurn": "%1$s尝试在水中游泳",
   "death.attack.waterBurn.player": "%1$s在尝试走水路逃离%2$s时失败了",
-
+  "death.attack.dehydration": "%1$s的生命干涸了",
+  "death.attack.dehydration.player": "%1$s以干涸自己生命的方式逃离了%2$s",
+  
   "ds.cave_dragon_choice": "你选择成为一只洞穴龙。",
   "ds.forest_dragon_choice": "你选择成为一只森林龙。",
   "ds.sea_dragon_choice": "你选择成为一只海洋龙。",
@@ -62,6 +65,9 @@
   "ds.dragon.grants.wings": "<末影龙> 我已经将翅膀赐予了你，现在请离开我的地盘！",
   "ds.space.occupied": "周围没有足够的空间",
   "ds.cooldown.active": "这个祭坛正在冷却",
+
+  "ds.regen.on": "龙巢生命回复功能打开",
+  "ds.regen.off": "龙巢生命回复功能关闭",
 
   "ds.endmessage.1": "你竟胆敢靠近我的巢穴，()。你为什么要来到这里？你需要解释一下你的行为。",
   "ds.endmessage.2": "我不能容忍陌生人闯入我的领地。离我远点，()。你的意图是什么？",
