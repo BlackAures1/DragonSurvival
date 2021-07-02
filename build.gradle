@@ -63,8 +63,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
-			arg "-mixin.config=" + mod_id + ".mixins.json"
-			
+			      arg "-mixin.config=" + mod_id + ".mixins.json"
+
             mods {
                 dragonsurvival {
                     source sourceSets.main
