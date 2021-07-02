@@ -10,6 +10,8 @@ import by.jackraidenph.dragonsurvival.containers.CraftingContainer;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
+import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRendererManager;
+import by.jackraidenph.dragonsurvival.mixins.AccessorLivingRenderer;
 import by.jackraidenph.dragonsurvival.network.OpenCrafting;
 import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
@@ -23,6 +25,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -38,6 +41,9 @@ import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.layers.ParrotVariantLayer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.util.InputMappings;
@@ -49,6 +55,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
@@ -394,7 +401,25 @@ public class ClientEvents {
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                
+
+                    String playerModelType = ((AbstractClientPlayerEntity)player).getModelName();
+                    LivingRenderer playerRenderer = ((AccessorEntityRendererManager)mc.getEntityRenderDispatcher()).getPlayerRenderers().get(playerModelType);
+                    for (LayerRenderer layer : ((AccessorLivingRenderer)playerRenderer).getRenderLayers()) {
+                        if (layer instanceof ParrotVariantLayer) {
+                            matrixStack.scale(1.0F / scale, 1.0F / scale ,1.0F / scale);
+                            matrixStack.mulPose(Vector3f.XN.rotationDegrees(180.0F));
+                            double height = 1.3 * scale;
+                            double forward = 0.3 * scale;
+                            float parrotHeadYaw =  MathHelper.clamp(-1.0F * (((float)cap.getMovementData().bodyYaw) - (float)cap.getMovementData().headYaw), -75.0F, 75.0F);
+                            matrixStack.translate(0, -height,-forward);
+                            layer.render(matrixStack, renderTypeBuffer, eventLight, player, 0.0F, 0.0F, partialRenderTick,(float)player.tickCount + partialRenderTick, parrotHeadYaw, (float)cap.getMovementData().headPitch);
+                            matrixStack.translate(0, height,forward);
+                            matrixStack.mulPose(Vector3f.XN.rotationDegrees(-180.0F));
+                            matrixStack.scale(scale, scale ,scale);
+                            break;
+                        }
+                    }
+
 	                ItemRenderer itemRenderer = mc.getItemRenderer();
 	                ItemStack right = player.getMainHandItem();
 	                matrixStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));

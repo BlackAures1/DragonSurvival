@@ -11,6 +11,8 @@
 	],
 	"client": [
 		"AccessorEntityRenderer",
+		"AccessorEntityRendererManager",
+		"AccessorLivingRenderer",
 		"MixinProjectileHelper",
 		"MixinFirstPersonRenderer",
 		"MixinInventoryScreen"
