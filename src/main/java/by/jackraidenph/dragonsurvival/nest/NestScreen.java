@@ -1,13 +1,23 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.Functions;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
@@ -30,79 +40,100 @@ public class NestScreen extends ContainerScreen<NestContainer> {
         playerEntity = inv.player;
     }
 
-    public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
-        this.renderBackground();
-        super.render(p_render_1_, p_render_2_, p_render_3_);
-        this.renderHoveredToolTip(p_render_1_, p_render_2_);
+    public void render(MatrixStack matrixStack, int p_render_1_, int p_render_2_, float p_render_3_) {
+        this.renderBackground(matrixStack);
+        super.render(matrixStack, p_render_1_, p_render_2_, p_render_3_);
+        this.renderTooltip(matrixStack, p_render_1_, p_render_2_);
     }
 
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {};
+    
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        renderBackground();
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) { // WIP
+        renderBackground(matrixStack);
         TextureManager textureManager = minecraft.getTextureManager();
-        textureManager.bindTexture(BACKGROUND);
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+        textureManager.bind(BACKGROUND);
+        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        switch (nestEntity.type) {
+        case CAVE:
+            textureManager.bind(CAVE_NEST0);
+            break;
+        case FOREST:
+            textureManager.bind(FOREST_NEST0);
+            break;
+        case SEA:
+            textureManager.bind(SEA_NEST0);
+            break;
+        }
+        blit(matrixStack, leftPos + 8, topPos + 8, 0, 0, 160, 49, 160, 49);
         switch (nestEntity.type) {
             case CAVE:
-                textureManager.bindTexture(CAVE_NEST0);
+                textureManager.bind(CAVE_NEST1);
                 break;
             case FOREST:
-                textureManager.bindTexture(FOREST_NEST0);
+                textureManager.bind(FOREST_NEST1);
                 break;
             case SEA:
-                textureManager.bindTexture(SEA_NEST0);
+                textureManager.bind(SEA_NEST1);
                 break;
         }
-        blit(guiLeft + 8, guiTop + 8, 0, 0, 160, 49, 160, 49);
-        textureManager.bindTexture(RED_HEART);
-        Functions.blit(guiLeft + 122, guiTop + 12 + 35, 0, 0, 38, (int) (-35 * (nestEntity.energy / 64f)), 38, 35);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, (nestEntity.energy / 64f));
+        blit(matrixStack, leftPos + 8, topPos + 8, 0, 0, 160, 49, 160, 49);
+        textureManager.getTexture(RED_HEART);
+        textureManager.bind(RED_HEART);
+        int yv = (int) (35 * (nestEntity.energy / 64f));
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.25F + (nestEntity.energy / 64f) * 0.5F);
+        blit(matrixStack, leftPos + 122, topPos + 12 + 35 - yv, 0, 35 - yv, 38, yv, 38, 35);
     }
 
     @Override
     protected void init() {
         super.init();
         //buttons are transparent
-        ExtendedButton sleep = addButton(new ExtendedButton(guiLeft + 8, guiTop + 60, 33, 18, "", p_onPress_1_ -> {
+        ExtendedButton sleep = addButton(new ExtendedButton(leftPos + 8, topPos + 60, 33, 18, new StringTextComponent(""), p_onPress_1_ -> {
         }) {
             @Override
-            public void renderButton(int mouseX, int mouseY, float partial) {
+            public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partial) {
+            	
             }
 
             @Override
             public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-                playerEntity.closeScreen();
-                DragonSurvivalMod.CHANNEL.sendToServer(new SleepInNest(nestEntity.getPos()));
+                playerEntity.closeContainer();
+                DragonSurvivalMod.CHANNEL.sendToServer(new SleepInNest(nestEntity.getBlockPos()));
                 return true;
             }
         });
-        ExtendedButton regenerate = addButton(new ExtendedButton(sleep.x + sleep.getWidth() + 4, guiTop + 60, 33, 18, "", p_onPress_1_ -> {
+        ExtendedButton regenerate = addButton(new ExtendedButton(sleep.x + sleep.getWidth() + 4, topPos + 60, 33, 18, new StringTextComponent(""), p_onPress_1_ -> {
         }) {
             @Override
-            public void renderButton(int mouseX, int mouseY, float partial) {
+            public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partial) {
 
             }
 
             @Override
             public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
                 nestEntity.regenerationMode = !nestEntity.regenerationMode;
-                DragonSurvivalMod.CHANNEL.sendToServer(new ToggleRegeneration(nestEntity.getPos(), nestEntity.regenerationMode));
+                DragonSurvivalMod.CHANNEL.sendToServer(new ToggleRegeneration(nestEntity.getBlockPos(), nestEntity.regenerationMode));
                 if (nestEntity.regenerationMode)
-                    playerEntity.sendMessage(new TranslationTextComponent("ds.regen.on"));
+                    playerEntity.sendMessage(new TranslationTextComponent("ds.regen.on"), playerEntity.getUUID());
                 else
-                    playerEntity.sendMessage(new TranslationTextComponent("ds.regen.off"));
+                    playerEntity.sendMessage(new TranslationTextComponent("ds.regen.off"), playerEntity.getUUID());
                 return true;
             }
         });
-        ExtendedButton carry = addButton(new ExtendedButton(regenerate.x + regenerate.getWidth() + 4, guiTop + 60, 33, 18, "", p_onPress_1_ -> {
+        addButton(new ExtendedButton(regenerate.x + regenerate.getWidth() + 4, topPos + 60, 33, 18, new StringTextComponent(""), p_onPress_1_ -> {
         }) {
             @Override
-            public void renderButton(int mouseX, int mouseY, float partial) {
+            public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partial) {
             }
 
             @Override
             public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-                playerEntity.closeScreen();
-                DragonSurvivalMod.CHANNEL.sendToServer(new DismantleNest(nestEntity.getPos()));
+                playerEntity.closeContainer();
+                DragonSurvivalMod.CHANNEL.sendToServer(new DismantleNest(nestEntity.getBlockPos()));
                 return true;
             }
         });

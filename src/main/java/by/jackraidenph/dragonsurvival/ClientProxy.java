@@ -20,53 +20,52 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 @Deprecated
-public class ClientProxy implements Proxy {
+public class ClientProxy{
 
-    @Override
     public void syncXpDevour(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
 
-        World world = Minecraft.getInstance().world;
+        World world = Minecraft.getInstance().level;
         if (world != null) {
-            ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntityByID(m.xp));
-            MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntityByID(m.entity);
+            ExperienceOrbEntity xpOrb = (ExperienceOrbEntity) (world.getEntity(m.xp));
+            MagicalPredatorEntity entity = (MagicalPredatorEntity) world.getEntity(m.entity);
             if (xpOrb != null && entity != null) {
-                entity.size += xpOrb.getXpValue() / 100.0F;
+                entity.size += xpOrb.getValue() / 100.0F;
                 entity.size = MathHelper.clamp(entity.size, 0.95F, 1.95F);
-                world.addParticle(ParticleTypes.SMOKE, xpOrb.getPosX(), xpOrb.getPosY(), xpOrb.getPosZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
+                world.addParticle(ParticleTypes.SMOKE, xpOrb.getX(), xpOrb.getY(), xpOrb.getZ(), 0, world.getRandom().nextFloat() / 12.5f, 0);
                 xpOrb.remove();
+                supplier.get().setPacketHandled(true);
             }
         }
     }
 
-    @Override
     public void syncPredatorStats(PacketSyncPredatorStats m, Supplier<NetworkEvent.Context> supplier) {
 
-        World world = Minecraft.getInstance().world;
+        World world = Minecraft.getInstance().level;
         if (world != null) {
-            Entity entity = world.getEntityByID(m.id);
+            Entity entity = world.getEntity(m.id);
             if (entity != null) {
                 ((MagicalPredatorEntity) entity).size = m.size;
                 ((MagicalPredatorEntity) entity).type = m.type;
+                supplier.get().setPacketHandled(true);
             }
         }
     }
 
-    @Override
     public void syncNest(SynchronizeNest synchronizeNest, Supplier<NetworkEvent.Context> contextSupplier) {
         PlayerEntity player = Minecraft.getInstance().player;
-        ClientWorld world = Minecraft.getInstance().world;
-        TileEntity entity = world.getTileEntity(synchronizeNest.pos);
+        ClientWorld world = Minecraft.getInstance().level;
+        TileEntity entity = world.getBlockEntity(synchronizeNest.pos);
         if (entity instanceof NestEntity) {
             NestEntity nestEntity = (NestEntity) entity;
             nestEntity.energy = synchronizeNest.health;
             nestEntity.damageCooldown = synchronizeNest.cooldown;
-            nestEntity.markDirty();
+            nestEntity.setChanged();
             if (nestEntity.energy <= 0) {
-                world.playSound(player, synchronizeNest.pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1, 1);
+                world.playSound(player, synchronizeNest.pos, SoundEvents.METAL_BREAK, SoundCategory.BLOCKS, 1, 1);
             } else {
-                world.playSound(player, synchronizeNest.pos, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
+                world.playSound(player, synchronizeNest.pos, SoundEvents.SHIELD_BLOCK, SoundCategory.BLOCKS, 1, 1);
             }
+            contextSupplier.get().setPacketHandled(true);
         }
-        contextSupplier.get().setPacketHandled(true);
     }
 }

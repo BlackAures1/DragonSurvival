@@ -1,8 +1,13 @@
 package by.jackraidenph.dragonsurvival;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.network.SyncLevel;
+import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
+import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -12,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -19,6 +25,28 @@ import java.util.function.Supplier;
  */
 public class PacketProxy {
 
+	 public DistExecutor.SafeRunnable handleCapabilityDebuff(SyncCapabilityDebuff syncCapabilityDebuff, Supplier<NetworkEvent.Context> supplier) {
+		 return () -> {
+	            NetworkEvent.Context context = supplier.get();
+	            context.enqueueWork(() -> handleDebuffs(syncCapabilityDebuff, context));
+	        };
+	 }
+	 
+	 private void handleDebuffs(SyncCapabilityDebuff syncCapabilityDebuff, NetworkEvent.Context context) {
+		 PlayerEntity thisPlayer = Minecraft.getInstance().player;
+		 if (thisPlayer != null) {
+	 		World world = thisPlayer.level;
+            Entity entity = world.getEntity(syncCapabilityDebuff.playerId);
+            if (entity instanceof PlayerEntity) {
+            	DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setDebuffData(syncCapabilityDebuff.timeWithoutWater, syncCapabilityDebuff.timeInDarkness);
+                });
+            }
+            context.setPacketHandled(true);
+		 }
+	 }
+	
+	
     public DistExecutor.SafeRunnable handleCapabilityMovement(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
         return () -> {
             NetworkEvent.Context context = supplier.get();
@@ -29,46 +57,66 @@ public class PacketProxy {
     private void handleMovement(PacketSyncCapabilityMovement syncCapabilityMovement, NetworkEvent.Context context) {
         PlayerEntity thisPlayer = Minecraft.getInstance().player;
         if (thisPlayer != null) {
-            World world = thisPlayer.world;
-            Entity entity = world.getEntityByID(syncCapabilityMovement.playerId);
+            World world = thisPlayer.level;
+            Entity entity = world.getEntity(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
-                if (entity != thisPlayer) {
-                    DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch);
-                    });
-                }
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                	if ((PlayerEntity)entity == thisPlayer)
+                		dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, ((PlayerEntity)entity).yHeadRot, entity.xRot, syncCapabilityMovement.bite);
+                	else
+                		dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.bite);
+                });
             }
             context.setPacketHandled(true);
         }
     }
 
-    public DistExecutor.SafeRunnable handleCapabilitySync(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> contextSupplier) {
-        return () -> contextSupplier.get().enqueueWork(() -> {
+    public DistExecutor.SafeRunnable updateSize(SyncSize syncSize, Supplier<NetworkEvent.Context> contextSupplier) {
+        return () -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            Entity entity = minecraft.level.getEntity(syncSize.playerId);
+            if (entity instanceof PlayerEntity) {
+                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                    dragonStateHandler.setSize(syncSize.size, (PlayerEntity)entity);
+                });
+                
+                contextSupplier.get().setPacketHandled(true);
+            }
+        };
+    }
+
+    public DistExecutor.SafeRunnable refreshInstances(SynchronizeDragonCap synchronizeDragonCap, Supplier<NetworkEvent.Context> context) {
+        return () -> {
             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
             if (myPlayer != null) {
-                World world = myPlayer.world;
-                PlayerEntity thatPlayer = (PlayerEntity) world.getEntityByID(synchronizeDragonCap.playerId);
+                World world = myPlayer.level;
+
+                if (ClientEvents.dummyDragon2 != null) {
+                    ClientEvents.dummyDragon2.get().player = myPlayer.getId();
+                }
+                PlayerEntity thatPlayer = (PlayerEntity) world.getEntity(synchronizeDragonCap.playerId);
+
                 if (thatPlayer != null) {
                     DragonStateProvider.getCap(thatPlayer).ifPresent(dragonStateHandler -> {
-                        dragonStateHandler.setIsDragon(synchronizeDragonCap.isDragon);
-                        dragonStateHandler.setLevel(synchronizeDragonCap.dragonLevel);
                         dragonStateHandler.setType(synchronizeDragonCap.dragonType);
                         dragonStateHandler.setIsHiding(synchronizeDragonCap.hiding);
                         dragonStateHandler.setHasWings(synchronizeDragonCap.hasWings);
+                        dragonStateHandler.setSize(synchronizeDragonCap.size);
+                        dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
+                        dragonStateHandler.setPassengerId(synchronizeDragonCap.passengerId);
+                        if (!dragonStateHandler.hasWings() && thatPlayer == myPlayer)
+                            FlightController.wingsEnabled = false;
                     });
-                    contextSupplier.get().setPacketHandled(true);
+                    //refresh instances
+                    if (thatPlayer != myPlayer) {
+                        DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
+                        dragonEntity.player = thatPlayer.getId();
+                        ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
+                    }
+                    thatPlayer.setForcedPose(null);
+                    thatPlayer.refreshDimensions();
                 }
-            }
-        });
-    }
-
-    public DistExecutor.SafeRunnable updateLevel(SyncLevel syncLevel, Supplier<NetworkEvent.Context> contextSupplier) {
-        return () -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            Entity entity = minecraft.world.getEntityByID(syncLevel.playerId);
-            if (entity instanceof PlayerEntity) {
-                DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> dragonStateHandler.setLevel(syncLevel.level));
-                contextSupplier.get().setPacketHandled(true);
+                context.get().setPacketHandled(true);
             }
         };
     }

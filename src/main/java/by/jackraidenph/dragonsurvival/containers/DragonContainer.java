@@ -20,9 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-
+@Deprecated
 public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftMatrix;
     private final CraftResultInventory craftResult = new CraftResultInventory();
@@ -65,27 +68,28 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
                  * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in
                  * the case of armor slots)
                  */
-                public int getSlotStackLimit() {
+            	@Override
+                public int getMaxStackSize() {
                     return 1;
                 }
 
                 /**
                  * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
                  */
-                public boolean isItemValid(ItemStack stack) {
+                public boolean mayPlace(ItemStack stack) {
                     return stack.canEquip(equipmentslottype, player);
                 }
 
                 /**
                  * Return whether this slot's stack can be taken from this slot.
                  */
-                public boolean canTakeStack(PlayerEntity playerIn) {
-                    ItemStack itemstack = this.getStack();
-                    return (itemstack.isEmpty() || playerIn.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.canTakeStack(playerIn);
+                public boolean mayPickup(PlayerEntity playerIn) {
+                    ItemStack itemstack = this.getItem();
+                    return (itemstack.isEmpty() || playerIn.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.mayPickup(playerIn);
                 }
 
                 @OnlyIn(Dist.CLIENT)
-                public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                     return Pair.of(LOCATION_BLOCKS_TEXTURE, ARMOR_SLOT_TEXTURES[equipmentslottype.getIndex()]);
                 }
             });
@@ -102,35 +106,35 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
             this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
         }
     }
-
+    
     @Override
-    public void fillStackedContents(RecipeItemHelper itemHelperIn) {
+    public void fillCraftSlotsStackedContents(RecipeItemHelper itemHelperIn) {
         craftMatrix.fillStackedContents(itemHelperIn);
     }
 
     @Override
-    public void clear() {
-        craftMatrix.clear();
-        craftResult.clear();
+    public void clearCraftingContent() {
+        craftMatrix.clearContent();
+        craftResult.clearContent();
     }
 
     @Override
-    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
-        return recipeIn.matches(this.craftMatrix, this.player.world);
+    public boolean recipeMatches(IRecipe<? super CraftingInventory> recipeIn) {
+        return recipeIn.matches(this.craftMatrix, this.player.level);
     }
 
     @Override
-    public int getOutputSlot() {
+    public int getResultSlotIndex() {
         return 0;
     }
 
     @Override
-    public int getWidth() {
+    public int getGridWidth() {
         return craftMatrix.getWidth();
     }
 
     @Override
-    public int getHeight() {
+    public int getGridHeight() {
         return craftMatrix.getHeight();
     }
 
@@ -140,40 +144,40 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean stillValid(PlayerEntity playerIn) {
         return true;
     }
 
     @Override
-    public boolean canMergeSlot(@Nonnull ItemStack stack, Slot slotIn) {
-        return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
+    public boolean canTakeItemForPickAll(@Nonnull ItemStack stack, Slot slotIn) {
+        return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstack);
+            EquipmentSlotType equipmentslottype = MobEntity.getEquipmentSlotForItem(itemstack);
             if (index == 0) {
-                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, true)) {
+                if (!this.moveItemStackTo(itemstack1, 9 + 5, 45 + 5, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
 
             } else if (index >= 1 + 5 && index < 5 + 5) {
-                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+                if (!this.moveItemStackTo(itemstack1, 9 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 5 + 5 && index < 9 + 5) {
-                if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+                if (!this.moveItemStackTo(itemstack1, 9 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (equipmentslottype.getSlotType() == EquipmentSlotType.Group.ARMOR && !this.inventorySlots.get(8 - equipmentslottype.getIndex()).getHasStack()) {
+            } else if (equipmentslottype.getType() == EquipmentSlotType.Group.ARMOR && !this.slots.get(8 - equipmentslottype.getIndex()).hasItem()) {
                 int i = 8 - equipmentslottype.getIndex() + 5;
-                if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
+                if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
                     return ItemStack.EMPTY;
                 }
 //            } else if (equipmentslottype == EquipmentSlotType.OFFHAND && !this.inventorySlots.get(45).getHasStack()) {
@@ -181,21 +185,21 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
 //                    return ItemStack.EMPTY;
 //                }
             } else if (index >= 9 + 5 && index < 36 + 5) {
-                if (!this.mergeItemStack(itemstack1, 36 + 5, 45 + 5, false)) {
+                if (!this.moveItemStackTo(itemstack1, 36 + 5, 45 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 36 + 5 && index < 45 + 5) {
-                if (!this.mergeItemStack(itemstack1, 9 + 5, 36 + 5, false)) {
+                if (!this.moveItemStackTo(itemstack1, 9 + 5, 36 + 5, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 9 + 5, 45 + 5, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 9 + 5, 45 + 5, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemstack1.getCount() == itemstack.getCount()) {
@@ -204,7 +208,7 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
 
             ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
             if (index == 0) {
-                playerIn.dropItem(itemstack2, false);
+                playerIn.drop(itemstack2, false);
             }
         }
 
@@ -214,40 +218,45 @@ public class DragonContainer extends RecipeBookContainer<CraftingInventory> {
     /**
      * Callback for when the crafting matrix is changed.
      */
-    public void onCraftMatrixChanged(IInventory inventoryIn) {
-        func_217066_a(this.windowId, this.player.world, this.player, this.craftMatrix, this.craftResult);
+    public void slotsChanged(IInventory inventoryIn) {
+    	detectAndSendChanges(this.containerId, this.player.level, this.player, this.craftMatrix, this.craftResult);
     }
 
-    protected static void func_217066_a(int windowId, World world, PlayerEntity p_217066_2_, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
-        if (!world.isRemote) {
+    protected static void detectAndSendChanges(int windowId, World world, PlayerEntity p_217066_2_, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
+        if (!world.isClientSide) {
             ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) p_217066_2_;
             ItemStack itemstack = ItemStack.EMPTY;
-            Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
+            Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, craftingInventory, world);
             if (optional.isPresent()) {
                 ICraftingRecipe icraftingrecipe = optional.get();
-                if (resultInventory.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-                    itemstack = icraftingrecipe.getCraftingResult(craftingInventory);
+                if (resultInventory.setRecipeUsed(world, serverplayerentity, icraftingrecipe)) {
+                    itemstack = icraftingrecipe.assemble(craftingInventory);
                 }
             }
 
-            resultInventory.setInventorySlotContents(0, itemstack);
-            serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemstack));
+            resultInventory.setItem(0, itemstack);
+            serverplayerentity.connection.send(new SSetSlotPacket(windowId, 0, itemstack));
         }
     }
 
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.craftResult.clear();
-        if (!playerIn.world.isRemote) {
-            this.clearContainer(playerIn, playerIn.world, this.craftMatrix);
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.craftResult.clearContent();
+        if (!playerIn.level.isClientSide) {
+            this.clearContainer(playerIn, playerIn.level, this.craftMatrix);
         }
     }
 
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.SEARCH, RecipeBookCategories.EQUIPMENT, RecipeBookCategories.BUILDING_BLOCKS, RecipeBookCategories.MISC, RecipeBookCategories.REDSTONE);
+        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
     }
+
+	@Override
+	public RecipeBookCategory getRecipeBookType() {
+		return RecipeBookCategory.CRAFTING;
+	}
 }

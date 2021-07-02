@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "by.jackraidenph.dragonsurvival.mixins",
+	"compatibilityLevel": "JAVA_8",
+	"refmap": "dragonsurvival.refmap.json",
+	"mixins": [
+        "MixinPlayerEntity",
+        "MixinLivingEntity",
+        "MixinItem",
+		"MixinEntity"
+	],
+	"client": [
+		"AccessorEntityRenderer",
+		"MixinProjectileHelper",
+		"MixinFirstPersonRenderer",
+		"MixinInventoryScreen"
+	],
+	"minVersion": "0.8"
+}

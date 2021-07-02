@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:dark_oak_door"
+     },
+     {
+       "item": "minecraft:dark_oak_door"
+     },
+     {
+       "item": "minecraft:dark_oak_door"
+     }
+  ],
+  "result": {
+    "item": "dragonsurvival:dark_oak_dragon_door",
+    "count": 2
+  }
+}

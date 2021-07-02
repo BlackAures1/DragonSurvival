@@ -11,11 +11,11 @@ import net.minecraftforge.common.util.LazyOptional;
 public class DragonStateProvider implements ICapabilitySerializable<CompoundNBT> {
 
     @CapabilityInject(DragonStateHandler.class)
-    public static Capability<DragonStateHandler> PLAYER_STATE_HANDLER_CAPABILITY = null;
-    private LazyOptional<DragonStateHandler> instance = LazyOptional.of(PLAYER_STATE_HANDLER_CAPABILITY::getDefaultInstance);
+    public static Capability<DragonStateHandler> DRAGON_CAPABILITY = null;
+    private final LazyOptional<DragonStateHandler> instance = LazyOptional.of(DRAGON_CAPABILITY::getDefaultInstance);
 
     public static LazyOptional<DragonStateHandler> getCap(Entity entity) {
-        return entity.getCapability(DragonStateProvider.PLAYER_STATE_HANDLER_CAPABILITY);
+        return entity.getCapability(DragonStateProvider.DRAGON_CAPABILITY);
     }
 
     public static boolean isDragon(Entity entity) {
@@ -24,16 +24,16 @@ public class DragonStateProvider implements ICapabilitySerializable<CompoundNBT>
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return cap == PLAYER_STATE_HANDLER_CAPABILITY ? instance.cast() : LazyOptional.empty();
+        return cap == DRAGON_CAPABILITY ? instance.cast() : LazyOptional.empty();
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        return (CompoundNBT) PLAYER_STATE_HANDLER_CAPABILITY.getStorage().writeNBT(PLAYER_STATE_HANDLER_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null);
+        return (CompoundNBT) DRAGON_CAPABILITY.getStorage().writeNBT(DRAGON_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null);
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        PLAYER_STATE_HANDLER_CAPABILITY.getStorage().readNBT(PLAYER_STATE_HANDLER_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null, nbt);
+        DRAGON_CAPABILITY.getStorage().readNBT(DRAGON_CAPABILITY, this.instance.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")), null, nbt);
     }
 }

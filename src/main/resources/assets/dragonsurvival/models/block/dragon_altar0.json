@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "dragonsurvival:block/dragon_altar_top_mossy",
+    "east": "dragonsurvival:block/dragon_altar_side1_mossy",
+    "west": "dragonsurvival:block/dragon_altar_side2_mossy",
+    "north": "dragonsurvival:block/dragon_altar_side3_mossy",
+    "south": "dragonsurvival:block/dragon_altar_side4_mossy",
+    "up": "dragonsurvival:block/dragon_altar_top_mossy",
+    "down": "dragonsurvival:block/dragon_altar_top_mossy"
+  }
+}

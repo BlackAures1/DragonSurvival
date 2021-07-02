@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+     {
+       "item": "minecraft:oak_door"
+     },
+     {
+       "item": "minecraft:oak_door"
+     },
+     {
+       "item": "minecraft:oak_door"
+     }
+  ],
+  "result": {
+    "item": "dragonsurvival:oak_dragon_door",
+    "count": 2
+  }
+}

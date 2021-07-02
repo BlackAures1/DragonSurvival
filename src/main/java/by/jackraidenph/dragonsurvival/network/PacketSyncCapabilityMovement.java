@@ -1,11 +1,17 @@
 package by.jackraidenph.dragonsurvival.network;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.PacketProxy;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -15,17 +21,17 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
     public double bodyYaw;
     public double headYaw;
     public double headPitch;
+    public boolean bite;
 
     public PacketSyncCapabilityMovement() {
     }
 
-    public PacketSyncCapabilityMovement(int playerId, double bodyYaw,
-                                        double headYaw,
-                                        double headPitch) {
+    public PacketSyncCapabilityMovement(int playerId, double bodyYaw, double headYaw, double headPitch, boolean bite) {
         this.bodyYaw = bodyYaw;
         this.headYaw = headYaw;
         this.headPitch = headPitch;
         this.playerId = playerId;
+        this.bite = bite;
     }
 
     @Override
@@ -34,32 +40,48 @@ public class PacketSyncCapabilityMovement implements IMessage<PacketSyncCapabili
         b.writeDouble(m.bodyYaw);
         b.writeDouble(m.headYaw);
         b.writeDouble(m.headPitch);
+        b.writeBoolean(m.bite);
     }
 
     @Override
     public PacketSyncCapabilityMovement decode(PacketBuffer b) {
-        return new PacketSyncCapabilityMovement(b.readInt(),
-                b.readDouble(),
-                b.readDouble(),
-                b.readDouble()
+        return new PacketSyncCapabilityMovement(b.readInt(), b.readDouble(), b.readDouble(), b.readDouble(), b.readBoolean()
         );
     }
 
-    private void writeVec3d(PacketBuffer buffer, Vec3d vec) {
+    private void writeVec3d(PacketBuffer buffer, Vector3d vec) {
         buffer.writeDouble(vec.x);
         buffer.writeDouble(vec.y);
         buffer.writeDouble(vec.z);
     }
 
-    private Vec3d readVec3d(PacketBuffer buffer) {
+    private Vector3d readVec3d(PacketBuffer buffer) {
         double x = buffer.readDouble();
         double y = buffer.readDouble();
         double z = buffer.readDouble();
-        return new Vec3d(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
     @Override
-    public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
+    public void handle(PacketSyncCapabilityMovement syncCapabilityMovement, Supplier<NetworkEvent.Context> supplier) { // TODO Clean this up
+    	NetworkEvent.Context context = supplier.get();
+    	ServerPlayerEntity player = context.getSender();
+    	if (player == null) {
+    		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> new PacketProxy().handleCapabilityMovement(syncCapabilityMovement, supplier));
+    		return;
+    	}
+    	Entity entity = player.level.getEntity(syncCapabilityMovement.playerId);
+    	if (entity == null || entity.level == null) {
+    		context.setPacketHandled(true);
+    		return;
+    	}
+    	if (entity instanceof PlayerEntity) {
+            DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
+                dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.bite);
+            });
+        }
+    	if (!entity.level.isClientSide)
+    		DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), syncCapabilityMovement);
+    	context.setPacketHandled(true);
     }
 }

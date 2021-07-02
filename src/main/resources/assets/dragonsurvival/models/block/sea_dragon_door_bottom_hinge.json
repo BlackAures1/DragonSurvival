@@ -1,0 +1,7 @@
+{
+  "parent": "block/door_bottom_rh",
+  "textures": {
+    "bottom": "dragonsurvival:block/sea_dragon_door_bottom",
+    "top": "dragonsurvival:block/sea_dragon_door_bottom"
+  }
+}

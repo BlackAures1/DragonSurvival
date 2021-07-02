@@ -17,7 +17,7 @@ public class BaseBlockEntity extends TileEntity {
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        BlockPos blockPos = getPos();
+        BlockPos blockPos = getBlockPos();
         return new SUpdateTileEntityPacket(blockPos, 0, getUpdateTag());
     }
 
@@ -25,25 +25,25 @@ public class BaseBlockEntity extends TileEntity {
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT supertag = super.getUpdateTag();
-        write(supertag);
+        save(supertag);
         return supertag;
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbtTagCompound = pkt.getNbtCompound();
-        read(nbtTagCompound);
+        CompoundNBT nbtTagCompound = pkt.getTag();
+        load(getBlockState(), nbtTagCompound);
     }
 
     public int getX() {
-        return getPos().getX();
+        return getBlockPos().getX();
     }
 
     public int getY() {
-        return getPos().getY();
+        return getBlockPos().getY();
     }
 
     public int getZ() {
-        return getPos().getZ();
+        return getBlockPos().getZ();
     }
 }

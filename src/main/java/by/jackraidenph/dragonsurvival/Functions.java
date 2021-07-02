@@ -1,9 +1,39 @@
 package by.jackraidenph.dragonsurvival;
 
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 
 public class Functions {
+
+    public static int secondsToTicks(int seconds)
+    {
+        return seconds * 20;
+    }
+
+    public static int minutesToTicks(int minutes)
+    {
+        return secondsToTicks(minutes)*60;
+    }
+
+    public static int ticksToSeconds(int ticks) {
+        return ticks / 20;
+    }
+
+    public static int ticksToMinutes(int ticks)
+    {
+        return ticksToSeconds(ticks) / 60;
+    }
+
     public static float getDefaultXRightLimbRotation(float limbSwing, float swingAmount) {
         return MathHelper.cos((float) (limbSwing + Math.PI)) * swingAmount;
     }
@@ -28,20 +58,6 @@ public class Functions {
 
     public static float degreesToRadians(float degrees) {
         return (float) (degrees * Math.PI / 180);
-    }
-
-    /**
-     * @param startX   relative to left
-     * @param startY   relative to top
-     * @param textureX
-     * @param textureY
-     * @param width
-     * @param height
-     * @param sizeX    relative width
-     * @param sizeY    relative height
-     */
-    public static void blit(int startX, int startY, float textureX, float textureY, int width, int height, int sizeX, int sizeY) {
-        AbstractGui.blit(startX, startY, textureX, textureY, width, height, sizeX, sizeY);
     }
 
 }

@@ -28,7 +28,7 @@ public class OpenDragonInventory implements IMessage<OpenDragonInventory> {
     @Override
     public void handle(OpenDragonInventory message, Supplier<NetworkEvent.Context> supplier) {
         ServerPlayerEntity serverPlayerEntity = supplier.get().getSender();
-        serverPlayerEntity.openContainer(new INamedContainerProvider() {
+        serverPlayerEntity.openMenu(new INamedContainerProvider() {
             @Override
             public ITextComponent getDisplayName() {
                 return new StringTextComponent("");

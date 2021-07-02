@@ -1,21 +1,31 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { 
+        	name = 'forge'
+        	url = 'https://files.minecraftforge.net/maven' 
+        }
+        maven {
+            name = "SpongePowered"
+        	url = 'https://repo.spongepowered.org/repository/maven-public/' 
+        }
+        
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.15'
-group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'DragonSurvival'
+version =  "$mc_version-$mod_version"
+group = property("mod_group")
+archivesBaseName = property("mod_file")
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -36,7 +46,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200514-1.15.1'
+    mappings channel: mappings_channel, version: mc_version
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -53,7 +63,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
-            args '--username', 'Dev####'
+			      arg "-mixin.config=" + mod_id + ".mixins.json"
 
             mods {
                 dragonsurvival {
@@ -71,6 +81,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
 
+			arg "-mixin.config=" + mod_id + ".mixins.json"
+
             mods {
                 dragonsurvival {
                     source sourceSets.main
@@ -87,7 +99,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'dragonsurvival', '--all', '--output', file('src/generated/resources/')
+            args '--mod', mod_id, '--all', '--output', "-mixin.config=" + mod_id + ".mixins.json", file('src/generated/resources/')
 
             mods {
                 dragonsurvival {
@@ -98,43 +110,48 @@ minecraft {
     }
 }
 
+mixin {
+    add sourceSets.main, mod_id + ".refmap.json"
+}
+
+repositories {
+    maven { 
+    	name = "Gecholib maven"
+    	url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.47'
+    minecraft "net.minecraftforge:forge:$mc_version-$forge_version"
 
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${property('mc_version')}:${property('geckolib_version')}")
 
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    compileOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${property('mc_version')}:${property('jei_version')}")
 
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+	annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-            "Specification-Title": "dragonsurvival",
+            "Specification-Title": mod_id,
             "Specification-Vendor": "Dragon Survival Team",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Dragon Survival Team",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": mod_id + ".mixins.json"
         ])
     }
 }
