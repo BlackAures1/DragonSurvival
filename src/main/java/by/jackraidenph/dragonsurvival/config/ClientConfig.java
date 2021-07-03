@@ -23,7 +23,7 @@ public class ClientConfig {
     	builder.pop().push("nametag");
 		dragonNameTags = builder
 				.comment("Show name tags for dragons.")
-				.define("dragonNameTags", true);
+				.define("dragonNameTags", false); // >:(
     }
 	
 }
