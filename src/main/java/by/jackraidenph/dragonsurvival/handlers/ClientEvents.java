@@ -336,14 +336,24 @@ public class ClientEvents {
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 try {
 	                matrixStack.pushPose();
-	                matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)cap.getMovementData().bodyYaw));
 	                float size = cap.getSize();
 	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
+                    String playerModelType = ((AbstractClientPlayerEntity)player).getModelName();
+                    LivingRenderer playerRenderer = ((AccessorEntityRendererManager)mc.getEntityRenderDispatcher()).getPlayerRenderers().get(playerModelType);
+                    int eventLight = renderPlayerEvent.getLight();
+                    final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
+                    if (ConfigHandler.CLIENT.dragonNameTags.get()) {
+                        net.minecraftforge.client.event.RenderNameplateEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameplateEvent(player, player.getDisplayName(), playerRenderer, matrixStack, renderTypeBuffer, eventLight, partialRenderTick);
+                        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
+                        if (renderNameplateEvent.getResult() != net.minecraftforge.eventbus.api.Event.Result.DENY && (renderNameplateEvent.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW || ((AccessorLivingRenderer)playerRenderer).callShouldShowName(player))) {
+                            ((AccessorEntityRenderer)playerRenderer).callRenderNameTag(player, renderNameplateEvent.getContent(), matrixStack, renderTypeBuffer, eventLight);
+                        }
+                    }
+
+                    matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)cap.getMovementData().bodyYaw));
 	                matrixStack.scale(scale, scale, scale);
-	                int eventLight = renderPlayerEvent.getLight();
 
                     ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius((3.0F * size + 62.0F) / 260.0F);
-
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
 	                dummyDragon.isArmorModel = false;
 	                EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
@@ -358,7 +368,6 @@ public class ClientEvents {
 	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckHead != null)
 	                	 neckHead.setHidden(false);
-	                final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
 	                if (player.isCrouching()) { // FIXME why does this exist... Why do the models auto-crouch align perfectly but when shift key is down they break?
 	                	switch (dragonStage) {
 	                        case ADULT:
@@ -402,8 +411,6 @@ public class ClientEvents {
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
-                    String playerModelType = ((AbstractClientPlayerEntity)player).getModelName();
-                    LivingRenderer playerRenderer = ((AccessorEntityRendererManager)mc.getEntityRenderDispatcher()).getPlayerRenderers().get(playerModelType);
                     for (LayerRenderer layer : ((AccessorLivingRenderer)playerRenderer).getRenderLayers()) {
                         if (layer instanceof ParrotVariantLayer) {
                             matrixStack.scale(1.0F / scale, 1.0F / scale ,1.0F / scale);
