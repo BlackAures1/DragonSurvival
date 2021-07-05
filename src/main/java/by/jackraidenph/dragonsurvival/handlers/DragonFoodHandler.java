@@ -217,7 +217,7 @@ public class DragonFoodHandler{
 	
 	@SubscribeEvent
 	@OnlyIn(Dist.DEDICATED_SERVER)
-	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) { 
+	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
 		DragonStateProvider.getCap(event.getEntityLiving()).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
 				ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
@@ -252,6 +252,7 @@ public class DragonFoodHandler{
 
 		            event.setCancellationResult(actionresult.getResult());
 				}
+				event.setCanceled(true);
 			}
 		});
 	}
