@@ -119,13 +119,6 @@ public class EventHandler {
         PlayerEntity playerEntity = playerTickEvent.player;
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                for (int i = 0; i < playerEntity.inventory.getContainerSize(); i++) {
-                    ItemStack stack = playerEntity.inventory.getItem(i);
-                    Item item = stack.getItem();
-                    if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
-                        playerEntity.drop(playerEntity.inventory.removeItemNoUpdate(i), true, false);
-                    }
-                }
                 if (playerEntity instanceof ServerPlayerEntity) {
                     PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).gameMode;
                     Field field = PlayerInteractionManager.class.getDeclaredFields()[5]; // FIXME: Don't do this...
