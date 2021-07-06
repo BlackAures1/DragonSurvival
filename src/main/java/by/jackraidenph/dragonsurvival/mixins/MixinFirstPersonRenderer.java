@@ -1,10 +1,16 @@
 package by.jackraidenph.dragonsurvival.mixins;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.api.DragonFood;
+import net.minecraft.item.ShearsItem;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolItem;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -22,8 +28,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
 @Mixin(FirstPersonRenderer.class)
-public class MixinFirstPersonRenderer {
-	
+public abstract class MixinFirstPersonRenderer {
+
 	@Shadow
 	@Final
 	public Minecraft minecraft;
@@ -51,13 +57,29 @@ public class MixinFirstPersonRenderer {
 		});
 	}
 	
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/util/HandSide;F)V", ordinal = 2), method = "renderArmWithItem", cancellable = true, expect = 1)
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/util/HandSide;F)V", ordinal = 2), method = "renderArmWithItem", cancellable = true)
 	public void renderDragonArmWithItem(AbstractClientPlayerEntity p_228405_1_, float p_228405_2_, float p_228405_3_, Hand p_228405_4_, float p_228405_5_, ItemStack p_228405_6_, float p_228405_7_, MatrixStack p_228405_8_, IRenderTypeBuffer p_228405_9_, int p_228405_10_, CallbackInfo ci) {
 		DragonStateProvider.getCap(minecraft.player).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon() && DragonFoodHandler.isDragonEdible(p_228405_6_.getItem(), dragonStateHandler.getType()))
 				this.applyEatTransform(p_228405_8_, p_228405_2_, p_228405_4_ == Hand.MAIN_HAND ? p_228405_1_.getMainArm() : p_228405_1_.getMainArm().getOpposite(), p_228405_6_);
 		});
-	
+	}
+
+	@Inject(at = @At(value = "HEAD"), method = "renderPlayerArm", cancellable = true)
+	private void renderDragonArm(MatrixStack p_228401_1_, IRenderTypeBuffer p_228401_2_, int p_228401_3_, float p_228401_4_, float p_228401_5_, HandSide p_228401_6_, CallbackInfo ci){
+		if (DragonStateProvider.isDragon(minecraft.player))
+			ci.cancel();
+	}
+
+	@Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;renderMapHand(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/util/HandSide;)V"), method = "renderTwoHandedMap")
+	private void removeTwoHandsMapForDragon(FirstPersonRenderer firstPersonRenderer, MatrixStack p_228403_1_, IRenderTypeBuffer p_228403_2_, int p_228403_3_, HandSide p_228403_4_){
+		if (!DragonStateProvider.isDragon(minecraft.player))
+			this.renderMapHand(p_228403_1_, p_228403_2_, p_228403_3_, p_228403_4_);
+	}
+
+	@Shadow
+	public void renderMapHand(MatrixStack p_228403_1_, IRenderTypeBuffer p_228403_2_, int p_228403_3_, HandSide p_228403_4_) {
+		throw new IllegalStateException("Mixin failed to shadow renderMapHand()");
 	}
 
 	@Shadow

@@ -145,8 +145,6 @@ public class ClientEvents {
         DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
             if (playerStateHandler.isDragon()) {
                 dragonModel.setupBones();
-                if (renderHandEvent.getItemStack().isEmpty())
-                    renderHandEvent.setCanceled(true);
                 MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
                 try {
 	                eventMatrixStack.pushPose();
