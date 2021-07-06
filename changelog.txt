@@ -1,6 +1,8 @@
 1.16.5-0.0.36:
 fixed parrots not rendering while riding on dragons
-fixed missing nametags, added config option to disable
+fixed missing nametags, added config option to enable >:(
+dragons no longer drop various items like shields and bows
+fixed item use being fired twice in mutiplayer
 
 1.16.5-0.0.35:
 fixed items in 3x3 crafting window not returning to player;
