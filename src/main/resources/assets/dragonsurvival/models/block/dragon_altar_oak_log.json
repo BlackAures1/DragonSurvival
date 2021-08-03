@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+    "particle": "dragonsurvival:block/dragon_altar_oak_log_top",
+    "east": "dragonsurvival:block/dragon_altar_oak_log_east",
+    "west": "dragonsurvival:block/dragon_altar_oak_log_west",
+    "north": "dragonsurvival:block/dragon_altar_oak_log_north",
+    "south": "dragonsurvival:block/dragon_altar_oak_log_south",
+    "up": "dragonsurvival:block/dragon_altar_oak_log_top",
+    "down": "dragonsurvival:block/dragon_altar_oak_log_top"
+    }
+}

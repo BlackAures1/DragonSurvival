@@ -23,10 +23,22 @@
   "block.dragonsurvival.big_forest_nest": "Big Forest Nest",
   "block.dragonsurvival.big_sea_nest": "Big Sea Nest",
   "block.dragonsurvival.big_cave_nest": "Big Cave Nest",
+  
+  
   "block.dragonsurvival.dragon_altar1": "Oak Dragon Altar",
   "block.dragonsurvival.dragon_altar2": "Stone Dragon Altar",
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
+
+  "block.dragonsurvival.dragon_altar_stone": "Stone dragon altar",
+  "block.dragonsurvival.dragon_altar_sandstone": "Sandstone dragon altar",
+  "block.dragonsurvival.dragon_altar_red_sandstone": "Red sandstone dragon altar",
+  "block.dragonsurvival.dragon_altar_purpur_block": "Purpur dragon altar",
+  "block.dragonsurvival.dragon_altar_oak_log": "Oak dragon altar",
+  "block.dragonsurvival.dragon_altar_nether_bricks": "Nether brick dragon altar",
+  "block.dragonsurvival.dragon_altar_mossy_cobblestone": "Mossy cobblestone dragon altar",
+  "block.dragonsurvival.dragon_altar_blackstone": "Blackstone dragon altar",
+
 
   "block.dragonsurvival.spruce_dragon_door": "Spruce Dragon Door",
   "block.dragonsurvival.acacia_dragon_door": "Acacia Dragon Door",
@@ -72,5 +84,37 @@
   
   "ds.endmessage.1": "Have you come here for the wings, ()? Get out, before it's too late.",
   "ds.endmessage.2": "This is my land, (), show some respect. Go away, but first answer, why have you come here. Is it for wings?",
-  "ds.endmessage.3": "You have gone through lot to get here, (), what do you wish?"
+  "ds.endmessage.3": "You have gone through lot to get here, (), what do you wish?",
+
+
+  "ds.altar_dragon_info.cave_dragon.0":"§c■ Cave dragon.§r",
+  "ds.altar_dragon_info.cave_dragon.1":"",
+  "ds.altar_dragon_info.cave_dragon.2":"§2■ Features:§f§r fire resistance, pickaxe claws, fire magic, faster movement on cave blocks.",
+  "ds.altar_dragon_info.cave_dragon.3":"",
+  "ds.altar_dragon_info.cave_dragon.4":"§4■ Weakness:§r water.",
+  "ds.altar_dragon_info.cave_dragon.5":"",
+  "ds.altar_dragon_info.cave_dragon.6":"§6■ Ration:§r",
+  "ds.altar_dragon_info.cave_dragon.7":"",
+  "ds.altar_dragon_info.cave_dragon.8":"--food--",
+  "ds.altar_dragon_info.forest_dragon.0":"§a■ Forest dragon.§r",
+  "ds.altar_dragon_info.forest_dragon.1":"",
+  "ds.altar_dragon_info.forest_dragon.2":"§2■ Features:§f§r soft fall, axe claws, poison magic, faster movement on forest blocks.",
+  "ds.altar_dragon_info.forest_dragon.3":"",
+  "ds.altar_dragon_info.forest_dragon.4":"§4■ Weakness:§r dark caves.",
+  "ds.altar_dragon_info.forest_dragon.5":"",
+  "ds.altar_dragon_info.forest_dragon.6":"§6■ Ration:§r",
+  "ds.altar_dragon_info.forest_dragon.7":"",
+  "ds.altar_dragon_info.forest_dragon.8":"--food--",
+  "ds.altar_dragon_info.sea_dragon.0":"§3■ Sea dragon.§r",
+  "ds.altar_dragon_info.sea_dragon.1":"",
+  "ds.altar_dragon_info.sea_dragon.2":"§2■ Features:§f§r underwater breathing, shovel claws, electric magic, faster movement on sea blocks.",
+  "ds.altar_dragon_info.sea_dragon.3":"",
+  "ds.altar_dragon_info.sea_dragon.4":"§4■ Weakness:§r dry air.",
+  "ds.altar_dragon_info.sea_dragon.5":"",
+  "ds.altar_dragon_info.sea_dragon.6":"§6■ Ration:§r",
+  "ds.altar_dragon_info.sea_dragon.7":"",
+  "ds.altar_dragon_info.sea_dragon.8":"--food--",
+  "ds.altar_dragon_info.human.0":"■ §nHuman.§r",
+  "ds.altar_dragon_info.human.1":"■ Homo sapiens.§r",
+  "ds.altar_dragon_info.human.2":"Traveler, builder and creator."
 }

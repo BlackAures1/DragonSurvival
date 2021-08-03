@@ -55,7 +55,9 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -80,6 +82,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import java.io.Console;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -368,31 +371,63 @@ public class EventHandler {
     public static void createAltar(PlayerInteractEvent.RightClickBlock rightClickBlock) {
         ItemStack itemStack = rightClickBlock.getItemStack();
         if (itemStack.getItem() == ItemsInit.elderDragonBone) {
-
-            final World world = rightClickBlock.getWorld();
-            final BlockPos blockPos = rightClickBlock.getPos();
-            BlockState blockState = world.getBlockState(blockPos);
-            final Block block = blockState.getBlock();
-            boolean replace = false;
-            if (block == Blocks.STONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar3.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.SANDSTONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar4.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.MOSSY_COBBLESTONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.OAK_LOG) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar2.defaultBlockState());
-                replace = true;
+            if(!rightClickBlock.getPlayer().isSpectator()) {
+        		
+                final World world = rightClickBlock.getWorld();
+                final BlockPos blockPos = rightClickBlock.getPos();
+                BlockState blockState = world.getBlockState(blockPos);
+                final Block block = blockState.getBlock();
+                
+                boolean replace = false;
+                rightClickBlock.getPlayer().isSpectator();
+                rightClickBlock.getPlayer().isCreative();
+                	BlockItemUseContext deirection = new BlockItemUseContext(
+                    		rightClickBlock.getPlayer(), 
+                    		rightClickBlock.getHand(), 
+                    		rightClickBlock.getItemStack(), 
+                    		new BlockRayTraceResult(
+                    				new Vector3d(0, 0, 0),
+                    				rightClickBlock.getPlayer().getDirection(), 
+                    				blockPos, 
+                    				false));
+                if (block == Blocks.STONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_stone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.MOSSY_COBBLESTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_mossy_cobblestone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.SANDSTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_sandstone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.RED_SANDSTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_red_sandstone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.OAK_LOG) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_oak_log.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.PURPUR_BLOCK) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_purpur_block.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.NETHER_BRICKS) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_nether_bricks.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.BLACKSTONE) {
+                	rightClickBlock.getPlayer().getDirection();
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_blackstone.getStateForPlacement(deirection));
+                    replace = true;
+                }
+                
+                if (replace) {
+                	if(!rightClickBlock.getPlayer().isCreative()) {
+                		itemStack.shrink(1);
+                	}
+                    rightClickBlock.setCanceled(true);
+                    world.playSound(rightClickBlock.getPlayer(), blockPos, SoundEvents.WITHER_SPAWN, SoundCategory.PLAYERS, 1, 1);
+                    rightClickBlock.setCancellationResult(ActionResultType.SUCCESS);
+                }
             }
-            if (replace) {
-                itemStack.shrink(1);
-                rightClickBlock.setCanceled(true);
-                world.playSound(rightClickBlock.getPlayer(), blockPos, SoundEvents.STONE_PLACE, SoundCategory.PLAYERS, 1, 1);
-                rightClickBlock.setCancellationResult(ActionResultType.SUCCESS);
-            }
+            
+            
 
         }
     }

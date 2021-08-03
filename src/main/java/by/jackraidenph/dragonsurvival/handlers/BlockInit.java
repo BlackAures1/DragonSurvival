@@ -16,7 +16,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,31 +30,49 @@ import net.minecraftforge.registries.ObjectHolder;
 public class BlockInit {
     public static Block PREDATOR_STAR_BLOCK;
 
-    public static Block dragon_altar;
-    public static Block dragon_altar2;
-    public static Block dragon_altar3;
-    public static Block dragon_altar4;
     public static NestBlock smallCaveNest, smallForestNest, smallSeaNest;
     public static DragonDoor spruceDoor, acaciaDoor, birchDoor, jungleDoor, oakDoor, darkOakDoor, crimsonDoor, warpedDoor;
     public static DragonDoor legacyDoor, ironDoor, murdererDoor, sleeperDoor, stoneDoor;
     public static DragonDoor caveDoor, forestDoor, seaDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
     public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
+    
+    public static Block dragon_altar_stone;
+    public static Block dragon_altar_sandstone;
+    public static Block dragon_altar_red_sandstone;
+    public static Block dragon_altar_purpur_block;
+    public static Block dragon_altar_oak_log;
+    public static Block dragon_altar_nether_bricks;
+    public static Block dragon_altar_mossy_cobblestone;
+    public static Block dragon_altar_blackstone;
+    
+    
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
         //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
         IForgeRegistry<Block> forgeRegistry = event.getRegistry();
-        dragon_altar = new DragonAltarBlock(Block.Properties
-                .of(Material.HEAVY_METAL).harvestTool(ToolType.PICKAXE).harvestLevel(2)
-                .strength(5.0f).lightLevel((state) -> 5).sound(SoundType.ANVIL));
-        forgeRegistry.register(dragon_altar.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar0"));
-        dragon_altar2 = new DragonAltarBlock(Block.Properties.copy(dragon_altar));
-        forgeRegistry.register(dragon_altar2.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar1"));
-        dragon_altar3 = new DragonAltarBlock(Block.Properties.copy(dragon_altar));
-        forgeRegistry.register(dragon_altar3.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar2"));
-        dragon_altar4 = new DragonAltarBlock(Block.Properties.copy(dragon_altar));
-        forgeRegistry.register(dragon_altar4.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar3"));
+        
+        
+        dragon_altar_stone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        dragon_altar_sandstone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(0.8f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        dragon_altar_red_sandstone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(0.8f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        dragon_altar_purpur_block = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        dragon_altar_oak_log = new DragonAltarBlock(Block.Properties.of(Material.WOOD).harvestTool(ToolType.AXE).harvestLevel(0).strength(2f).sound(SoundType.WOOD));
+        dragon_altar_nether_bricks = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(0.4f).sound(SoundType.NETHER_BRICKS).requiresCorrectToolForDrops());
+        dragon_altar_mossy_cobblestone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(2f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        dragon_altar_blackstone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops());
+        
+        forgeRegistry.register(dragon_altar_stone.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_stone"));
+        forgeRegistry.register(dragon_altar_sandstone.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_sandstone"));
+        forgeRegistry.register(dragon_altar_red_sandstone.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_red_sandstone"));
+        forgeRegistry.register(dragon_altar_purpur_block.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_purpur_block"));
+        forgeRegistry.register(dragon_altar_oak_log.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_oak_log"));
+        forgeRegistry.register(dragon_altar_nether_bricks.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_nether_bricks"));
+        forgeRegistry.register(dragon_altar_mossy_cobblestone.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_mossy_cobblestone"));
+        forgeRegistry.register(dragon_altar_blackstone.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar_blackstone"));
+        
+        
         PREDATOR_STAR_BLOCK = new PredatorStarBlock(Block.Properties.of(Material.EGG).noCollission()
                 .strength(10F, 9999F).randomTicks().harvestTool(ToolType.HOE).requiresCorrectToolForDrops()
                 .sound(SoundType.NETHER_WART));
@@ -145,10 +165,15 @@ public class BlockInit {
         registerSingleItem(bigForestNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(bigCaveNest, new Item.Properties(), forgeRegistry);
 
-        registerItem(dragon_altar, new Item.Properties(), forgeRegistry);
-        registerItem(dragon_altar2, new Item.Properties(), forgeRegistry);
-        registerItem(dragon_altar3, new Item.Properties(), forgeRegistry);
-        registerItem(dragon_altar4, new Item.Properties(), forgeRegistry);
+        
+        registerItem(dragon_altar_stone, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_sandstone, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_red_sandstone, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_purpur_block, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_oak_log, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_nether_bricks, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_mossy_cobblestone, new Item.Properties(), forgeRegistry);
+        registerItem(dragon_altar_blackstone, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")

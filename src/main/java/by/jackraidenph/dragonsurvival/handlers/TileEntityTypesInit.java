@@ -31,7 +31,16 @@ public class TileEntityTypesInit {
                 PREDATOR_STAR_TILE_ENTITY_TYPE.setRegistryName(DragonSurvivalMod.MODID, "predator_star_te"));
         nestPlaceHolder = TileEntityType.Builder.of(() -> new NestPlaceHolder(nestPlaceHolder), BlockInit.mediumSeaNest, BlockInit.mediumForestNest, BlockInit.mediumCaveNest, BlockInit.bigForestNest, BlockInit.bigSeaNest, BlockInit.bigCaveNest).build(null);
         registry.register(nestPlaceHolder.setRegistryName("nest_placeholder"));
-        altarEntityTile = TileEntityType.Builder.of(() -> new AltarEntity(altarEntityTile), BlockInit.dragon_altar, BlockInit.dragon_altar2, BlockInit.dragon_altar3, BlockInit.dragon_altar4).build(null);
+        altarEntityTile = TileEntityType.Builder.of(() -> new AltarEntity(altarEntityTile), 
+        		BlockInit.dragon_altar_stone, 
+        		BlockInit.dragon_altar_sandstone, 
+        		BlockInit.dragon_altar_red_sandstone, 
+        		BlockInit.dragon_altar_purpur_block, 
+        		BlockInit.dragon_altar_oak_log, 
+        		BlockInit.dragon_altar_nether_bricks, 
+        		BlockInit.dragon_altar_mossy_cobblestone, 
+        		BlockInit.dragon_altar_blackstone
+        		).build(null);
         registry.register(altarEntityTile.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar"));
     }
 }

@@ -23,10 +23,22 @@
   "block.dragonsurvival.big_forest_nest": "Grand Nid De Forêt",
   "block.dragonsurvival.big_sea_nest": "Grand Nid Océanique",
   "block.dragonsurvival.big_cave_nest": "Grand Nid De Caverne",
+  
+  
   "block.dragonsurvival.dragon_altar1": "Autel De Dragon En Chêne",
   "block.dragonsurvival.dragon_altar2": "Autel De Dragon En Pierre",
   "block.dragonsurvival.dragon_altar3": "Autel De Dragon En Grès",
   "block.dragonsurvival.dragon_altar0": "Autel De Dragon Moussu",
+
+  "block.dragonsurvival.dragon_altar_stone": "Autel De Dragon En Pierre",
+  "block.dragonsurvival.dragon_altar_sandstone": "Autel De Dragon En Grès",
+  "block.dragonsurvival.dragon_altar_red_sandstone": "Autel De Dragon En Grès Rouge",
+  "block.dragonsurvival.dragon_altar_purpur_block": "Autel De Dragon En Purpur",
+  "block.dragonsurvival.dragon_altar_oak_log": "Autel De Dragon En Chêne",
+  "block.dragonsurvival.dragon_altar_nether_bricks": "Autel De Dragon En Briques Du Nether",
+  "block.dragonsurvival.dragon_altar_mossy_cobblestone": "Autel De Dragon En Pierre Moussue",
+  "block.dragonsurvival.dragon_altar_blackstone": "Autel De Dragon En Roche Noire",
+
 
   "block.dragonsurvival.spruce_dragon_door": "Porte De Dragon En Épicéa",
   "block.dragonsurvival.acacia_dragon_door": "Porte De Dragon En Acacia",
@@ -72,5 +84,37 @@
   
   "ds.endmessage.1": "Vous êtes venu ici pour les ailes, ()? Va t'en, avant qu'il ne soit trop tard.",
   "ds.endmessage.2": "Ceci sont mes terres, (), fait preuve de respect. Pars, mais avant cela réponds moi, pourquoi est tu venu ici, est-ce pour les ailes ?",
-  "ds.endmessage.3": "Vous avez traversé beaucoup pour arriver ici, (), que souhaitez vous ?"
+  "ds.endmessage.3": "Vous avez traversé beaucoup pour arriver ici, (), que souhaitez vous ?",
+
+
+  "ds.altar_dragon_info.cave_dragon.0":"§l■ §nDragon des cavernes.§r",
+  "ds.altar_dragon_info.cave_dragon.1":"",
+  "ds.altar_dragon_info.cave_dragon.2":"§2§l■ Caractéristiques :§f§r Résistance au feu, Griffes pioche, Maîtrise du feu, Vitesse supérieure sur la roche.",
+  "ds.altar_dragon_info.cave_dragon.3":"",
+  "ds.altar_dragon_info.cave_dragon.4":"§4§l■ Faiblesse :§r Eau.",
+  "ds.altar_dragon_info.cave_dragon.5":"",
+  "ds.altar_dragon_info.cave_dragon.6":"§6§l■ Alimentation :§r",
+  "ds.altar_dragon_info.cave_dragon.7":"",
+  "ds.altar_dragon_info.cave_dragon.8":"--Nourriture--",
+  "ds.altar_dragon_info.forest_dragon.0":"§l■ §nLe dragon des forêts.§r",
+  "ds.altar_dragon_info.forest_dragon.1":"",
+  "ds.altar_dragon_info.forest_dragon.2":"§2§l■ Caractéristiques :§f§r Chute en douceur, Griffes hache, Maîtrise du poison, Vitesse supérieure sur les blocs forestiers. ",
+  "ds.altar_dragon_info.forest_dragon.3":"",
+  "ds.altar_dragon_info.forest_dragon.4":"§4§l■ Faiblesse :§r Pénombre.",
+  "ds.altar_dragon_info.forest_dragon.5":"",
+  "ds.altar_dragon_info.forest_dragon.6":"§6§l■ Alimentation:§r",
+  "ds.altar_dragon_info.forest_dragon.7":"",
+  "ds.altar_dragon_info.forest_dragon.8":"--Nourriture--",
+  "ds.altar_dragon_info.sea_dragon.0":"§l■ §nDragon des mers.§r",
+  "ds.altar_dragon_info.sea_dragon.1":"",
+  "ds.altar_dragon_info.sea_dragon.2":"§2§l■ Caractéristiques : §f§r Respiration sous l'eau, Griffes pelle, Maîtrise de l'électricité, Vitesse supérieure sur les blocs marins.",
+  "ds.altar_dragon_info.sea_dragon.3":"",
+  "ds.altar_dragon_info.sea_dragon.4":"§4§l■ Faiblesse :§r Air.",
+  "ds.altar_dragon_info.sea_dragon.5":"",
+  "ds.altar_dragon_info.sea_dragon.6":"§6§l■ Alimentation :§r",
+  "ds.altar_dragon_info.sea_dragon.7":"",
+  "ds.altar_dragon_info.sea_dragon.8":"--Nourriture--",
+  "ds.altar_dragon_info.human.0":"§l■ §nHumain.§r",
+  "ds.altar_dragon_info.human.1":"§l■ Homo sapiens.§r",
+  "ds.altar_dragon_info.human.2":"Voyageur, bâtisseur et inventeur."
 }
