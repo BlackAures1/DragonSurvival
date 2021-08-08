@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "betterendforge:cooked_vegetables"
+  },
+  "result": "dragonsurvival:charred_vegetable",
+  "experience": 0.35,
+  "cookingtime": 200
+}

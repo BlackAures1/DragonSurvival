@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "tag": "quark:cooked_seafood"
+  },
+  "result": "dragonsurvival:charred_seafood",
+  "experience": 0.35,
+  "cookingtime": 600
+}

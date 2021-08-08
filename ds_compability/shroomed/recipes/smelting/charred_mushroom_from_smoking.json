@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "tag": "shroomed:cooked_mushrooms"
+  },
+  "result": "dragonsurvival:charred_mushroom",
+  "experience": 0.35,
+  "cookingtime": 100
+}

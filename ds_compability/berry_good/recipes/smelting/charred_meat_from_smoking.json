@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "tag": "berry_good:cooked_meats"
+  },
+  "result": "dragonsurvival:charred_meat",
+  "experience": 0.35,
+  "cookingtime": 100
+}

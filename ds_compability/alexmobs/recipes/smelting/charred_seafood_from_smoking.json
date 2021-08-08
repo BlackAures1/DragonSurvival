@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "tag": "alexmobs:cooked_seafood"
+  },
+  "result": "dragonsurvival:charred_seafood",
+  "experience": 0.35,
+  "cookingtime": 100
+}

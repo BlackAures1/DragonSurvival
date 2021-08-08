@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "tag": "aoa3:cooked_meats"
+  },
+  "result": "dragonsurvival:charred_meat",
+  "experience": 0.35,
+  "cookingtime": 600
+}

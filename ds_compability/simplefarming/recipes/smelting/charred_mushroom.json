@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "simplefarming:cooked_mushrooms"
+  },
+  "result": "dragonsurvival:charred_mushroom",
+  "experience": 0.35,
+  "cookingtime": 200
+}

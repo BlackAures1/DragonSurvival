@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "simplefarming:fish_and_chips",
+	"simplefarming:fried_calamari",
+	"simplefarming:fish_fillet",
+	"simplefarming:sushi"
+  ]
+}

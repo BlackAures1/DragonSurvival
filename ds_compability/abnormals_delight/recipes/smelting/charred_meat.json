@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "abnormals_delight:cooked_meats"
+  },
+  "result": "dragonsurvival:charred_meat",
+  "experience": 0.35,
+  "cookingtime": 200
+}
