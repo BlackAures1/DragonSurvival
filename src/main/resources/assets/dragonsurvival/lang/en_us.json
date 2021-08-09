@@ -4,12 +4,17 @@
   "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
 
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Magical Predator Spawn Egg",
-  "item.dragonsurvival.heart_element": "Heart Element",
   "item.dragonsurvival.star_bone": "Star Bone",
+  "item.dragonsurvival.heart_element": "Heart Element",
   "item.dragonsurvival.elder_dragon_bone": "Elder Dragon Bone",
-  "item.dragonsurvival.charged_coal": "Charged Coal",
-  "item.dragonsurvival.charred_meat": "Charred Meat",
   "item.dragonsurvival.elder_dragon_dust": "Elder Dragon Dust",
+  "item.dragonsurvival.charged_coal": "Charged Coal",
+  "item.dragonsurvival.charged_soup": "Charged Soup",
+  "item.dragonsurvival.charred_meat": "Charred Meat",
+  "item.dragonsurvival.charred_vegetable": "Charred Vegetable",
+  "item.dragonsurvival.charred_seafood": "Charred Seafood",
+  "item.dragonsurvival.charred_mushroom": "Charred Mushroom",
+
 
   
   "block.dragonsurvival.predator_star": "Predator Star",

@@ -4,12 +4,16 @@
   "entity.dragonsurvival.magical_predator_entity": "Магический хищник",
 
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Яйцо призыва магического хищника",
-  "item.dragonsurvival.heart_element": "Элемент сердца",
   "item.dragonsurvival.star_bone": "Звёздная кость",
+  "item.dragonsurvival.heart_element": "Элемент сердца",
   "item.dragonsurvival.elder_dragon_bone": "Кость древнего дракона",
-  "item.dragonsurvival.charged_coal": "Заряженный уголь",
-  "item.dragonsurvival.charred_meat": "Обугленное мясо",
   "item.dragonsurvival.elder_dragon_dust": "Пыль древнего дракона",
+  "item.dragonsurvival.charged_coal": "Заряженный уголь",
+  "item.dragonsurvival.charged_soup": "Заряженный суп",
+  "item.dragonsurvival.charred_meat": "Обугленное мясо",
+  "item.dragonsurvival.charred_vegetable": "Обугленный овощ",
+  "item.dragonsurvival.charred_seafood": "Обугленный морепродукт",
+  "item.dragonsurvival.charred_mushroom": "Обугленный гриб",
 
   
   "block.dragonsurvival.predator_star": "Звезда хищника",

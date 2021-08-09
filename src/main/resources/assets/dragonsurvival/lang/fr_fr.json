@@ -4,12 +4,16 @@
   "entity.dragonsurvival.magical_predator_entity": "Prédateur magique",
 
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Oeuf De Prédateur Magique",
-  "item.dragonsurvival.heart_element": "Coeur Élémentaire",
   "item.dragonsurvival.star_bone": "Étoile D'Os",
+  "item.dragonsurvival.heart_element": "Coeur Élémentaire",
   "item.dragonsurvival.elder_dragon_bone": "Ossement De Dragon Ancien",
-  "item.dragonsurvival.charged_coal": "Charbon Chargé",
-  "item.dragonsurvival.charred_meat": "Viande Carbonisée",
   "item.dragonsurvival.elder_dragon_dust": "Poudre de dragon ancien",
+  "item.dragonsurvival.charged_coal": "Charbon Chargé",
+  "item.dragonsurvival.charged_soup": "Soupe Chargé",
+  "item.dragonsurvival.charred_meat": "Viande Carbonisée",
+  "item.dragonsurvival.charred_vegetable": "Légumes Carbonisés",
+  "item.dragonsurvival.charred_seafood": "Fruits de mer Carbonisés",
+  "item.dragonsurvival.charred_mushroom": "Champignons Carbonisés",
 
   
   "block.dragonsurvival.predator_star": "Étoile De Dragon",

@@ -26,6 +26,7 @@ in object registration event handlers.
 7. Try to keep the code clean and compatible with other mods. 
 8. Don't forget to leave hints for other programmers to make it easier to work as a team and train new people. 
 9. TO DO can be found on the discord server in "help-to-do".
+10. Remember that this mod should not affect players who remain human. 
 
 ## Capability synchronization
 

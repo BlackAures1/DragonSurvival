@@ -1,4 +1,21 @@
+1.16.5-0.0.38:
+
 1.16.5-0.0.37:
+New:
+- added new altars of blackstone, nether brick, purple and red sandstone (special thanks to NoCube for textures and to mina987 for code)
+- added text help when selecting a dragon, compatible with the configuration file (features, weaknesses, diet)
+- when hitting an elder dragon to create an altar, sound is played
+- textures of all altars have been updated.
+- all animations and dragon model were upgraded (special thanks to AIS).
+- textures of dragons were improved: when attacking, lower jaw will not be visible, and a sea dragon does not have an extra 1 pixel on the wing now
+- each altar now has sounds appropriate to the type of material in all situations
+- altars no longer given a nest when is turned into a dragon
+- altars have strength and features appropriate to material
+- altars can now be crafted and are displayed in jei
+- altars no longer have 1 unit lighting
+- altars can now be rotated in all sides for decoration
+- altar names fixed
+- russian, french (Shaenarys), chinese (Ice flare-dragon ice) and english (Contra) localization updated
 
 1.16.5-0.0.36:
 fixed parrots not rendering while riding on dragons
