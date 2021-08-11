@@ -71,7 +71,7 @@ public class DragonAltarBlock extends Block {
                 if (worldIn.isClientSide) {
                     openGUi();
                 }
-                altarEntity.usageCooldowns.put(player.getUUID(),Functions.minutesToTicks(3));
+                altarEntity.usageCooldowns.put(player.getUUID(),Functions.secondsToTicks(1));
             }
         }
         return ActionResultType.SUCCESS;

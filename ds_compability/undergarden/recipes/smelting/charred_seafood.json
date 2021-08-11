@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "undergarden:cooked_seafood"
-  },
-  "result": "dragonsurvival:charred_seafood",
-  "experience": 0.35,
-  "cookingtime": 200
-}
