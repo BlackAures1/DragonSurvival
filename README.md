@@ -40,6 +40,8 @@ ____
 **6.** Don't forget to leave **hints for other programmers** to make it easier to work as a team and train new people. There are a lot of different people working on the project and it's really hard to figure out what's going on with us. 
 
 **7.** This mod should **not affect for a humans gameplay.**
+
+**8.** Remember that **skins cannot be broken** in any way. We have so many people who have created their own skins and some have paid money to get them. It would be very unfortunate if people were to lose them in any way or have to fix something in their skins. We will need to make an additional skinning system in the future which will be automated. This system should be completely safe, have the ability to temporarily disable your skin within the game and be tied to a certain kind of dragon (for example, *BlackAures_adult* will replace all adult dragons, and *BlackAures_aduld_sea* will replace only adult sea dragons). The current system allows you to use the skin offline, it's important to keep this.
 ____
 ■  **A few more important details to keep in mind when adding new content:**
 - player opinions are important to me and we often have polls when there are controversial issues;
