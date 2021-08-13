@@ -287,7 +287,13 @@ public class ServerConfig {
 						"item:infernalexp:glowcoal:2:3",
 						"item:resourcefulbees:coal_honeycomb:5:5",
 						"item:resourcefulbees:netherite_honeycomb:5:5",
-						"item:lazierae2:coal_dust:1:1"
+						"item:lazierae2:coal_dust:1:1",
+						"item:wyrmroost:jewelled_apple",
+						"item:silents_mechanisms:coal_dust:1:1",
+						"item:potionsmaster:calcinatedcoal_powder:1:1",
+						"item:thermal:basalz_rod:2:4",
+						"item:thermal:basalz_powder:1:2",
+						"item:druidcraft:fiery_glass:2:2"
 						), (food) -> isValidFoodConfig(food));
 		forestDragonFoods = builder
 				.defineList("forestDragon", Arrays.asList(
@@ -379,7 +385,13 @@ public class ServerConfig {
 						"item:byg:soul_shroom:9:5",
 						"item:byg:death_cap:9:8",
 						"item:byg:holly_berries:2:2",
-						"item:minecolonies:chorus_bread"
+						"item:minecolonies:chorus_bread",
+						"item:wyrmroost:jewelled_apple",
+						"item:wyrmroost:raw_lowtier_meat:3:2",
+						"item:wyrmroost:raw_common_meat:5:3",
+						"item:wyrmroost:raw_apex_meat:8:6",
+						"item:wyrmroost:raw_behemoth_meat:11:12",
+						"item:wyrmroost:desert_wyrm:4:3"
 						), (food) -> isValidFoodConfig(food));
 		seaDragonFoods = builder
 				.defineList("seaDragon", Arrays.asList(
@@ -477,7 +489,8 @@ public class ServerConfig {
 						"item:upgrade_aquatic:ochre_kelp:2:2",
 						"item:upgrade_aquatic:lionfish:8:9",
 						"item:resourcefulbees:gold_honeycomb:5:5",
-						"item:resourcefulbees:rainbow_honey_bottle"
+						"item:resourcefulbees:rainbow_honey_bottle",
+						"item:wyrmroost:jewelled_apple"
 						), (food) -> isValidFoodConfig(food));
 	}
 	

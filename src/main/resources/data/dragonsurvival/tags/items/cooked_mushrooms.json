@@ -34,6 +34,12 @@
     {"id": "pamhc2crops:roastedmushroomitem",
       "required": false},
     {"id": "twilightforest:meef_stroganoff",
+      "required": false},
+    {"id": "forbidden_arcanus:edelwood_mushroom_stew_bucket",
+      "required": false},
+    {"id": "infernalexp:blindsight_tongue_stew",
+      "required": false},
+    {"id": "xenoclustwo:fulngus_stew",
       "required": false}
   ]
 }
