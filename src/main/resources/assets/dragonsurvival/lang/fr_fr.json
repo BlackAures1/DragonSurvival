@@ -9,7 +9,7 @@
   "item.dragonsurvival.elder_dragon_bone": "Ossement De Dragon Ancien",
   "item.dragonsurvival.elder_dragon_dust": "Poudre de dragon ancien",
   "item.dragonsurvival.charged_coal": "Charbon Chargé",
-  "item.dragonsurvival.charged_soup": "Soupe Chargé",
+  "item.dragonsurvival.charged_soup": "Soupe Chargée",
   "item.dragonsurvival.charred_meat": "Viande Carbonisée",
   "item.dragonsurvival.charred_vegetable": "Légumes Carbonisés",
   "item.dragonsurvival.charred_seafood": "Fruits de mer Carbonisés",
@@ -28,12 +28,6 @@
   "block.dragonsurvival.big_sea_nest": "Grand Nid Océanique",
   "block.dragonsurvival.big_cave_nest": "Grand Nid De Caverne",
   
-  
-  "block.dragonsurvival.dragon_altar1": "Autel De Dragon En Chêne",
-  "block.dragonsurvival.dragon_altar2": "Autel De Dragon En Pierre",
-  "block.dragonsurvival.dragon_altar3": "Autel De Dragon En Grès",
-  "block.dragonsurvival.dragon_altar0": "Autel De Dragon Moussu",
-
   "block.dragonsurvival.dragon_altar_stone": "Autel De Dragon En Pierre",
   "block.dragonsurvival.dragon_altar_sandstone": "Autel De Dragon En Grès",
   "block.dragonsurvival.dragon_altar_red_sandstone": "Autel De Dragon En Grès Rouge",

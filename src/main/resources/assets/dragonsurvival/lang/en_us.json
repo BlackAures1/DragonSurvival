@@ -16,7 +16,6 @@
   "item.dragonsurvival.charred_mushroom": "Charred Mushroom",
 
 
-  
   "block.dragonsurvival.predator_star": "Predator Star",
   "block.dragonsurvival.dragon_altar": "Dragons' Altar",
   "block.dragonsurvival.cave_nest_small": "Small Cave Nest",
@@ -28,13 +27,11 @@
   "block.dragonsurvival.big_forest_nest": "Big Forest Nest",
   "block.dragonsurvival.big_sea_nest": "Big Sea Nest",
   "block.dragonsurvival.big_cave_nest": "Big Cave Nest",
-  
-  
+
   "block.dragonsurvival.dragon_altar1": "Oak Dragon Altar",
   "block.dragonsurvival.dragon_altar2": "Stone Dragon Altar",
   "block.dragonsurvival.dragon_altar3": "Sandstone Dragon Altar",
   "block.dragonsurvival.dragon_altar0": "Mossy Dragon Altar",
-
   "block.dragonsurvival.dragon_altar_stone": "Stone dragon altar",
   "block.dragonsurvival.dragon_altar_sandstone": "Sandstone dragon altar",
   "block.dragonsurvival.dragon_altar_red_sandstone": "Red sandstone dragon altar",
@@ -43,7 +40,6 @@
   "block.dragonsurvival.dragon_altar_nether_bricks": "Nether brick dragon altar",
   "block.dragonsurvival.dragon_altar_mossy_cobblestone": "Mossy cobblestone dragon altar",
   "block.dragonsurvival.dragon_altar_blackstone": "Blackstone dragon altar",
-
 
   "block.dragonsurvival.spruce_dragon_door": "Spruce Dragon Door",
   "block.dragonsurvival.acacia_dragon_door": "Acacia Dragon Door",
@@ -90,7 +86,6 @@
   "ds.endmessage.1": "Have you come here for the wings, ()? Get out, before it's too late.",
   "ds.endmessage.2": "This is my land, (), show some respect. Go away, but first answer, why have you come here. Is it for wings?",
   "ds.endmessage.3": "You have gone through lot to get here, (), what do you wish?",
-
 
   "ds.altar_dragon_info.cave_dragon.0":"§c■ Cave dragon.§r",
   "ds.altar_dragon_info.cave_dragon.1":"",
