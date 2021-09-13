@@ -186,7 +186,17 @@ public class ServerConfig {
 						"tag:minecraft:impermeable",
 						"tag:minecraft:sand",
 						"tag:minecraft:coral_blocks",
-						"tag:forge:sand"
+						"tag:forge:sand",
+						"block:minecraft:dirt_path",
+						"block:minecraft:sandstone",
+						"block:minecraft:cut_sandstone",
+						"block:minecraft:chiseled_sandstone",
+						"block:minecraft:smooth_sandstone",
+						"block:minecraft:red_sandstone",
+						"block:minecraft:cut_red_sandstone",
+						"block:minecraft:chiseled_red_sandstone",
+						"block:minecraft:smooth_red_sandstone",
+						"block:minecraft:water"
 						), (block) -> isValidBlockConfig(block));
 		builder.pop(2).push("penalties");
 		penalties = builder
@@ -202,17 +212,17 @@ public class ServerConfig {
 		builder.pop().push("forest"); // Forest Dragon Penalties
 		forestStressTicks = builder
 				.comment("The number of ticks in darkness before the forest dragon gets the Stressed effect. Set to 0 to disable to stress effect.")
-				.defineInRange("ticksBeforeStressed", 200, 0, 10000);
+				.defineInRange("ticksBeforeStressed", 70, 0, 10000);
 		forestStressEffectDuration = builder
 				.comment("The number of seconds the stress effect lasts for.")
-				.defineInRange("stressEffectDuration", 30, 2, 100000);
+				.defineInRange("stressEffectDuration", 50, 2, 100000);
 		stressExhaustion = builder
 				.comment("The amount of exhaustion applied per 10 ticks during the stress effect.")
 				.defineInRange("stressExhaustion", 1.0, 0.1, 4.0);
 		builder.pop().push("sea"); // Sea Dragon Penalties
 		seaTicksWithoutWater = builder
 				.comment("The number of ticks out of water before the sea dragon will start taking dehydration damage. Set to 0 to disable. Note: This value can stack up to double while dehydrated.")
-				.defineInRange("ticksWithoutWater", 2400, 0, 100000);
+				.defineInRange("ticksWithoutWater", 15000, 0, 100000);
 		seaDehydrationDamage = builder
 				.comment("The amount of damage taken per tick while dehydrated (once every 40 ticks unless fully dehydrated, then once every 20 ticks).")
 				.defineInRange("dehydrationDamage", 1.0, 0.5, 100.0);
@@ -228,7 +238,7 @@ public class ServerConfig {
 				.define("allowWaterBottles", true);
 		seaTicksWithoutWaterRestored = builder
 				.comment("How many ticks do water restoration items restore when used. Set to 0 to disable.")
-				.defineInRange("waterItemRestorationTicks", 2400, 0, 100000);
+				.defineInRange("waterItemRestorationTicks", 5000, 0, 100000);
 		seaAdditionalWaterUseables = builder
 				.comment("Additional modded USEABLE items that restore water when used (called from LivingEntityUseItemEvent.Finish). Format: item/tag:modid:id")
 				.defineList("seaHydrationItems", Arrays.asList(
@@ -238,7 +248,7 @@ public class ServerConfig {
 		builder.pop(3).push("oreLoot");
 		humanOreDustChance = builder
 				.comment("The odds of dust dropping when a human harvests an ore.")
-				.defineInRange("humanOreDustChance", 0.0033, 0.0, 1.0);
+				.defineInRange("humanOreDustChance", 0.1, 0.0, 1.0);
         dragonOreDustChance = builder
         		.comment("The odds of dust dropping when a dragon harvests an ore.")
         		.defineInRange("dragonOreDustChance", 0.4, 0.0, 1.0);
@@ -261,7 +271,7 @@ public class ServerConfig {
 						"item:minecraft:charcoal:1:2",
 						"item:minecraft:golden_apple",
 						"item:minecraft:enchanted_golden_apple",
-						"item:dragonsurvival:charged_coal:5:6",
+						"item:dragonsurvival:charged_coal:4:2",
 						"item:dragonsurvival:charred_meat:10:12",
 						"item:dragonsurvival:charred_seafood:8:10",
 						"item:dragonsurvival:charred_vegetable:8:9",
@@ -391,7 +401,53 @@ public class ServerConfig {
 						"item:wyrmroost:raw_common_meat:5:3",
 						"item:wyrmroost:raw_apex_meat:8:6",
 						"item:wyrmroost:raw_behemoth_meat:11:12",
-						"item:wyrmroost:desert_wyrm:4:3"
+						"item:wyrmroost:desert_wyrm:4:3",
+						"item:eanimod:rawchicken_darkbig:9:5",
+						"item:eanimod:rawchicken_dark:5:4",
+						"item:eanimod:rawchicken_darksmall:3:2",
+						"item:eanimod:rawchicken_pale:5:3",
+						"item:eanimod:rawchicken_palesmall:4:3",
+						"item:eanimod:rawrabbit_small:4:4",
+						"item:environmental:duck:4:3",
+						"item:environmental:venison:7:7",
+						"item:cnb:lizard_item_0:4:4",
+						"item:cnb:lizard_item_1:4:4",
+						"item:cnb:lizard_item_2:4:4",
+						"item:cnb:lizard_item_3:4:4",
+						"item:snowpig:frozen_porkchop:7:3",
+						"item:snowpig:frozen_ham:5:7",
+						"item:untamedwilds:snake_grass_snake:4:4",
+						"item:untamedwilds:snake_green_mamba:4:4",
+						"item:untamedwilds:snake_rattlesnake:4:4",
+						"item:untamedwilds:snake_emerald:4:4",
+						"item:untamedwilds:snake_carpet_python:4:4",
+						"item:untamedwilds:snake_corn:4:4",
+						"item:untamedwilds:snake_gray_kingsnake:4:4",
+						"item:untamedwilds:snake_coral:4:4",
+						"item:untamedwilds:snake_ball_python:4:4",
+						"item:untamedwilds:snake_black_mamba:4:4",
+						"item:untamedwilds:snake_western_rattlesnake:4:4",
+						"item:untamedwilds:snake_taipan:4:4",
+						"item:untamedwilds:snake_adder:4:4",
+						"item:untamedwilds:snake_rice_paddy:4:4",
+						"item:untamedwilds:snake_coral_blue:4:4",
+						"item:untamedwilds:snake_cave_racer:4:4",
+						"item:untamedwilds:snake_swamp_moccasin:4:4",
+						"item:untamedwilds:softshell_turtle_pig_nose:4:4",
+						"item:untamedwilds:softshell_turtle_flapshell:4:4",
+						"item:untamedwilds:softshell_turtle_chinese:4:4",
+						"item:untamedwilds:tortoise_asian_box:4:4",
+						"item:untamedwilds:tortoise_gopher:4:4",
+						"item:untamedwilds:tortoise_leopard:4:4",
+						"item:untamedwilds:softshell_turtle_peacock:4:4",
+						"item:untamedwilds:softshell_turtle_nile:4:4",
+						"item:untamedwilds:softshell_turtle_spiny:4:4",
+						"item:untamedwilds:tortoise_sulcata:4:4",
+						"item:untamedwilds:tortoise_star:4:4",
+						"item:untamedwilds:tortoise_marginated:4:4",
+						"item:leescreatures:raw_boarlin:6:6",
+						"item:mysticalworld:venison:5:5",
+						"item:toadterror:toad_chops:8:7"
 						), (food) -> isValidFoodConfig(food));
 		seaDragonFoods = builder
 				.defineList("seaDragon", Arrays.asList(
@@ -490,7 +546,39 @@ public class ServerConfig {
 						"item:upgrade_aquatic:lionfish:8:9",
 						"item:resourcefulbees:gold_honeycomb:5:5",
 						"item:resourcefulbees:rainbow_honey_bottle",
-						"item:wyrmroost:jewelled_apple"
+						"item:wyrmroost:jewelled_apple",
+						"item:freshwarriors:fresh_soup:15:10",
+						"item:aquaculture:sushi:6:5",
+						"item:freshwarriors:beluga_caviar:10:3",
+						"item:freshwarriors:piranha:4:1",
+						"item:freshwarriors:tilapia:4:1",
+						"item:freshwarriors:stuffed_piranha:4:1",
+						"item:freshwarriors:tigerfish:5:5",
+						"item:freshwarriors:toe_biter_leg:3:3",
+						"item:untamedwilds:egg_arowana_black:4:4",
+						"item:untamedwilds:egg_trevally_jack:4:4",
+						"item:untamedwilds:egg_trevally_golden:4:4",
+						"item:untamedwilds:egg_giant_salamander_chinese:6:4",
+						"item:untamedwilds:egg_giant_salamander_hellbender:6:4",
+						"item:untamedwilds:egg_giant_salamander_japanese:6:4",
+						"item:untamedwilds:giant_clam_gigas:4:4",
+						"item:untamedwilds:giant_clam_derasa:4:4",
+						"item:untamedwilds:giant_clam_maxima:4:4",
+						"item:untamedwilds:giant_clam_squamosa:4:4",
+						"item:untamedwilds:egg_trevally_giant:6:4",
+						"item:untamedwilds:egg_trevally_bluespotted:6:4",
+						"item:untamedwilds:egg_trevally_bigeye:6:4",
+						"item:untamedwilds:egg_sunfish_southern:6:4",
+						"item:untamedwilds:egg_sunfish_sunfish:6:4",
+						"item:untamedwilds:egg_giant_clam_squamosa:6:4",
+						"item:untamedwilds:egg_giant_clam_gigas:6:4",
+						"item:untamedwilds:egg_giant_clam_derasa:6:4",
+						"item:untamedwilds:egg_giant_clam_maxima:6:4",
+						"item:untamedwilds:egg_football_fish_atlantic:6:4",
+						"item:untamedwilds:egg_arowana_silver:6:4",
+						"item:untamedwilds:egg_arowana_jardini:6:4",
+						"item:untamedwilds:egg_arowana_green:6:4",
+						"item:mysticalworld:raw_squid:6:5"
 						), (food) -> isValidFoodConfig(food));
 	}
 	
