@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
+import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -37,17 +38,17 @@ public class CommonConfig {
 		// Predator
 		builder.pop().push("predator");
 		predatorDamageFactor = builder
-				.defineInRange("predatorDamageFactor", 1, 0.5, 10);
+				.defineInRange("predatorDamageFactor", 0.5, 0.5, 10);
 		predatorHealthFactor = builder
-				.defineInRange("predatorHealthFactor", 1, 0.2, 5);
+				.defineInRange("predatorHealthFactor", 0.2, 0.2, 5);
 		builder.push("spawnChances");
 		minPredatorSpawn = builder
-				.defineInRange("minimum", 1, 0, 64);
+				.defineInRange("minimum", 0, 0, 64);
 		maxPredatorSpawn = builder
-				.defineInRange("maximum", 3, 0, 64);
+				.defineInRange("maximum", 1, 0, 64);
 		predatorSpawnWeight = builder
 				.comment("Set weight to 0 to disable spawning.")
-				.defineInRange("weight", 4, 0, 100);
+				.defineInRange("weight", 2, 0, 100);
 		predatorStarSpawnChance = builder
 				.comment("Chance for predators to spawn from stars. Set to 0.0 to disable.")
 				.defineInRange("starSpawnChance", 0.3, 0, 1.0);
@@ -57,9 +58,9 @@ public class CommonConfig {
 		builder.pop().push("spawnBiomes");
 		predatorBiomesInclude = builder
 				.comment("The predator can only spawn in biomes with the included types.")
-				.defineList("include", Arrays.asList(FOREST.toString(), PLAINS.toString(), HILLS.toString(), SWAMP.toString(), SANDY.toString(), SNOWY.toString(), WASTELAND.toString(), BEACH.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+				.defineList("include", Arrays.asList(END.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
 		predatorBiomesExclude = builder
 				.comment("The predator cannot spawn in biomes with excluded types.")
-				.defineList("exclude", Arrays.asList(MOUNTAIN.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+				.defineList("exclude", Arrays.asList(OVERWORLD.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
 	}
 }

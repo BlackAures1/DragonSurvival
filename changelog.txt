@@ -1,5 +1,60 @@
-0.0.35:
+1.16.5-0.0.39:
+- new languages have been added: Brazilian Portuguese and Traditional Chinese
+- chance of dust falling out for humans is increased to 1%
+- predators spawn only in End.
+- weakened health and attack of magical predators
+- sea dragons get speed boost on different variants of sandstone.
+- forest dragons get faster and stronger fear of dark
+- land time of sea dragons increased from 2400 to 15000 ticks.
+- bottle of water restores 5000 water ticks instead of 2400
+- nutritional value of charcoal was decreased from 5:6 to 4:2
+- added food compatibility with eanimod, environmental, untamedwilds, creatures and beast, snow pig, lees creatures, mystical world, toad terror and freshwarriors
+
+1.16.5-0.0.38:
+- updated and added items: charred meat, charred seafood, charred mushrooms, charred vegetables, which are obtained by re-cooking fried foods in furnace, smoker, and campfire.
+- all charred/charred foods can now be made into 1 coal unit
+- added charged soup for the cave dragon. Best food for a cave dragons and worst for a human. Recipe: put 3 fresh charged charcoal on top of 1 charred seafood/meat, 1 charred vegetable and 1 charred mushroom, then heat it all up on several buckets of lava in the workbench.
+- altar cooldown reduced to 1 second
+- added automatic compatibility of dragon rations and charred meat recipes through configuration with more than 80 mods (that's about 300 items). Don't forget to use the DragonFruit addon from Patreon, which shows exactly how much your dragon will get bonuses from food. The full list is available on GitHub:
+- charred food [https://github.com/DragonSurvivalTeam/DragonSurvival/tree/v1.16.x/src/main/resources/data/dragonsurvival/tags/items],
+- ration [https://github.com/DragonSurvivalTeam/DragonSurvival/blob/v1.16.x/src/main/java/by/jackraidenph/dragonsurvival/config/ServerConfig.java#L259-L482]
+- updated Russian, Chinese, French and English translations;
+- updated all recipes for creating charred foods;
+- fixed a problem with players from Turkey who had the "load_registries" error;
+- minor animation fix;
+- extra models and files removed.
+
+1.16.5-0.0.37:
+New:
+- added new altars of blackstone, nether brick, purple and red sandstone (special thanks to NoCube for textures and to mina987 for code)
+- added text help when selecting a dragon, compatible with the configuration file (features, weaknesses, diet)
+- when hitting an elder dragon to create an altar, sound is played
+- textures of all altars have been updated.
+- all animations and dragon model were upgraded (special thanks to AIS).
+- textures of dragons were improved: when attacking, lower jaw will not be visible, and a sea dragon does not have an extra 1 pixel on the wing now
+- each altar now has sounds appropriate to the type of material in all situations
+- altars no longer given a nest when is turned into a dragon
+- altars have strength and features appropriate to material
+- altars can now be crafted and are displayed in jei
+- altars no longer have 1 unit lighting
+- altars can now be rotated in all sides for decoration
+- altar names fixed
+- russian, french (Shaenarys), chinese (Ice flare-dragon ice) and english (Contra) localization updated
+
+1.16.5-0.0.36:
+fixed parrots not rendering while riding on dragons
+fixed missing nametags, added config option to enable >:(
+dragons no longer drop various items like shields and bows
+fixed item use being fired twice in mutiplayer
+
+1.16.5-0.0.35:
 fixed items in 3x3 crafting window not returning to player;
+implemented dragon riding - humans and baby dragons can now ride max size dragons
+fixed dragon inventory display
+removed fire render from cave dragons
+fixed specifics sync issues when traveling between dimensions
+dragon shadows now scale off dragon size
+fixed flying dragon fall damage
 
 1.16.5-0.0.34:
 many new (and perhaps unnecessary) config options

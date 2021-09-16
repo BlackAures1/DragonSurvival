@@ -1,5 +1,7 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import java.util.Locale;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -47,7 +49,7 @@ public class DragonDoor extends Block {
     	
         @Override
         public String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ENGLISH);
         }
     }
 
@@ -61,7 +63,7 @@ public class DragonDoor extends Block {
     	
     	@Override
         public String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ENGLISH);
         }
 	}
 	

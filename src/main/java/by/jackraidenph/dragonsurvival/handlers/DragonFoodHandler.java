@@ -1,9 +1,12 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -26,6 +29,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.ITag;
@@ -90,6 +94,23 @@ public class DragonFoodHandler{
 		dragonMap.put(DragonType.SEA, buildDragonFoodMap(DragonType.SEA));
 		DRAGON_FOODS = new HashMap<DragonType, Map<Item, Food>>(dragonMap);
 	}
+	
+	public static List<Item> getSafeEdibleFoods(DragonType dragonType) {
+        List<Item> foods = new ArrayList<>();
+        for (Item item : DRAGON_FOODS.get(dragonType).keySet()) {
+            boolean safe = true;
+            for (Pair<EffectInstance, Float> effect : DRAGON_FOODS.get(dragonType).get(item).getEffects()) {
+                Effect e = effect.getFirst().getEffect();
+                if (!e.isBeneficial() && e != Effects.CONFUSION) { // Because we decided to leave confusion on pufferfish
+                    safe = false;
+                    break;
+                }
+            }
+            if (safe)
+                foods.add(item);
+        }
+        return foods;
+    }
 	
 	private static Map<Item, Food> buildDragonFoodMap(DragonType type) {
 		HashMap<Item, Food> foodMap = new HashMap<Item, Food>();
@@ -217,7 +238,7 @@ public class DragonFoodHandler{
 	
 	@SubscribeEvent
 	@OnlyIn(Dist.DEDICATED_SERVER)
-	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) { 
+	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
 		DragonStateProvider.getCap(event.getEntityLiving()).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
 				ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
@@ -252,6 +273,7 @@ public class DragonFoodHandler{
 
 		            event.setCancellationResult(actionresult.getResult());
 				}
+				event.setCanceled(true);
 			}
 		});
 	}

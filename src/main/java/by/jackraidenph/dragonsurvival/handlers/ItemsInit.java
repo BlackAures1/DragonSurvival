@@ -36,7 +36,7 @@ public class ItemsInit {
             return new ItemStack(elderDragonBone);
         }
     };
-    public static Item charredMeat, chargedCoal;
+    public static Item charredMeat, charredVegetable, charredMushroom, charredSeafood, chargedCoal, charredSoup;
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<Item> event) {
@@ -117,9 +117,21 @@ public class ItemsInit {
         		return 3200;
         	}
         }.setRegistryName(DragonSurvivalMod.MODID, "charged_coal");
-        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(5).saturationMod(0.4F).meat()
+        charredMeat = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
         		.effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
         		.build())).setRegistryName(DragonSurvivalMod.MODID, "charred_meat");
-        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, elderDragonDust);
+        charredVegetable = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
+                .effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
+                .build())).setRegistryName(DragonSurvivalMod.MODID, "charred_vegetable");
+        charredMushroom = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
+                .effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
+                .build())).setRegistryName(DragonSurvivalMod.MODID, "charred_mushroom");
+        charredSeafood = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
+                .effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
+                .build())).setRegistryName(DragonSurvivalMod.MODID, "charred_seafood");
+        charredSoup = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
+                .effect(() -> new EffectInstance(Effects.POISON, 20 * 15, 0), 1.0F)
+                .build())).setRegistryName(DragonSurvivalMod.MODID, "charged_soup");
+        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, charredVegetable, charredMushroom, charredSoup, charredSeafood, elderDragonDust);
     }
 }

@@ -11,8 +11,11 @@
 	],
 	"client": [
 		"AccessorEntityRenderer",
+		"AccessorEntityRendererManager",
+		"AccessorLivingRenderer",
 		"MixinProjectileHelper",
-		"MixinFirstPersonRenderer"
+		"MixinFirstPersonRenderer",
+		"MixinInventoryScreen"
 	],
 	"minVersion": "0.8"
 }

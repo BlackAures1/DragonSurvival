@@ -55,7 +55,9 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -80,6 +82,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import java.io.Console;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -119,13 +122,6 @@ public class EventHandler {
         PlayerEntity playerEntity = playerTickEvent.player;
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-                for (int i = 0; i < playerEntity.inventory.getContainerSize(); i++) {
-                    ItemStack stack = playerEntity.inventory.getItem(i);
-                    Item item = stack.getItem();
-                    if (item instanceof CrossbowItem || item instanceof BowItem || item instanceof ShieldItem) {
-                        playerEntity.drop(playerEntity.inventory.removeItemNoUpdate(i), true, false);
-                    }
-                }
                 if (playerEntity instanceof ServerPlayerEntity) {
                     PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).gameMode;
                     Field field = PlayerInteractionManager.class.getDeclaredFields()[5]; // FIXME: Don't do this...
@@ -144,6 +140,40 @@ public class EventHandler {
 	}
 
     @SubscribeEvent
+    public static void reduceFlightFallDamage(LivingHurtEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                event.setAmount(dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void negateFlightFallDamage(LivingAttackEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (livingEntity.level.isClientSide())
+            return;
+        DamageSource damageSource = event.getSource();
+        DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
+            if (damageSource == DamageSource.FALL && livingEntity.isPassenger() && DragonStateProvider.isDragon(livingEntity.getVehicle()))
+                event.setCanceled(true);
+            else if (damageSource == DamageSource.FALL && dragonStateHandler.isDragon() && dragonStateHandler.hasWings() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())){
+                float dragonFallDamage = Math.min(livingEntity.getMaxHealth() / 2f, event.getAmount() / 2f <= 3f ? 0f : event.getAmount() / 2f);
+                float effectiveHealth = livingEntity.getHealth() + livingEntity.getAbsorptionAmount();
+                float damage = dragonFallDamage >= effectiveHealth ? effectiveHealth - 1 : dragonFallDamage;
+                if (damage <= 0)
+                    event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
     public static void onServerPlayerTick(TickEvent.PlayerTickEvent event) { // TODO: Find a better way of doing this.
         if (!(event.player instanceof ServerPlayerEntity))
             return;
@@ -152,27 +182,31 @@ public class EventHandler {
             int passengerId = dragonStateHandler.getPassengerId();
             Entity passenger = player.level.getEntity(passengerId);
             boolean flag = false;
-            if (!dragonStateHandler.isDragon() && player.isVehicle()){
+            if (!dragonStateHandler.isDragon() && player.isVehicle() && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSpectator() && passenger != null){
+            } else if (player.isSpectator() && passenger != null && player.getPassengers().get(0) instanceof ServerPlayerEntity) {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()){
+            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSleeping() && player.isVehicle()){
+            } else if (player.isSleeping() && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
             }
-            if (passenger != null) {
+            if (passenger != null && passenger instanceof ServerPlayerEntity) {
                 DragonStateHandler passengerCap = DragonStateProvider.getCap(passenger).orElseGet(null);
                 if (passengerCap != null){
                     if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY){
+                        flag = true;
+                        passenger.stopRiding();
+                        player.connection.send(new SSetPassengersPacket(player));
+                    } else if (passenger.getRootVehicle() != player.getRootVehicle()) {
                         flag = true;
                         passenger.stopRiding();
                         player.connection.send(new SSetPassengersPacket(player));
@@ -187,6 +221,21 @@ public class EventHandler {
         });
     }
 
+    @SubscribeEvent
+    public static void onPlayerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
+        if (player.getVehicle() == null || !(player.getVehicle() instanceof ServerPlayerEntity))
+            return;
+        ServerPlayerEntity vehicle = (ServerPlayerEntity)player.getVehicle();
+        DragonStateProvider.getCap(player).ifPresent(playerCap -> {
+            DragonStateProvider.getCap(vehicle).ifPresent(vehicleCap -> {
+                player.stopRiding();
+                vehicle.connection.send(new SSetPassengersPacket(vehicle));
+                vehicleCap.setPassengerId(0);
+                DragonSurvivalMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> vehicle), new SynchronizeDragonCap(player.getId(), vehicleCap.isHiding(), vehicleCap.getType(), vehicleCap.getSize(), vehicleCap.hasWings(), vehicleCap.getLavaAirSupply(), 0));
+            });
+        });
+    }
 
 
     /**
@@ -322,31 +371,63 @@ public class EventHandler {
     public static void createAltar(PlayerInteractEvent.RightClickBlock rightClickBlock) {
         ItemStack itemStack = rightClickBlock.getItemStack();
         if (itemStack.getItem() == ItemsInit.elderDragonBone) {
-
-            final World world = rightClickBlock.getWorld();
-            final BlockPos blockPos = rightClickBlock.getPos();
-            BlockState blockState = world.getBlockState(blockPos);
-            final Block block = blockState.getBlock();
-            boolean replace = false;
-            if (block == Blocks.STONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar3.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.SANDSTONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar4.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.MOSSY_COBBLESTONE) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar.defaultBlockState());
-                replace = true;
-            } else if (block == Blocks.OAK_LOG) {
-                world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar2.defaultBlockState());
-                replace = true;
+            if(!rightClickBlock.getPlayer().isSpectator()) {
+        		
+                final World world = rightClickBlock.getWorld();
+                final BlockPos blockPos = rightClickBlock.getPos();
+                BlockState blockState = world.getBlockState(blockPos);
+                final Block block = blockState.getBlock();
+                
+                boolean replace = false;
+                rightClickBlock.getPlayer().isSpectator();
+                rightClickBlock.getPlayer().isCreative();
+                	BlockItemUseContext deirection = new BlockItemUseContext(
+                    		rightClickBlock.getPlayer(), 
+                    		rightClickBlock.getHand(), 
+                    		rightClickBlock.getItemStack(), 
+                    		new BlockRayTraceResult(
+                    				new Vector3d(0, 0, 0),
+                    				rightClickBlock.getPlayer().getDirection(), 
+                    				blockPos, 
+                    				false));
+                if (block == Blocks.STONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_stone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.MOSSY_COBBLESTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_mossy_cobblestone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.SANDSTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_sandstone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.RED_SANDSTONE) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_red_sandstone.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.OAK_LOG) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_oak_log.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.PURPUR_BLOCK) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_purpur_block.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.NETHER_BRICKS) {
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_nether_bricks.getStateForPlacement(deirection));
+                    replace = true;
+                } else if (block == Blocks.BLACKSTONE) {
+                	rightClickBlock.getPlayer().getDirection();
+                    world.setBlockAndUpdate(blockPos, BlockInit.dragon_altar_blackstone.getStateForPlacement(deirection));
+                    replace = true;
+                }
+                
+                if (replace) {
+                	if(!rightClickBlock.getPlayer().isCreative()) {
+                		itemStack.shrink(1);
+                	}
+                    rightClickBlock.setCanceled(true);
+                    world.playSound(rightClickBlock.getPlayer(), blockPos, SoundEvents.WITHER_SPAWN, SoundCategory.PLAYERS, 1, 1);
+                    rightClickBlock.setCancellationResult(ActionResultType.SUCCESS);
+                }
             }
-            if (replace) {
-                itemStack.shrink(1);
-                rightClickBlock.setCanceled(true);
-                world.playSound(rightClickBlock.getPlayer(), blockPos, SoundEvents.STONE_PLACE, SoundCategory.PLAYERS, 1, 1);
-                rightClickBlock.setCancellationResult(ActionResultType.SUCCESS);
-            }
+            
+            
 
         }
     }

@@ -50,7 +50,14 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void setupClient(final FMLClientSetupEvent event) {
-        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_stone, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_sandstone, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_red_sandstone, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_purpur_block, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_oak_log, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_nether_bricks, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_mossy_cobblestone, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_blackstone, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.mediumCaveNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.mediumForestNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.mediumSeaNest, RenderType.cutout());
