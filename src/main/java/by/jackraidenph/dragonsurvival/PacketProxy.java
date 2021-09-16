@@ -3,8 +3,8 @@ package by.jackraidenph.dragonsurvival;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
+import by.jackraidenph.dragonsurvival.handlers.ClientFlightHandler;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
@@ -105,7 +105,7 @@ public class PacketProxy {
                         dragonStateHandler.setLavaAirSupply(synchronizeDragonCap.lavaAirSupply);
                         dragonStateHandler.setPassengerId(synchronizeDragonCap.passengerId);
                         if (!dragonStateHandler.hasWings() && thatPlayer == myPlayer)
-                            FlightController.wingsEnabled = false;
+                            ClientFlightHandler.wingsEnabled = false;
                     });
                     //refresh instances
                     if (thatPlayer != myPlayer) {

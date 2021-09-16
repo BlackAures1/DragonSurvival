@@ -1,7 +1,5 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
@@ -11,25 +9,31 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * Used in pair with {@link ServerFlightHandler}
+ */
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @SuppressWarnings("unused")
-public class FlightController {
-	
+public class ClientFlightHandler {
+
     public static boolean wingsEnabled;
+    /**
+     * Acceleration
+     */
     static double ax, ay, az;
 
+    /**
+     * Controls acceleration
+     */
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;

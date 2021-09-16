@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.network;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
-import by.jackraidenph.dragonsurvival.handlers.FlightController;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;

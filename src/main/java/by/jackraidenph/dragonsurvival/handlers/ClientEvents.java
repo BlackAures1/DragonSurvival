@@ -1,95 +1,61 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.DragonCapStorage;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
-import by.jackraidenph.dragonsurvival.containers.CraftingContainer;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRendererManager;
 import by.jackraidenph.dragonsurvival.mixins.AccessorLivingRenderer;
 import by.jackraidenph.dragonsurvival.network.OpenCrafting;
-import by.jackraidenph.dragonsurvival.network.OpenDragonInventory;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.ViewFrustum;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.layers.ParrotVariantLayer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
-import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 @SuppressWarnings("unused")
@@ -236,10 +202,10 @@ public class ClientEvents {
             			
 	                    Vector3d moveVector = getInputVector(new Vector3d(player.input.leftImpulse, 0, player.input.forwardImpulse), 1F, player.yRot);
 	                    boolean isFlying = false;
-	                    if (FlightController.wingsEnabled && !player.isOnGround() && !player.isInWater() && !player.isInLava()) { // TODO: Remove this when fixing flight system
-	                    	moveVector = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
-	                    	isFlying = true;
-	                    }
+	                    if (ClientFlightHandler.wingsEnabled && !player.isOnGround() && !player.isInWater() && !player.isInLava()) { // TODO: Remove this when fixing flight system
+                            moveVector = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
+                            isFlying = true;
+                        }
 	                    float f = (float)MathHelper.atan2(moveVector.z, moveVector.x) * (180F / (float)Math.PI) - 90F;
 	                    float f1 = (float)(Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
 	                    
