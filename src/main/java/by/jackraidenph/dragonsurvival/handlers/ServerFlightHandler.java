@@ -92,7 +92,7 @@ public class ServerFlightHandler {
                 ax = 0;
                 az = 0;
                 ay = 0;
-            } else {
+            } else if (ConfigHandler.SERVER.enableFlightFallDamage.get()) {
                 DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
                     if (dragonStateHandler.isDragon() && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())) {
                         ax = 0;

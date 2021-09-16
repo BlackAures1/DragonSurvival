@@ -1,11 +1,10 @@
 package by.jackraidenph.dragonsurvival.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ServerConfig {
 
@@ -14,7 +13,8 @@ public class ServerConfig {
 	public final ForgeConfigSpec.BooleanValue mineStarBlock;
     public final ForgeConfigSpec.BooleanValue sizeChangesHitbox;
     public final ForgeConfigSpec.BooleanValue hitboxGrowsPastHuman;
-    public final ForgeConfigSpec.BooleanValue startWithWings;
+	public final ForgeConfigSpec.BooleanValue startWithWings;
+	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
     
     // Specifics
     public final ForgeConfigSpec.BooleanValue customDragonFoods;
@@ -92,7 +92,10 @@ public class ServerConfig {
 		startWithWings = builder
 				.comment("Whether dragons start out with wings.")
 				.define("startWithWings", false);
-		
+
+		enableFlightFallDamage = builder.comment("Whether damage from flight falling is enabled")
+				.define("enableFlightFallDamage", true);
+
 		// Specifics
 		builder.pop().push("specifics");
 		customDragonFoods = builder
