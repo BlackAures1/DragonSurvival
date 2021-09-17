@@ -34,7 +34,7 @@ public class ServerFlightHandler {
         if (!playerEntity.level.isClientSide) {
             DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
-                    if (DragonSizeHandler.serverWingsEnabled.containsKey(playerEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(playerEntity.getId())) {
+                    if (DragonSizeHandler.wingsStatusServer.containsKey(playerEntity.getId()) && DragonSizeHandler.wingsStatusServer.get(playerEntity.getId())) {
                         if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
                             Vector3d motion = playerEntity.getDeltaMovement();
 
@@ -94,7 +94,7 @@ public class ServerFlightHandler {
                 ay = 0;
             } else if (ConfigHandler.SERVER.enableFlightFallDamage.get()) {
                 DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
-                    if (dragonStateHandler.isDragon() && DragonSizeHandler.serverWingsEnabled.containsKey(livingEntity.getId()) && DragonSizeHandler.serverWingsEnabled.get(livingEntity.getId())) {
+                    if (dragonStateHandler.isDragon() && DragonSizeHandler.wingsStatusServer.containsKey(livingEntity.getId()) && DragonSizeHandler.wingsStatusServer.get(livingEntity.getId())) {
                         ax = 0;
                         az = 0;
                         ay = 0;
