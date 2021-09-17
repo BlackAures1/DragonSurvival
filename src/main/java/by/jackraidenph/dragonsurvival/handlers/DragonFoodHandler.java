@@ -1,30 +1,14 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
-
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
-
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -34,12 +18,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.*;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,9 +30,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DragonFoodHandler{
@@ -92,23 +74,26 @@ public class DragonFoodHandler{
 		dragonMap.put(DragonType.CAVE, buildDragonFoodMap(DragonType.CAVE));
 		dragonMap.put(DragonType.FOREST, buildDragonFoodMap(DragonType.FOREST));
 		dragonMap.put(DragonType.SEA, buildDragonFoodMap(DragonType.SEA));
-		DRAGON_FOODS = new HashMap<DragonType, Map<Item, Food>>(dragonMap);
+		DRAGON_FOODS = new HashMap<>(dragonMap);
 	}
 	
 	public static List<Item> getSafeEdibleFoods(DragonType dragonType) {
         List<Item> foods = new ArrayList<>();
         for (Item item : DRAGON_FOODS.get(dragonType).keySet()) {
-            boolean safe = true;
-            for (Pair<EffectInstance, Float> effect : DRAGON_FOODS.get(dragonType).get(item).getEffects()) {
-                Effect e = effect.getFirst().getEffect();
-                if (!e.isBeneficial() && e != Effects.CONFUSION) { // Because we decided to leave confusion on pufferfish
-                    safe = false;
-                    break;
-                }
-            }
-            if (safe)
-                foods.add(item);
-        }
+			boolean safe = true;
+			final Food food = DRAGON_FOODS.get(dragonType).get(item);
+			if (food != null) {
+				for (Pair<EffectInstance, Float> effect : food.getEffects()) {
+					Effect e = effect.getFirst().getEffect();
+					if (!e.isBeneficial() && e != Effects.CONFUSION) { // Because we decided to leave confusion on pufferfish
+						safe = false;
+						break;
+					}
+				}
+				if (safe)
+					foods.add(item);
+			}
+		}
         return foods;
     }
 	
@@ -135,29 +120,30 @@ public class DragonFoodHandler{
 			final ResourceLocation rlEntry = new ResourceLocation(sEntry[1], sEntry[2]);
 			if (sEntry[0].equalsIgnoreCase("tag")) {
 				final ITag<Item> tag = ItemTags.getAllTags().getTag(rlEntry);
-				if (tag != null && tag.getValues().size() != 0)
+				if (tag != null && tag.getValues().size() != 0) {
 					for (Item item : tag.getValues())
-						foodMap.put(item, calculateDragonFoodProperties(item, type, 
-								sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
-								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0, 
+						foodMap.put(item, calculateDragonFoodProperties(item, type,
+								sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1,
+								sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int) (item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0,
 								true));
+				}
 				else
 					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			} else {
 				final Item item = ForgeRegistries.ITEMS.getValue(rlEntry);
-				if (item != null)
-					foodMap.put(item, calculateDragonFoodProperties(item, type, 
-							sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1, 
-							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int)(item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0,
+				if (item != null) {
+					foodMap.put(item, calculateDragonFoodProperties(item, type,
+							sEntry.length == 5 ? Integer.parseInt(sEntry[3]) : item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 1,
+							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int) (item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0,
 							true));
-				else
+				} else
 					DragonSurvivalMod.LOGGER.error("Unknown item '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			}
 		}
 		for (Item item : ForgeRegistries.ITEMS.getValues())
 			if (!foodMap.containsKey(item) && item.isEdible())
 				foodMap.put(item, calculateDragonFoodProperties(item, type, 0, 0, false));
-		return new HashMap<Item, Food>(foodMap);
+		return new HashMap<>(foodMap);
 	}
 
 	@Nullable
@@ -180,7 +166,6 @@ public class DragonFoodHandler{
 					if (effect.getFirst().getEffect() != Effects.HUNGER && effect.getFirst().getEffect() != Effects.POISON)
 						builder.effect(() -> effect.getFirst(), effect.getSecond());
 			}
-			return builder.build();
 		} else {
 			Food humanFood = item.getFoodProperties();
 			builder.nutrition(humanFood.getNutrition())
@@ -195,8 +180,8 @@ public class DragonFoodHandler{
 				if (effect.getFirst().getEffect() != Effects.HUNGER)
 					builder.effect(() -> effect.getFirst(), effect.getSecond());
 			builder.effect(() -> new EffectInstance(Effects.HUNGER, 20 * 60, 0), 1.0F);
-			return builder.build();
 		}
+		return builder.build();
 	}
 	
 	@Nullable
@@ -318,10 +303,8 @@ public class DragonFoodHandler{
                 	
                 	if (food.getSaturationLevel() <= 0.0F && player.tickCount % (food.getFoodLevel() * 3 + 1) == 0)
                 		y = top + (rand.nextInt(3) - 1);
-                    
-                	
-                	
-                	mc.gui.blit(event.getMatrixStack(), left - i * 8 - 9, y, (hunger ? 117 : 0), type, 9, 9);
+
+					mc.gui.blit(event.getMatrixStack(), left - i * 8 - 9, y, (hunger ? 117 : 0), type, 9, 9);
                 	
                 	if (idx < food.getFoodLevel())
                 		mc.gui.blit(event.getMatrixStack(), left - i * 8 - 9, y, (hunger ? 72 : 36), type, 9, 9);
@@ -331,15 +314,8 @@ public class DragonFoodHandler{
                 
         		this.mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         		RenderSystem.disableBlend();
-				
-                
-                
 			} else
 				isDrawingOverlay = false;
 		});
 	}
-	
-	
-	
-	
 }
