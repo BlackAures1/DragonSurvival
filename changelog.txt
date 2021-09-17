@@ -1,6 +1,6 @@
 1.16.5-0.0.40:
 added a config option to enable fall damage from dragon flight;
-fall damage from dragon flight is now calculated based on speed;
+fall damage from dragon flight is now calculated based on speed and his size;
 fixed 'Unknown custom packet identifier' spam in console;
 fixed dragon sliding when it has passenger?
 fixed crash from Dragon Altar if custom dragon food is disabled;
