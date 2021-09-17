@@ -4,13 +4,7 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
-import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
-import by.jackraidenph.dragonsurvival.handlers.DragonFoodHandler;
-import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.EventHandler;
-import by.jackraidenph.dragonsurvival.handlers.SpecificsHandler;
-import by.jackraidenph.dragonsurvival.handlers.WingObtainmentController;
+import by.jackraidenph.dragonsurvival.handlers.*;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.SleepInNest;
@@ -19,7 +13,6 @@ import by.jackraidenph.dragonsurvival.network.*;
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -245,9 +238,9 @@ public class DragonSurvivalMod {
                         Entity entity = minecraft.level.getEntity(diggingStatus.playerId);
                         if (entity instanceof PlayerEntity) {
                             ClientEvents.dragonsDigging.put(entity.getId(), diggingStatus.status);
-                            contextSupplier.get().setPacketHandled(true);
                         }
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, StartJump.class, (startJump, packetBuffer) -> {
