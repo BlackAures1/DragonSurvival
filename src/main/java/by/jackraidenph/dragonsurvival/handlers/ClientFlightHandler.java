@@ -37,62 +37,64 @@ public class ClientFlightHandler {
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;
-        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon()) {
-                if (wingsEnabled) {
-                    if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
-                        Vector3d motion = playerEntity.getDeltaMovement();
+        if (!playerEntity.isPassenger()) {
+            DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+                if (dragonStateHandler.isDragon()) {
+                    if (wingsEnabled) {
+                        if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
+                            Vector3d motion = playerEntity.getDeltaMovement();
 
-                        Vector3d lookVec = playerEntity.getLookAngle();
-                        float f6 = playerEntity.xRot * ((float) Math.PI / 180F);
-                        double d9 = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
-                        double d11 = Math.sqrt(LivingEntity.getHorizontalDistanceSqr(motion));
-                        double d12 = lookVec.length();
-                        float f3 = MathHelper.cos(f6);
-                        f3 = (float) ((double) f3 * (double) f3 * Math.min(1.0D, d12 / 0.4D));
-                        ModifiableAttributeInstance gravity = playerEntity.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get());
-                        double g = gravity.getValue();
-                        motion = playerEntity.getDeltaMovement().add(0.0D, g * (-1.0D + (double) f3 * 0.75D), 0.0D);
-                        if (motion.y < 0.0D && d9 > 0.0D) {
-                            double d3 = motion.y * -0.1D * (double) f3;
-                            motion = motion.add(lookVec.x * d3 / d9, d3, lookVec.z * d3 / d9);
-                        }
+                            Vector3d lookVec = playerEntity.getLookAngle();
+                            float f6 = playerEntity.xRot * ((float) Math.PI / 180F);
+                            double d9 = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
+                            double d11 = Math.sqrt(LivingEntity.getHorizontalDistanceSqr(motion));
+                            double d12 = lookVec.length();
+                            float f3 = MathHelper.cos(f6);
+                            f3 = (float) ((double) f3 * (double) f3 * Math.min(1.0D, d12 / 0.4D));
+                            ModifiableAttributeInstance gravity = playerEntity.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get());
+                            double g = gravity.getValue();
+                            motion = playerEntity.getDeltaMovement().add(0.0D, g * (-1.0D + (double) f3 * 0.75D), 0.0D);
+                            if (motion.y < 0.0D && d9 > 0.0D) {
+                                double d3 = motion.y * -0.1D * (double) f3;
+                                motion = motion.add(lookVec.x * d3 / d9, d3, lookVec.z * d3 / d9);
+                            }
 
-                        if (f6 < 0.0F && d9 > 0.0D) {
-                            double d13 = d11 * (double) (-MathHelper.sin(f6)) * 0.04D;
-                            motion = motion.add(-lookVec.x * d13 / d9, d13 * 3.2D, -lookVec.z * d13 / d9);
-                        }
+                            if (f6 < 0.0F && d9 > 0.0D) {
+                                double d13 = d11 * (double) (-MathHelper.sin(f6)) * 0.04D;
+                                motion = motion.add(-lookVec.x * d13 / d9, d13 * 3.2D, -lookVec.z * d13 / d9);
+                            }
 
-                        if (d9 > 0.0D) {
-                            motion = motion.add((lookVec.x / d9 * d11 - motion.x) * 0.1D, 0.0D, (lookVec.z / d9 * d11 - motion.z) * 0.1D);
-                        }
-                        double lookY = lookVec.y;
-                        double yaw = Math.toRadians(playerEntity.yHeadRot + 90);
-                        if (lookY < 0) {
-                            ax += Math.cos(yaw) / 1000;
-                            az += Math.sin(yaw) / 1000;
+                            if (d9 > 0.0D) {
+                                motion = motion.add((lookVec.x / d9 * d11 - motion.x) * 0.1D, 0.0D, (lookVec.z / d9 * d11 - motion.z) * 0.1D);
+                            }
+                            double lookY = lookVec.y;
+                            double yaw = Math.toRadians(playerEntity.yHeadRot + 90);
+                            if (lookY < 0) {
+                                ax += Math.cos(yaw) / 1000;
+                                az += Math.sin(yaw) / 1000;
+                            } else {
+                                ax *= 0.99;
+                                az *= 0.99;
+                                ay = lookVec.y / 8;
+                            }
+                            double speedLimit = ConfigHandler.SERVER.maxFlightSpeed.get();
+                            ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
+                            az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
+                            if (lookY < 0) {
+                                motion = motion.add(ax, 0, az);
+                            } else {
+                                motion = motion.add(ax, ay, az);
+                            }
+                            playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
                         } else {
-                            ax *= 0.99;
-                            az *= 0.99;
-                            ay = lookVec.y / 8;
+                            ax = 0;
+                            az = 0;
+                            ay = 0;
                         }
-                        double speedLimit = ConfigHandler.SERVER.maxFlightSpeed.get();
-                        ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
-                        az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
-                        if (lookY < 0) {
-                            motion = motion.add(ax, 0, az);
-                        } else {
-                            motion = motion.add(ax, ay, az);
-                        }
-                        playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
-                    } else {
-                        ax = 0;
-                        az = 0;
-                        ay = 0;
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @SubscribeEvent

@@ -60,17 +60,19 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 public class EventHandler {
-	
+    /**
+     * Mounting a dragon
+     */
     @SubscribeEvent
-    public static void onEntityInteract(PlayerInteractEvent.EntityInteractSpecific event){
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteractSpecific event) {
         if (!(event.getTarget() instanceof PlayerEntity) || event.getHand() != Hand.MAIN_HAND)
             return;
-        PlayerEntity target = (PlayerEntity)event.getTarget();
+        PlayerEntity target = (PlayerEntity) event.getTarget();
         PlayerEntity self = event.getPlayer();
         DragonStateProvider.getCap(target).ifPresent(targetCap -> {
             if (targetCap.isDragon() && target.getPose() == Pose.CROUCHING && targetCap.getSize() >= 40 && !target.isVehicle()) {
                 DragonStateProvider.getCap(self).ifPresent(selfCap -> {
-                    if (!selfCap.isDragon() || selfCap.getLevel() == DragonLevel.BABY){
+                    if (!selfCap.isDragon() || selfCap.getLevel() == DragonLevel.BABY) {
                         if (event.getTarget() instanceof ServerPlayerEntity){
                             self.startRiding(target);
                             ((ServerPlayerEntity)event.getTarget()).connection.send(new SSetPassengersPacket(target));

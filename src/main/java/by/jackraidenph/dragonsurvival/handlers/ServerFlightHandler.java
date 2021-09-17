@@ -31,7 +31,7 @@ public class ServerFlightHandler {
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;
-        if (!playerEntity.level.isClientSide) {
+        if (!playerEntity.level.isClientSide && !playerEntity.isPassenger()) {
             DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     if (DragonSizeHandler.wingsStatusServer.containsKey(playerEntity.getId()) && DragonSizeHandler.wingsStatusServer.get(playerEntity.getId())) {
