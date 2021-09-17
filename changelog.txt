@@ -2,6 +2,7 @@
 added a config option to enable fall damage from dragon flight;
 fall damage from dragon flight is now calculated based on speed;
 fixed 'Unknown custom packet identifier' spam in console;
+fixed dragon sliding when it has passenger?
 
 1.16.5-0.0.39:
 - new languages have been added: Brazilian Portuguese and Traditional Chinese
