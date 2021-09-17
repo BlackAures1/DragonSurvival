@@ -35,6 +35,7 @@ public class ServerFlightHandler {
             DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     if (DragonSizeHandler.wingsStatusServer.containsKey(playerEntity.getId()) && DragonSizeHandler.wingsStatusServer.get(playerEntity.getId())) {
+                        //start
                         if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
                             Vector3d motion = playerEntity.getDeltaMovement();
 
@@ -70,6 +71,7 @@ public class ServerFlightHandler {
                             ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
                             az = MathHelper.clamp(az, -0.2 * speedLimit, 0.2 * speedLimit);
                         }
+                        //end
                     }
                 }
             });

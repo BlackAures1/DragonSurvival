@@ -41,6 +41,7 @@ public class ClientFlightHandler {
             DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     if (wingsEnabled) {
+                        //start
                         if (!playerEntity.isOnGround() && !playerEntity.isInWater() && !playerEntity.isInLava()) {
                             Vector3d motion = playerEntity.getDeltaMovement();
 
@@ -86,6 +87,7 @@ public class ClientFlightHandler {
                                 motion = motion.add(ax, ay, az);
                             }
                             playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
+                            //end
                         } else {
                             ax = 0;
                             az = 0;
