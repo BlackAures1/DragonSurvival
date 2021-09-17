@@ -103,67 +103,69 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent renderHandEvent) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (dummyDragon2 == null) {
-            dummyDragon2 = new AtomicReference<>(EntityTypesInit.dragonEntity.create(player.level));
-            dummyDragon2.get().player = player.getId();
-        }
-        DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-            if (playerStateHandler.isDragon()) {
-                dragonModel.setupBones();
-                MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
-                try {
-	                eventMatrixStack.pushPose();
-	                float partialTicks = renderHandEvent.getPartialTicks();
-	                float playerYaw = player.getViewYRot(partialTicks);
-	                float playerPitch = player.getViewXRot(partialTicks);
-	                ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
-	                eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
-	                eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-	                eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(player.yRot));
-	                eventMatrixStack.mulPose(Vector3f.YN.rotationDegrees((float)playerStateHandler.getMovementData().bodyYaw));
-	                eventMatrixStack.translate(0, -2, -1);
-	                IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
-	                int light = renderHandEvent.getLight();
-	                
-	                dummyDragon2.get().isArmorModel = false;
-	                EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
-	                dummyDragon2.get().copyPosition(player);
-	                dragonModel.setCurrentTexture(texture);
-	                final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
-	                if (neckandHead != null)
-	                    neckandHead.setHidden(true);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
-	                if (leftwing != null)
-	                    leftwing.setHidden(!playerStateHandler.hasWings());
-	                if (rightWing != null)
-	                    rightWing.setHidden(!playerStateHandler.hasWings());
-	                if (!player.isInvisible())
-	                	dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
-	
-	                dummyDragon2.get().isArmorModel = true;
-	                eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
-	                ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-	                dragonModel.setCurrentTexture(chestplate);
-	                dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
-	                ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-	                dragonModel.setCurrentTexture(legs);
-	                dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
-	                ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
-	                dragonModel.setCurrentTexture(boots);
-	                dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
-	
-	                eventMatrixStack.translate(0, 0, 0.15);
-                } catch (Throwable ignored) {
-                    if (!(ignored instanceof NullPointerException))
-                        ignored.printStackTrace();
-                } finally {
-                	eventMatrixStack.popPose();
-                }
-
+        if (ConfigHandler.CLIENT.renderInFirstPerson.get()) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+            if (dummyDragon2 == null) {
+                dummyDragon2 = new AtomicReference<>(EntityTypesInit.dragonEntity.create(player.level));
+                dummyDragon2.get().player = player.getId();
             }
-        });
+            DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+                if (playerStateHandler.isDragon()) {
+                    dragonModel.setupBones();
+                    MatrixStack eventMatrixStack = renderHandEvent.getMatrixStack();
+                    try {
+                        eventMatrixStack.pushPose();
+                        float partialTicks = renderHandEvent.getPartialTicks();
+                        float playerYaw = player.getViewYRot(partialTicks);
+                        float playerPitch = player.getViewXRot(partialTicks);
+                        ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
+                        eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
+                        eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                        eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(player.yRot));
+                        eventMatrixStack.mulPose(Vector3f.YN.rotationDegrees((float) playerStateHandler.getMovementData().bodyYaw));
+                        eventMatrixStack.translate(0, -2, -1);
+                        IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
+                        int light = renderHandEvent.getLight();
+
+                        dummyDragon2.get().isArmorModel = false;
+                        EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dummyDragon2.get());
+                        dummyDragon2.get().copyPosition(player);
+                        dragonModel.setCurrentTexture(texture);
+                        final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
+                        if (neckandHead != null)
+                            neckandHead.setHidden(true);
+                        final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+                        final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
+                        if (leftwing != null)
+                            leftwing.setHidden(!playerStateHandler.hasWings());
+                        if (rightWing != null)
+                            rightWing.setHidden(!playerStateHandler.hasWings());
+                        if (!player.isInvisible())
+                            dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+
+                        dummyDragon2.get().isArmorModel = true;
+                        eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
+                        ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
+                        dragonModel.setCurrentTexture(chestplate);
+                        dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
+                        dragonModel.setCurrentTexture(legs);
+                        dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
+                        dragonModel.setCurrentTexture(boots);
+                        dragonRenderer.render(dummyDragon2.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+
+                        eventMatrixStack.translate(0, 0, 0.15);
+                    } catch (Throwable ignored) {
+                        if (!(ignored instanceof NullPointerException))
+                            ignored.printStackTrace();
+                    } finally {
+                        eventMatrixStack.popPose();
+                    }
+
+                }
+            });
+        }
     }
 
     @SubscribeEvent
