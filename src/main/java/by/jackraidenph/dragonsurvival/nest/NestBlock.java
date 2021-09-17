@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
@@ -83,9 +84,9 @@ public class NestBlock extends HorizontalBlock {
             final Direction placementDirection = playerHorizontalFacing.getOpposite();
             if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
 
-                if (worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing)) &&
-                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing.getCounterClockWise())) &&
-                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing).relative(playerHorizontalFacing.getCounterClockWise()))) {
+                if (Functions.isAirOrFluid(pos.relative(playerHorizontalFacing), worldIn) &&
+                        Functions.isAirOrFluid(pos.relative(playerHorizontalFacing.getCounterClockWise()), worldIn) &&
+                        Functions.isAirOrFluid(pos.relative(playerHorizontalFacing).relative(playerHorizontalFacing.getCounterClockWise()), worldIn)) {
                     CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:
@@ -109,10 +110,10 @@ public class NestBlock extends HorizontalBlock {
                     return ActionResultType.CONSUME;
                 }
             } else if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.ADULT) {
-                if (worldIn.isEmptyBlock(pos.north()) && worldIn.isEmptyBlock(pos.south()) &&
-                        worldIn.isEmptyBlock(pos.west()) && worldIn.isEmptyBlock(pos.east())
-                        && worldIn.isEmptyBlock(pos.north().west()) && worldIn.isEmptyBlock(pos.north().east())
-                        && worldIn.isEmptyBlock(pos.south().east()) && worldIn.isEmptyBlock(pos.south().west())) {
+                if (Functions.isAirOrFluid(pos.north(), worldIn) && Functions.isAirOrFluid(pos.south(), worldIn) &&
+                        Functions.isAirOrFluid(pos.west(), worldIn) && Functions.isAirOrFluid(pos.east(), worldIn)
+                        && Functions.isAirOrFluid(pos.north().west(), worldIn) && Functions.isAirOrFluid(pos.north().east(), worldIn)
+                        && Functions.isAirOrFluid(pos.south().east(), worldIn) && Functions.isAirOrFluid(pos.south().west(), worldIn)) {
                     CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:

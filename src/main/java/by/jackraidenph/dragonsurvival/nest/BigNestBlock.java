@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,14 +26,14 @@ public class BigNestBlock extends MediumNestBlock {
             World world = context.getLevel();
             PlayerEntity playerEntity = context.getPlayer();
             Direction direction = playerEntity.getDirection();
-            if (world.isEmptyBlock(blockPos.relative(direction.getOpposite())) &&
-                    world.isEmptyBlock(blockPos.relative(direction).relative(direction.getClockWise())) &&
-                    world.isEmptyBlock(blockPos.relative(direction.getClockWise())) &&
-                    world.isEmptyBlock(blockPos.relative(direction.getOpposite()).relative(direction.getCounterClockWise())) &&
-                    world.isEmptyBlock(blockPos.relative(direction.getOpposite()).relative(direction.getClockWise())) &&
-                    world.isEmptyBlock(blockPos.relative(direction).above()) &&
-                    world.isEmptyBlock(blockPos.relative(direction).above().relative(direction.getClockWise())) &&
-                    world.isEmptyBlock(blockPos.relative(direction).above().relative(direction.getCounterClockWise()))
+            if (Functions.isAirOrFluid(blockPos.relative(direction.getOpposite()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction).relative(direction.getClockWise()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction.getClockWise()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction.getOpposite()).relative(direction.getCounterClockWise()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction.getOpposite()).relative(direction.getClockWise()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction).above(), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction).above().relative(direction.getClockWise()), world) &&
+                    Functions.isAirOrFluid(blockPos.relative(direction).above().relative(direction.getCounterClockWise()), world)
             )
                 return superState;
         }

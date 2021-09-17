@@ -5,6 +5,8 @@ fixed 'Unknown custom packet identifier' spam in console;
 fixed dragon sliding when it has passenger?
 fixed crash from Dragon Altar if custom dragon food is disabled;
 added an option to toggle first person model rendering;
+added an option to prevent dragons from using Elytra;
+the Nests can be placed in water now;
 
 1.16.5-0.0.39:
 - new languages have been added: Brazilian Portuguese and Traditional Chinese

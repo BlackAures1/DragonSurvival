@@ -47,8 +47,8 @@ public class Functions {
         return pitch * 0.017453292F;
     }
 
-    public static boolean isLiquid(BlockPos blockPos, World world) {
-        return !world.getFluidState(blockPos).isEmpty();
+    public static boolean isAirOrFluid(BlockPos blockPos, World world) {
+        return !world.getFluidState(blockPos).isEmpty() || world.isEmptyBlock(blockPos);
     }
 
 }
