@@ -72,12 +72,12 @@ public class ClientFlightHandler {
                             double lookY = lookVec.y;
                             double yaw = Math.toRadians(playerEntity.yHeadRot + 90);
                             if (lookY < 0) {
-                                ax += Math.cos(yaw) / 1000;
-                                az += Math.sin(yaw) / 1000;
+                                ax += Math.cos(yaw) / 2000;
+                                az += Math.sin(yaw) / 2000;
                             } else {
                                 ax *= 0.99;
                                 az *= 0.99;
-                                ay = lookVec.y / 8;
+                                ay = lookVec.y / 16;
                             }
                             double speedLimit = ConfigHandler.SERVER.maxFlightSpeed.get();
                             ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
