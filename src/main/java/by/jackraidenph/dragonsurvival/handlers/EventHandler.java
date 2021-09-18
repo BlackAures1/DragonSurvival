@@ -152,27 +152,25 @@ public class EventHandler {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
+            } else if (dragonStateHandler.isDragon() && dragonStateHandler.getSize() != 40 && player.isVehicle() && player.getPassengers().get(0) instanceof ServerPlayerEntity) {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
-            } else if (player.isSleeping() && player.isVehicle()  && player.getPassengers().get(0) instanceof ServerPlayerEntity){
+            } else if (player.isSleeping() && player.isVehicle() && player.getPassengers().get(0) instanceof ServerPlayerEntity) {
                 flag = true;
                 player.getPassengers().get(0).stopRiding();
                 player.connection.send(new SSetPassengersPacket(player));
             }
-            if (passenger != null && passenger instanceof ServerPlayerEntity) {
+            if (passenger instanceof ServerPlayerEntity) {
                 DragonStateHandler passengerCap = DragonStateProvider.getCap(passenger).orElseGet(null);
-                if (passengerCap != null){
-                    if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY){
-                        flag = true;
-                        passenger.stopRiding();
-                        player.connection.send(new SSetPassengersPacket(player));
-                    } else if (passenger.getRootVehicle() != player.getRootVehicle()) {
-                        flag = true;
-                        passenger.stopRiding();
-                        player.connection.send(new SSetPassengersPacket(player));
-                    }
+                if (passengerCap.isDragon() && passengerCap.getLevel() != DragonLevel.BABY) {
+                    flag = true;
+                    passenger.stopRiding();
+                    player.connection.send(new SSetPassengersPacket(player));
+                } else if (passenger.getRootVehicle() != player.getRootVehicle()) {
+                    flag = true;
+                    passenger.stopRiding();
+                    player.connection.send(new SSetPassengersPacket(player));
                 }
             }
             if (flag || passenger == null || !player.hasPassenger(passenger) || passenger.isSpectator() || player.isSpectator()){
