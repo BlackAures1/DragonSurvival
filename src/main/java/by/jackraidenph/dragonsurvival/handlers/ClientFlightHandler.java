@@ -37,7 +37,8 @@ public class ClientFlightHandler {
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
         PlayerEntity playerEntity = playerTickEvent.player;
-        if (!playerEntity.isPassenger()) {
+        PlayerEntity currentPlayer = Minecraft.getInstance().player;
+        if (playerEntity == currentPlayer && !playerEntity.isPassenger()) {
             DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.isDragon()) {
                     if (wingsEnabled) {
@@ -86,7 +87,11 @@ public class ClientFlightHandler {
                             } else {
                                 motion = motion.add(ax, ay, az);
                             }
-                            playerEntity.setDeltaMovement(motion.multiply(0.99F, 0.98F, 0.99F));
+                            motion = motion.multiply(0.99F, 0.98F, 0.99F);
+                            playerEntity.setDeltaMovement(motion);
+                            ax = motion.x;
+                            ay = motion.y;
+                            az = motion.z;
                             //end
                         } else {
                             ax = 0;
