@@ -174,3 +174,12 @@ publishing {
         }
     }
 }
+
+task debugArguments << {
+    configurations.compile.each {
+        String absolutePath = it.absolutePath
+        if(absolutePath.contains("mixin")) {
+            println("-javaagent:"+absolutePath)
+        }
+    }
+}

@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
@@ -52,8 +53,8 @@ public class MediumNestBlock extends NestBlock {
         World world = context.getLevel();
         PlayerEntity playerEntity = context.getPlayer();
         Direction direction = playerEntity.getDirection();
-        if (world.isEmptyBlock(blockPos.relative(direction)) && world.isEmptyBlock(blockPos.relative(direction.getCounterClockWise()))
-                && world.isEmptyBlock(blockPos.relative(direction).relative(direction.getCounterClockWise())))
+        if (Functions.isAirOrFluid(blockPos.relative(direction), world) && Functions.isAirOrFluid(blockPos.relative(direction.getCounterClockWise()), world)
+                && Functions.isAirOrFluid(blockPos.relative(direction).relative(direction.getCounterClockWise()), world))
             return super.getStateForPlacement(context).setValue(FACING, direction.getOpposite());
         return null;
     }
@@ -94,11 +95,11 @@ public class MediumNestBlock extends NestBlock {
                 dragonLevel == DragonLevel.ADULT && nest.ownerUUID.equals(player.getUUID())
                 && state.getBlock().getClass() == MediumNestBlock.class) {
             final Direction playerDirection = player.getDirection();
-            if (worldIn.isEmptyBlock(rootPos.relative(playerDirection.getOpposite())) &&
-                    worldIn.isEmptyBlock(rootPos.relative(playerDirection).relative(playerDirection.getClockWise())) &&
-                    worldIn.isEmptyBlock(rootPos.relative(playerDirection.getClockWise())) &&
-                    worldIn.isEmptyBlock(rootPos.relative(playerDirection.getOpposite()).relative(playerDirection.getCounterClockWise())) &&
-                    worldIn.isEmptyBlock(rootPos.relative(playerDirection.getOpposite()).relative(playerDirection.getClockWise()))) {
+            if (Functions.isAirOrFluid(rootPos.relative(playerDirection.getOpposite()), worldIn) &&
+                    Functions.isAirOrFluid(rootPos.relative(playerDirection).relative(playerDirection.getClockWise()), worldIn) &&
+                    Functions.isAirOrFluid(rootPos.relative(playerDirection.getClockWise()), worldIn) &&
+                    Functions.isAirOrFluid(rootPos.relative(playerDirection.getOpposite()).relative(playerDirection.getCounterClockWise()), worldIn) &&
+                    Functions.isAirOrFluid(rootPos.relative(playerDirection.getOpposite()).relative(playerDirection.getClockWise()), worldIn)) {
                 CompoundNBT compoundNBT = nest.save(new CompoundNBT());
                 final Direction placementDirection = playerDirection.getOpposite();
                 switch (dragonType) {

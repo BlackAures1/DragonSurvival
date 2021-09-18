@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.ClientProxy;
+import by.jackraidenph.dragonsurvival.PacketProxy;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -34,7 +34,7 @@ public class PacketSyncXPDevour implements IMessage<PacketSyncXPDevour> {
 
     @Override
     public void handle(PacketSyncXPDevour m, Supplier<NetworkEvent.Context> supplier) {
-        new ClientProxy().syncXpDevour(m, supplier);
+        new PacketProxy().syncXpDevour(m, supplier);
         supplier.get().setPacketHandled(true);
     }
 }

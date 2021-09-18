@@ -1,17 +1,8 @@
 package by.jackraidenph.dragonsurvival;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 public class Functions {
 
@@ -56,8 +47,8 @@ public class Functions {
         return pitch * 0.017453292F;
     }
 
-    public static float degreesToRadians(float degrees) {
-        return (float) (degrees * Math.PI / 180);
+    public static boolean isAirOrFluid(BlockPos blockPos, World world) {
+        return !world.getFluidState(blockPos).isEmpty() || world.isEmptyBlock(blockPos);
     }
 
 }

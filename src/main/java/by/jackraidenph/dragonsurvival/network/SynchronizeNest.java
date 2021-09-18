@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.network;
 
-import by.jackraidenph.dragonsurvival.ClientProxy;
+import by.jackraidenph.dragonsurvival.PacketProxy;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -36,6 +36,6 @@ public class SynchronizeNest implements IMessage<SynchronizeNest> {
 
     @Override
     public void handle(SynchronizeNest message, Supplier<NetworkEvent.Context> supplier) {
-        new ClientProxy().syncNest(message, supplier);
+        new PacketProxy().syncNest(message, supplier);
     }
 }

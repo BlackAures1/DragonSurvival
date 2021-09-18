@@ -1,7 +1,5 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.util.DragonType;
@@ -10,12 +8,13 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber
 public class DragonSizeHandler {
@@ -102,25 +101,27 @@ public class DragonSizeHandler {
     }
     
     private static Pose overridePose(PlayerEntity player) {
-    	Pose overridePose = getOverridePose(player);
-    	if (player.getForcedPose() != overridePose) {
-    		player.setForcedPose(overridePose);
-    		if (player.level.isClientSide() && Minecraft.getInstance().cameraEntity != player)
-    			player.refreshDimensions();
-    	}
-    	
-			
-    	return overridePose;
-    }
-    
-    // Server Only
-    public static ConcurrentHashMap<Integer, Boolean> serverWingsEnabled = new ConcurrentHashMap<>(20);
-    
-    public static Pose getOverridePose(LivingEntity player) {
-    	boolean swimming = (player.isInWaterOrBubble() || (player.isInLava() && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get() && DragonStateProvider.getCap(player).orElseGet(null).getType() == DragonType.CAVE)) && player.isSprinting() && !player.isPassenger();
-    	boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
-				|| (!player.level.isClientSide && !player.isOnGround() && serverWingsEnabled.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
-    	boolean spinning = player.isAutoSpinAttack();
+		Pose overridePose = getOverridePose(player);
+		if (player.getForcedPose() != overridePose) {
+			player.setForcedPose(overridePose);
+			if (player.level.isClientSide() && Minecraft.getInstance().cameraEntity != player)
+				player.refreshDimensions();
+		}
+
+
+		return overridePose;
+	}
+
+	/**
+	 * Server Only
+	 */
+	public static ConcurrentHashMap<Integer, Boolean> wingsStatusServer = new ConcurrentHashMap<>(20);
+
+	public static Pose getOverridePose(LivingEntity player) {
+		boolean swimming = (player.isInWaterOrBubble() || (player.isInLava() && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get() && DragonStateProvider.getCap(player).orElseGet(null).getType() == DragonType.CAVE)) && player.isSprinting() && !player.isPassenger();
+		boolean flying = (player.level.isClientSide && ClientEvents.dragonsFlying.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && !player.isOnGround() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+				|| (!player.level.isClientSide && !player.isOnGround() && wingsStatusServer.getOrDefault(player.getId(), false) && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings());
+		boolean spinning = player.isAutoSpinAttack();
 		boolean crouching = player.isShiftKeyDown();
 		if (flying && !player.isSleeping())
 			return Pose.FALL_FLYING;

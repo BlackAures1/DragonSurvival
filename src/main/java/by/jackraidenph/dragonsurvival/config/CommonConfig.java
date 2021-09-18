@@ -1,19 +1,19 @@
 package by.jackraidenph.dragonsurvival.config;
 
-import static net.minecraftforge.common.BiomeDictionary.Type.*;
+import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
 
-import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
-import net.minecraft.client.world.DimensionRenderInfo;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.ForgeConfigSpec;
+import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
 public class CommonConfig {
 
 	// General
-    public final ForgeConfigSpec.BooleanValue endVoidTeleport;
+	public final ForgeConfigSpec.BooleanValue endVoidTeleport;
+	public final ForgeConfigSpec.BooleanValue dragonsAllowedToUseElytra;
     
     // Predator
     public final ForgeConfigSpec.DoubleValue predatorDamageFactor;
@@ -34,7 +34,7 @@ public class CommonConfig {
 		endVoidTeleport = builder
 				.comment("Should the player be teleported to the overworld when they fall in the end?")
 				.define("endVoidTeleport", true);
-		
+		dragonsAllowedToUseElytra = builder.comment("Whether dragons are allowed to use Elytra").define("elytraForDragon", false);
 		// Predator
 		builder.pop().push("predator");
 		predatorDamageFactor = builder

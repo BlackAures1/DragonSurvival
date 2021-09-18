@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.BlockInit;
@@ -9,13 +10,19 @@ import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -27,26 +34,28 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class NestBlock extends HorizontalBlock {
+public class NestBlock extends HorizontalBlock implements IWaterLoggable {
 
     public static final VoxelShape SHAPE = VoxelShapes.box(0, 0, 0, 1, 0.1, 1);
     public static final VoxelShape OUTLINE = VoxelShapes.box(0, 0, 0, 1, 0.5, 1);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public NestBlock(Properties properties) {
         super(properties);
+        registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
@@ -84,9 +93,9 @@ public class NestBlock extends HorizontalBlock {
             final Direction placementDirection = playerHorizontalFacing.getOpposite();
             if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.YOUNG) {
 
-                if (worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing)) &&
-                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing.getCounterClockWise())) &&
-                        worldIn.isEmptyBlock(pos.relative(playerHorizontalFacing).relative(playerHorizontalFacing.getCounterClockWise()))) {
+                if (Functions.isAirOrFluid(pos.relative(playerHorizontalFacing), worldIn) &&
+                        Functions.isAirOrFluid(pos.relative(playerHorizontalFacing.getCounterClockWise()), worldIn) &&
+                        Functions.isAirOrFluid(pos.relative(playerHorizontalFacing).relative(playerHorizontalFacing.getCounterClockWise()), worldIn)) {
                     CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:
@@ -110,10 +119,10 @@ public class NestBlock extends HorizontalBlock {
                     return ActionResultType.CONSUME;
                 }
             } else if (state.getBlock().getClass() == NestBlock.class && dragonLevel == DragonLevel.ADULT) {
-                if (worldIn.isEmptyBlock(pos.north()) && worldIn.isEmptyBlock(pos.south()) &&
-                        worldIn.isEmptyBlock(pos.west()) && worldIn.isEmptyBlock(pos.east())
-                        && worldIn.isEmptyBlock(pos.north().west()) && worldIn.isEmptyBlock(pos.north().east())
-                        && worldIn.isEmptyBlock(pos.south().east()) && worldIn.isEmptyBlock(pos.south().west())) {
+                if (Functions.isAirOrFluid(pos.north(), worldIn) && Functions.isAirOrFluid(pos.south(), worldIn) &&
+                        Functions.isAirOrFluid(pos.west(), worldIn) && Functions.isAirOrFluid(pos.east(), worldIn)
+                        && Functions.isAirOrFluid(pos.north().west(), worldIn) && Functions.isAirOrFluid(pos.north().east(), worldIn)
+                        && Functions.isAirOrFluid(pos.south().east(), worldIn) && Functions.isAirOrFluid(pos.south().west(), worldIn)) {
                     CompoundNBT compoundNBT = blockEntity.save(new CompoundNBT());
                     switch (dragonType) {
                         case SEA:
@@ -188,5 +197,25 @@ public class NestBlock extends HorizontalBlock {
     @Override
     public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
 
+    }
+
+    //methods below are required for waterlogged property to work
+
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, IWorld world, BlockPos blockPos, BlockPos blockPos1) {
+        if (blockState.getValue(WATERLOGGED)) {
+            world.getLiquidTicks().scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        }
+        return super.updateShape(blockState, direction, blockState1, world, blockPos, blockPos1);
+    }
+
+    public FluidState getFluidState(BlockState blockState) {
+        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
+    }
+
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext blockItemUseContext) {
+        FluidState fluidstate = blockItemUseContext.getLevel().getFluidState(blockItemUseContext.getClickedPos());
+        boolean flag = fluidstate.getType() == Fluids.WATER;
+        return super.getStateForPlacement(blockItemUseContext).setValue(WATERLOGGED, flag);
     }
 }
