@@ -16,19 +16,20 @@ import java.util.Optional;
 public class CraftingContainer extends WorkbenchContainer {
     World world;
     PlayerEntity playerEntity;
-    public CraftingContainer(int p_i50089_1_, PlayerInventory p_i50089_2_) {
-        super(p_i50089_1_, p_i50089_2_);
-        world=p_i50089_2_.player.level;
-        playerEntity= p_i50089_2_.player;
+
+    public CraftingContainer(int p_i50089_1_, PlayerInventory playerInventory) {
+        super(p_i50089_1_, playerInventory);
+        world = playerInventory.player.level;
+        playerEntity = playerInventory.player;
     }
 
     @Override
-    public boolean stillValid(PlayerEntity p_75145_1_) {
+    public boolean stillValid(PlayerEntity playerEntity) {
         return true;
     }
 
     @Override
-    public void slotsChanged(IInventory p_75130_1_) {
+    public void slotsChanged(IInventory inventory) {
         if (!world.isClientSide) {
             ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) playerEntity;
             ItemStack itemstack = ItemStack.EMPTY;
