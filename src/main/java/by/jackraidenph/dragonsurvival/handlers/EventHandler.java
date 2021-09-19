@@ -55,7 +55,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -97,16 +96,8 @@ public class EventHandler {
             if (dragonStateHandler.isDragon()) {
                 if (playerEntity instanceof ServerPlayerEntity) {
                     PlayerInteractionManager interactionManager = ((ServerPlayerEntity) playerEntity).gameMode;
-                    Field field = PlayerInteractionManager.class.getDeclaredFields()[5]; // FIXME: Don't do this...
-                    field.setAccessible(true);
-                    if (field.getType() == boolean.class) {
-                        try {
-                            boolean isMining = field.getBoolean(interactionManager);
-                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getId(), isMining));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    boolean isMining = interactionManager.isDestroyingBlock;
+                    DragonSurvivalMod.CHANNEL.send(PacketDistributor.ALL.noArg(), new DiggingStatus(playerEntity.getId(), isMining));
                 }
             }
         });
