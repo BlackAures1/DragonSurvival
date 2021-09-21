@@ -2,7 +2,7 @@
 
 1. ■ Patreon - https://www.patreon.com/blackaures
 2. ■ Сurseforge (download) - https://www.curseforge.com/minecraft/mc-mods/dragons-survival
-3. ■ Discord Server - http://discord.gg/blackaures
+3. ■ Discord Server - http://discord.gg/8SsB8ar
 4. ■ Youtube - https://www.youtube.com/channel/UCasTlG0nSSQPPvk4mrmoWLw
 5. ■ Github - https://github.com/DragonSurvivalTeam/DragonSurvival
 6. ■ Twitter - https://twitter.com/BlackAures
