@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
+import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.Hand;
@@ -51,6 +53,7 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
 
         this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers());
         this.goalSelector.addGoal(7, new AlertExceptHunters<>(this, HunterHound.class, ShooterHunter.class, SquireHunter.class));
+        goalSelector.addGoal(6, new RideHorse<>(this));
     }
 
     @Nullable
@@ -102,5 +105,10 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
 
     public boolean canBeLeader() {
         return false;
+    }
+
+    @Override
+    public PathNavigator getNavigation() {
+        return navigation;
     }
 }

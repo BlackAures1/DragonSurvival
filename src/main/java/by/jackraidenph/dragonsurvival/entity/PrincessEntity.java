@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.entity;
 
+import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -167,6 +168,7 @@ public class PrincessEntity extends VillagerEntity {
             }
         });
         this.goalSelector.addGoal(6, new LookAtGoal(this, LivingEntity.class, 8.0F));
+        goalSelector.addGoal(5, new RideHorse<>(this));
     }
 
     public void gossip(ServerWorld p_242368_1_, VillagerEntity p_242368_2_, long p_242368_3_) {
