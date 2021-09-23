@@ -13,7 +13,7 @@ public class RideHorse<E extends MobEntity> extends Goal {
 
     @Override
     public boolean canUse() {
-        return mob.getVehicle() instanceof HorseEntity && mob.getNavigation().isInProgress();
+        return mob.getVehicle() instanceof HorseEntity;
     }
 
     @Override
