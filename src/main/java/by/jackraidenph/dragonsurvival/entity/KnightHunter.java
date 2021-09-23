@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.entity;
 
-import by.jackraidenph.dragonsurvival.goals.AlertGoal;
+import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -49,8 +49,8 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
 
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
 
-        this.targetSelector.addGoal(6, (new HurtByTargetGoal(this)).setAlertOthers());
-        this.goalSelector.addGoal(7, new AlertGoal<>(this, HunterHound.class, ShooterHunter.class, SquireHunter.class));
+        this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers());
+        this.goalSelector.addGoal(7, new AlertExceptHunters<>(this, HunterHound.class, ShooterHunter.class, SquireHunter.class));
     }
 
     @Nullable
