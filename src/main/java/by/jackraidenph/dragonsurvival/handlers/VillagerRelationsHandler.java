@@ -1,58 +1,27 @@
-// package by.jackraidenph.dragonsurvival.handlers;
-// import by.jackraidenph.dragonsurvival.Functions;
-// import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
-// import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-// import by.jackraidenph.dragonsurvival.capability.VillageRelationShips;
-// import by.jackraidenph.dragonsurvival.entity.KnightHunter;
-// import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
-// import by.jackraidenph.dragonsurvival.util.EffectInstance2;
-// import java.util.List;
-// import java.util.Objects;
-// import java.util.Optional;
-// import java.util.stream.Collectors;
-// import net.minecraft.entity.Entity;
-// import net.minecraft.entity.EntityType;
-// import net.minecraft.entity.LivingEntity;
-// import net.minecraft.entity.MobEntity;
-// import net.minecraft.entity.SpawnReason;
-// import net.minecraft.entity.ai.goal.Goal;
-// import net.minecraft.entity.item.ItemEntity;
-// import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-// import net.minecraft.entity.merchant.villager.VillagerEntity;
-// import net.minecraft.entity.merchant.villager.WanderingTraderEntity;
-// import net.minecraft.entity.passive.IronGolemEntity;
-// import net.minecraft.entity.player.PlayerEntity;
-// import net.minecraft.entity.player.ServerPlayerEntity;
-// import net.minecraft.item.DyeColor;
-// import net.minecraft.item.Item;
-// import net.minecraft.item.ItemStack;
-// import net.minecraft.item.Items;
-// import net.minecraft.item.MerchantOffer;
-// import net.minecraft.item.MerchantOffers;
-// import net.minecraft.nbt.CompoundNBT;
-// import net.minecraft.nbt.INBT;
-// import net.minecraft.nbt.ListNBT;
-// import net.minecraft.potion.EffectInstance;
-// import net.minecraft.potion.Effects;
-// import net.minecraft.tileentity.BannerPattern;
-// import net.minecraft.util.IItemProvider;
-// import net.minecraft.util.math.BlockPos;
-// import net.minecraft.world.IServerWorld;
-// import net.minecraft.world.World;
-// import net.minecraft.world.server.ServerWorld;
-// import net.minecraftforge.event.TickEvent;
-// import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-// import net.minecraftforge.event.entity.living.LivingDeathEvent;
-// import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-// import net.minecraftforge.event.entity.living.PotionEvent;
-// import net.minecraftforge.event.entity.player.AttackEntityEvent;
-// import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-// import net.minecraftforge.eventbus.api.SubscribeEvent;
-// import net.minecraftforge.fml.common.Mod;
-//
-// @Mod.EventBusSubscriber
-// public class VillagerRelationsHandler {
-//   @SubscribeEvent
+package by.jackraidenph.dragonsurvival.handlers;
+
+import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
+import by.jackraidenph.dragonsurvival.util.EffectInstance2;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber
+public class VillagerRelationsHandler {
+    //   @SubscribeEvent
 //   public static void onDeath(LivingDeathEvent deathEvent) {
 //     LivingEntity livingEntity = deathEvent.getEntityLiving();
 //     Entity killer = deathEvent.getSource().func_76346_g();
@@ -140,92 +109,95 @@
 //
 //   public static List<EntityType<? extends CreatureEntity>> dragonHunters;
 //
-//   @SubscribeEvent
-//   public static void entityTargets(LivingSetAttackTargetEvent setAttackTargetEvent) {
-//     Entity entity = setAttackTargetEvent.getEntity();
-//     LivingEntity target = setAttackTargetEvent.getTarget();
-//     if (entity instanceof IronGolemEntity) {
-//       if (target instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter)
-//         ((IronGolemEntity)entity).func_70624_b(null);
-//     } else if (entity instanceof ZombieEntity &&
-//       target instanceof PrincessEntity) {
-//       ((ZombieEntity)entity).func_70624_b(null);
-//     }
-//   }
+    @SubscribeEvent
+    public static void entityTargets(LivingSetAttackTargetEvent setAttackTargetEvent) {
+        Entity entity = setAttackTargetEvent.getEntity();
+        LivingEntity target = setAttackTargetEvent.getTarget();
+        if (entity instanceof IronGolemEntity) {
+            if (target instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter)
+                ((IronGolemEntity) entity).setTarget(null);
+        } else if (entity instanceof ZombieEntity &&
+                target instanceof PrincessEntity) {
+            ((ZombieEntity) entity).setTarget(null);
+        }
+    }
+
+    //
 //
 //
 //
-//
-//   public static void applyEvilMarker(PlayerEntity playerEntity) {
-//     DragonStateProvider.getCap((Entity)playerEntity).ifPresent(dragonStateHandler -> {
-//           if (dragonStateHandler.isDragon()) {
-//             EffectInstance effectInstance = playerEntity.func_70660_b(DragonEffects.EVIL_DRAGON);
-//             if (effectInstance == null) {
-//               playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(10)));
-//             } else {
-//               int duration = effectInstance.func_76459_b();
-//               if (duration <= Functions.minutesToTicks(10)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
-//               } else if (duration <= Functions.minutesToTicks(30)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
-//               } else if (duration <= Functions.minutesToTicks(60)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(40)));
-//               } else if (duration <= Functions.minutesToTicks(100)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
-//               } else if (duration <= Functions.minutesToTicks(120)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
-//               } else if (duration <= Functions.minutesToTicks(150)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
-//               } else if (duration <= Functions.minutesToTicks(200)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
-//               } else if (duration <= Functions.minutesToTicks(250)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
-//               } else if (duration <= Functions.minutesToTicks(300)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
-//               } else if (duration <= Functions.minutesToTicks(350)) {
-//                 playerEntity.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
-//               }
-//             }
-//           }
-//         });
-//   }
-//   public static int computeLevelOfEvil(PlayerEntity playerEntity) {
-//     if (DragonStateProvider.isDragon((Entity)playerEntity) && playerEntity.func_70644_a(DragonEffects.EVIL_DRAGON)) {
-//       EffectInstance effectInstance = playerEntity.func_70660_b(DragonEffects.EVIL_DRAGON);
-//       assert effectInstance != null;
-//       int timeLeft = effectInstance.func_76459_b();
-//       if (timeLeft >= Functions.minutesToTicks(350))
-//         return 10;
-//       if (timeLeft >= Functions.minutesToTicks(300))
-//         return 9;
-//       if (timeLeft >= Functions.minutesToTicks(250))
-//         return 8;
-//       if (timeLeft >= Functions.minutesToTicks(200))
-//         return 7;
-//       if (timeLeft >= Functions.minutesToTicks(150))
-//         return 6;
-//       if (timeLeft >= Functions.minutesToTicks(120))
-//         return 5;
-//       if (timeLeft >= Functions.minutesToTicks(100))
-//         return 4;
-//       if (timeLeft >= Functions.minutesToTicks(60))
-//         return 3;
-//       if (timeLeft >= Functions.minutesToTicks(30))
-//         return 2;
-//       if (timeLeft >= Functions.minutesToTicks(10))
-//         return 1;
-//     }
-//     return 0;
-//   }
-//
-//   @SubscribeEvent
-//   public static void voidEvilStatus(PotionEvent.PotionAddedEvent potionAddedEvent) {
-//     EffectInstance effectInstance = potionAddedEvent.getPotionEffect();
-//     LivingEntity livingEntity = potionAddedEvent.getEntityLiving();
-//     if (effectInstance.func_188419_a() == Effects.field_220310_F)
-//       livingEntity.func_195063_d(DragonEffects.EVIL_DRAGON);
-//   }
-//
+    public static void applyEvilMarker(PlayerEntity playerEntity) {
+        DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon()) {
+                EffectInstance effectInstance = playerEntity.getEffect(DragonEffects.EVIL_DRAGON);
+                if (effectInstance == null) {
+                    playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(10)));
+                } else {
+                    int duration = effectInstance.getDuration();
+                    if (duration <= Functions.minutesToTicks(10)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
+                    } else if (duration <= Functions.minutesToTicks(30)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
+                    } else if (duration <= Functions.minutesToTicks(60)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(40)));
+                    } else if (duration <= Functions.minutesToTicks(100)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
+                    } else if (duration <= Functions.minutesToTicks(120)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
+                    } else if (duration <= Functions.minutesToTicks(150)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                    } else if (duration <= Functions.minutesToTicks(200)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                    } else if (duration <= Functions.minutesToTicks(250)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                    } else if (duration <= Functions.minutesToTicks(300)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                    } else if (duration <= Functions.minutesToTicks(350)) {
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                    }
+                }
+            }
+        });
+    }
+
+    public static int computeLevelOfEvil(PlayerEntity playerEntity) {
+        if (DragonStateProvider.isDragon(playerEntity) && playerEntity.hasEffect(DragonEffects.EVIL_DRAGON)) {
+            EffectInstance effectInstance = playerEntity.getEffect(DragonEffects.EVIL_DRAGON);
+            assert effectInstance != null;
+            int timeLeft = effectInstance.getDuration();
+            if (timeLeft >= Functions.minutesToTicks(350))
+                return 10;
+            if (timeLeft >= Functions.minutesToTicks(300))
+                return 9;
+            if (timeLeft >= Functions.minutesToTicks(250))
+                return 8;
+            if (timeLeft >= Functions.minutesToTicks(200))
+                return 7;
+            if (timeLeft >= Functions.minutesToTicks(150))
+                return 6;
+            if (timeLeft >= Functions.minutesToTicks(120))
+                return 5;
+            if (timeLeft >= Functions.minutesToTicks(100))
+                return 4;
+            if (timeLeft >= Functions.minutesToTicks(60))
+                return 3;
+            if (timeLeft >= Functions.minutesToTicks(30))
+                return 2;
+            if (timeLeft >= Functions.minutesToTicks(10))
+                return 1;
+        }
+        return 0;
+    }
+
+    @SubscribeEvent
+    public static void voidEvilStatus(PotionEvent.PotionAddedEvent potionAddedEvent) {
+        EffectInstance effectInstance = potionAddedEvent.getPotionEffect();
+        LivingEntity livingEntity = potionAddedEvent.getEntityLiving();
+        if (effectInstance.getEffect() == Effects.HERO_OF_THE_VILLAGE)
+            livingEntity.removeEffect(DragonEffects.EVIL_DRAGON);
+    }
+
+    //
 //   @SubscribeEvent
 //   public static void specialTasks(EntityJoinWorldEvent joinWorldEvent) {
 //     World world = joinWorldEvent.getWorld();
@@ -245,31 +217,31 @@
 //   }
 //
 //
-//   @SubscribeEvent
-//   public static void interactions(PlayerInteractEvent.EntityInteract event) {
-//     PlayerEntity playerEntity = event.getPlayer();
-//     Entity livingEntity = event.getTarget();
-//     if (livingEntity instanceof AbstractVillagerEntity)
-//       DragonStateProvider.getCap((Entity)playerEntity).ifPresent(dragonStateHandler -> {
-//             if (dragonStateHandler.isDragon() && playerEntity.func_70644_a(DragonEffects.EVIL_DRAGON)) {
-//               event.setCanceled(true);
-//             }
-//           });
-//   }
-//
-//   @SubscribeEvent
-//   public static void hurtEntity(AttackEntityEvent attackEntityEvent) {
-//     Entity attacked = attackEntityEvent.getTarget();
-//     PlayerEntity attacker = attackEntityEvent.getPlayer();
-//     if (attacked instanceof AbstractVillagerEntity) {
-//       if (attacker.func_70644_a(DragonEffects.EVIL_DRAGON)) {
-//         int duration = attacker.func_70660_b(DragonEffects.EVIL_DRAGON).func_76459_b();
-//         attacker.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, duration + Functions.secondsToTicks(5)));
-//       } else {
-//         attacker.func_195064_c((EffectInstance)new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.secondsToTicks(5)));
-//       }
-//     }
-//   }
+    @SubscribeEvent
+    public static void interactions(PlayerInteractEvent.EntityInteract event) {
+        PlayerEntity playerEntity = event.getPlayer();
+        Entity livingEntity = event.getTarget();
+        if (livingEntity instanceof AbstractVillagerEntity) {
+            if (DragonStateProvider.isDragon(playerEntity) && playerEntity.hasEffect(DragonEffects.EVIL_DRAGON)) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    //
+    @SubscribeEvent
+    public static void hurtEntity(AttackEntityEvent attackEntityEvent) {
+        Entity attacked = attackEntityEvent.getTarget();
+        PlayerEntity attacker = attackEntityEvent.getPlayer();
+        if (attacked instanceof AbstractVillagerEntity) {
+            if (attacker.hasEffect(DragonEffects.EVIL_DRAGON)) {
+                int duration = attacker.getEffect(DragonEffects.EVIL_DRAGON).getDuration();
+                attacker.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, duration + Functions.secondsToTicks(5)));
+            } else {
+                attacker.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.secondsToTicks(5)));
+            }
+        }
+    }
 //
 //
 //   @SubscribeEvent
@@ -346,4 +318,4 @@
 //         }
 //     }
 //   }
-// }
+}

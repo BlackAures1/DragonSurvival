@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -38,7 +37,7 @@ public class Prince extends PrincessEntity {
 
     @Nullable
     public ILivingEntityData finalizeSpawn(IServerWorld serverWorld, DifficultyInstance difficultyInstance, SpawnReason reason, @Nullable ILivingEntityData livingEntityData, @Nullable CompoundNBT compoundNBT) {
-        setItemInHand(Hand.MAIN_HAND, new ItemStack((IItemProvider) Items.GOLDEN_SWORD));
+        setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_SWORD));
         return super.finalizeSpawn(serverWorld, difficultyInstance, reason, livingEntityData, compoundNBT);
     }
 }
