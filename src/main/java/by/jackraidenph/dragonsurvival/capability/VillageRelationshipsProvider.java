@@ -14,7 +14,6 @@ import java.util.Objects;
 public class VillageRelationshipsProvider implements ICapabilitySerializable<CompoundNBT> {
     private final LazyOptional<VillageRelationShips> instance = LazyOptional.of(() -> (VillageRelationShips) Objects.<Object>requireNonNull(Capabilities.VILLAGE_RELATIONSHIP.getDefaultInstance()));
 
-
     @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         return (cap == Capabilities.VILLAGE_RELATIONSHIP) ? this.instance.cast() : LazyOptional.empty();
