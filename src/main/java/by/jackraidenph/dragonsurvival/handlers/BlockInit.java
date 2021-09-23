@@ -16,9 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.Direction;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,15 +43,14 @@ public class BlockInit {
     public static Block dragon_altar_nether_bricks;
     public static Block dragon_altar_mossy_cobblestone;
     public static Block dragon_altar_blackstone;
-    
+    public static Block broken_helmet;
     
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
         //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
         IForgeRegistry<Block> forgeRegistry = event.getRegistry();
-        
-        
+
         dragon_altar_stone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops());
         dragon_altar_sandstone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(0.8f).sound(SoundType.STONE).requiresCorrectToolForDrops());
         dragon_altar_red_sandstone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(0.8f).sound(SoundType.STONE).requiresCorrectToolForDrops());
@@ -121,6 +118,8 @@ public class BlockInit {
         forgeRegistry.register(bigForestNest.setRegistryName(DragonSurvivalMod.MODID, "big_forest_nest"));
         bigSeaNest = new BigNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(bigSeaNest.setRegistryName(DragonSurvivalMod.MODID, "big_sea_nest"));
+        broken_helmet = new Block(AbstractBlock.Properties.of(Material.METAL)).setRegistryName(DragonSurvivalMod.MODID, "broken_helmet");
+        forgeRegistry.register(broken_helmet);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -174,6 +173,7 @@ public class BlockInit {
         registerItem(dragon_altar_nether_bricks, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_mossy_cobblestone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_blackstone, new Item.Properties(), forgeRegistry);
+        registerItem(broken_helmet, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
