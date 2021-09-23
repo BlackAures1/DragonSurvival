@@ -68,6 +68,7 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
         horse.setPos(getX(), getY(), getZ());
         horse.finalizeSpawn(serverWorld, difficultyInstance, reason, entityData, compoundNBT);
         horse.setTamed(true);
+        horse.equipSaddle(null);
         horse.setSlot(401, new ItemStack(Items.IRON_HORSE_ARMOR));
         this.level.addFreshEntity((Entity) horse);
         horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> {

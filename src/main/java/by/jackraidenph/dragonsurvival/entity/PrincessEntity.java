@@ -69,6 +69,7 @@ public class PrincessEntity extends VillagerEntity {
         horse.setPos(getX(), getY(), getZ());
         horse.finalizeSpawn(serverWorld, difficultyInstance, reason, livingEntityData, compoundNBT);
         horse.setTamed(true);
+        horse.equipSaddle(null);
         horse.setSlot(401, new ItemStack(Items.GOLDEN_HORSE_ARMOR));
         this.level.addFreshEntity(horse);
         horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> {
