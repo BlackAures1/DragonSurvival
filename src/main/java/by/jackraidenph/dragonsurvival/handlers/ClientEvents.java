@@ -106,7 +106,7 @@ public class ClientEvents {
         if (ConfigHandler.CLIENT.renderInFirstPerson.get()) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (dummyDragon2 == null) {
-                dummyDragon2 = new AtomicReference<>(EntityTypesInit.dragonEntity.create(player.level));
+                dummyDragon2 = new AtomicReference<>(EntityTypesInit.DRAGON.create(player.level));
                 dummyDragon2.get().player = player.getId();
             }
             DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
@@ -283,7 +283,7 @@ public class ClientEvents {
         }
 
         if (!playerDragonHashMap.containsKey(player.getId())) {
-            DragonEntity dummyDragon = EntityTypesInit.dragonEntity.create(player.level);
+            DragonEntity dummyDragon = EntityTypesInit.DRAGON.create(player.level);
             dummyDragon.player = player.getId();
             playerDragonHashMap.put(player.getId(), new AtomicReference<>(dummyDragon));
         }

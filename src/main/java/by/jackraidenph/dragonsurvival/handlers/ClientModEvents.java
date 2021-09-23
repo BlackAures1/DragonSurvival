@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.settings.KeyBinding;
@@ -50,6 +51,8 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void setupClient(final FMLClientSetupEvent event) {
+        Minecraft minecraft = event.getMinecraftSupplier().get();
+
         RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_stone, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_sandstone, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.dragon_altar_red_sandstone, RenderType.cutout());
@@ -66,7 +69,10 @@ public class ClientModEvents {
         RenderTypeLookup.setRenderLayer(BlockInit.bigSeaNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.birchDoor, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.acaciaDoor, RenderType.cutout());
+
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.BOLAS_ENTITY, manager -> new SpriteRenderer<>(manager, minecraft.getItemRenderer()));
+
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();
 
@@ -76,7 +82,7 @@ public class ClientModEvents {
         TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.dragonEntity, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
     }
 
     /**

@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.network.SyncSize;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
-import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,7 +23,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.apache.logging.log4j.core.jmx.Server;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemsInit {
@@ -37,6 +36,7 @@ public class ItemsInit {
         }
     };
     public static Item charredMeat, charredVegetable, charredMushroom, charredSeafood, chargedCoal, charredSoup;
+    public static Item huntingNet;
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<Item> event) {
@@ -132,6 +132,10 @@ public class ItemsInit {
         charredSoup = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
                 .effect(() -> new EffectInstance(Effects.POISON, 20 * 15, 0), 1.0F)
                 .build())).setRegistryName(DragonSurvivalMod.MODID, "charged_soup");
-        event.getRegistry().registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, charredVegetable, charredMushroom, charredSoup, charredSeafood, elderDragonDust);
+        IForgeRegistry<Item> registry = event.getRegistry();
+        registry.registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, charredVegetable, charredMushroom, charredSoup, charredSeafood, elderDragonDust);
+
+        huntingNet = new Item(new Item.Properties()).setRegistryName("dragonsurvival", "dragon_hunting_mesh");
+        registry.register(huntingNet);
     }
 }

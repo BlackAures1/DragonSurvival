@@ -115,7 +115,7 @@ public class PacketProxy {
                     });
                     //refresh instances
                     if (thatPlayer != myPlayer) {
-                        DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(world);
+                        DragonEntity dragonEntity = EntityTypesInit.DRAGON.create(world);
                         dragonEntity.player = thatPlayer.getId();
                         ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
                     }

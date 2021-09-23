@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.entity.BolasEntity;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import com.google.common.base.CaseFormat;
@@ -17,6 +18,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
 
@@ -27,7 +29,8 @@ public class EntityTypesInit {
     private static final List<Item> spawnEggs = Lists.newArrayList();
 
     public static EntityType<MagicalPredatorEntity> MAGICAL_BEAST;
-    public static EntityType<DragonEntity> dragonEntity;
+    public static EntityType<DragonEntity> DRAGON;
+    public static EntityType<BolasEntity> BOLAS_ENTITY;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
 
@@ -46,18 +49,26 @@ public class EntityTypesInit {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, entityClass.getSimpleName()).replace("entity_", "");
     }
 
+    private static <T extends EntityType<?>> T cast(EntityType<?> entityType) {
+        return (T) entityType;
+    }
+
     @SubscribeEvent
     public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
 
+        IForgeRegistry<EntityType<?>> registry = event.getRegistry();
         for (EntityType entity : entities) {
             Preconditions.checkNotNull(entity.getRegistryName(), "registryName");
-            event.getRegistry().register(entity);
+            registry.register(entity);
             EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         }
 
-        dragonEntity = new EntityType<DragonEntity>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
-        dragonEntity.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
-        event.getRegistry().register(dragonEntity);
+        DRAGON = new EntityType<DragonEntity>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
+        DRAGON.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
+        registry.register(DRAGON);
+        BOLAS_ENTITY = cast(EntityType.Builder.of((p_create_1_, p_create_2_) -> new BolasEntity(p_create_2_), EntityClassification.MISC).sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).build("bolas"));
+        BOLAS_ENTITY.setRegistryName("dragonsurvival", "bolas");
+        registry.register(BOLAS_ENTITY);
     }
 
     @SubscribeEvent
@@ -71,39 +82,9 @@ public class EntityTypesInit {
 
     @SubscribeEvent
     public static void attributeCreationEvent(EntityAttributeCreationEvent event) {
-    	event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
-    	event.put(dragonEntity, DragonEntity.createLivingAttributes().build());
+        event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
+        event.put(DRAGON, DragonEntity.createLivingAttributes().build());
     }
-    
-    
-    
-    
-    /*public static void addSpawn() { // *Covers face with wing to hide from evil code*
-        List<Biome> spawnableBiomes = Lists.newArrayList();
 
-        List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigurationHandler.SPAWN.include.get()));
-        List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigurationHandler.SPAWN.exclude.get()));
-        if (!includeList.isEmpty()) {
-            for (BiomeDictionary.Type type : includeList) {
-                for (RegistryKey<Biome> biome : BiomeDictionary.getBiomes(type)) {
-                    if (!biome.getSpawns(EntityClassification.MONSTER).isEmpty()) {
-                        spawnableBiomes.add(biome);
-                    }
-                }
-            }
-            if (!excludeList.isEmpty()) {
-                for (BiomeDictionary.Type type : excludeList) {
-                    Set<RegistryKey<Biome>> excludeBiomes = BiomeDictionary.getBiomes(type);
-                    for (RegistryKey<Biome> biome : excludeBiomes) {
-                        spawnableBiomes.remove(biome);
-                    }
-                }
-            }
-        } else {
-            throw new IllegalArgumentException("Do not leave the BiomeDictionary type inclusion list empty. If you wish to disable spawning of an entity, set the weight to 0 instead.");
-        }
-        for (Biome biome : spawnableBiomes) {
-            biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(MAGICAL_BEAST, ConfigurationHandler.SPAWN.weight.get(), ConfigurationHandler.SPAWN.min.get(), ConfigurationHandler.SPAWN.max.get()));
-        }
-    }*/
+
 }
