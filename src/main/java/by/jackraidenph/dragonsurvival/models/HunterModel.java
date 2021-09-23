@@ -106,8 +106,6 @@ public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel
         if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.ATTACKING) {
             if (p_225597_1_.getMainHandItem().isEmpty()) {
                 ModelHelper.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, p_225597_4_);
-            } else {
-                ModelHelper.swingWeaponDown(this.rightArm, this.leftArm, p_225597_1_, this.attackTime, p_225597_4_);
             }
         } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
             this.rightArm.z = 0.0F;
