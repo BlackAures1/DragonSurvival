@@ -7,6 +7,8 @@ import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
+import by.jackraidenph.dragonsurvival.renderer.PrinceRenderer;
+import by.jackraidenph.dragonsurvival.renderer.PrincessRenderer;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.client.Minecraft;
@@ -18,6 +20,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -72,6 +75,13 @@ public class ClientModEvents {
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.BOLAS_ENTITY, manager -> new SpriteRenderer<>(manager, minecraft.getItemRenderer()));
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS, manager -> new PrincessRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE, manager -> new PrinceRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.HUNTER_HOUND, by.jackraidenph.dragonsurvival.renderer.HunterHoundRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.SHOOTER_HUNTER, by.jackraidenph.dragonsurvival.renderer.ShooterHunterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT_HUNTER, by.jackraidenph.dragonsurvival.renderer.KnightHunterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.SQUIRE_HUNTER, by.jackraidenph.dragonsurvival.renderer.SquireHunterRenderer::new);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ShaderHelper.initShaders();

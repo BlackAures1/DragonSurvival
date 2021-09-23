@@ -1,15 +1,19 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.entity.BolasEntity;
-import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.entity.monster.VindicatorEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
@@ -31,6 +35,12 @@ public class EntityTypesInit {
     public static EntityType<MagicalPredatorEntity> MAGICAL_BEAST;
     public static EntityType<DragonEntity> DRAGON;
     public static EntityType<BolasEntity> BOLAS_ENTITY;
+    public static EntityType<HunterHound> HUNTER_HOUND;
+    public static EntityType<ShooterHunter> SHOOTER_HUNTER;
+    public static EntityType<KnightHunter> KNIGHT_HUNTER;
+    public static EntityType<SquireHunter> SQUIRE_HUNTER;
+    public static EntityType<PrincessEntity> PRINCESS;
+    public static EntityType<Prince> PRINCE;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
 
@@ -74,6 +84,12 @@ public class EntityTypesInit {
     @SubscribeEvent
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
         MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
+        HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192);
+        SHOOTER_HUNTER = createEntity(ShooterHunter.class, ShooterHunter::new, 0.6F, 1.95F, 12486764, 2690565);
+        KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
+        SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
+        PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
+        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
         for (Item spawnEgg : spawnEggs) {
             Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
             event.getRegistry().register(spawnEgg);
@@ -84,6 +100,12 @@ public class EntityTypesInit {
     public static void attributeCreationEvent(EntityAttributeCreationEvent event) {
         event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
         event.put(DRAGON, DragonEntity.createLivingAttributes().build());
+        event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 4.0D).build());
+        event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().build());
+        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
+        event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 2.0D).build());
+        event.put(PRINCESS, VillagerEntity.createAttributes().build());
+        event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
 
 
