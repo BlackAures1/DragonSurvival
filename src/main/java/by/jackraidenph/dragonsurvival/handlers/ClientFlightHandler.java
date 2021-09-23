@@ -89,9 +89,6 @@ public class ClientFlightHandler {
                             }
                             motion = motion.multiply(0.99F, 0.98F, 0.99F);
                             playerEntity.setDeltaMovement(motion);
-                            ax = motion.x;
-                            ay = motion.y;
-                            az = motion.z;
                             //end
                         } else {
                             ax = 0;
