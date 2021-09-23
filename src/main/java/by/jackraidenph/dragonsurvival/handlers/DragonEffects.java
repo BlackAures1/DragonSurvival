@@ -20,7 +20,24 @@ import java.util.List;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DragonEffects {
 
-    public static class Stress extends Effect {
+
+    public static Effect STRESS;
+    public static Effect TRAPPED;
+    public static Effect EVIL_DRAGON;
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public static void registerEffects(RegistryEvent.Register<Effect> effectRegister) {
+        IForgeRegistry<Effect> forgeRegistry = effectRegister.getRegistry();
+        STRESS = new Stress(0xf4a2e8).setRegistryName(DragonSurvivalMod.MODID, "stress");
+        forgeRegistry.register(STRESS);
+        TRAPPED = new Trapped(EffectType.NEUTRAL, 0xdddddd).setRegistryName(DragonSurvivalMod.MODID, "trapped");
+        forgeRegistry.register(TRAPPED);
+        EVIL_DRAGON = new EvilDragon(EffectType.NEUTRAL).setRegistryName(DragonSurvivalMod.MODID, "evil_dragon");
+        forgeRegistry.register(EVIL_DRAGON);
+    }
+
+    private static class Stress extends Effect {
 
         protected Stress(int color) {
             super(EffectType.HARMFUL, color);
@@ -51,21 +68,7 @@ public class DragonEffects {
         }
     }
 
-    public static Effect STRESS;
-    public static Effect TRAPPED;
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public static void registerEffects(RegistryEvent.Register<Effect> effectRegister) {
-        STRESS = new Stress(0xf4a2e8).setRegistryName(DragonSurvivalMod.MODID, "stress");
-        TRAPPED = new Trapped(EffectType.NEUTRAL, 0xdddddd).setRegistryName(DragonSurvivalMod.MODID, "trapped");
-        IForgeRegistry<Effect> forgeRegistry = effectRegister.getRegistry();
-        forgeRegistry.register(STRESS);
-        forgeRegistry.register(TRAPPED);
-    }
-
-    private static class Trapped
-            extends Effect {
+    private static class Trapped extends Effect {
         protected Trapped(EffectType effectType, int color) {
             super(effectType, color);
         }
@@ -85,5 +88,18 @@ public class DragonEffects {
             if (livingEntity.hasEffect(DragonEffects.TRAPPED))
                 livingEntity.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(BolasEntity.DISABLE_MOVEMENT);
         }
+    }
+
+    private static class EvilDragon extends Effect {
+
+        protected EvilDragon(EffectType p_i50391_1_) {
+            super(p_i50391_1_, 13700608);
+        }
+
+        @Override
+        public List<ItemStack> getCurativeItems() {
+            return Collections.emptyList();
+        }
+
     }
 }
