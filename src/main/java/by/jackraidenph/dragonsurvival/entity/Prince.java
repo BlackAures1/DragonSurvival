@@ -3,8 +3,7 @@ package by.jackraidenph.dragonsurvival.entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.ItemStack;
@@ -31,6 +30,10 @@ public class Prince extends PrincessEntity {
         super.registerGoals();
         this.targetSelector.addGoal(5, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
+        goalSelector.availableGoals.removeIf(prioritizedGoal -> {
+            Goal goal = prioritizedGoal.getGoal();
+            return goal instanceof PanicGoal || goal instanceof AvoidEntityGoal;
+        });
     }
 
     @Nullable
