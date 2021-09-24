@@ -13,7 +13,6 @@
     "AccessorEntityRenderer",
     "AccessorEntityRendererManager",
     "AccessorLivingRenderer",
-    "MixinClientPlayNetHandler",
     "MixinFirstPersonRenderer",
     "MixinInventoryScreen",
     "MixinProjectileHelper"
