@@ -5,11 +5,9 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
+import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -19,10 +17,15 @@ import net.minecraft.entity.merchant.villager.WanderingTraderEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -39,6 +42,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
@@ -76,7 +80,7 @@ public class VillagerRelationsHandler {
                             break;
                     }
                     if (!world.isClientSide)
-                        world.addFreshEntity((Entity) new ItemEntity(world, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), new ItemStack(flower)));
+                        world.addFreshEntity(new ItemEntity(world, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), new ItemStack(flower)));
                     applyEvilMarker(playerEntity);
                 } else {
 
@@ -288,50 +292,49 @@ public class VillagerRelationsHandler {
             }
         }
     }
-//
-//
-//   private static int timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(ThreadLocalRandom.current().nextInt(30));
-//
-//   @SubscribeEvent
-//   public static void spawnPrinceOrPrincess(TickEvent.WorldTickEvent serverTickEvent) {
-//     World world = serverTickEvent.world;
-//     if (world instanceof ServerWorld) {
-//       ServerWorld serverWorld = (ServerWorld)world;
-//       if (!serverWorld.func_217369_A().isEmpty() && serverWorld.func_234923_W_() == World.field_234918_g_)
-//         if (timeLeft == 0) {
-//           ServerPlayerEntity player = serverWorld.func_217472_l_();
-//           BlockPos blockPos = Functions.findRandomSpawnPosition((PlayerEntity)player, 1, 2, 20.0F);
-//           if (blockPos != null) {
-//             EntityType<? extends PrincessEntity> entityType = world.field_73012_v.nextBoolean() ? EntityTypesInit.PRINCESS : (EntityType)EntityTypesInit.PRINCE;
-//             PrincessEntity princessEntity = (PrincessEntity)entityType.func_200721_a(world);
-//             princessEntity.func_70107_b(blockPos.func_177958_n(), blockPos.func_177956_o(), blockPos.func_177952_p());
-//             princessEntity.func_213386_a((IServerWorld)serverWorld, serverWorld.func_175649_E(player.func_233580_cy_()), SpawnReason.NATURAL, null, null);
-//
-//             serverWorld.func_217376_c((Entity)princessEntity);
-//
-//             DyeColor dyeColor = DyeColor.func_196056_a(princessEntity.getColor());
-//             ListNBT pattern = (new BannerPattern.Builder()).func_222477_a(BannerPattern.values()[world.field_73012_v.nextInt((BannerPattern.values()).length)], DyeColor.values()[world.field_73012_v.nextInt((DyeColor.values()).length)]).func_222476_a();
-//
-//             int knights = world.field_73012_v.nextInt(3) + 3;
-//             for (int i = 0; i < knights; i++) {
-//               KnightHunter knightHunter = (KnightHunter)EntityTypesInit.KNIGHT_HUNTER.func_200721_a((World)serverWorld);
-//               knightHunter.func_70107_b(blockPos.func_177958_n(), blockPos.func_177956_o(), blockPos.func_177952_p());
-//               knightHunter.field_70714_bg.func_75776_a(5, (Goal)new FollowMobGoal(PrincessEntity.class, (MobEntity)knightHunter, 8));
-//               knightHunter.func_213386_a((IServerWorld)serverWorld, serverWorld.func_175649_E(player.func_233580_cy_()), SpawnReason.NATURAL, null, null);
-//               ItemStack itemStack = new ItemStack((IItemProvider)Items.field_185159_cQ);
-//               CompoundNBT compoundNBT = new CompoundNBT();
-//               compoundNBT.func_74768_a("Base", princessEntity.getColor());
-//               compoundNBT.func_218657_a("Patterns", (INBT)pattern);
-//               itemStack.func_77983_a("BlockEntityTag", (INBT)compoundNBT);
-//               knightHunter.func_184611_a(Hand.OFF_HAND, itemStack);
-//               serverWorld.func_217376_c((Entity)knightHunter);
-//             }
-//
-//             timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(world.field_73012_v.nextInt(30));
-//           }
-//         } else {
-//           timeLeft--;
-//         }
-//     }
-//   }
+
+
+    private static int timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(ThreadLocalRandom.current().nextInt(30));
+
+    @SubscribeEvent
+    public static void spawnPrinceOrPrincess(TickEvent.WorldTickEvent serverTickEvent) {
+        World world = serverTickEvent.world;
+        if (world instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) world;
+            if (!serverWorld.players().isEmpty() && serverWorld.dimension() == World.OVERWORLD)
+                if (timeLeft == 0) {
+                    ServerPlayerEntity player = serverWorld.getRandomPlayer();
+                    BlockPos blockPos = Functions.findRandomSpawnPosition(player, 1, 2, 20.0F);
+                    if (blockPos != null) {
+                        EntityType<? extends PrincessEntity> entityType = world.random.nextBoolean() ? EntityTypesInit.PRINCESS : EntityTypesInit.PRINCE;
+                        PrincessEntity princessEntity = entityType.create(world);
+                        princessEntity.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                        princessEntity.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(player.blockPosition()), SpawnReason.NATURAL, null, null);
+
+                        serverWorld.addFreshEntity(princessEntity);
+
+                        ListNBT pattern = (new BannerPattern.Builder()).addPattern(BannerPattern.values()[world.random.nextInt((BannerPattern.values()).length)], DyeColor.values()[world.random.nextInt((DyeColor.values()).length)]).toListTag();
+
+                        int knights = world.random.nextInt(3) + 3;
+                        for (int i = 0; i < knights; i++) {
+                            KnightHunter knightHunter = EntityTypesInit.KNIGHT_HUNTER.create(serverWorld);
+                            knightHunter.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                            knightHunter.goalSelector.addGoal(5, new FollowMobGoal(PrincessEntity.class, knightHunter, 8));
+                            knightHunter.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(player.blockPosition()), SpawnReason.NATURAL, null, null);
+                            ItemStack itemStack = new ItemStack(Items.SHIELD);
+                            CompoundNBT compoundNBT = new CompoundNBT();
+                            compoundNBT.putInt("Base", princessEntity.getColor());
+                            compoundNBT.put("Patterns", pattern);
+                            itemStack.addTagElement("BlockEntityTag", compoundNBT);
+                            knightHunter.setItemInHand(Hand.OFF_HAND, itemStack);
+                            serverWorld.addFreshEntity(knightHunter);
+                        }
+
+                        timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(world.random.nextInt(30));
+                    }
+                } else {
+                    timeLeft--;
+                }
+        }
+    }
 }
