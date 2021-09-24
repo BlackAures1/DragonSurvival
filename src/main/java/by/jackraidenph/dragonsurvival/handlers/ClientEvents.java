@@ -408,9 +408,11 @@ public class ClientEvents {
                     matrixStack.translate(0.5f, 1, -0.8);
                     itemRenderer.renderStatic(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                     matrixStack.popPose();
+                    matrixStack.pushPose();
                     ItemStack left = player.getOffhandItem();
-                    matrixStack.translate(0.9, 0, 0);
+                    matrixStack.translate(0.25, 1, 0.4);
                     itemRenderer.renderStatic(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    matrixStack.popPose();
                 } catch (Throwable throwable) {
                 	 if (!(throwable instanceof NullPointerException))
                          throwable.printStackTrace();
