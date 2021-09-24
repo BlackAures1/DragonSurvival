@@ -2,16 +2,27 @@ package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.WanderingTraderEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.EntityPredicates;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -19,94 +30,93 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Mod.EventBusSubscriber
 public class VillagerRelationsHandler {
-    //   @SubscribeEvent
-//   public static void onDeath(LivingDeathEvent deathEvent) {
-//     LivingEntity livingEntity = deathEvent.getEntityLiving();
-//     Entity killer = deathEvent.getSource().func_76346_g();
-//     if (killer instanceof PlayerEntity) {
-//       PlayerEntity playerEntity = (PlayerEntity)killer;
-//       if (livingEntity instanceof AbstractVillagerEntity) {
-//         World world = killer.level;
-//
-//         if (livingEntity instanceof by.jackraidenph.dragonsurvival.entity.Prince) {
-//           if (!world.field_72995_K)
-//             world.func_217376_c((Entity)new ItemEntity(world, livingEntity.func_226277_ct_(), livingEntity.func_226278_cu_(), livingEntity.func_226281_cx_(), new ItemStack((IItemProvider)Items.field_151010_B)));
-//           applyEvilMarker(playerEntity);
-//         } else if (livingEntity instanceof PrincessEntity) {
-//           Item flower = Items.field_190931_a;
-//           DyeColor dyeColor = DyeColor.func_196056_a(((PrincessEntity)livingEntity).getColor());
-//           switch (dyeColor) {
-//             case BLUE:
-//               flower = Items.field_221621_aW;
-//               break;
-//             case RED:
-//               flower = Items.field_221624_aZ;
-//               break;
-//             case BLACK:
-//               flower = Items.field_221690_bg;
-//               break;
-//             case YELLOW:
-//               flower = Items.field_221619_aU;
-//               break;
-//             case PURPLE:
-//               flower = Items.field_221910_fm;
-//               break;
-//             case WHITE:
-//               flower = Items.field_221680_bb; break;
-//           }
-//           if (!world.field_72995_K)
-//             world.func_217376_c((Entity)new ItemEntity(world, livingEntity.func_226277_ct_(), livingEntity.func_226278_cu_(), livingEntity.func_226281_cx_(), new ItemStack((IItemProvider)flower)));
-//           applyEvilMarker(playerEntity);
-//         } else {
-//           DragonStateProvider.getCap(killer).ifPresent(dragonStateHandler -> {
-//                 if (dragonStateHandler.isDragon()) {
-//                   AbstractVillagerEntity villagerEntity = (AbstractVillagerEntity)livingEntity;
-//
-//                   MerchantOffers merchantOffers = villagerEntity.func_213706_dY();
-//
-//                   if (villagerEntity instanceof VillagerEntity) {
-//                     VillagerEntity villager = (VillagerEntity)villagerEntity;
-//
-//                     int level = villager.func_213700_eh().func_221132_c();
-//
-//                     if (world.field_73012_v.nextInt(100) < 30) {
-//                       Optional<MerchantOffer> offer = ((List<MerchantOffer>)merchantOffers.stream().filter(()).collect(Collectors.toList())).stream().findAny();
-//
-//                       offer.ifPresent(());
-//                     }
-//
-//                     if (!world.field_72995_K) {
-//                       playerEntity.func_195068_e(level * 100);
-//                       applyEvilMarker(playerEntity);
-//                     }
-//                   } else if (villagerEntity instanceof WanderingTraderEntity) {
-//                     WanderingTraderEntity wanderingTrader = (WanderingTraderEntity)villagerEntity;
-//                     if (!world.field_72995_K) {
-//                       playerEntity.func_195068_e(200);
-//                       if (world.field_73012_v.nextInt(100) < 30) {
-//                         ItemStack itemStack = ((MerchantOffer)((List<MerchantOffer>)wanderingTrader.func_213706_dY().stream().filter(()).collect(Collectors.toList())).get(wanderingTrader.func_70681_au().nextInt(wanderingTrader.func_213706_dY().size()))).func_222200_d();
-//                         world.func_217376_c((Entity)new ItemEntity(world, wanderingTrader.func_226277_ct_(), wanderingTrader.func_226278_cu_(), wanderingTrader.func_226281_cx_(), itemStack));
-//                       }
-//                       applyEvilMarker(playerEntity);
-//                     }
-//                   }
-//                 }
-//               });
-//         }
-//       } else if (livingEntity instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter) {
-//         DragonStateProvider.getCap((Entity)playerEntity).ifPresent(dragonStateHandler -> {
-//               if (dragonStateHandler.isDragon()) {
-//                 applyEvilMarker(playerEntity);
-//               } else if (livingEntity instanceof KnightHunter) {
-//                 playerEntity.func_195064_c(new EffectInstance(Effects.field_220309_E, Functions.minutesToTicks(5)));
-//               }
-//             });
-//       }
-//     }
-//   }
-//
+    @SubscribeEvent
+    public static void onDeath(LivingDeathEvent deathEvent) {
+        LivingEntity livingEntity = deathEvent.getEntityLiving();
+        Entity killer = deathEvent.getSource().getEntity();
+        if (killer instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) killer;
+            if (livingEntity instanceof AbstractVillagerEntity) {
+                World world = killer.level;
+
+                if (livingEntity instanceof PrincessEntity) {
+                    Item flower = Items.AIR;
+                    DyeColor dyeColor = DyeColor.byId(((PrincessEntity) livingEntity).getColor());
+                    switch (dyeColor) {
+                        case BLUE:
+                            flower = Items.BLUE_ORCHID;
+                            break;
+                        case RED:
+                            flower = Items.RED_TULIP;
+                            break;
+                        case BLACK:
+                            flower = Items.WITHER_ROSE;
+                            break;
+                        case YELLOW:
+                            flower = Items.DANDELION;
+                            break;
+                        case PURPLE:
+                            flower = Items.LILAC;
+                            break;
+                        case WHITE:
+                            flower = Items.LILY_OF_THE_VALLEY;
+                            break;
+                    }
+                    if (!world.isClientSide)
+                        world.addFreshEntity((Entity) new ItemEntity(world, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), new ItemStack(flower)));
+                    applyEvilMarker(playerEntity);
+                } else {
+
+                    if (DragonStateProvider.isDragon(killer)) {
+                        AbstractVillagerEntity villagerEntity = (AbstractVillagerEntity) livingEntity;
+
+                        MerchantOffers merchantOffers = villagerEntity.getOffers();
+
+                        if (villagerEntity instanceof VillagerEntity) {
+                            VillagerEntity villager = (VillagerEntity) villagerEntity;
+
+                            int level = villager.getVillagerData().getLevel();
+
+                            if (world.random.nextInt(100) < 30) {
+                                Optional<MerchantOffer> offer = merchantOffers.stream().filter(merchantOffer -> merchantOffer.getResult().getItem() != Items.EMERALD).collect(Collectors.toList()).stream().findAny();
+
+                                offer.ifPresent(merchantOffer -> world.addFreshEntity(new ItemEntity(world, villager.getX(), villager.getY(), villager.getZ(), merchantOffer.getResult())));
+                            }
+
+                            if (!world.isClientSide) {
+                                playerEntity.giveExperiencePoints(level * 100);
+                                applyEvilMarker(playerEntity);
+                            }
+                        } else if (villagerEntity instanceof WanderingTraderEntity) {
+                            WanderingTraderEntity wanderingTrader = (WanderingTraderEntity) villagerEntity;
+                            if (!world.isClientSide) {
+                                playerEntity.giveExperiencePoints(200);
+                                if (world.random.nextInt(100) < 30) {
+                                    ItemStack itemStack = wanderingTrader.getOffers().stream().filter((merchantOffer -> merchantOffer.getResult().getItem() != Items.EMERALD)).collect(Collectors.toList()).get(wanderingTrader.getRandom().nextInt(wanderingTrader.getOffers().size())).getResult();
+                                    world.addFreshEntity(new ItemEntity(world, wanderingTrader.getX(), wanderingTrader.getY(), wanderingTrader.getZ(), itemStack));
+                                }
+                                applyEvilMarker(playerEntity);
+                            }
+                        }
+                    }
+
+                }
+            } else if (livingEntity instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter) {
+                if (DragonStateProvider.isDragon(playerEntity)) {
+                    applyEvilMarker(playerEntity);
+                } else if (livingEntity instanceof KnightHunter) {
+                    playerEntity.addEffect(new EffectInstance(Effects.BAD_OMEN, Functions.minutesToTicks(5)));
+                }
+            }
+        }
+    }
+
+    //
 //   public static List<EntityType<? extends CreatureEntity>> dragonHunters;
 //
     @SubscribeEvent
@@ -197,26 +207,24 @@ public class VillagerRelationsHandler {
             livingEntity.removeEffect(DragonEffects.EVIL_DRAGON);
     }
 
-    //
-//   @SubscribeEvent
-//   public static void specialTasks(EntityJoinWorldEvent joinWorldEvent) {
-//     World world = joinWorldEvent.getWorld();
-//     Entity entity = joinWorldEvent.getEntity();
-//     if (entity instanceof IronGolemEntity) {
-//       IronGolemEntity golemEntity = (IronGolemEntity)entity;
-//       golemEntity.field_70715_bh.func_75776_a(5, (Goal)new NearestAttackableTargetGoal((MobEntity)golemEntity, PlayerEntity.class, 0, true, false, livingEntity ->
-//
-//             (DragonStateProvider.isDragon((Entity)livingEntity) && livingEntity.func_70644_a(DragonEffects.EVIL_DRAGON))));
-//     }
-//
-//     if (entity instanceof AbstractVillagerEntity && !(entity instanceof by.jackraidenph.dragonsurvival.entity.Prince)) {
-//       AbstractVillagerEntity abstractVillagerEntity = (AbstractVillagerEntity)entity;
-//       abstractVillagerEntity.field_70714_bg.func_75776_a(10, (Goal)new AvoidEntityGoal((CreatureEntity)abstractVillagerEntity, PlayerEntity.class, livingEntity ->
-//             (DragonStateProvider.isDragon((Entity)livingEntity) && livingEntity.func_70644_a(DragonEffects.EVIL_DRAGON)), 16.0F, 1.0D, 1.0D, EntityPredicates.field_188444_d::test));
-//     }
-//   }
-//
-//
+    @SubscribeEvent
+    public static void specialTasks(EntityJoinWorldEvent joinWorldEvent) {
+        World world = joinWorldEvent.getWorld();
+        Entity entity = joinWorldEvent.getEntity();
+        if (entity instanceof IronGolemEntity) {
+            IronGolemEntity golemEntity = (IronGolemEntity) entity;
+            golemEntity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(golemEntity, PlayerEntity.class, 0, true, false, livingEntity ->
+
+                    (DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
+        }
+
+        if (entity instanceof AbstractVillagerEntity && !(entity instanceof by.jackraidenph.dragonsurvival.entity.Prince)) {
+            AbstractVillagerEntity abstractVillagerEntity = (AbstractVillagerEntity) entity;
+            abstractVillagerEntity.goalSelector.addGoal(10, new AvoidEntityGoal<>(abstractVillagerEntity, PlayerEntity.class, livingEntity ->
+                    (DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON)), 16.0F, 1.0D, 1.0D, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test));
+        }
+    }
+
     @SubscribeEvent
     public static void interactions(PlayerInteractEvent.EntityInteract event) {
         PlayerEntity playerEntity = event.getPlayer();
