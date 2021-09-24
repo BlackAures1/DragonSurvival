@@ -10,6 +10,7 @@ import by.jackraidenph.dragonsurvival.network.DiggingStatus;
 import by.jackraidenph.dragonsurvival.network.RefreshDragons;
 import by.jackraidenph.dragonsurvival.network.SynchronizeDragonCap;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
+import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,8 +63,12 @@ public class CapabilityController {
                 villageRelationShips.evilStatusDuration = old.evilStatusDuration;
                 villageRelationShips.crimeLevel = old.crimeLevel;
                 villageRelationShips.hunterSpawnDelay = old.hunterSpawnDelay;
+                if (villageRelationShips.evilStatusDuration > 0) {
+                    player.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, villageRelationShips.evilStatusDuration));
+                }
             });
         });
+
     }
 
     @SubscribeEvent

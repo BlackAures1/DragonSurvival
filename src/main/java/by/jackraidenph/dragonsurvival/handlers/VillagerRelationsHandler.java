@@ -337,4 +337,19 @@ public class VillagerRelationsHandler {
                 }
         }
     }
+
+    /**
+     * Save duration of evil dragon
+     */
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
+        if (playerTickEvent.phase == TickEvent.Phase.END) {
+            PlayerEntity playerEntity = playerTickEvent.player;
+            if (!playerEntity.level.isClientSide) {
+                if (playerEntity.hasEffect(DragonEffects.EVIL_DRAGON)) {
+                    Capabilities.getVillageRelationships(playerEntity).ifPresent(villageRelationShips -> villageRelationShips.evilStatusDuration = playerEntity.getEffect(DragonEffects.EVIL_DRAGON).getDuration());
+                }
+            }
+        }
+    }
 }
