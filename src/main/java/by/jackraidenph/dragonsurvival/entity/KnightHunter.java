@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.entity;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.util.GroundNavigator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -109,7 +110,7 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
         return false;
     }
 
-    //these 2 below allow horse riding
+    //these 2 overrides below allow horse riding
     @Override
     public PathNavigator getNavigation() {
         return navigation;
@@ -118,5 +119,10 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
     @Override
     public MovementController getMoveControl() {
         return moveControl;
+    }
+
+    @Override
+    protected PathNavigator createNavigation(World world) {
+        return new GroundNavigator(this, world);
     }
 }

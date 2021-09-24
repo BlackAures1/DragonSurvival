@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.entity;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.util.GroundNavigator;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -189,7 +190,7 @@ public class PrincessEntity extends VillagerEntity {
         return -0.4d;
     }
 
-    //these 2 below allow horse riding
+    //these 2 overrides below allow horse riding
     @Override
     public PathNavigator getNavigation() {
         return navigation;
@@ -198,5 +199,10 @@ public class PrincessEntity extends VillagerEntity {
     @Override
     public MovementController getMoveControl() {
         return moveControl;
+    }
+
+    @Override
+    protected PathNavigator createNavigation(World world) {
+        return new GroundNavigator(this, world);
     }
 }
