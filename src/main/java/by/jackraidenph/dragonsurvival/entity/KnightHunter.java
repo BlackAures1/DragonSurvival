@@ -46,13 +46,9 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
             return goal instanceof NearestAttackableTargetGoal;
         });
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, true, false, livingEntity ->
-
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
-
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, false, livingEntity ->
-
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
-
         this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers());
         this.goalSelector.addGoal(7, new AlertExceptHunters<>(this, HunterHound.class, ShooterHunter.class, SquireHunter.class));
         goalSelector.addGoal(6, new RideHorse<>(this));
