@@ -403,9 +403,11 @@ public class ClientEvents {
                         matrixStack.popPose();
                     }
                     ItemStack right = player.getMainHandItem();
+                    matrixStack.pushPose();
                     matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
-                    matrixStack.translate(-0.45f, 1, 0);
+                    matrixStack.translate(0.5f, 1, -0.8);
                     itemRenderer.renderStatic(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    matrixStack.popPose();
                     ItemStack left = player.getOffhandItem();
                     matrixStack.translate(0.9, 0, 0);
                     itemRenderer.renderStatic(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
