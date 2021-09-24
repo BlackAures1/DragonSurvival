@@ -1,11 +1,14 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -20,7 +23,10 @@ import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -30,6 +36,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -116,9 +124,9 @@ public class VillagerRelationsHandler {
         }
     }
 
-    //
-//   public static List<EntityType<? extends CreatureEntity>> dragonHunters;
-//
+
+    public static List<? extends EntityType<? extends CreatureEntity>> dragonHunters;
+
     @SubscribeEvent
     public static void entityTargets(LivingSetAttackTargetEvent setAttackTargetEvent) {
         Entity entity = setAttackTargetEvent.getEntity();
@@ -250,36 +258,36 @@ public class VillagerRelationsHandler {
             }
         }
     }
-//
-//
-//   @SubscribeEvent
-//   public static void spawnHunters(TickEvent.PlayerTickEvent playerTickEvent) {
-//     if (playerTickEvent.phase == TickEvent.Phase.END) {
-//       PlayerEntity player = playerTickEvent.player;
-//       if (DragonStateProvider.isDragon((Entity)player) && player.func_70644_a(DragonEffects.EVIL_DRAGON) && !player.field_70170_p.field_72995_K &&
-//         !player.func_184812_l_() && !player.func_175149_v() && player.func_70089_S()) {
-//         ServerWorld serverWorld = (ServerWorld)player.field_70170_p;
-//         Capabilities.getVillageRelationships((Entity)player).ifPresent(villageRelationShips -> {
-//               if (villageRelationShips.hunterSpawnDelay == 0) {
-//                 BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 10.0F);
-//                 if (spawnPosition != null) {
-//                   int levelOfEvil = computeLevelOfEvil(player);
-//                   for (int i = 0; i < levelOfEvil; i++) {
-//                     Functions.spawn((MobEntity)Objects.requireNonNull(((EntityType)dragonHunters.get(serverWorld.field_73012_v.nextInt(dragonHunters.size()))).func_200721_a((World)serverWorld)), spawnPosition, serverWorld);
-//                   }
-//                   if (serverWorld.func_241119_a_(player.func_233580_cy_(), 3)) {
-//                     villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(20) + Functions.secondsToTicks(serverWorld.field_73012_v.nextInt(10));
-//                   } else {
-//                     villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(60) + Functions.secondsToTicks(serverWorld.field_73012_v.nextInt(20));
-//                   }
-//                 }
-//               } else {
-//                 villageRelationShips.hunterSpawnDelay--;
-//               }
-//             });
-//       }
-//     }
-//   }
+
+
+    @SubscribeEvent
+    public static void spawnHunters(TickEvent.PlayerTickEvent playerTickEvent) {
+        if (playerTickEvent.phase == TickEvent.Phase.END) {
+            PlayerEntity player = playerTickEvent.player;
+            if (DragonStateProvider.isDragon(player) && player.hasEffect(DragonEffects.EVIL_DRAGON) && !player.level.isClientSide &&
+                    !player.isCreative() && !player.isSpectator() && player.isAlive()) {
+                ServerWorld serverWorld = (ServerWorld) player.level;
+                Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
+                    if (villageRelationShips.hunterSpawnDelay == 0) {
+                        BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 10.0F);
+                        if (spawnPosition != null) {
+                            int levelOfEvil = computeLevelOfEvil(player);
+                            for (int i = 0; i < levelOfEvil; i++) {
+                                Functions.spawn(Objects.requireNonNull((dragonHunters.get(serverWorld.random.nextInt(dragonHunters.size()))).create(serverWorld)), spawnPosition, serverWorld);
+                            }
+                            if (serverWorld.isCloseToVillage(player.blockPosition(), 3)) {
+                                villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(20) + Functions.secondsToTicks(serverWorld.random.nextInt(10));
+                            } else {
+                                villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(60) + Functions.secondsToTicks(serverWorld.random.nextInt(20));
+                            }
+                        }
+                    } else {
+                        villageRelationShips.hunterSpawnDelay--;
+                    }
+                });
+            }
+        }
+    }
 //
 //
 //   private static int timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(ThreadLocalRandom.current().nextInt(30));

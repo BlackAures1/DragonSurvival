@@ -24,6 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -90,6 +91,7 @@ public class EntityTypesInit {
         SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
         PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
+        VillagerRelationsHandler.dragonHunters = Arrays.asList(HUNTER_HOUND, SHOOTER_HUNTER, SQUIRE_HUNTER, KNIGHT_HUNTER);
         for (Item spawnEgg : spawnEggs) {
             Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
             event.getRegistry().register(spawnEgg);
@@ -100,10 +102,10 @@ public class EntityTypesInit {
     public static void attributeCreationEvent(EntityAttributeCreationEvent event) {
         event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
         event.put(DRAGON, DragonEntity.createLivingAttributes().build());
-        event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 4.0D).build());
-        event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().build());
-        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
-        event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 2.0D).build());
+        event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 4.0D).build());
+        event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).build());
+        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
+        event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
