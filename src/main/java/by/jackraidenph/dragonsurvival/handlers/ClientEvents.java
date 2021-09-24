@@ -266,7 +266,7 @@ public class ClientEvents {
         }
     }
     
-
+    private static ItemStack BOLAS;
     /**
      * Called for every player.
      */
@@ -382,25 +382,33 @@ public class ClientEvents {
                             matrixStack.mulPose(Vector3f.XN.rotationDegrees(180.0F));
                             double height = 1.3 * scale;
                             double forward = 0.3 * scale;
-                            float parrotHeadYaw =  MathHelper.clamp(-1.0F * (((float)cap.getMovementData().bodyYaw) - (float)cap.getMovementData().headYaw), -75.0F, 75.0F);
-                            matrixStack.translate(0, -height,-forward);
-                            layer.render(matrixStack, renderTypeBuffer, eventLight, player, 0.0F, 0.0F, partialRenderTick,(float)player.tickCount + partialRenderTick, parrotHeadYaw, (float)cap.getMovementData().headPitch);
-                            matrixStack.translate(0, height,forward);
+                            float parrotHeadYaw = MathHelper.clamp(-1.0F * (((float) cap.getMovementData().bodyYaw) - (float) cap.getMovementData().headYaw), -75.0F, 75.0F);
+                            matrixStack.translate(0, -height, -forward);
+                            layer.render(matrixStack, renderTypeBuffer, eventLight, player, 0.0F, 0.0F, partialRenderTick, (float) player.tickCount + partialRenderTick, parrotHeadYaw, (float) cap.getMovementData().headPitch);
+                            matrixStack.translate(0, height, forward);
                             matrixStack.mulPose(Vector3f.XN.rotationDegrees(-180.0F));
-                            matrixStack.scale(scale, scale ,scale);
+                            matrixStack.scale(scale, scale, scale);
                             break;
                         }
                     }
-
-	                ItemRenderer itemRenderer = mc.getItemRenderer();
-	                ItemStack right = player.getMainHandItem();
-	                matrixStack.mulPose(Vector3f.XP.rotationDegrees(45.0F));
-	                matrixStack.translate(-0.45f, 1, 0);
-	                final int combinedOverlayIn = LivingRenderer.getOverlayCoords(player, 0);
-	                itemRenderer.renderStatic(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
-	                ItemStack left = player.getOffhandItem();
-	                matrixStack.translate(0.9, 0, 0);
-	                itemRenderer.renderStatic(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    if (BOLAS == null)
+                        BOLAS = new ItemStack(ItemsInit.huntingNet);
+                    ItemRenderer itemRenderer = mc.getItemRenderer();
+                    final int combinedOverlayIn = LivingRenderer.getOverlayCoords(player, 0);
+                    if (player.hasEffect(DragonEffects.TRAPPED)) {
+                        matrixStack.pushPose();
+                        matrixStack.scale(3, 3, 3);
+                        matrixStack.translate(0, 0.5, 0);
+                        itemRenderer.renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                        matrixStack.popPose();
+                    }
+                    ItemStack right = player.getMainHandItem();
+                    matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                    matrixStack.translate(-0.45f, 1, 0);
+                    itemRenderer.renderStatic(right, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
+                    ItemStack left = player.getOffhandItem();
+                    matrixStack.translate(0.9, 0, 0);
+                    itemRenderer.renderStatic(left, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
                 } catch (Throwable throwable) {
                 	 if (!(throwable instanceof NullPointerException))
                          throwable.printStackTrace();
