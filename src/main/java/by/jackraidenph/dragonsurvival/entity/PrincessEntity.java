@@ -10,6 +10,7 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -188,8 +189,14 @@ public class PrincessEntity extends VillagerEntity {
         return -0.4d;
     }
 
+    //these 2 below allow horse riding
     @Override
     public PathNavigator getNavigation() {
         return navigation;
+    }
+
+    @Override
+    public MovementController getMoveControl() {
+        return moveControl;
     }
 }

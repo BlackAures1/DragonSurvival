@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.goals;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.pathfinding.Path;
 
 public class RideHorse<E extends MobEntity> extends Goal {
     protected E mob;
@@ -21,6 +22,7 @@ public class RideHorse<E extends MobEntity> extends Goal {
         HorseEntity horseEntity = (HorseEntity) mob.getVehicle();
         horseEntity.yRot = mob.yRot;
         horseEntity.yBodyRot = mob.yBodyRot;
-        horseEntity.getNavigation().moveTo(mob.getNavigation().getPath(), 2.5);
+        Path path = mob.getNavigation().getPath();
+        horseEntity.getNavigation().moveTo(path, 2.5);
     }
 }

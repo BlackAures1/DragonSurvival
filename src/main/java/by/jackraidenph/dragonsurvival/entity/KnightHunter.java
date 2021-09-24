@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -108,8 +109,14 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
         return false;
     }
 
+    //these 2 below allow horse riding
     @Override
     public PathNavigator getNavigation() {
         return navigation;
+    }
+
+    @Override
+    public MovementController getMoveControl() {
+        return moveControl;
     }
 }
