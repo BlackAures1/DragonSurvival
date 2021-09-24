@@ -48,7 +48,7 @@ public class Functions {
             int y = playerEntity.level.getHeight(Heightmap.Type.WORLD_SURFACE, (int) xRandom, (int) zRandom);
             blockpos$mutable.set(xRandom, y, zRandom);
             if (playerEntity.level.hasChunksAt(blockpos$mutable.getX() - 10, blockpos$mutable.getY() - 10, blockpos$mutable.getZ() - 10, blockpos$mutable.getX() + 10, blockpos$mutable.getY() + 10, blockpos$mutable.getZ() + 10) && playerEntity.level.getChunkSource().isEntityTickingChunk(new ChunkPos((BlockPos) blockpos$mutable)) && (WorldEntitySpawner.canSpawnAtBody(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, playerEntity.level, (BlockPos) blockpos$mutable, EntityTypesInit.HUNTER_HOUND) || (playerEntity.level.getBlockState(blockpos$mutable).is(Blocks.SNOW) && playerEntity.level.getBlockState((BlockPos) blockpos$mutable).isAir()))) {
-                return (BlockPos) blockpos$mutable;
+                return blockpos$mutable;
             }
         }
         return null;

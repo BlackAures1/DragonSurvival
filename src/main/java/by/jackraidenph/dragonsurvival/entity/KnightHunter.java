@@ -76,7 +76,7 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
             return (goal instanceof net.minecraft.entity.ai.goal.PanicGoal || goal instanceof net.minecraft.entity.ai.goal.RunAroundLikeCrazyGoal || goal instanceof net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal || goal instanceof net.minecraft.entity.ai.goal.LookRandomlyGoal);
         });
 
-        horse.targetSelector.availableGoals.removeIf(prioritizedGoal -> prioritizedGoal.getGoal() instanceof net.minecraft.entity.ai.goal.AvoidEntityGoal);
+        horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> prioritizedGoal.getGoal() instanceof net.minecraft.entity.ai.goal.AvoidEntityGoal);
         startRiding(horse);
         return super.finalizeSpawn(serverWorld, difficultyInstance, reason, entityData, compoundNBT);
     }
