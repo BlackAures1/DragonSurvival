@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
+import by.jackraidenph.dragonsurvival.gecko.Knight;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -42,6 +43,7 @@ public class EntityTypesInit {
     public static EntityType<SquireHunter> SQUIRE_HUNTER;
     public static EntityType<PrincessEntity> PRINCESS;
     public static EntityType<Prince> PRINCE;
+    public static EntityType<Knight> KNIGHT;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
 
@@ -91,6 +93,7 @@ public class EntityTypesInit {
         SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
         PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
+        KNIGHT = createEntity(Knight.class, Knight::new, 0.9f, 2.5f, 0xffffff, 0xeeeeee);
         VillagerRelationsHandler.dragonHunters = Arrays.asList(HUNTER_HOUND, SHOOTER_HUNTER, SQUIRE_HUNTER, KNIGHT_HUNTER);
         for (Item spawnEgg : spawnEggs) {
             Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
@@ -108,6 +111,7 @@ public class EntityTypesInit {
         event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
+        event.put(KNIGHT, Knight.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8).add(Attributes.ARMOR, 10).add(Attributes.MAX_HEALTH, 40).build());
     }
 
 
