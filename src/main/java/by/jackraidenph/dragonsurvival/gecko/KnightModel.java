@@ -12,7 +12,7 @@ public class KnightModel extends AnimatedGeoModel<Knight> {
 
     @Override
     public ResourceLocation getTextureLocation(Knight object) {
-        return new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon_knight_black.png");
+        return new ResourceLocation(DragonSurvivalMod.MODID, "textures/riders/dragon_knight_black.png");
     }
 
     @Override
