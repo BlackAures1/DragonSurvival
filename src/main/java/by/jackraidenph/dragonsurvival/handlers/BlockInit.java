@@ -43,8 +43,6 @@ public class BlockInit {
     public static Block dragon_altar_nether_bricks;
     public static Block dragon_altar_mossy_cobblestone;
     public static Block dragon_altar_blackstone;
-    public static Block broken_helmet;
-    
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -118,8 +116,6 @@ public class BlockInit {
         forgeRegistry.register(bigForestNest.setRegistryName(DragonSurvivalMod.MODID, "big_forest_nest"));
         bigSeaNest = new BigNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(bigSeaNest.setRegistryName(DragonSurvivalMod.MODID, "big_sea_nest"));
-        broken_helmet = new Block(AbstractBlock.Properties.of(Material.METAL)).setRegistryName(DragonSurvivalMod.MODID, "broken_helmet");
-        forgeRegistry.register(broken_helmet);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -173,7 +169,6 @@ public class BlockInit {
         registerItem(dragon_altar_nether_bricks, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_mossy_cobblestone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_blackstone, new Item.Properties(), forgeRegistry);
-        registerItem(broken_helmet, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
