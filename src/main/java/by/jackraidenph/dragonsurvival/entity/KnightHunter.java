@@ -26,7 +26,6 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -88,8 +87,8 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
-        setItemInHand(Hand.MAIN_HAND, new ItemStack((IItemProvider) Items.IRON_SWORD));
-        ItemStack itemStack = new ItemStack((IItemProvider) Items.SHIELD);
+        setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+        ItemStack itemStack = new ItemStack(Items.SHIELD);
         ListNBT listNBT = (new BannerPattern.Builder()).addPattern(BannerPattern.values()[this.random.nextInt((BannerPattern.values()).length)], DyeColor.values()[this.random.nextInt((DyeColor.values()).length)]).toListTag();
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt("Base", DyeColor.values()[this.random.nextInt((DyeColor.values()).length)].getId());
