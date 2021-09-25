@@ -8,19 +8,22 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.Hand;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -35,17 +38,27 @@ public class Knight extends CreatureEntity implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "movement", 1, this::move));
-    }
+        data.addAnimationController(new AnimationController<>(this, "everything", 1, event -> {
+            AnimationBuilder animationBuilder = new AnimationBuilder();
+            AnimationController animationController = event.getController();
+            Animation animation = animationController.getCurrentAnimation();
+            double movement = Math.sqrt(Math.pow(getX() - xo, 2) + Math.pow(getY() - yo, 2) + Math.pow(getZ() - zo, 2));
+            if (movement > 0) {
+                if (movement > 0.3)
+                    animationBuilder.addAnimation("run");
+                else if (movement > 0.08) {
+                    animationBuilder.addAnimation("walk");
+                }
+                animationController.setAnimation(animationBuilder);
+                return PlayState.CONTINUE;
+            } else {
 
-    private <E extends IAnimatable> PlayState move(AnimationEvent<E> animationEvent) {
-        AnimationBuilder animationBuilder = new AnimationBuilder();
-        AnimationController animationController = animationEvent.getController();
-        if (animationEvent.isMoving()) {
-            animationBuilder.addAnimation("walk");
-        }
-        animationController.setAnimation(animationBuilder);
-        return PlayState.CONTINUE;
+                animationBuilder.addAnimation("idle");
+                animationController.setAnimation(animationBuilder);
+                return PlayState.CONTINUE;
+            }
+        }));
+
     }
 
     @Override
@@ -58,17 +71,23 @@ public class Knight extends CreatureEntity implements IAnimatable {
         super.registerGoals();
         goalSelector.addGoal(0, new SwimGoal(this));
         goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1));
-        goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
+        goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.5, true));
         targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 1, true, false, livingEntity -> {
             return livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON);
         }));
-        targetSelector.addGoal(6, new HurtByTargetGoal(this, ShooterHunter.class));
+        targetSelector.addGoal(6, new HurtByTargetGoal(this, ShooterHunter.class).setAlertOthers());
     }
 
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
         setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-        setItemInHand(Hand.OFF_HAND, new ItemStack(Items.SHIELD));
+        ItemStack itemStack = new ItemStack(Items.SHIELD);
+        ListNBT listNBT = (new BannerPattern.Builder()).addPattern(BannerPattern.values()[this.random.nextInt((BannerPattern.values()).length)], DyeColor.values()[this.random.nextInt((DyeColor.values()).length)]).toListTag();
+        CompoundNBT compoundNBT = new CompoundNBT();
+        compoundNBT.putInt("Base", DyeColor.values()[this.random.nextInt((DyeColor.values()).length)].getId());
+        compoundNBT.put("Patterns", listNBT);
+        itemStack.addTagElement("BlockEntityTag", compoundNBT);
+        setItemInHand(Hand.OFF_HAND, itemStack);
     }
 
     @Nullable
@@ -76,5 +95,11 @@ public class Knight extends CreatureEntity implements IAnimatable {
     public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         populateDefaultEquipmentSlots(p_213386_2_);
         return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+    }
+
+    @Override
+    public void tick() {
+        updateSwingTime();
+        super.tick();
     }
 }

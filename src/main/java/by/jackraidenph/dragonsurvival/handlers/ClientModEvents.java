@@ -3,6 +3,8 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.gecko.DragonRenderer;
+import by.jackraidenph.dragonsurvival.gecko.KnightModel;
+import by.jackraidenph.dragonsurvival.gecko.KnightRenderer;
 import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
@@ -93,6 +95,7 @@ public class ClientModEvents {
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT, manager -> new KnightRenderer(manager, new KnightModel()));
     }
 
     /**
