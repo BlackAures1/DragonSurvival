@@ -38,25 +38,26 @@ public class Knight extends CreatureEntity implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "everything", 1, event -> {
+        data.addAnimationController(new AnimationController<>(this, "everything", 0, event -> {
             AnimationBuilder animationBuilder = new AnimationBuilder();
             AnimationController animationController = event.getController();
             Animation animation = animationController.getCurrentAnimation();
             double movement = Math.sqrt(Math.pow(getX() - xo, 2) + Math.pow(getY() - yo, 2) + Math.pow(getZ() - zo, 2));
+            if (swingTime > 0) {
+                animationBuilder.addAnimation("attack");
+            }
             if (movement > 0) {
                 if (movement > 0.3)
                     animationBuilder.addAnimation("run");
                 else if (movement > 0.08) {
                     animationBuilder.addAnimation("walk");
                 }
-                animationController.setAnimation(animationBuilder);
-                return PlayState.CONTINUE;
             } else {
 
                 animationBuilder.addAnimation("idle");
-                animationController.setAnimation(animationBuilder);
-                return PlayState.CONTINUE;
             }
+            animationController.setAnimation(animationBuilder);
+            return PlayState.CONTINUE;
         }));
 
     }
