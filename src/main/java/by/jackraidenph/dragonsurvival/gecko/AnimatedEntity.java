@@ -4,6 +4,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.HashMap;
@@ -40,5 +41,10 @@ public abstract class AnimatedEntity extends CreatureEntity implements IAnimatab
 
     protected int getDuration(String animation) {
         return animationTicks.getOrDefault(animation, 0);
+    }
+
+    protected void putAnimation(String animation, int ticks, AnimationBuilder builder) {
+        builder.addAnimation(animation);
+        putDuration(animation, ticks);
     }
 }

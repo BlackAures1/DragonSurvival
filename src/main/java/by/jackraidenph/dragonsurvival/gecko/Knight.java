@@ -25,12 +25,10 @@ import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class Knight extends CreatureEntity implements IAnimatable {
-    AnimationFactory animationFactory = new AnimationFactory(this);
+public class Knight extends AnimatedEntity implements IAnimatable {
 
     public Knight(EntityType<? extends CreatureEntity> p_i48576_1_, World world) {
         super(p_i48576_1_, world);
@@ -41,30 +39,63 @@ public class Knight extends CreatureEntity implements IAnimatable {
         data.addAnimationController(new AnimationController<>(this, "everything", 0, event -> {
             AnimationBuilder animationBuilder = new AnimationBuilder();
             AnimationController animationController = event.getController();
-            Animation animation = animationController.getCurrentAnimation();
-            double movement = Math.sqrt(Math.pow(getX() - xo, 2) + Math.pow(getY() - yo, 2) + Math.pow(getZ() - zo, 2));
+            double movement = getMovementSpeed();
             if (swingTime > 0) {
-                animationBuilder.addAnimation("attack");
+                Animation animation = animationController.getCurrentAnimation();
+                if (animation != null) {
+                    String name = animation.animationName;
+                    switch (name) {
+                        case "attack":
+                            trackAnimation("attack");
+                            break;
+                        case "attack2":
+                            trackAnimation("attack2");
+                            break;
+                    }
+                    if (getDuration("attack") <= 0)
+                        putAnimation("attack2", 17, animationBuilder);
+                    else if (getDuration("attack2") <= 0)
+                        putAnimation("attack", 17, animationBuilder);
+                }
             }
             if (movement > 0) {
-                if (movement > 0.3)
+                if (movement > 0.4)
                     animationBuilder.addAnimation("run");
-                else if (movement > 0.08) {
+                else if (movement > 0.1) {
                     animationBuilder.addAnimation("walk");
                 }
             } else {
-
-                animationBuilder.addAnimation("idle");
+                Animation animation = animationController.getCurrentAnimation();
+                if (animation == null) {
+                    putAnimation("idle", 88, animationBuilder);
+                } else {
+                    String name = animation.animationName;
+                    switch (name) {
+                        case "idle":
+                            trackAnimation("idle");
+                            if (getDuration("idle") <= 0) {
+                                if (random.nextInt(10) == 0) {
+                                    putAnimation("idle_2", 145, animationBuilder);
+                                }
+                            }
+                            break;
+                        case "walk":
+                        case "run":
+                            putAnimation("idle", 88, animationBuilder);
+                            break;
+                        case "idle_2":
+                            trackAnimation("idle_2");
+                            if (getDuration("idle_2") <= 0) {
+                                putAnimation("idle", 88, animationBuilder);
+                            }
+                            break;
+                    }
+                }
             }
             animationController.setAnimation(animationBuilder);
             return PlayState.CONTINUE;
         }));
 
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return animationFactory;
     }
 
     @Override
