@@ -8,10 +8,8 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -81,8 +79,8 @@ public class EventHandler {
         Entity entity = joinWorldEvent.getEntity();
         if (entity instanceof AnimalEntity) {
 
-            ((MobEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
-                    (CreatureEntity) entity, PlayerEntity.class,
+            ((AnimalEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
+                    (AnimalEntity) entity, PlayerEntity.class,
                     livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity),
                     20.0F, 1.3F, 1.5F, EntityPredicates.ATTACK_ALLOWED));
         }
