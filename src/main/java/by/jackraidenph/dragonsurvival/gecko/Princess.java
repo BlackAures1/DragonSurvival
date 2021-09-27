@@ -32,7 +32,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -182,42 +181,37 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "everything", 0, event -> {
             AnimationBuilder builder = new AnimationBuilder();
-            Vector3d deltaMove = getDeltaMovement();
             double speed = getMovementSpeed(this);
             AnimationController controller = event.getController();
-            if (speed > 0.7)
+            if (speed > 0.6)
                 builder.addAnimation("run_princess");
-            else {
-                double sqr = deltaMove.x * deltaMove.x + deltaMove.z * deltaMove.z;
-                if (speed > 0.4 && sqr > 0.1) {
-                    //FIXME
-                    builder.addAnimation("walk_princess");
+            else if (speed > 0.1) {
+                builder.addAnimation("walk_princess");
+            } else {
+                Animation animation = controller.getCurrentAnimation();
+                if (animation == null) {
+                    animationTimer.putAnimation("idle_princess", 88, builder);
                 } else {
-                    Animation animation = controller.getCurrentAnimation();
-                    if (animation == null) {
-                        animationTimer.putAnimation("idle_princess", 88, builder);
-                    } else {
-                        String name = animation.animationName;
-                        switch (name) {
-                            case "idle_princess":
-                                animationTimer.trackAnimation("idle_princess");
-                                if (animationTimer.getDuration("idle_princess") <= 0) {
-                                    if (random.nextInt(2000) == 1) {
-                                        animationTimer.putAnimation("idle_princess_2", 145, builder);
-                                    }
+                    String name = animation.animationName;
+                    switch (name) {
+                        case "idle_princess":
+                            animationTimer.trackAnimation("idle_princess");
+                            if (animationTimer.getDuration("idle_princess") <= 0) {
+                                if (random.nextInt(2000) == 1) {
+                                    animationTimer.putAnimation("idle_princess_2", 145, builder);
                                 }
-                                break;
-                            case "walk":
-                            case "run":
+                            }
+                            break;
+                        case "walk_princess":
+                        case "run_princess":
+                            animationTimer.putAnimation("idle_princess", 88, builder);
+                            break;
+                        case "idle_princess_2":
+                            animationTimer.trackAnimation("idle_princess_2");
+                            if (animationTimer.getDuration("idle_princess_2") <= 0) {
                                 animationTimer.putAnimation("idle_princess", 88, builder);
-                                break;
-                            case "idle_princess_2":
-                                animationTimer.trackAnimation("idle_princess_2");
-                                if (animationTimer.getDuration("idle_princess_2") <= 0) {
-                                    animationTimer.putAnimation("idle_princess", 88, builder);
-                                }
-                                break;
-                        }
+                            }
+                            break;
                     }
                 }
             }

@@ -95,7 +95,7 @@ public class EntityTypesInit {
         SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
         PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
-        KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0xffffff, 0x510707);
+        KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707);
         VillagerRelationsHandler.dragonHunters = Arrays.asList(HUNTER_HOUND, SHOOTER_HUNTER, SQUIRE_HUNTER, KNIGHT);
         PRINCESS_ON_HORSE = createEntity(Princess.class, Princess::new, 0.8f, 2.5f, 0xffd61f, 0x2ab10);
         for (Item spawnEgg : spawnEggs) {
