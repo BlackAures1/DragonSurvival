@@ -6,7 +6,6 @@ import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
-import by.jackraidenph.dragonsurvival.renderer.PrinceRenderer;
 import by.jackraidenph.dragonsurvival.renderer.PrincessRenderer;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -76,7 +75,7 @@ public class ClientModEvents {
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.BOLAS_ENTITY, manager -> new SpriteRenderer<>(manager, minecraft.getItemRenderer()));
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS, manager -> new PrincessRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE, manager -> new PrinceRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
+//        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE, manager -> new PrinceRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.HUNTER_HOUND, by.jackraidenph.dragonsurvival.renderer.HunterHoundRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.SHOOTER_HUNTER, by.jackraidenph.dragonsurvival.renderer.ShooterHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT_HUNTER, by.jackraidenph.dragonsurvival.renderer.KnightHunterRenderer::new);
@@ -94,6 +93,8 @@ public class ClientModEvents {
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT, manager -> new KnightRenderer(manager, new KnightModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS_ON_HORSE, manager -> new by.jackraidenph.dragonsurvival.gecko.PrincessRenderer(manager, new PrincessModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE_ON_HORSE, manager -> new PrinceRenderer(manager, new PrinceModel()));
+
     }
 
     /**

@@ -43,9 +43,10 @@ public class EntityTypesInit {
     public static EntityType<KnightHunter> KNIGHT_HUNTER;
     public static EntityType<SquireHunter> SQUIRE_HUNTER;
     public static EntityType<PrincessEntity> PRINCESS;
-    public static EntityType<Prince> PRINCE;
+//    public static EntityType<Prince> PRINCE;
     public static EntityType<Knight> KNIGHT;
     public static EntityType<Princess> PRINCESS_ON_HORSE;
+    public static EntityType<by.jackraidenph.dragonsurvival.gecko.Prince> PRINCE_ON_HORSE;
 
     private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
 
@@ -94,8 +95,9 @@ public class EntityTypesInit {
         KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
         SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
-        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
+//        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
         KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707);
+        PRINCE_ON_HORSE = createEntity(by.jackraidenph.dragonsurvival.gecko.Prince.class, by.jackraidenph.dragonsurvival.gecko.Prince::new, 0.8f, 2.5f, 0xffdd1f, 0x2ab10);
         VillagerRelationsHandler.dragonHunters = Arrays.asList(HUNTER_HOUND, SHOOTER_HUNTER, SQUIRE_HUNTER, KNIGHT);
         PRINCESS_ON_HORSE = createEntity(Princess.class, Princess::new, 0.8f, 2.5f, 0xffd61f, 0x2ab10);
         for (Item spawnEgg : spawnEggs) {
@@ -114,9 +116,8 @@ public class EntityTypesInit {
         event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCESS_ON_HORSE, VillagerEntity.createAttributes().build());
-        event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
+//        event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
         event.put(KNIGHT, Knight.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8).add(Attributes.ARMOR, 10).add(Attributes.MAX_HEALTH, 40).build());
+        event.put(PRINCE_ON_HORSE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
-
-
 }

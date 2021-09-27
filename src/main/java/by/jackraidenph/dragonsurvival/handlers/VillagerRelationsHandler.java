@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
+import by.jackraidenph.dragonsurvival.gecko.Princess;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.entity.*;
@@ -300,8 +301,8 @@ public class VillagerRelationsHandler {
                     ServerPlayerEntity player = serverWorld.getRandomPlayer();
                     BlockPos blockPos = Functions.findRandomSpawnPosition(player, 1, 2, 20.0F);
                     if (blockPos != null) {
-                        EntityType<? extends PrincessEntity> entityType = world.random.nextBoolean() ? EntityTypesInit.PRINCESS : EntityTypesInit.PRINCE;
-                        PrincessEntity princessEntity = entityType.create(world);
+                        EntityType<? extends Princess> entityType = world.random.nextBoolean() ? EntityTypesInit.PRINCESS_ON_HORSE : EntityTypesInit.PRINCE_ON_HORSE;
+                        Princess princessEntity = entityType.create(world);
                         princessEntity.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                         princessEntity.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(player.blockPosition()), SpawnReason.NATURAL, null, null);
 
