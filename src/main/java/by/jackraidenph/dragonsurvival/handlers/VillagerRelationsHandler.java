@@ -317,7 +317,7 @@ public class VillagerRelationsHandler {
                             for (int i = 0; i < knights; i++) {
                                 Knight knightHunter = EntityTypesInit.KNIGHT.create(serverWorld);
                                 knightHunter.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                                knightHunter.goalSelector.addGoal(5, new FollowMobGoal(PrincessEntity.class, knightHunter, 8));
+                                knightHunter.goalSelector.addGoal(5, new FollowMobGoal(Princess.class, knightHunter, 8));
                                 knightHunter.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(player.blockPosition()), SpawnReason.NATURAL, null, null);
                                 ItemStack itemStack = new ItemStack(Items.SHIELD);
                                 CompoundNBT compoundNBT = new CompoundNBT();
