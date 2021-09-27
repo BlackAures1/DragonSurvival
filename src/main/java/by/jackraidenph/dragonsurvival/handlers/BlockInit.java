@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
 import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
+import by.jackraidenph.dragonsurvival.blocks.Helmet;
 import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import by.jackraidenph.dragonsurvival.nest.BigNestBlock;
@@ -34,7 +35,7 @@ public class BlockInit {
     public static DragonDoor caveDoor, forestDoor, seaDoor;
     public static MediumNestBlock mediumSeaNest, mediumCaveNest, mediumForestNest;
     public static BigNestBlock bigForestNest, bigCaveNest, bigSeaNest;
-    
+
     public static Block dragon_altar_stone;
     public static Block dragon_altar_sandstone;
     public static Block dragon_altar_red_sandstone;
@@ -43,6 +44,8 @@ public class BlockInit {
     public static Block dragon_altar_nether_bricks;
     public static Block dragon_altar_mossy_cobblestone;
     public static Block dragon_altar_blackstone;
+
+    public static Helmet helmet1, helmet2, helmet3;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -116,6 +119,10 @@ public class BlockInit {
         forgeRegistry.register(bigForestNest.setRegistryName(DragonSurvivalMod.MODID, "big_forest_nest"));
         bigSeaNest = new BigNestBlock(Block.Properties.copy(smallSeaNest));
         forgeRegistry.register(bigSeaNest.setRegistryName(DragonSurvivalMod.MODID, "big_sea_nest"));
+
+        helmet1 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_1", forgeRegistry);
+        helmet2 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_2", forgeRegistry);
+        helmet3 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_3", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -160,7 +167,7 @@ public class BlockInit {
         registerSingleItem(bigForestNest, new Item.Properties(), forgeRegistry);
         registerSingleItem(bigCaveNest, new Item.Properties(), forgeRegistry);
 
-        
+
         registerItem(dragon_altar_stone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_sandstone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_red_sandstone, new Item.Properties(), forgeRegistry);
@@ -169,6 +176,10 @@ public class BlockInit {
         registerItem(dragon_altar_nether_bricks, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_mossy_cobblestone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_blackstone, new Item.Properties(), forgeRegistry);
+
+        registerItem(helmet1, new Item.Properties(), forgeRegistry);
+        registerItem(helmet2, new Item.Properties(), forgeRegistry);
+        registerItem(helmet3, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
