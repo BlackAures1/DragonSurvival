@@ -25,19 +25,28 @@ import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class Knight extends AnimatedEntity implements IAnimatable {
+public class Knight extends CreatureEntity implements IAnimatable {
+    AnimationFactory animationFactory = new AnimationFactory(this);
 
     public Knight(EntityType<? extends CreatureEntity> p_i48576_1_, World world) {
         super(p_i48576_1_, world);
     }
 
+    protected double getMovementSpeed() {
+        return Math.sqrt(Math.pow(getX() - xo, 2) + Math.pow(getZ() - zo, 2));
+    }
+
+    AnimationTimer animationTimer = new AnimationTimer();
+
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController<>(this, "everything", 0, event -> {
             AnimationBuilder animationBuilder = new AnimationBuilder();
+
             AnimationController animationController = event.getController();
             double movement = getMovementSpeed();
             if (swingTime > 0) {
@@ -46,16 +55,16 @@ public class Knight extends AnimatedEntity implements IAnimatable {
                     String name = animation.animationName;
                     switch (name) {
                         case "attack":
-                            trackAnimation("attack");
+                            animationTimer.trackAnimation("attack");
                             break;
                         case "attack2":
-                            trackAnimation("attack2");
+                            animationTimer.trackAnimation("attack2");
                             break;
                     }
-                    if (getDuration("attack") <= 0)
-                        putAnimation("attack2", 17, animationBuilder);
-                    else if (getDuration("attack2") <= 0)
-                        putAnimation("attack", 17, animationBuilder);
+                    if (animationTimer.getDuration("attack2") <= 0)
+                        animationTimer.putAnimation("attack", 17, animationBuilder);
+                    else if (animationTimer.getDuration("attack") <= 0)
+                        animationTimer.putAnimation("attack2", 17, animationBuilder);
                 }
             }
             if (movement > 0) {
@@ -67,26 +76,26 @@ public class Knight extends AnimatedEntity implements IAnimatable {
             } else {
                 Animation animation = animationController.getCurrentAnimation();
                 if (animation == null) {
-                    putAnimation("idle", 88, animationBuilder);
+                    animationTimer.putAnimation("idle", 88, animationBuilder);
                 } else {
                     String name = animation.animationName;
                     switch (name) {
                         case "idle":
-                            trackAnimation("idle");
-                            if (getDuration("idle") <= 0) {
+                            animationTimer.trackAnimation("idle");
+                            if (animationTimer.getDuration("idle") <= 0) {
                                 if (random.nextInt(10) == 0) {
-                                    putAnimation("idle_2", 145, animationBuilder);
+                                    animationTimer.putAnimation("idle_2", 145, animationBuilder);
                                 }
                             }
                             break;
                         case "walk":
                         case "run":
-                            putAnimation("idle", 88, animationBuilder);
+                            animationTimer.putAnimation("idle", 88, animationBuilder);
                             break;
                         case "idle_2":
-                            trackAnimation("idle_2");
-                            if (getDuration("idle_2") <= 0) {
-                                putAnimation("idle", 88, animationBuilder);
+                            animationTimer.trackAnimation("idle_2");
+                            if (animationTimer.getDuration("idle_2") <= 0) {
+                                animationTimer.putAnimation("idle", 88, animationBuilder);
                             }
                             break;
                     }
@@ -96,6 +105,11 @@ public class Knight extends AnimatedEntity implements IAnimatable {
             return PlayState.CONTINUE;
         }));
 
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return animationFactory;
     }
 
     @Override
