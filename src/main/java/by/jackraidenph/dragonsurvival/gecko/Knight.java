@@ -159,4 +159,9 @@ public class Knight extends CreatureEntity implements IAnimatable {
         updateSwingTime();
         super.tick();
     }
+
+    @Override
+    public boolean isBlocking() {
+        return random.nextBoolean();
+    }
 }
