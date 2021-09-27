@@ -78,7 +78,7 @@ public class ClientModEvents {
 //        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE, manager -> new PrinceRenderer(manager, (IReloadableResourceManager) minecraft.getResourceManager()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.HUNTER_HOUND, by.jackraidenph.dragonsurvival.renderer.HunterHoundRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.SHOOTER_HUNTER, by.jackraidenph.dragonsurvival.renderer.ShooterHunterRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT_HUNTER, by.jackraidenph.dragonsurvival.renderer.KnightHunterRenderer::new);
+//        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT_HUNTER, by.jackraidenph.dragonsurvival.renderer.KnightHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.SQUIRE_HUNTER, by.jackraidenph.dragonsurvival.renderer.SquireHunterRenderer::new);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);

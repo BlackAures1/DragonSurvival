@@ -92,7 +92,7 @@ public class EntityTypesInit {
         MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
         HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192);
         SHOOTER_HUNTER = createEntity(ShooterHunter.class, ShooterHunter::new, 0.6F, 1.95F, 12486764, 2690565);
-        KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
+//        KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
         SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
 //        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
@@ -112,7 +112,7 @@ public class EntityTypesInit {
         event.put(DRAGON, DragonEntity.createLivingAttributes().build());
         event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 4.0D).build());
         event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).build());
-        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
+//        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
         event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCESS_ON_HORSE, VillagerEntity.createAttributes().build());
