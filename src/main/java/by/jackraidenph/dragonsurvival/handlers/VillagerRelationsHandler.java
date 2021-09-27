@@ -141,7 +141,7 @@ public class VillagerRelationsHandler {
             if (target instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter)
                 ((IronGolemEntity) entity).setTarget(null);
         } else if (entity instanceof ZombieEntity &&
-                target instanceof PrincessEntity) {
+                (target instanceof PrincessEntity || target instanceof Princess)) {
             ((ZombieEntity) entity).setTarget(null);
         }
     }
@@ -338,7 +338,7 @@ public class VillagerRelationsHandler {
     }
 
     /**
-     * Save duration of evil dragon
+     * Save duration of 'evil dragon'
      */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
