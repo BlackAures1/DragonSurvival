@@ -56,15 +56,28 @@ public class Knight extends CreatureEntity implements IAnimatable {
                     switch (name) {
                         case "attack":
                             animationTimer.trackAnimation("attack");
+                            if (animationTimer.getDuration("attack2") <= 0) {
+                                if (random.nextBoolean())
+                                    animationTimer.putAnimation("attack", 17, animationBuilder);
+                                else
+                                    animationTimer.putAnimation("attack2", 17, animationBuilder);
+                            }
                             break;
                         case "attack2":
                             animationTimer.trackAnimation("attack2");
+                            if (animationTimer.getDuration("attack") <= 0) {
+                                if (random.nextBoolean())
+                                    animationTimer.putAnimation("attack", 17, animationBuilder);
+                                else
+                                    animationTimer.putAnimation("attack2", 17, animationBuilder);
+                            }
                             break;
+                        default:
+                            if (random.nextBoolean())
+                                animationTimer.putAnimation("attack", 17, animationBuilder);
+                            else
+                                animationTimer.putAnimation("attack2", 17, animationBuilder);
                     }
-                    if (animationTimer.getDuration("attack2") <= 0)
-                        animationTimer.putAnimation("attack", 17, animationBuilder);
-                    else if (animationTimer.getDuration("attack") <= 0)
-                        animationTimer.putAnimation("attack2", 17, animationBuilder);
                 }
             }
             if (movement > 0) {
