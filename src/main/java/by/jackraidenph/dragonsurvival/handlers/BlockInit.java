@@ -9,14 +9,21 @@ import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import by.jackraidenph.dragonsurvival.nest.BigNestBlock;
 import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
 import by.jackraidenph.dragonsurvival.nest.NestBlock;
+import by.jackraidenph.dragonsurvival.renderer.HelmetEntityRenderer;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -177,9 +184,21 @@ public class BlockInit {
         registerItem(dragon_altar_mossy_cobblestone, new Item.Properties(), forgeRegistry);
         registerItem(dragon_altar_blackstone, new Item.Properties(), forgeRegistry);
 
-        registerItem(helmet1, new Item.Properties(), forgeRegistry);
-        registerItem(helmet2, new Item.Properties(), forgeRegistry);
-        registerItem(helmet3, new Item.Properties(), forgeRegistry);
+        ItemStackTileEntityRenderer helmetRenderer = new ItemStackTileEntityRenderer() {
+            @Override
+            public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer p_239207_4_, int p_239207_5_, int p_239207_6_) {
+                if (transformType == ItemCameraTransforms.TransformType.GUI) {
+                    matrixStack.translate(0.5, -0.15, 0);
+                    matrixStack.mulPose(Vector3f.XP.rotationDegrees(45));
+                    matrixStack.mulPose(Vector3f.YP.rotationDegrees(135));
+                }
+                BlockItem blockItem = (BlockItem) itemStack.getItem();
+                HelmetEntityRenderer.renderSkull(null, 0, blockItem.getBlock(), 0, matrixStack, p_239207_4_, p_239207_5_);
+            }
+        };
+        registerItem(helmet1, new Item.Properties().setISTER(() -> () -> helmetRenderer), forgeRegistry);
+        registerItem(helmet2, new Item.Properties().setISTER(() -> () -> helmetRenderer), forgeRegistry);
+        registerItem(helmet3, new Item.Properties().setISTER(() -> () -> helmetRenderer), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
