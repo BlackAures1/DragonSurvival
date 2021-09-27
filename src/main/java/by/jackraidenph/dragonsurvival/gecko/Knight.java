@@ -80,12 +80,10 @@ public class Knight extends CreatureEntity implements IAnimatable {
                     }
                 }
             }
-            if (movement > 0) {
-                if (movement > 0.4)
-                    animationBuilder.addAnimation("run");
-                else if (movement > 0.1) {
-                    animationBuilder.addAnimation("walk");
-                }
+            if (movement > 0.4)
+                animationBuilder.addAnimation("run");
+            else if (movement > 0.1) {
+                animationBuilder.addAnimation("walk");
             } else {
                 Animation animation = animationController.getCurrentAnimation();
                 if (animation == null) {
@@ -138,7 +136,7 @@ public class Knight extends CreatureEntity implements IAnimatable {
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
+    protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
         ItemStack itemStack = new ItemStack(Items.SHIELD);
         ListNBT listNBT = (new BannerPattern.Builder()).addPattern(BannerPattern.values()[this.random.nextInt((BannerPattern.values()).length)], DyeColor.values()[this.random.nextInt((DyeColor.values()).length)]).toListTag();
@@ -151,9 +149,9 @@ public class Knight extends CreatureEntity implements IAnimatable {
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
-        populateDefaultEquipmentSlots(p_213386_2_);
-        return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+    public ILivingEntityData finalizeSpawn(IServerWorld serverWorld, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+        populateDefaultEquipmentSlots(difficultyInstance);
+        return super.finalizeSpawn(serverWorld, difficultyInstance, spawnReason, entityData, nbt);
     }
 
     @Override
