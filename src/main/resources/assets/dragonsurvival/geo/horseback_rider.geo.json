@@ -757,6 +757,60 @@
           ]
         },
         {
+          "name": "right_item",
+          "parent": "right_arm",
+          "pivot": [
+            -6.75,
+            26,
+            3
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -7.25,
+                25.5,
+                2.5
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "name": "left_item",
+          "parent": "left_arm",
+          "pivot": [
+            5.75,
+            26,
+            3
+          ],
+          "cubes": [
+            {
+              "origin": [
+                5.25,
+                25.5,
+                2.5
+              ],
+              "size": [
+                1,
+                1,
+                1
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        {
           "name": "right_leg",
           "parent": "knight",
           "pivot": [
