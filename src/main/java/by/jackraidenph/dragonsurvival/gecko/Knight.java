@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
+import by.jackraidenph.dragonsurvival.entity.DragonHunter;
 import by.jackraidenph.dragonsurvival.entity.ShooterHunter;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import net.minecraft.entity.CreatureEntity;
@@ -29,7 +30,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class Knight extends CreatureEntity implements IAnimatable {
+public class Knight extends CreatureEntity implements IAnimatable, DragonHunter {
     AnimationFactory animationFactory = new AnimationFactory(this);
 
     public Knight(EntityType<? extends CreatureEntity> p_i48576_1_, World world) {

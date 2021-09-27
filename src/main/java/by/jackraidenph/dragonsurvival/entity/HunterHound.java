@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.entity;
 
+import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
@@ -44,8 +45,8 @@ public class HunterHound extends WolfEntity implements DragonHunter {
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, false, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
-        this.goalSelector.addGoal(7, new FollowMobGoal<>(KnightHunter.class, this, 15));
-        this.goalSelector.addGoal(8, new AlertExceptHunters(this, KnightHunter.class, ShooterHunter.class, SquireHunter.class));
+        this.goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
+        this.goalSelector.addGoal(8, new AlertExceptHunters(this, Knight.class, ShooterHunter.class, SquireHunter.class));
     }
 
     protected void defineSynchedData() {

@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
@@ -43,9 +44,9 @@ public class ShooterHunter extends PillagerEntity implements DragonHunter {
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, false, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
-        this.goalSelector.addGoal(7, new FollowMobGoal<>(KnightHunter.class, this, 15));
+        this.goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
         this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers());
-        this.goalSelector.addGoal(7, new AlertExceptHunters<>(this, HunterHound.class, KnightHunter.class, SquireHunter.class));
+        this.goalSelector.addGoal(7, new AlertExceptHunters<>(this, HunterHound.class, Knight.class, SquireHunter.class));
     }
 
     @Override
