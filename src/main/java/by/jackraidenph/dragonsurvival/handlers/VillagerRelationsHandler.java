@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
+import by.jackraidenph.dragonsurvival.gecko.Prince;
 import by.jackraidenph.dragonsurvival.gecko.Princess;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
@@ -226,7 +227,7 @@ public class VillagerRelationsHandler {
                     (DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         }
 
-        if (entity instanceof AbstractVillagerEntity && !(entity instanceof by.jackraidenph.dragonsurvival.entity.Prince)) {
+        if (entity instanceof AbstractVillagerEntity && !(entity instanceof Prince)) {
             AbstractVillagerEntity abstractVillagerEntity = (AbstractVillagerEntity) entity;
             abstractVillagerEntity.goalSelector.addGoal(10, new AvoidEntityGoal<>(abstractVillagerEntity, PlayerEntity.class, livingEntity ->
                     (DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON)), 16.0F, 1.0D, 1.0D, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test));
