@@ -128,7 +128,6 @@ public class VillagerRelationsHandler {
         }
     }
 
-
     public static List<? extends EntityType<? extends CreatureEntity>> dragonHunters;
 
     @SubscribeEvent
@@ -144,10 +143,6 @@ public class VillagerRelationsHandler {
         }
     }
 
-    //
-//
-//
-//
     public static void applyEvilMarker(PlayerEntity playerEntity) {
         DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
@@ -248,7 +243,6 @@ public class VillagerRelationsHandler {
         }
     }
 
-    //
     @SubscribeEvent
     public static void hurtEntity(AttackEntityEvent attackEntityEvent) {
         Entity attacked = attackEntityEvent.getTarget();
