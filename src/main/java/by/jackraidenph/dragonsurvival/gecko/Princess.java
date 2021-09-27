@@ -32,6 +32,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -39,6 +40,10 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.Animation;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -46,7 +51,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class Princess extends VillagerEntity implements IAnimatable {
+public class Princess extends VillagerEntity implements IAnimatable, CommonTraits {
     private static final List<DyeColor> colors = Arrays.asList(DyeColor.RED, DyeColor.YELLOW, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.BLACK, DyeColor.WHITE);
     public static DataParameter<Integer> color = EntityDataManager.defineId(Princess.class, DataSerializers.INT);
 
@@ -155,7 +160,7 @@ public class Princess extends VillagerEntity implements IAnimatable {
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.5D) {
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1) {
             public boolean canUse() {
                 return (!Princess.this.isTrading() && super.canUse());
             }
@@ -164,7 +169,7 @@ public class Princess extends VillagerEntity implements IAnimatable {
         goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 16, 1, 1, livingEntity -> {
             return DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON);
         }));
-        goalSelector.addGoal(7, new PanicGoal(this, 1));
+        goalSelector.addGoal(7, new PanicGoal(this, 1.5));
     }
 
     public void gossip(ServerWorld p_242368_1_, VillagerEntity p_242368_2_, long p_242368_3_) {
@@ -175,7 +180,50 @@ public class Princess extends VillagerEntity implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-
+        data.addAnimationController(new AnimationController(this, "everything", 0, event -> {
+            AnimationBuilder builder = new AnimationBuilder();
+            Vector3d deltaMove = getDeltaMovement();
+            double speed = getMovementSpeed(this);
+            AnimationController controller = event.getController();
+            if (speed > 0.7)
+                builder.addAnimation("run_princess");
+            else {
+                double sqr = deltaMove.x * deltaMove.x + deltaMove.z * deltaMove.z;
+                if (speed > 0.4 && sqr > 0.1) {
+                    //FIXME
+                    builder.addAnimation("walk_princess");
+                } else {
+                    Animation animation = controller.getCurrentAnimation();
+                    if (animation == null) {
+                        animationTimer.putAnimation("idle_princess", 88, builder);
+                    } else {
+                        String name = animation.animationName;
+                        switch (name) {
+                            case "idle_princess":
+                                animationTimer.trackAnimation("idle_princess");
+                                if (animationTimer.getDuration("idle_princess") <= 0) {
+                                    if (random.nextInt(2000) == 1) {
+                                        animationTimer.putAnimation("idle_princess_2", 145, builder);
+                                    }
+                                }
+                                break;
+                            case "walk":
+                            case "run":
+                                animationTimer.putAnimation("idle_princess", 88, builder);
+                                break;
+                            case "idle_princess_2":
+                                animationTimer.trackAnimation("idle_princess_2");
+                                if (animationTimer.getDuration("idle_princess_2") <= 0) {
+                                    animationTimer.putAnimation("idle_princess", 88, builder);
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+            controller.setAnimation(builder);
+            return PlayState.CONTINUE;
+        }));
     }
 
     @Override

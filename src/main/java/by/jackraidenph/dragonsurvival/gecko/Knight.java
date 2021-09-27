@@ -94,7 +94,7 @@ public class Knight extends CreatureEntity implements IAnimatable {
                         case "idle":
                             animationTimer.trackAnimation("idle");
                             if (animationTimer.getDuration("idle") <= 0) {
-                                if (random.nextInt(10) == 0) {
+                                if (random.nextInt(2000) == 0) {
                                     animationTimer.putAnimation("idle_2", 145, animationBuilder);
                                 }
                             }

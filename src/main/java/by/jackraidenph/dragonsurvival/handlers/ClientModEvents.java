@@ -1,10 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.gecko.DragonModel;
-import by.jackraidenph.dragonsurvival.gecko.DragonRenderer;
-import by.jackraidenph.dragonsurvival.gecko.KnightModel;
-import by.jackraidenph.dragonsurvival.gecko.KnightRenderer;
+import by.jackraidenph.dragonsurvival.gecko.*;
 import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
@@ -93,9 +90,10 @@ public class ClientModEvents {
 
         TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
-
+        //Gecko renderers
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT, manager -> new KnightRenderer(manager, new KnightModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS_ON_HORSE, manager -> new by.jackraidenph.dragonsurvival.gecko.PrincessRenderer(manager, new PrincessModel()));
     }
 
     /**

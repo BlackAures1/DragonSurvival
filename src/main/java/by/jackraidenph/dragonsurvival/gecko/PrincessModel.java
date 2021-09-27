@@ -26,7 +26,7 @@ public class PrincessModel extends AnimatedGeoModel<Princess> {
             case YELLOW:
                 return new ResourceLocation(DragonSurvivalMod.MODID, "textures/riders/princess_yellow.png");
             case BLACK:
-                return new ResourceLocation(DragonSurvivalMod.MODID, "texture/riders/princess_black.png");
+                return new ResourceLocation(DragonSurvivalMod.MODID, "textures/riders/princess_black.png");
         }
         return null;
     }
