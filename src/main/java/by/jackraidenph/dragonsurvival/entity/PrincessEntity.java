@@ -1,9 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
-import by.jackraidenph.dragonsurvival.util.GroundNavigator;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -11,26 +9,24 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.PanicGoal;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -67,20 +63,6 @@ public class PrincessEntity extends VillagerEntity {
     public ILivingEntityData finalizeSpawn(IServerWorld serverWorld, DifficultyInstance difficultyInstance, SpawnReason reason, @Nullable ILivingEntityData livingEntityData, @Nullable CompoundNBT compoundNBT) {
         setColor(colors.get(this.random.nextInt(6)).getId());
         setVillagerData(getVillagerData().setProfession(VillagerProfession.NITWIT));
-
-        HorseEntity horse = new HorseEntity(EntityType.HORSE, this.level);
-        horse.setPos(getX(), getY(), getZ());
-        horse.finalizeSpawn(serverWorld, difficultyInstance, reason, livingEntityData, compoundNBT);
-        horse.setTamed(true);
-        horse.equipSaddle(null);
-        horse.setSlot(401, new ItemStack(Items.GOLDEN_HORSE_ARMOR));
-        this.level.addFreshEntity(horse);
-        horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> {
-            Goal goal = prioritizedGoal.getGoal();
-            return (goal instanceof net.minecraft.entity.ai.goal.PanicGoal || goal instanceof net.minecraft.entity.ai.goal.RunAroundLikeCrazyGoal || goal instanceof WaterAvoidingRandomWalkingGoal || goal instanceof net.minecraft.entity.ai.goal.LookRandomlyGoal);
-        });
-        horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> prioritizedGoal.getGoal() instanceof net.minecraft.entity.ai.goal.AvoidEntityGoal);
-        startRiding(horse);
         return super.finalizeSpawn(serverWorld, difficultyInstance, reason, livingEntityData, compoundNBT);
     }
 
@@ -172,7 +154,6 @@ public class PrincessEntity extends VillagerEntity {
             }
         });
         this.goalSelector.addGoal(6, new LookAtGoal(this, LivingEntity.class, 8.0F));
-        goalSelector.addGoal(5, new RideHorse<>(this));
         goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 16, 1, 1, livingEntity -> {
             return DragonStateProvider.isDragon(livingEntity) && livingEntity.hasEffect(DragonEffects.EVIL_DRAGON);
         }));
@@ -183,26 +164,5 @@ public class PrincessEntity extends VillagerEntity {
     }
 
     public void startSleeping(BlockPos p_213342_1_) {
-    }
-
-    @Override
-    public double getMyRidingOffset() {
-        return -0.4d;
-    }
-
-    //these 2 overrides below allow horse riding
-    @Override
-    public PathNavigator getNavigation() {
-        return navigation;
-    }
-
-    @Override
-    public MovementController getMoveControl() {
-        return moveControl;
-    }
-
-    @Override
-    protected PathNavigator createNavigation(World world) {
-        return new GroundNavigator(this, world);
     }
 }
