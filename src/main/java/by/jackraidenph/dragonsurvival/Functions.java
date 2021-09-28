@@ -6,6 +6,9 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -15,6 +18,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class Functions {
 
@@ -64,4 +68,15 @@ public class Functions {
         return !world.getFluidState(blockPos).isEmpty() || world.isEmptyBlock(blockPos);
     }
 
+    public static ListNBT createRandomPattern(BannerPattern.Builder builder, int times) {
+        if (times > 16)
+            times = 16;
+        if (times < 1)
+            times = 1;
+        Random random = new Random();
+        for (int i = 0; i < times; i++) {
+            builder = builder.addPattern(BannerPattern.values()[random.nextInt(BannerPattern.values().length)], DyeColor.values()[random.nextInt(DyeColor.values().length)]);
+        }
+        return builder.toListTag();
+    }
 }
