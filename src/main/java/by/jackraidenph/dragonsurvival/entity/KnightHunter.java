@@ -4,7 +4,6 @@ import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.RideHorse;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import by.jackraidenph.dragonsurvival.util.GroundNavigator;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
@@ -67,7 +66,7 @@ public class KnightHunter extends VindicatorEntity implements DragonHunter {
         horse.setTamed(true);
         horse.equipSaddle(null);
         horse.setSlot(401, new ItemStack(Items.IRON_HORSE_ARMOR));
-        this.level.addFreshEntity((Entity) horse);
+        this.level.addFreshEntity(horse);
         horse.goalSelector.availableGoals.removeIf(prioritizedGoal -> {
             Goal goal = prioritizedGoal.getGoal();
             return (goal instanceof net.minecraft.entity.ai.goal.PanicGoal || goal instanceof net.minecraft.entity.ai.goal.RunAroundLikeCrazyGoal || goal instanceof net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal || goal instanceof net.minecraft.entity.ai.goal.LookRandomlyGoal);

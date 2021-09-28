@@ -4,7 +4,10 @@ import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.ItemForItemTrade;
+import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -51,6 +54,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Princess extends VillagerEntity implements IAnimatable, CommonTraits {
     private static final List<DyeColor> colors = Arrays.asList(DyeColor.RED, DyeColor.YELLOW, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.BLACK, DyeColor.WHITE);
@@ -230,5 +234,21 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
     @Override
     public boolean removeWhenFarAway(double distance) {
         return tickCount >= Functions.minutesToTicks(ConfigHandler.COMMON.princessDespawnDelay.get());
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        if (level instanceof ServerWorld) {
+            PrincessEntity princess = EntityTypesInit.PRINCESS.create(level);
+            princess.setPos(getX(), getY(), getZ());
+            princess.finalizeSpawn((IServerWorld) level, level.getCurrentDifficultyAt(blockPosition()), SpawnReason.NATURAL, null, null);
+            princess.setColor(getColor());
+            princess.setUUID(UUID.randomUUID());
+            level.addFreshEntity(princess);
+        }
+        super.die(damageSource);
+        if (damageSource.getEntity() instanceof PlayerEntity) {
+            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
+        }
     }
 }

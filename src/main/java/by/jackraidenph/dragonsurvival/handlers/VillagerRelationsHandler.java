@@ -58,33 +58,7 @@ public class VillagerRelationsHandler {
             if (livingEntity instanceof AbstractVillagerEntity) {
                 World world = killer.level;
 
-                if (livingEntity instanceof Princess) {
-                    Item flower = Items.AIR;
-                    DyeColor dyeColor = DyeColor.byId(((Princess) livingEntity).getColor());
-                    switch (dyeColor) {
-                        case BLUE:
-                            flower = Items.BLUE_ORCHID;
-                            break;
-                        case RED:
-                            flower = Items.RED_TULIP;
-                            break;
-                        case BLACK:
-                            flower = Items.WITHER_ROSE;
-                            break;
-                        case YELLOW:
-                            flower = Items.DANDELION;
-                            break;
-                        case PURPLE:
-                            flower = Items.LILAC;
-                            break;
-                        case WHITE:
-                            flower = Items.LILY_OF_THE_VALLEY;
-                            break;
-                    }
-                    if (!world.isClientSide)
-                        world.addFreshEntity(new ItemEntity(world, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), new ItemStack(flower)));
-                    applyEvilMarker(playerEntity);
-                } else {
+                if (!(livingEntity instanceof Princess)) {
 
                     if (DragonStateProvider.isDragon(killer)) {
                         AbstractVillagerEntity villagerEntity = (AbstractVillagerEntity) livingEntity;

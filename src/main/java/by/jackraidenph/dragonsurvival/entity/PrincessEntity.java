@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -21,8 +22,7 @@ import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.MerchantOffers;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -164,5 +164,37 @@ public class PrincessEntity extends VillagerEntity {
     }
 
     public void startSleeping(BlockPos p_213342_1_) {
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
+        Item flower = Items.AIR;
+        DyeColor dyeColor = DyeColor.byId(getColor());
+        switch (dyeColor) {
+            case BLUE:
+                flower = Items.BLUE_ORCHID;
+                break;
+            case RED:
+                flower = Items.RED_TULIP;
+                break;
+            case BLACK:
+                flower = Items.WITHER_ROSE;
+                break;
+            case YELLOW:
+                flower = Items.DANDELION;
+                break;
+            case PURPLE:
+                flower = Items.LILAC;
+                break;
+            case WHITE:
+                flower = Items.LILY_OF_THE_VALLEY;
+                break;
+        }
+        if (!level.isClientSide)
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), new ItemStack(flower)));
+        if (damageSource.getEntity() instanceof PlayerEntity) {
+            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
+        }
     }
 }
