@@ -18,6 +18,6 @@ public class HelmetStackTileEntityRenderer extends ItemStackTileEntityRenderer {
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(135));
         }
         BlockItem blockItem = (BlockItem) itemStack.getItem();
-        HelmetEntityRenderer.renderSkull(null, 0, blockItem.getBlock(), 0, matrixStack, p_239207_4_, p_239207_5_);
+        HelmetEntityRenderer.renderHelmet(null, 0, blockItem.getBlock(), 0, matrixStack, p_239207_4_, p_239207_5_);
     }
 }

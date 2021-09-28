@@ -39,10 +39,10 @@ public class HelmetEntityRenderer extends TileEntityRenderer<HelmetEntity> {
     public void render(HelmetEntity helmetEntity, float p_225616_2_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225616_5_, int p_225616_6_) {
         BlockState blockstate = helmetEntity.getBlockState();
         float f1 = 22.5F * blockstate.getValue(SkullBlock.ROTATION);
-        renderSkull(null, f1, blockstate.getBlock(), 0, matrixStack, renderTypeBuffer, p_225616_5_);
+        renderHelmet(null, f1, blockstate.getBlock(), 0, matrixStack, renderTypeBuffer, p_225616_5_);
     }
 
-    public static void renderSkull(@Nullable Direction direction, float p_228879_1_, Block helmetBlock, float p_228879_4_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_228879_7_) {
+    public static void renderHelmet(@Nullable Direction direction, float p_228879_1_, Block helmetBlock, float p_228879_4_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_228879_7_) {
         matrixStack.pushPose();
         if (direction == null) {
             matrixStack.translate(0.5D, 0.0D, 0.5D);

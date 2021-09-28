@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
-
+@Deprecated
 public class KnightHunterRenderer extends MobRenderer<KnightHunter, HunterModel<KnightHunter>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("dragonsurvival", "textures/dragon_knight.png");
 
