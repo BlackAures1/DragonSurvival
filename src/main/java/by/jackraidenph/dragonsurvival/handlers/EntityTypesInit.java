@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
@@ -40,7 +41,7 @@ public class EntityTypesInit {
     public static EntityType<BolasEntity> BOLAS_ENTITY;
     public static EntityType<HunterHound> HUNTER_HOUND;
     public static EntityType<ShooterHunter> SHOOTER_HUNTER;
-    public static EntityType<KnightHunter> KNIGHT_HUNTER;
+    //    public static EntityType<KnightHunter> KNIGHT_HUNTER;
     public static EntityType<SquireHunter> SQUIRE_HUNTER;
     public static EntityType<PrincessEntity> PRINCESS;
 //    public static EntityType<Prince> PRINCE;
@@ -79,7 +80,7 @@ public class EntityTypesInit {
             EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         }
 
-        DRAGON = new EntityType<DragonEntity>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
+        DRAGON = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
         DRAGON.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
         registry.register(DRAGON);
         BOLAS_ENTITY = cast(EntityType.Builder.of((p_create_1_, p_create_2_) -> new BolasEntity(p_create_2_), EntityClassification.MISC).sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).build("bolas"));
@@ -117,7 +118,7 @@ public class EntityTypesInit {
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCESS_ON_HORSE, VillagerEntity.createAttributes().build());
 //        event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
-        event.put(KNIGHT, Knight.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8).add(Attributes.ARMOR, 10).add(Attributes.MAX_HEALTH, 40).build());
+        event.put(KNIGHT, Knight.createMobAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.knightSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.knightDamage.get()).add(Attributes.ARMOR, ConfigHandler.COMMON.knightArmor.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.knightHealth.get()).build());
         event.put(PRINCE_ON_HORSE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
 }
