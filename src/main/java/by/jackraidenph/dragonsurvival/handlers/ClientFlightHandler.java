@@ -109,10 +109,12 @@ public class ClientFlightHandler {
                 if (dragonStateHandler.hasWings()) {
                     wingsEnabled = !wingsEnabled;
                     DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
-                    if (wingsEnabled)
-                        player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
-                    else
-                        player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                    if (ConfigHandler.CLIENT.notifyWingStatus.get()) {
+                        if (wingsEnabled)
+                            player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
+                        else
+                            player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                    }
                 } else {
                     player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"), player.getUUID());
                 }

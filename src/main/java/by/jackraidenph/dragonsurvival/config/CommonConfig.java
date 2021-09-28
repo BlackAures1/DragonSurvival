@@ -129,5 +129,6 @@ public class CommonConfig {
 		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
 		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.5d, 0.2d, 0.6d);
 		princeArmor = builder.comment("Prince armor").defineInRange("princeArmor", 0d, 0d, 20d);
+		builder.pop();
 	}
 }
