@@ -30,6 +30,7 @@ public class KnightRenderer extends GeoEntityRenderer<Knight> {
         } else if (bone.getName().equals("right_item")) {
             stack.pushPose();
             RenderUtils.moveToPivot(bone, stack);
+            stack.mulPose(Vector3f.XP.rotationDegrees(180));
             stack.translate(-0.05, 0.1, 0.1);
             stack.mulPose(Vector3f.XP.rotationDegrees(90));
             Minecraft.getInstance().getItemRenderer().renderStatic(offHand, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, rtb);
