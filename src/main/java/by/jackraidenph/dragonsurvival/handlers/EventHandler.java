@@ -13,7 +13,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.HoglinEntity;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -77,7 +79,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onJoin(EntityJoinWorldEvent joinWorldEvent) {
         Entity entity = joinWorldEvent.getEntity();
-        if (entity instanceof AnimalEntity) {
+        if (entity instanceof AnimalEntity && !(entity instanceof WolfEntity || entity instanceof HoglinEntity)) {
 
             ((AnimalEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
                     (AnimalEntity) entity, PlayerEntity.class,
