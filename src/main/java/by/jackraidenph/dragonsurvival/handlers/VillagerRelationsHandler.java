@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Prince;
@@ -251,9 +252,9 @@ public class VillagerRelationsHandler {
                                     Functions.spawn(Objects.requireNonNull((dragonHunters.get(serverWorld.random.nextInt(dragonHunters.size()))).create(serverWorld)), spawnPosition, serverWorld);
                                 }
                                 if (serverWorld.isCloseToVillage(player.blockPosition(), 3)) {
-                                    villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(20) + Functions.secondsToTicks(serverWorld.random.nextInt(10));
+                                    villageRelationShips.hunterSpawnDelay = Functions.minutesToTicks(ConfigHandler.COMMON.hunterSpawnDelay.get() / 3) + Functions.minutesToTicks(serverWorld.random.nextInt(ConfigHandler.COMMON.hunterSpawnDelay.get() / 6));
                                 } else {
-                                    villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(60) + Functions.secondsToTicks(serverWorld.random.nextInt(20));
+                                    villageRelationShips.hunterSpawnDelay = Functions.minutesToTicks(ConfigHandler.COMMON.hunterSpawnDelay.get()) + Functions.minutesToTicks(serverWorld.random.nextInt(ConfigHandler.COMMON.hunterSpawnDelay.get() / 3));
                                 }
                             }
                         } else {
@@ -265,8 +266,8 @@ public class VillagerRelationsHandler {
         }
     }
 
-
-    private static int timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(ThreadLocalRandom.current().nextInt(30));
+    //change to minutes
+    private static int timeLeft = Functions.minutesToTicks(ConfigHandler.COMMON.princessSpawnDelay.get()) + Functions.minutesToTicks(ThreadLocalRandom.current().nextInt(30));
 
     @SubscribeEvent
     public static void spawnPrinceOrPrincess(TickEvent.WorldTickEvent serverTickEvent) {
@@ -303,7 +304,7 @@ public class VillagerRelationsHandler {
                                 serverWorld.addFreshEntity(knightHunter);
                             }
 
-                            timeLeft = Functions.minutesToTicks(2) + Functions.minutesToTicks(world.random.nextInt(30));
+                            timeLeft = Functions.minutesToTicks(ConfigHandler.COMMON.princessSpawnDelay.get()) + Functions.minutesToTicks(world.random.nextInt(ConfigHandler.COMMON.princessSpawnDelay.get() / 2));
                         }
                     }
                 } else {
