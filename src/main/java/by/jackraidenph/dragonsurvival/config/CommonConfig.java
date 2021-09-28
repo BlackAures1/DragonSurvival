@@ -5,6 +5,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
@@ -85,33 +86,35 @@ public class CommonConfig {
 		builder.pop().push("spawnBiomes");
 		predatorBiomesInclude = builder
 				.comment("The predator can only spawn in biomes with the included types.")
-				.defineList("include", Arrays.asList(END.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+				.defineList("include", Collections.singletonList(END.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
 		predatorBiomesExclude = builder
 				.comment("The predator cannot spawn in biomes with excluded types.")
 				.defineList("exclude", Arrays.asList(OVERWORLD.toString(), NETHER.toString()), o -> BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(String.valueOf(o))));
+		builder.pop();
 
 		builder.pop().push("dragonHunters");
+		builder.push("knight");
 		knightHealth = builder.comment("Armored Knight health").defineInRange("knightHealth", 40d, 10d, 80d);
 		knightDamage = builder.comment("Armored Knight base damage").defineInRange("knightDamage", 8d, 1d, 32d);
 		knightArmor = builder.comment("Armored Knight armor").defineInRange("knightArmor", 10d, 0d, 30d);
 		knightSpeed = builder.comment("Armored Knight speed").defineInRange("knightSpeed", 0.35d, 0.1d, 0.6d);
-
+		builder.pop().push("hound");
 		houndHealth = builder.comment("Knight Hound health").defineInRange("houndHealth", 10d, 8d, 40d);
 		houndDamage = builder.comment("Knight Hound damage").defineInRange("houndDamage", 2d, 1d, 10d);
 		houndSpeed = builder.comment("Knight Hound speed").defineInRange("houndSpeed", 0.35d, 0.1d, 0.6d);
 		houndDoesSlowdown = builder.comment("Does Knight Hound apply speed slowdown?").define("houndDoesSlowdown", true);
-
+		builder.pop().push("hunter");
 		hunterHealth = builder.comment("Hunter health").defineInRange("hunterHealth", 24d, 10d, 60d);
 		hunterDamage = builder.comment("Hunter damage").defineInRange("hunterDamage", 5d, 2d, 20d);
 		hunterSpeed = builder.comment("Hunter speed").defineInRange("hunterSpeed", 0.35d, 0.1d, 0.6d);
 		hunterArmor = builder.comment("Hunter armor").defineInRange("hunterArmor", 0d, 0d, 20d);
 		hunterHasBolas = builder.comment("Is hunter able to throw a bolas?").define("hunterThrowsBolas", true);
-
+		builder.pop().push("squire");
 		squireHealth = builder.comment("Squire health").defineInRange("squireHealth", 24d, 10d, 60d);
 		squireDamage = builder.comment("Squire damage").defineInRange("squireDamage", 2d, 2d, 20d);
 		squireSpeed = builder.comment("Squire speed").defineInRange("squireSpeed", 0.35d, 0.1d, 0.6d);
 		squireArmor = builder.comment("Squire armor").defineInRange("squireArmor", 0d, 0d, 20d);
-
+		builder.pop().push("prince");
 		princeHealth = builder.comment("Prince health").defineInRange("princeHealth", 20d, 10d, 60d);
 		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
 		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.5d, 0.2d, 0.6d);
