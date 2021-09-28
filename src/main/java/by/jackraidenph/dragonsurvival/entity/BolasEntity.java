@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.UUID;
 
 public class BolasEntity extends ProjectileItemEntity {
-    public static final UUID DISABLE_MOVEMENT = new UUID(5487623L, 8774419L);
+    public static final UUID DISABLE_MOVEMENT = UUID.fromString("eab67409-4834-43d8-bdf6-736dc96375f2");
 
     public BolasEntity(World world) {
         super(EntityTypesInit.BOLAS_ENTITY, world);
