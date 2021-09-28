@@ -54,6 +54,9 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue princeArmor;
 	public final ForgeConfigSpec.DoubleValue princeSpeed;
 
+	public final ForgeConfigSpec.IntValue hunterDespawnDelay;
+	public final ForgeConfigSpec.IntValue princessDespawnDelay;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -93,6 +96,8 @@ public class CommonConfig {
 		builder.pop();
 
 		builder.pop().push("dragonHunters");
+		princessDespawnDelay = builder.comment("Princess or prince may despawn after this many minutes").defineInRange("princessDespawnDelay", 15, 1, 120);
+		hunterDespawnDelay = builder.comment("Any dragon hunter may despawn after this many minutes").defineInRange("hunterDespawnDelay", 15, 1, 120);
 		builder.push("knight");
 		knightHealth = builder.comment("Armored Knight health").defineInRange("knightHealth", 40d, 10d, 80d);
 		knightDamage = builder.comment("Armored Knight base damage").defineInRange("knightDamage", 8d, 1d, 32d);

@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.ItemForItemTrade;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import com.mojang.serialization.Dynamic;
@@ -228,6 +229,6 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
 
     @Override
     public boolean removeWhenFarAway(double distance) {
-        return tickCount >= Functions.minutesToTicks(15);
+        return tickCount >= Functions.minutesToTicks(ConfigHandler.COMMON.princessDespawnDelay.get());
     }
 }

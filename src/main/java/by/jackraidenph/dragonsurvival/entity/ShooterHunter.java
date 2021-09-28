@@ -103,6 +103,6 @@ public class ShooterHunter extends PillagerEntity implements DragonHunter {
 
     @Override
     public boolean removeWhenFarAway(double distance) {
-        return tickCount >= Functions.minutesToTicks(15);
+        return tickCount >= Functions.minutesToTicks(ConfigHandler.COMMON.hunterDespawnDelay.get());
     }
 }
