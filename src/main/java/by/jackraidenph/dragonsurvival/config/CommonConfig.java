@@ -43,6 +43,11 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue hunterSpeed;
 	public final ForgeConfigSpec.BooleanValue hunterHasBolas;
 
+	public final ForgeConfigSpec.DoubleValue squireHealth;
+	public final ForgeConfigSpec.DoubleValue squireDamage;
+	public final ForgeConfigSpec.DoubleValue squireArmor;
+	public final ForgeConfigSpec.DoubleValue squireSpeed;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -96,6 +101,11 @@ public class CommonConfig {
 		hunterSpeed = builder.comment("Hunter speed").defineInRange("hunterSpeed", 0.35d, 0.1d, 0.6d);
 		hunterArmor = builder.comment("Hunter armor").defineInRange("hunterArmor", 0d, 0d, 20d);
 		hunterHasBolas = builder.comment("Is hunter able to throw a bolas?").define("hunterThrowsBolas", true);
+
+		squireHealth = builder.comment("Squire health").defineInRange("squireHealth", 24d, 10d, 60d);
+		squireDamage = builder.comment("Squire damage").defineInRange("squireDamage", 2d, 2d, 20d);
+		squireSpeed = builder.comment("Squire speed").defineInRange("squireSpeed", 0.35d, 0.1d, 0.6d);
+		squireArmor = builder.comment("Squire armor").defineInRange("squireArmor", 0d, 0d, 20d);
 
 	}
 }

@@ -114,7 +114,7 @@ public class EntityTypesInit {
         event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.houndSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.houndDamage.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.houndHealth.get()).build());
         event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.hunterSpeed.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.houndHealth.get()).add(Attributes.ARMOR, ConfigHandler.COMMON.hunterArmor.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.hunterDamage.get()).build());
 //        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
-        event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());
+        event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.squireSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.squireDamage.get()).add(Attributes.ARMOR, ConfigHandler.COMMON.squireArmor.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.squireHealth.get()).build());
         event.put(PRINCESS, VillagerEntity.createAttributes().build());
         event.put(PRINCESS_ON_HORSE, VillagerEntity.createAttributes().build());
 //        event.put(PRINCE, VillagerEntity.createAttributes().add(Attributes.ATTACK_DAMAGE, 1.0D).build());
