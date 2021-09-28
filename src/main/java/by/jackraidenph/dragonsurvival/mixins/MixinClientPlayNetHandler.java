@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-
+@Deprecated
 @Mixin({ClientPlayNetHandler.class})
 public abstract class MixinClientPlayNetHandler {
     @Inject(at = {@At("HEAD")}, method = {"(Lnet/minecraft/network/play/server/SSpawnObjectPacket;)V"})
