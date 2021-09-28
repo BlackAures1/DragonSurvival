@@ -28,8 +28,10 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.layers.ParrotVariantLayer;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -544,14 +546,29 @@ public class ClientEvents {
     		}
     	});
     }
-    
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void removeFireOverlay(RenderBlockOverlayEvent event) {
-    	ClientPlayerEntity player = Minecraft.getInstance().player;
-    	DragonStateProvider.getCap(player).ifPresent(cap -> {
-    		if (cap.isDragon() && cap.getType() == DragonType.CAVE && event.getOverlayType() == OverlayType.FIRE)
-    			event.setCanceled(true);
-    	});
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
+            if (cap.isDragon() && cap.getType() == DragonType.CAVE && event.getOverlayType() == OverlayType.FIRE)
+                event.setCanceled(true);
+        });
+    }
+
+    @SubscribeEvent
+    public static void renderTrap(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> postEvent) {
+        LivingEntity entity = postEvent.getEntity();
+        if (!(entity instanceof PlayerEntity)) {
+            if (entity.hasEffect(DragonEffects.TRAPPED)) {
+                MatrixStack matrixStack = postEvent.getMatrixStack();
+                matrixStack.pushPose();
+                matrixStack.scale(3, 3, 3);
+                matrixStack.translate(0, 0.5, 0);
+                Minecraft.getInstance().getItemRenderer().renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, postEvent.getLight(), LivingRenderer.getOverlayCoords(entity, 0), matrixStack, postEvent.getBuffers());
+                matrixStack.popPose();
+            }
+        }
     }
 }
