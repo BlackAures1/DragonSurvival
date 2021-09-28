@@ -270,7 +270,7 @@ public class VillagerRelationsHandler {
                 if (serverWorld.dimension() == World.OVERWORLD) {
                     Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
                         if (villageRelationShips.hunterSpawnDelay == 0) {
-                            BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 10.0F);
+                            BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 14.0F);
                             if (spawnPosition != null) {
                                 int levelOfEvil = computeLevelOfEvil(player);
                                 for (int i = 0; i < levelOfEvil; i++) {
