@@ -37,6 +37,12 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue houndSpeed;
 	public final ForgeConfigSpec.BooleanValue houndDoesSlowdown;
 
+	public final ForgeConfigSpec.DoubleValue hunterHealth;
+	public final ForgeConfigSpec.DoubleValue hunterDamage;
+	public final ForgeConfigSpec.DoubleValue hunterArmor;
+	public final ForgeConfigSpec.DoubleValue hunterSpeed;
+	public final ForgeConfigSpec.BooleanValue hunterHasBolas;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -84,5 +90,12 @@ public class CommonConfig {
 		houndDamage = builder.comment("Knight Hound damage").defineInRange("houndDamage", 2d, 1d, 10d);
 		houndSpeed = builder.comment("Knight Hound speed").defineInRange("houndSpeed", 0.35d, 0.1d, 0.6d);
 		houndDoesSlowdown = builder.comment("Does Knight Hound apply speed slowdown?").define("houndDoesSlowdown", true);
+
+		hunterHealth = builder.comment("Hunter health").defineInRange("hunterHealth", 24d, 10d, 60d);
+		hunterDamage = builder.comment("Hunter damage").defineInRange("hunterDamage", 5d, 2d, 20d);
+		hunterSpeed = builder.comment("Hunter speed").defineInRange("hunterSpeed", 0.35d, 0.1d, 0.6d);
+		hunterArmor = builder.comment("Hunter armor").defineInRange("hunterArmor", 0d, 0d, 20d);
+		hunterHasBolas = builder.comment("Is hunter able to throw a bolas?").define("hunterThrowsBolas", true);
+
 	}
 }

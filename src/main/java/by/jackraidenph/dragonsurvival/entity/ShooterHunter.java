@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
@@ -76,14 +77,16 @@ public class ShooterHunter extends PillagerEntity implements DragonHunter {
 
     public void tick() {
         super.tick();
-        LivingEntity target = getTarget();
-        if (target instanceof PlayerEntity && DragonStateProvider.isDragon(target))
-            if (this.bolasCooldown == 0) {
-                performBolasThrow(target);
-                this.bolasCooldown = Functions.secondsToTicks(30);
-            } else {
-                this.bolasCooldown--;
-            }
+        if (ConfigHandler.COMMON.hunterHasBolas.get()) {
+            LivingEntity target = getTarget();
+            if (target instanceof PlayerEntity && DragonStateProvider.isDragon(target))
+                if (this.bolasCooldown == 0) {
+                    performBolasThrow(target);
+                    this.bolasCooldown = Functions.secondsToTicks(30);
+                } else {
+                    this.bolasCooldown--;
+                }
+        }
     }
 
     public void performBolasThrow(LivingEntity target) {
