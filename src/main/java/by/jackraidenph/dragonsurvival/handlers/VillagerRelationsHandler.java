@@ -267,24 +267,26 @@ public class VillagerRelationsHandler {
             if (DragonStateProvider.isDragon(player) && player.hasEffect(DragonEffects.EVIL_DRAGON) && !player.level.isClientSide &&
                     !player.isCreative() && !player.isSpectator() && player.isAlive()) {
                 ServerWorld serverWorld = (ServerWorld) player.level;
-                Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
-                    if (villageRelationShips.hunterSpawnDelay == 0) {
-                        BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 10.0F);
-                        if (spawnPosition != null) {
-                            int levelOfEvil = computeLevelOfEvil(player);
-                            for (int i = 0; i < levelOfEvil; i++) {
-                                Functions.spawn(Objects.requireNonNull((dragonHunters.get(serverWorld.random.nextInt(dragonHunters.size()))).create(serverWorld)), spawnPosition, serverWorld);
+                if (serverWorld.dimension() == World.OVERWORLD) {
+                    Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
+                        if (villageRelationShips.hunterSpawnDelay == 0) {
+                            BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 10.0F);
+                            if (spawnPosition != null) {
+                                int levelOfEvil = computeLevelOfEvil(player);
+                                for (int i = 0; i < levelOfEvil; i++) {
+                                    Functions.spawn(Objects.requireNonNull((dragonHunters.get(serverWorld.random.nextInt(dragonHunters.size()))).create(serverWorld)), spawnPosition, serverWorld);
+                                }
+                                if (serverWorld.isCloseToVillage(player.blockPosition(), 3)) {
+                                    villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(20) + Functions.secondsToTicks(serverWorld.random.nextInt(10));
+                                } else {
+                                    villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(60) + Functions.secondsToTicks(serverWorld.random.nextInt(20));
+                                }
                             }
-                            if (serverWorld.isCloseToVillage(player.blockPosition(), 3)) {
-                                villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(20) + Functions.secondsToTicks(serverWorld.random.nextInt(10));
-                            } else {
-                                villageRelationShips.hunterSpawnDelay = Functions.secondsToTicks(60) + Functions.secondsToTicks(serverWorld.random.nextInt(20));
-                            }
+                        } else {
+                            villageRelationShips.hunterSpawnDelay--;
                         }
-                    } else {
-                        villageRelationShips.hunterSpawnDelay--;
-                    }
-                });
+                    });
+                }
             }
         }
     }
