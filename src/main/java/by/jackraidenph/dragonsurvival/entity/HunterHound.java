@@ -29,7 +29,6 @@ public class HunterHound extends WolfEntity implements DragonHunter {
     public static final DataParameter<Integer> variety = EntityDataManager.defineId(HunterHound.class, DataSerializers.INT);
 
     public HunterHound(EntityType<? extends WolfEntity> type, World world) {
-        /* 29 */
         super(type, world);
     }
 
@@ -64,7 +63,7 @@ public class HunterHound extends WolfEntity implements DragonHunter {
 
     public void addAdditionalSaveData(CompoundNBT compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.putInt("Variety", (Integer) this.entityData.get(variety));
+        compoundNBT.putInt("Variety", this.entityData.get(variety));
     }
 
     public void readAdditionalSaveData(CompoundNBT compoundNBT) {
