@@ -562,6 +562,8 @@ public class ClientEvents {
         LivingEntity entity = postEvent.getEntity();
         if (!(entity instanceof PlayerEntity)) {
             if (entity.hasEffect(DragonEffects.TRAPPED)) {
+                if (BOLAS == null)
+                    BOLAS = new ItemStack(ItemsInit.huntingNet);
                 MatrixStack matrixStack = postEvent.getMatrixStack();
                 matrixStack.pushPose();
                 matrixStack.scale(3, 3, 3);

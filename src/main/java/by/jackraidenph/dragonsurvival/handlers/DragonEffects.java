@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.FoodStats;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -73,20 +74,17 @@ public class DragonEffects {
             super(effectType, color);
         }
 
-
         public List<ItemStack> getCurativeItems() {
             return Collections.emptyList();
         }
-
 
         public boolean isDurationEffectTick(int timeLeft, int p_76397_2_) {
             return (timeLeft == 1);
         }
 
-
         public void applyEffectTick(LivingEntity livingEntity, int strength) {
-            if (livingEntity.hasEffect(DragonEffects.TRAPPED))
-                livingEntity.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(BolasEntity.DISABLE_MOVEMENT);
+            livingEntity.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(BolasEntity.DISABLE_MOVEMENT);
+            livingEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).removeModifier(BolasEntity.DISABLE_JUMP);
         }
     }
 

@@ -16,12 +16,14 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.UUID;
 
 public class BolasEntity extends ProjectileItemEntity {
     public static final UUID DISABLE_MOVEMENT = UUID.fromString("eab67409-4834-43d8-bdf6-736dc96375f2");
+    public static final UUID DISABLE_JUMP = UUID.fromString("d7c976cd-edba-46aa-9002-294d429d7741");
 
     public BolasEntity(World world) {
         super(EntityTypesInit.BOLAS_ENTITY, world);
@@ -48,11 +50,23 @@ public class BolasEntity extends ProjectileItemEntity {
             LivingEntity livingEntity = (LivingEntity) entity;
             ModifiableAttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier bolasTrap = new AttributeModifier(DISABLE_MOVEMENT, "Bolas trap", -attributeInstance.getValue(), AttributeModifier.Operation.ADDITION);
-
+            boolean addEffect = false;
             if (!attributeInstance.hasModifier(bolasTrap)) {
                 attributeInstance.addTransientModifier(bolasTrap);
-                livingEntity.addEffect(new EffectInstance(DragonEffects.TRAPPED, Functions.secondsToTicks(20)));
+                addEffect = true;
             }
+
+            ModifiableAttributeInstance jump = livingEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get());
+            if (jump != null) {
+                AttributeModifier disableJump = new AttributeModifier(DISABLE_JUMP, "Jump debuff", 3, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                if (!jump.hasModifier(disableJump)) {
+                    jump.addTransientModifier(disableJump);
+                    addEffect = true;
+                }
+            }
+            if (addEffect)
+                livingEntity.addEffect(new EffectInstance(DragonEffects.TRAPPED, Functions.secondsToTicks(20)));
+
         }
     }
 
