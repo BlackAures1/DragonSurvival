@@ -111,7 +111,7 @@ public class EntityTypesInit {
     public static void attributeCreationEvent(EntityAttributeCreationEvent event) {
         event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
         event.put(DRAGON, DragonEntity.createLivingAttributes().build());
-        event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 4.0D).build());
+        event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.houndSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.houndDamage.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.houndHealth.get()).build());
         event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).build());
 //        event.put(KNIGHT_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 8.0D).add(Attributes.ARMOR, 10.0D).add(Attributes.MAX_HEALTH, 40.0D).build());
         event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.ATTACK_DAMAGE, 2.0D).build());

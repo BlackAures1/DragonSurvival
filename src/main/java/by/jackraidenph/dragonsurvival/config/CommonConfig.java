@@ -32,6 +32,11 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue knightArmor;
 	public final ForgeConfigSpec.DoubleValue knightSpeed;
 
+	public final ForgeConfigSpec.DoubleValue houndHealth;
+	public final ForgeConfigSpec.DoubleValue houndDamage;
+	public final ForgeConfigSpec.DoubleValue houndSpeed;
+	public final ForgeConfigSpec.BooleanValue houndDoesSlowdown;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -75,5 +80,9 @@ public class CommonConfig {
 		knightArmor = builder.comment("Armored Knight armor").defineInRange("knightArmor", 10d, 0d, 30d);
 		knightSpeed = builder.comment("Armored Knight speed").defineInRange("knightSpeed", 0.35d, 0.1d, 0.6d);
 
+		houndHealth = builder.comment("Knight Hound health").defineInRange("houndHealth", 10d, 8d, 40d);
+		houndDamage = builder.comment("Knight Hound damage").defineInRange("houndDamage", 2d, 1d, 10d);
+		houndSpeed = builder.comment("Knight Hound speed").defineInRange("houndSpeed", 0.35d, 0.1d, 0.6d);
+		houndDoesSlowdown = builder.comment("Does Knight Hound apply speed slowdown?").define("houndDoesSlowdown", true);
 	}
 }

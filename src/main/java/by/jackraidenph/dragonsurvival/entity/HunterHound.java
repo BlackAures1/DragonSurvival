@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
@@ -72,12 +73,13 @@ public class HunterHound extends WolfEntity implements DragonHunter {
     }
 
     public boolean doHurtTarget(Entity entity) {
-        if (entity instanceof LivingEntity)
+        if (ConfigHandler.COMMON.houndDoesSlowdown.get() && entity instanceof LivingEntity) {
             if (((LivingEntity) entity).hasEffect(Effects.MOVEMENT_SLOWDOWN)) {
                 ((LivingEntity) entity).addEffect(new EffectInstance2(Effects.MOVEMENT_SLOWDOWN, 200, 1));
             } else {
                 ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200));
             }
+        }
         return super.doHurtTarget(entity);
     }
 
