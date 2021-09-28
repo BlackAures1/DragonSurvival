@@ -48,6 +48,11 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue squireArmor;
 	public final ForgeConfigSpec.DoubleValue squireSpeed;
 
+	public final ForgeConfigSpec.DoubleValue princeHealth;
+	public final ForgeConfigSpec.DoubleValue princeDamage;
+	public final ForgeConfigSpec.DoubleValue princeArmor;
+	public final ForgeConfigSpec.DoubleValue princeSpeed;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -107,5 +112,9 @@ public class CommonConfig {
 		squireSpeed = builder.comment("Squire speed").defineInRange("squireSpeed", 0.35d, 0.1d, 0.6d);
 		squireArmor = builder.comment("Squire armor").defineInRange("squireArmor", 0d, 0d, 20d);
 
+		princeHealth = builder.comment("Prince health").defineInRange("princeHealth", 20d, 10d, 60d);
+		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
+		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.5d, 0.2d, 0.6d);
+		princeArmor = builder.comment("Prince armor").defineInRange("princeArmor", 0d, 0d, 20d);
 	}
 }
