@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.entity;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
@@ -79,5 +80,10 @@ public class HunterHound extends WolfEntity implements DragonHunter {
                 ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200));
             }
         return super.doHurtTarget(entity);
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return tickCount >= Functions.minutesToTicks(15);
     }
 }

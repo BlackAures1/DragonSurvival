@@ -97,4 +97,9 @@ public class ShooterHunter extends PillagerEntity implements DragonHunter {
         playSound(SoundEvents.WITCH_THROW, 1.0F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(bolas);
     }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return tickCount >= Functions.minutesToTicks(15);
+    }
 }

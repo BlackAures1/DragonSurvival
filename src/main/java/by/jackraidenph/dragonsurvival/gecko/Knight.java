@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.entity.DragonHunter;
 import by.jackraidenph.dragonsurvival.entity.ShooterHunter;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
@@ -160,5 +161,10 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter,
     @Override
     public boolean isBlocking() {
         return random.nextBoolean();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return tickCount >= Functions.minutesToTicks(15);
     }
 }

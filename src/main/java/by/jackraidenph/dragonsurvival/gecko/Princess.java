@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.entity.ItemForItemTrade;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
@@ -223,5 +224,10 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
     @Override
     public AnimationFactory getFactory() {
         return animationFactory;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return tickCount >= Functions.minutesToTicks(15);
     }
 }
