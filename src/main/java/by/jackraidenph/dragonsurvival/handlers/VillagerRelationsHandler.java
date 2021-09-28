@@ -3,7 +3,6 @@ package by.jackraidenph.dragonsurvival.handlers;
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import by.jackraidenph.dragonsurvival.entity.KnightHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Prince;
@@ -124,7 +123,7 @@ public class VillagerRelationsHandler {
             } else if (livingEntity instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter) {
                 if (DragonStateProvider.isDragon(playerEntity)) {
                     applyEvilMarker(playerEntity);
-                } else if (livingEntity instanceof KnightHunter) {
+                } else if (livingEntity instanceof Knight) {
                     playerEntity.addEffect(new EffectInstance(Effects.BAD_OMEN, Functions.minutesToTicks(5)));
                 }
             }

@@ -15,7 +15,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
+@Deprecated
 public class Prince extends PrincessEntity {
     public Prince(EntityType<? extends VillagerEntity> entityType, World world) {
         super(entityType, world);

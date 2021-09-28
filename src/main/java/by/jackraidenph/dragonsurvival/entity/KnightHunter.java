@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.raid.Raid;
 
 import javax.annotation.Nullable;
-
+@Deprecated
 public class KnightHunter extends VindicatorEntity implements DragonHunter {
     public KnightHunter(EntityType<? extends VindicatorEntity> entityType, World world) {
         super(entityType, world);
