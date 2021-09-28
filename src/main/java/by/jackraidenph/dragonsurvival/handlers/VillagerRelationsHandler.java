@@ -59,9 +59,9 @@ public class VillagerRelationsHandler {
             if (livingEntity instanceof AbstractVillagerEntity) {
                 World world = killer.level;
 
-                if (livingEntity instanceof PrincessEntity) {
+                if (livingEntity instanceof Princess) {
                     Item flower = Items.AIR;
-                    DyeColor dyeColor = DyeColor.byId(((PrincessEntity) livingEntity).getColor());
+                    DyeColor dyeColor = DyeColor.byId(((Princess) livingEntity).getColor());
                     switch (dyeColor) {
                         case BLUE:
                             flower = Items.BLUE_ORCHID;
@@ -155,25 +155,25 @@ public class VillagerRelationsHandler {
                 } else {
                     int duration = effectInstance.getDuration();
                     if (duration <= Functions.minutesToTicks(10)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30), 1));
                     } else if (duration <= Functions.minutesToTicks(30)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(60), 2));
                     } else if (duration <= Functions.minutesToTicks(60)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(40)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(100), 3));
                     } else if (duration <= Functions.minutesToTicks(100)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(20)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(120), 4));
                     } else if (duration <= Functions.minutesToTicks(120)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(150), 5));
                     } else if (duration <= Functions.minutesToTicks(150)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(200), 6));
                     } else if (duration <= Functions.minutesToTicks(200)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(250), 7));
                     } else if (duration <= Functions.minutesToTicks(250)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(300), 8));
                     } else if (duration <= Functions.minutesToTicks(300)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(350), 9));
                     } else if (duration <= Functions.minutesToTicks(350)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(50)));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(400), 10));
                     }
                 }
             }

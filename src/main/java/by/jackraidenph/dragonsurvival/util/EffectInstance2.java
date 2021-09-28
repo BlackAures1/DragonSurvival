@@ -10,12 +10,12 @@ public class EffectInstance2 extends EffectInstance {
         super(effect);
     }
 
-    public EffectInstance2(Effect effect, int p_i46812_2_) {
-        super(effect, p_i46812_2_);
+    public EffectInstance2(Effect effect, int duration) {
+        super(effect, duration);
     }
 
-    public EffectInstance2(Effect p_i46813_1_, int p_i46813_2_, int p_i46813_3_) {
-        super(p_i46813_1_, p_i46813_2_, p_i46813_3_);
+    public EffectInstance2(Effect effect, int duration, int strength) {
+        super(effect, duration, strength);
     }
 
     public EffectInstance2(Effect effect, int duration, int strength, boolean ambient, boolean visible) {
