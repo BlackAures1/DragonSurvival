@@ -42,7 +42,7 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter,
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "everything", 0, event -> {
+        data.addAnimationController(new AnimationController<>(this, "everything", 3, event -> {
             AnimationBuilder animationBuilder = new AnimationBuilder();
 
             AnimationController animationController = event.getController();

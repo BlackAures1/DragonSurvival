@@ -180,7 +180,7 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "everything", 0, event -> {
+        data.addAnimationController(new AnimationController(this, "everything", 4, event -> {
             AnimationBuilder builder = new AnimationBuilder();
             double speed = getMovementSpeed(this);
             AnimationController controller = event.getController();
