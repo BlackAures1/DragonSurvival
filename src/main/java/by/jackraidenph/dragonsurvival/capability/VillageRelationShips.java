@@ -5,5 +5,6 @@ import by.jackraidenph.dragonsurvival.Functions;
 public class VillageRelationShips {
     public int crimeLevel;
     public int evilStatusDuration;
-    public int hunterSpawnDelay = Functions.minutesToTicks(10);
+    //change to minutes
+    public int hunterSpawnDelay = Functions.secondsToTicks(10);
 }

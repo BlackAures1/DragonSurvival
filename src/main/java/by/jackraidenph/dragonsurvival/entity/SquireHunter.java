@@ -38,7 +38,7 @@ public class SquireHunter extends VindicatorEntity implements DragonHunter {
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, true, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
         this.goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
-        this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers(new Class[0]));
+        this.targetSelector.addGoal(6, (new HurtByTargetGoal(this, ShooterHunter.class)).setAlertOthers());
         this.goalSelector.addGoal(8, new AlertExceptHunters<>(this, HunterHound.class, Knight.class, ShooterHunter.class));
     }
 

@@ -30,15 +30,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class Knight extends CreatureEntity implements IAnimatable, DragonHunter {
+public class Knight extends CreatureEntity implements IAnimatable, DragonHunter, CommonTraits {
     AnimationFactory animationFactory = new AnimationFactory(this);
 
     public Knight(EntityType<? extends CreatureEntity> p_i48576_1_, World world) {
         super(p_i48576_1_, world);
-    }
-
-    protected double getMovementSpeed() {
-        return Math.sqrt(Math.pow(getX() - xo, 2) + Math.pow(getZ() - zo, 2));
     }
 
     AnimationTimer animationTimer = new AnimationTimer();
@@ -49,7 +45,7 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter 
             AnimationBuilder animationBuilder = new AnimationBuilder();
 
             AnimationController animationController = event.getController();
-            double movement = getMovementSpeed();
+            double movement = getMovementSpeed(this);
             if (swingTime > 0) {
                 Animation animation = animationController.getCurrentAnimation();
                 if (animation != null) {
