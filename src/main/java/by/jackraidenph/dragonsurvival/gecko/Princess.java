@@ -238,7 +238,7 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
 
     @Override
     public void die(DamageSource damageSource) {
-        if (level instanceof ServerWorld) {
+        if (level instanceof ServerWorld && !(this instanceof Prince)) {
             PrincessEntity princess = EntityTypesInit.PRINCESS.create(level);
             princess.setPos(getX(), getY(), getZ());
             princess.finalizeSpawn((IServerWorld) level, level.getCurrentDifficultyAt(blockPosition()), SpawnReason.NATURAL, null, null);
