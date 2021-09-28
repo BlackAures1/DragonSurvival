@@ -7,6 +7,7 @@ import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.WolfEntity;
@@ -39,12 +40,13 @@ public class HunterHound extends WolfEntity implements DragonHunter {
         });
         this.targetSelector.availableGoals.removeIf(prioritizedGoal -> {
             Goal goal = prioritizedGoal.getGoal();
-            return (goal instanceof NearestAttackableTargetGoal || goal instanceof net.minecraft.entity.ai.goal.OwnerHurtByTargetGoal);
+            return (goal instanceof NearestAttackableTargetGoal || goal instanceof net.minecraft.entity.ai.goal.OwnerHurtByTargetGoal || goal instanceof HurtByTargetGoal);
         });
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, true, false, livingEntity ->
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, false, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
+        targetSelector.addGoal(4, new HurtByTargetGoal(this, ShooterHunter.class).setAlertOthers());
         this.goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
         this.goalSelector.addGoal(8, new AlertExceptHunters(this, Knight.class, ShooterHunter.class, SquireHunter.class));
     }
