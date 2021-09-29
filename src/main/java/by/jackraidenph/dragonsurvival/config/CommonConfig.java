@@ -59,6 +59,10 @@ public class CommonConfig {
 	public final ForgeConfigSpec.IntValue hunterSpawnDelay;
 	public final ForgeConfigSpec.IntValue princessSpawnDelay;
 
+	public final ForgeConfigSpec.BooleanValue spawnKnight;
+	public final ForgeConfigSpec.BooleanValue spawnSquire;
+	public final ForgeConfigSpec.BooleanValue spawnHunter;
+	public final ForgeConfigSpec.BooleanValue spawnHound;
 
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
@@ -103,6 +107,10 @@ public class CommonConfig {
 		hunterDespawnDelay = builder.comment("Any dragon hunter may despawn after this many minutes").defineInRange("hunterDespawnDelay", 15, 1, 120);
 		princessSpawnDelay = builder.comment("Minimum delay between prince or princess spawning, in minutes").defineInRange("princessSpawnDelay", 120, 10, 240);
 		hunterSpawnDelay = builder.comment("Minimum delay between hunter group spawning, in minutes").defineInRange("hunterGroupSpawnDelay", 60, 12, 240);
+		spawnKnight = builder.comment("Armored knight spawning enabled?").define("allowKnightSpawning", true);
+		spawnSquire = builder.comment("Squire spawning enabled?").define("allowSquireSpawning", true);
+		spawnHunter = builder.comment("Hunter spawning enabled?").define("allowHunterSpawning", true);
+		spawnHound = builder.comment("Knight hound spawning enabled?").define("allowHoundSpawning", true);
 		builder.push("knight");
 		knightHealth = builder.comment("Armored Knight health").defineInRange("knightHealth", 40d, 10d, 80d);
 		knightDamage = builder.comment("Armored Knight base damage").defineInRange("knightDamage", 8d, 1d, 32d);

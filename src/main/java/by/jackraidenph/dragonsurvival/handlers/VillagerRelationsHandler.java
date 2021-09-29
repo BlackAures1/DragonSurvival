@@ -237,7 +237,7 @@ public class VillagerRelationsHandler {
 
     @SubscribeEvent
     public static void spawnHunters(TickEvent.PlayerTickEvent playerTickEvent) {
-        if (playerTickEvent.phase == TickEvent.Phase.END) {
+        if (!dragonHunters.isEmpty() && playerTickEvent.phase == TickEvent.Phase.END) {
             PlayerEntity player = playerTickEvent.player;
             if (DragonStateProvider.isDragon(player) && player.hasEffect(DragonEffects.EVIL_DRAGON) && !player.level.isClientSide &&
                     !player.isCreative() && !player.isSpectator() && player.isAlive()) {

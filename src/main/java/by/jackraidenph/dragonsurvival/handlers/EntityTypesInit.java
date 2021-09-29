@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -66,6 +66,9 @@ public class EntityTypesInit {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, entityClass.getSimpleName()).replace("entity_", "");
     }
 
+    /**
+     * Because of generic quirks
+     */
     private static <T extends EntityType<?>> T cast(EntityType<?> entityType) {
         return (T) entityType;
     }
@@ -99,7 +102,15 @@ public class EntityTypesInit {
 //        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
         KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707);
         PRINCE_ON_HORSE = createEntity(by.jackraidenph.dragonsurvival.gecko.Prince.class, by.jackraidenph.dragonsurvival.gecko.Prince::new, 0.8f, 2.5f, 0xffdd1f, 0x2ab10);
-        VillagerRelationsHandler.dragonHunters = Arrays.asList(HUNTER_HOUND, SHOOTER_HUNTER, SQUIRE_HUNTER, KNIGHT);
+        VillagerRelationsHandler.dragonHunters = new ArrayList<>(4);
+        if (ConfigHandler.COMMON.spawnHound.get())
+            VillagerRelationsHandler.dragonHunters.add(cast(HUNTER_HOUND));
+        if (ConfigHandler.COMMON.spawnSquire.get())
+            VillagerRelationsHandler.dragonHunters.add(cast(SQUIRE_HUNTER));
+        if (ConfigHandler.COMMON.spawnHunter.get())
+            VillagerRelationsHandler.dragonHunters.add(cast(SHOOTER_HUNTER));
+        if (ConfigHandler.COMMON.spawnKnight.get())
+            VillagerRelationsHandler.dragonHunters.add(cast(KNIGHT));
         PRINCESS_ON_HORSE = createEntity(Princess.class, Princess::new, 0.8f, 2.5f, 0xffd61f, 0x2ab10);
         for (Item spawnEgg : spawnEggs) {
             Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
