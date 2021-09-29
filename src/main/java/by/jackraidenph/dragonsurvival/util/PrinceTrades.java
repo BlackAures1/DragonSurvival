@@ -22,16 +22,17 @@ public class PrinceTrades {
     private static final ItemForItemTrade PURPLE_FLOWER = new ItemForItemTrade(Items.LILAC, 10, Items.EXPERIENCE_BOTTLE, 1, 10, 4);
     private static final ItemForItemTrade WHITE_FLOWER = new ItemForItemTrade(Items.OXEYE_DAISY, 10, Items.EXPERIENCE_BOTTLE, 1, 10, 4);
 
-    private static final ItemFor2ItemsTrade ELDER_DRAGON_DUST = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 5, Items.EMERALD, 5, ItemsInit.elderDragonDust, 1, 12, 8);
+    private static final ItemForItemTrade ELDER_DRAGON_DUST = new ItemForItemTrade(Items.GOLD_INGOT, 5, ItemsInit.elderDragonDust, 1, 12, 8);
+    private static final ItemForItemTrade ELDER_DRAGON_DUST2 = new ItemForItemTrade(Items.EMERALD, 5, ItemsInit.elderDragonDust, 1, 12, 8);
 
     static {
         colorToTrades = Util.make(Maps.newHashMap(), integerInt2ObjectMapMap -> {
-            integerInt2ObjectMapMap.put(DyeColor.RED.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{RED_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
-            integerInt2ObjectMapMap.put(DyeColor.YELLOW.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{YELLOW_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
-            integerInt2ObjectMapMap.put(DyeColor.BLACK.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{BLACK_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
-            integerInt2ObjectMapMap.put(DyeColor.BLUE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{BLUE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
-            integerInt2ObjectMapMap.put(DyeColor.PURPLE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{PURPLE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
-            integerInt2ObjectMapMap.put(DyeColor.WHITE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{WHITE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST})));
+            integerInt2ObjectMapMap.put(DyeColor.RED.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{RED_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
+            integerInt2ObjectMapMap.put(DyeColor.YELLOW.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{YELLOW_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
+            integerInt2ObjectMapMap.put(DyeColor.BLACK.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{BLACK_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
+            integerInt2ObjectMapMap.put(DyeColor.BLUE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{BLUE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
+            integerInt2ObjectMapMap.put(DyeColor.PURPLE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{PURPLE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
+            integerInt2ObjectMapMap.put(DyeColor.WHITE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{GOLD_NUGGETS}, 2, new VillagerTrades.ITrade[]{WHITE_FLOWER}, 3, new VillagerTrades.ITrade[]{ELDER_DRAGON_DUST, ELDER_DRAGON_DUST2})));
         });
     }
 }
