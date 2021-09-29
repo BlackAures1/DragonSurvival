@@ -55,31 +55,31 @@ public class DragonAltarGUI extends Screen {
 
 
         if (mouseY > startY + 6 && mouseY < startY + 153) {
-            final boolean atTheTop = (mouseY > startY + 6 && mouseY < startY + 26) || (mouseY > startY + 133 && mouseY < startY + 153);
+            final boolean atTheTopOrBottom = (mouseY > startY + 6 && mouseY < startY + 26) || (mouseY > startY + 133 && mouseY < startY + 153);
             if (mouseX > startX + 5 && mouseX < startX + 55) {
                 blit(matrixStack, startX + 6, startY + 6, 217, 0, 49, 149, 512, 512);
-                if (atTheTop) {
+                if (atTheTopOrBottom) {
                     renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("cave_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.CAVE)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 57 && mouseX < startX + 107) {
                 blit(matrixStack, startX + 58, startY + 6, 266, 0, 49, 149, 512, 512);
-                if (atTheTop) {
+                if (atTheTopOrBottom) {
                     renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("forest_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.FOREST)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 109 && mouseX < startX + 159) {
                 blit(matrixStack, startX + 110, startY + 6, 315, 0, 49, 149, 512, 512);
-                if (atTheTop) {
+                if (atTheTopOrBottom) {
                     renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("sea_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.SEA)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 161 && mouseX < startX + 211) {
                 blit(matrixStack, startX + 161, startY + 6, 364, 0, 49, 149, 512, 512);
-                if (atTheTop) {
+                if (atTheTopOrBottom) {
                     renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("human", Collections.emptyList()), mouseX, mouseY, font);
                 }
             }
