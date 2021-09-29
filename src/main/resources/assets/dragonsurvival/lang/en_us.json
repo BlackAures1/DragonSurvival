@@ -137,5 +137,6 @@
   "ds.altar_dragon_info.sea_dragon.8": "--food--",
   "ds.altar_dragon_info.human.0": "■ §nHuman.§r",
   "ds.altar_dragon_info.human.1": "■ Homo sapiens.§r",
-  "ds.altar_dragon_info.human.2": "Traveler, builder and creator."
+  "ds.altar_dragon_info.human.2": "Traveler, builder and creator.",
+  "ds.hold_shift.for_food": "Hold 'Shift' for food info"
 }

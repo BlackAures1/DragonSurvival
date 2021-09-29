@@ -22,19 +22,17 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class DragonAltarGUI extends Screen {
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(DragonSurvivalMod.MODID, "textures/gui/dragon_altar_texture.png");
-    private final int xSize = 852 / 2;
-    private final int ySize = 500 / 2;
     private int guiLeft;
     private int guiTop;
 
     public DragonAltarGUI(ITextComponent title) {
         super(title);
-        AltarDragonInfo();
     }
 
     @Override
@@ -42,8 +40,6 @@ public class DragonAltarGUI extends Screen {
         return false;
     }
 
-    
-    
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.minecraft == null)
@@ -63,28 +59,28 @@ public class DragonAltarGUI extends Screen {
             if (mouseX > startX + 5 && mouseX < startX + 55) {
                 blit(matrixStack, startX + 6, startY + 6, 217, 0, 49, 149, 512, 512);
                 if (atTheTop) {
-                    renderWrappedToolTip(matrixStack, AltarDragonInfoCaveDragon, mouseX, mouseY, font);
+                    renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("cave_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.CAVE)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 57 && mouseX < startX + 107) {
                 blit(matrixStack, startX + 58, startY + 6, 266, 0, 49, 149, 512, 512);
                 if (atTheTop) {
-                    renderWrappedToolTip(matrixStack, AltarDragonInfoForestDragon, mouseX, mouseY, font);
+                    renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("forest_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.FOREST)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 109 && mouseX < startX + 159) {
                 blit(matrixStack, startX + 110, startY + 6, 315, 0, 49, 149, 512, 512);
                 if (atTheTop) {
-                    renderWrappedToolTip(matrixStack, AltarDragonInfoSeaDragon, mouseX, mouseY, font);
+                    renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("sea_dragon", DragonFoodHandler.getSafeEdibleFoods(DragonType.SEA)), mouseX, mouseY, font);
                 }
             }
 
             if (mouseX > startX + 161 && mouseX < startX + 211) {
                 blit(matrixStack, startX + 161, startY + 6, 364, 0, 49, 149, 512, 512);
                 if (atTheTop) {
-                    renderWrappedToolTip(matrixStack, AltarDragonInfoHuman, mouseX, mouseY, font);
+                    renderWrappedToolTip(matrixStack, altarDragonInfoLocalized("human", Collections.emptyList()), mouseX, mouseY, font);
                 }
             }
             //warning
@@ -100,8 +96,10 @@ public class DragonAltarGUI extends Screen {
     protected void init() {
         super.init();
 
-        this.guiLeft = (this.width - this.xSize / 2) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
+        int xSize = 852 / 2;
+        this.guiLeft = (this.width - xSize / 2) / 2;
+        int ySize = 500 / 2;
+        this.guiTop = (this.height - ySize) / 2;
 
         this.addButton(new ExtendedButton(this.guiLeft + 6, this.guiTop + 6, 49, 147, new StringTextComponent("CAVE"),
                 button -> {
@@ -153,58 +151,42 @@ public class DragonAltarGUI extends Screen {
             cap.setHasWings(false);
         });
     }
-    
-    
-    private ArrayList<ITextComponent> AltarDragonInfoCaveDragon;    
-    private ArrayList<ITextComponent> AltarDragonInfoForestDragon;    
-    private ArrayList<ITextComponent> AltarDragonInfoSeaDragon;    
-    private ArrayList<ITextComponent> AltarDragonInfoHuman;
-    private List<Item> AltarDragonInfoCaveDragonFood;
-    private List<Item> AltarDragonInfoForestDragonFood;
-    private List<Item> AltarDragonInfoSeaDragonFood;
-    private void AltarDragonInfo(){
 
-        if (AltarDragonInfoCaveDragonFood == null) {
-            AltarDragonInfoCaveDragonFood = DragonFoodHandler.getSafeEdibleFoods(DragonType.CAVE);
-            AltarDragonInfoForestDragonFood = DragonFoodHandler.getSafeEdibleFoods(DragonType.FOREST);
-            AltarDragonInfoSeaDragonFood = DragonFoodHandler.getSafeEdibleFoods(DragonType.SEA);
-        }
-        AltarDragonInfoCaveDragon = AltarDragonInfoLang("cave_dragon", AltarDragonInfoCaveDragonFood);
-        AltarDragonInfoForestDragon = AltarDragonInfoLang("forest_dragon", AltarDragonInfoForestDragonFood);
-        AltarDragonInfoSeaDragon = AltarDragonInfoLang("sea_dragon", AltarDragonInfoSeaDragonFood);
-        AltarDragonInfoHuman = AltarDragonInfoLang("human", new ArrayList<>());
-    }
-
-    private ArrayList<ITextComponent> AltarDragonInfoLang(String dragonType, List<Item> Food) {
-        ArrayList<ITextComponent> a = new ArrayList<ITextComponent>();
+    private ArrayList<ITextComponent> altarDragonInfoLocalized(String dragonType, List<Item> foodList) {
+        ArrayList<ITextComponent> info = new ArrayList<ITextComponent>();
         String b = "ds.altar_dragon_info." + dragonType + ".";
         int i = 0;
         if (new TranslationTextComponent(b + i).getString().equals(b + i)) {
-            a.add(ITextComponent.nullToEmpty("none"));
+            info.add(ITextComponent.nullToEmpty("none"));
         } else {
             boolean c = true;
             while (c) {
                 String d = new TranslationTextComponent(b + i).getString();
                 if (d.equals(b + i)) {
-    				c = false;
-    			}else {
-                    if (d.contains("--food--")) {
+                    c = false;
+                } else {
+                    if (d.contains("--food--") && hasShiftDown()) {
                         if (!Objects.equals(dragonType, "human")) {
                             String food = "";
-                            for (Item item : Food) {
+                            for (Item item : foodList) {
                                 food += (item.getName(new ItemStack(item)).getString() + "; ");
                             }
-                            a.add(ITextComponent.nullToEmpty(d.replaceAll("--food--", food)));
+                            info.add(ITextComponent.nullToEmpty(d.replaceAll("--food--", food)));
                         } else {
-                            a.add(ITextComponent.nullToEmpty(d));
+                            info.add(ITextComponent.nullToEmpty(d));
                         }
                     } else {
-                        a.add(ITextComponent.nullToEmpty(d));
-    				}
-    				i++;
-    			}
-    		}
-    	}
-    	return a;
+                        info.add(ITextComponent.nullToEmpty(d));
+                        if (d.equals("--food--")) {
+                            info.remove(new StringTextComponent("--food--"));
+                            info.add(new TranslationTextComponent("ds.hold_shift.for_food"));
+                        }
+                    }
+                    i++;
+
+                }
+            }
+        }
+        return info;
     }
 }
