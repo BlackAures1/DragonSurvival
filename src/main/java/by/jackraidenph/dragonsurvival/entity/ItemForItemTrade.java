@@ -8,7 +8,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.*;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.util.Util;
 
 import javax.annotation.Nullable;
@@ -35,8 +34,8 @@ public class ItemForItemTrade implements VillagerTrades.ITrade {
 
     @Nullable
     public MerchantOffer getOffer(Entity entity, Random random) {
-        ItemStack buyIng = new ItemStack((IItemProvider) this.item, this.cost);
-        return new MerchantOffer(buyIng, new ItemStack((IItemProvider) this.itemOut, this.count), this.maxUses, this.xpReward, 0.0F);
+        ItemStack buyIng = new ItemStack(this.item, this.cost);
+        return new MerchantOffer(buyIng, new ItemStack(this.itemOut, this.count), this.maxUses, this.xpReward, 0.0F);
     }
 
     public static ItemForItemTrade RED1 = new ItemForItemTrade(Items.POPPY, 5, Items.GOLD_INGOT, 1, 16, 2);
@@ -81,7 +80,7 @@ public class ItemForItemTrade implements VillagerTrades.ITrade {
         });
     }
 
-    private static Int2ObjectMap<VillagerTrades.ITrade[]> toIntMap(ImmutableMap<Integer, VillagerTrades.ITrade[]> p_221238_0_) {
+    public static Int2ObjectMap<VillagerTrades.ITrade[]> toIntMap(ImmutableMap<Integer, VillagerTrades.ITrade[]> p_221238_0_) {
         return new Int2ObjectOpenHashMap<>(p_221238_0_);
     }
 }

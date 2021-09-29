@@ -1,13 +1,18 @@
 package by.jackraidenph.dragonsurvival.gecko;
 
+import by.jackraidenph.dragonsurvival.util.PrinceTrades;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.world.DifficultyInstance;
@@ -124,6 +129,18 @@ public class Prince extends Princess {
     public void tick() {
         updateSwingTime();
         super.tick();
+    }
+
+    protected void updateTrades() {
+        VillagerData villagerdata = getVillagerData();
+        Int2ObjectMap<VillagerTrades.ITrade[]> int2objectmap = PrinceTrades.colorToTrades.get(getColor());
+        if (int2objectmap != null && !int2objectmap.isEmpty()) {
+            VillagerTrades.ITrade[] trades = int2objectmap.get(villagerdata.getLevel());
+            if (trades != null) {
+                MerchantOffers merchantoffers = getOffers();
+                addOffersFromItemListings(merchantoffers, trades, 2);
+            }
+        }
     }
 }
 
