@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.entity;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
+import by.jackraidenph.dragonsurvival.util.PrincessTrades;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -137,7 +138,7 @@ public class PrincessEntity extends VillagerEntity {
 
     protected void updateTrades() {
         VillagerData villagerdata = getVillagerData();
-        Int2ObjectMap<VillagerTrades.ITrade[]> int2objectmap = ItemForItemTrade.colorToTrades.get(getColor());
+        Int2ObjectMap<VillagerTrades.ITrade[]> int2objectmap = PrincessTrades.colorToTrades.get(getColor());
         if (int2objectmap != null && !int2objectmap.isEmpty()) {
             VillagerTrades.ITrade[] trades = int2objectmap.get(villagerdata.getLevel());
             if (trades != null) {

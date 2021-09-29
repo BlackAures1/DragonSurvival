@@ -1,6 +1,5 @@
 package by.jackraidenph.dragonsurvival.util;
 
-import by.jackraidenph.dragonsurvival.entity.ItemForItemTrade;
 import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;

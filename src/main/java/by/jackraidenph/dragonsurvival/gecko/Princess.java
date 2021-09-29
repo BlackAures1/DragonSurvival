@@ -3,11 +3,11 @@ package by.jackraidenph.dragonsurvival.gecko;
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
-import by.jackraidenph.dragonsurvival.entity.ItemForItemTrade;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
+import by.jackraidenph.dragonsurvival.util.PrincessTrades;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.EntityType;
@@ -154,7 +154,7 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
 
     protected void updateTrades() {
         VillagerData villagerdata = getVillagerData();
-        Int2ObjectMap<VillagerTrades.ITrade[]> int2objectmap = ItemForItemTrade.colorToTrades.get(getColor());
+        Int2ObjectMap<VillagerTrades.ITrade[]> int2objectmap = PrincessTrades.colorToTrades.get(getColor());
         if (int2objectmap != null && !int2objectmap.isEmpty()) {
             VillagerTrades.ITrade[] trades = int2objectmap.get(villagerdata.getLevel());
             if (trades != null) {
