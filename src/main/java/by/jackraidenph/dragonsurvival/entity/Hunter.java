@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
@@ -37,5 +38,9 @@ public abstract class Hunter extends CreatureEntity implements DragonHunter {
     @Override
     public boolean removeWhenFarAway(double distance) {
         return tickCount >= Functions.minutesToTicks(ConfigHandler.COMMON.hunterDespawnDelay.get());
+    }
+
+    public AbstractIllagerEntity.ArmPose getArmPose() {
+        return AbstractIllagerEntity.ArmPose.ATTACKING;
     }
 }

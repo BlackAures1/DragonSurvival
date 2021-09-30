@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.models;
 
+import by.jackraidenph.dragonsurvival.entity.Hunter;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.model.IHasArm;
@@ -14,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel<T> implements IHasArm, IHasHead {
+public class HunterModel<T extends Hunter> extends SegmentedModel<T> implements IHasArm, IHasHead {
     private final ModelRenderer head;
     private final ModelRenderer hat;
     private final ModelRenderer body;
@@ -68,7 +69,7 @@ public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel
         return ImmutableList.of(this.head, this.body, this.leftLeg, this.rightLeg, this.arms, this.rightArm, this.leftArm);
     }
 
-    public void setupAnim(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+    public void setupAnim(T entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
         this.head.yRot = p_225597_5_ * ((float) Math.PI / 180F);
         this.head.xRot = p_225597_6_ * ((float) Math.PI / 180F);
         this.arms.y = 3.0F;
@@ -102,12 +103,12 @@ public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel
             this.rightLeg.zRot = 0.0F;
         }
 
-        AbstractIllagerEntity.ArmPose abstractillagerentity$armpose = p_225597_1_.getArmPose();
-        if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.ATTACKING) {
-            if (p_225597_1_.getMainHandItem().isEmpty()) {
+        AbstractIllagerEntity.ArmPose armPose = entity.getArmPose();
+        if (armPose == AbstractIllagerEntity.ArmPose.ATTACKING) {
+            if (entity.getMainHandItem().isEmpty()) {
                 ModelHelper.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, p_225597_4_);
             }
-        } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
+        } else if (armPose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
             this.rightArm.z = 0.0F;
             this.rightArm.x = -5.0F;
             this.leftArm.z = 0.0F;
@@ -118,17 +119,17 @@ public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel
             this.leftArm.zRot = -2.3561945F;
             this.rightArm.yRot = 0.0F;
             this.leftArm.yRot = 0.0F;
-        } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.BOW_AND_ARROW) {
+        } else if (armPose == AbstractIllagerEntity.ArmPose.BOW_AND_ARROW) {
             this.rightArm.yRot = -0.1F + this.head.yRot;
             this.rightArm.xRot = (-(float) Math.PI / 2F) + this.head.xRot;
             this.leftArm.xRot = -0.9424779F + this.head.xRot;
             this.leftArm.yRot = this.head.yRot - 0.4F;
             this.leftArm.zRot = ((float) Math.PI / 2F);
-        } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSBOW_HOLD) {
+        } else if (armPose == AbstractIllagerEntity.ArmPose.CROSSBOW_HOLD) {
             ModelHelper.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
-        } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSBOW_CHARGE) {
-            ModelHelper.animateCrossbowCharge(this.rightArm, this.leftArm, p_225597_1_, true);
-        } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
+        } else if (armPose == AbstractIllagerEntity.ArmPose.CROSSBOW_CHARGE) {
+            ModelHelper.animateCrossbowCharge(this.rightArm, this.leftArm, entity, true);
+        } else if (armPose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
             this.rightArm.z = 0.0F;
             this.rightArm.x = -5.0F;
             this.rightArm.xRot = MathHelper.cos(p_225597_4_ * 0.6662F) * 0.05F;
@@ -141,7 +142,7 @@ public class HunterModel<T extends AbstractIllagerEntity> extends SegmentedModel
             this.leftArm.yRot = 0.0F;
         }
 
-        boolean flag = abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSED;
+        boolean flag = armPose == AbstractIllagerEntity.ArmPose.CROSSED;
         this.arms.visible = flag;
         this.leftArm.visible = !flag;
         this.rightArm.visible = !flag;
