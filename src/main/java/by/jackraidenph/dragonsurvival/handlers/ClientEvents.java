@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
+import by.jackraidenph.dragonsurvival.entity.BolasEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
@@ -32,6 +33,8 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -560,8 +563,9 @@ public class ClientEvents {
     @SubscribeEvent
     public static void renderTrap(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> postEvent) {
         LivingEntity entity = postEvent.getEntity();
-        if (!(entity instanceof PlayerEntity)) {
-            if (entity.hasEffect(DragonEffects.TRAPPED)) {
+        if (!(entity instanceof PlayerEntity) && entity.getAttributes().hasAttribute(Attributes.MOVEMENT_SPEED)) {
+            AttributeModifier bolasTrap = new AttributeModifier(BolasEntity.DISABLE_MOVEMENT, "Bolas trap", -entity.getAttribute(Attributes.MOVEMENT_SPEED).getValue(), AttributeModifier.Operation.ADDITION);
+            if (entity.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(bolasTrap)) {
                 if (BOLAS == null)
                     BOLAS = new ItemStack(ItemsInit.huntingNet);
                 MatrixStack matrixStack = postEvent.getMatrixStack();
