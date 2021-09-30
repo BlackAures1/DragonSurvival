@@ -13,7 +13,7 @@ public class SquireHunterRenderer extends MobRenderer<Squire, HunterModel<Squire
     private static final ResourceLocation TEXTURE = new ResourceLocation("dragonsurvival", "textures/dragon_squire.png");
 
     public SquireHunterRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager, new HunterModel(0.0F, 0.0F, 64, 64), 0.5F);
+        super(rendererManager, new HunterModel<>(0.0F, 0.0F, 64, 64), 0.5F);
         addLayer(new HeadLayer<>(this));
         addLayer(new HeldItemLayer<>(this));
     }
@@ -22,7 +22,7 @@ public class SquireHunterRenderer extends MobRenderer<Squire, HunterModel<Squire
         return TEXTURE;
     }
 
-    protected void scale(Squire knightHunter, MatrixStack matrixStack, float p_225620_3_) {
+    protected void scale(Squire squire, MatrixStack matrixStack, float p_225620_3_) {
         float f = 0.9375F;
         matrixStack.scale(f, f, f);
     }

@@ -42,7 +42,7 @@ public class EntityTypesInit {
     public static EntityType<HunterHound> HUNTER_HOUND;
     public static EntityType<ShooterHunter> SHOOTER_HUNTER;
     //    public static EntityType<KnightHunter> KNIGHT_HUNTER;
-    public static EntityType<SquireHunter> SQUIRE_HUNTER;
+    public static EntityType<Squire> SQUIRE_HUNTER;
     public static EntityType<PrincessEntity> PRINCESS;
 //    public static EntityType<Prince> PRINCE;
     public static EntityType<Knight> KNIGHT;
@@ -97,7 +97,7 @@ public class EntityTypesInit {
         HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192);
         SHOOTER_HUNTER = createEntity(ShooterHunter.class, ShooterHunter::new, 0.6F, 1.95F, 12486764, 2690565);
 //        KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
-        SQUIRE_HUNTER = createEntity(SquireHunter.class, SquireHunter::new, 0.6F, 1.95F, 12486764, 5318420);
+        SQUIRE_HUNTER = createEntity(Squire.class, Squire::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
 //        PRINCE = createEntity(Prince.class, Prince::new, 0.6F, 1.9F, 4924973, 174864);
         KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707);
