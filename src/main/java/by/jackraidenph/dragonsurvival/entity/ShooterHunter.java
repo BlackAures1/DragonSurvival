@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.raid.Raid;
 
 import javax.annotation.Nullable;
-
+@Deprecated
 public class ShooterHunter extends PillagerEntity implements DragonHunter {
     protected int bolasCooldown = Functions.secondsToTicks(30);
 
