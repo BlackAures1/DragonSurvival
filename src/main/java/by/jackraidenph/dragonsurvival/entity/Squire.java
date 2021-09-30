@@ -20,7 +20,7 @@ public class Squire extends Hunter {
     protected void registerGoals() {
         super.registerGoals();
         goalSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
-        goalSelector.addGoal(8, new AlertExceptHunters<>(this, HunterHound.class, Knight.class));
+        goalSelector.addGoal(8, new AlertExceptHunters<>(this, HunterHound.class, Knight.class, Shooter.class));
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
