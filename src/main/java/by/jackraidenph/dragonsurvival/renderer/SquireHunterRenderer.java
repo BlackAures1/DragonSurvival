@@ -19,7 +19,6 @@ public class SquireHunterRenderer extends MobRenderer<SquireHunter, HunterModel<
     }
 
     public ResourceLocation getTextureLocation(SquireHunter squireHunter) {
-        /* 24 */
         return TEXTURE;
     }
 
