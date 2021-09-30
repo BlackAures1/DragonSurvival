@@ -40,7 +40,7 @@ public class EntityTypesInit {
     public static EntityType<DragonEntity> DRAGON;
     public static EntityType<BolasEntity> BOLAS_ENTITY;
     public static EntityType<HunterHound> HUNTER_HOUND;
-    public static EntityType<ShooterHunter> SHOOTER_HUNTER;
+    public static EntityType<Shooter> SHOOTER_HUNTER;
     //    public static EntityType<KnightHunter> KNIGHT_HUNTER;
     public static EntityType<Squire> SQUIRE_HUNTER;
     public static EntityType<PrincessEntity> PRINCESS;
@@ -95,7 +95,7 @@ public class EntityTypesInit {
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
         MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
         HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192);
-        SHOOTER_HUNTER = createEntity(ShooterHunter.class, ShooterHunter::new, 0.6F, 1.95F, 12486764, 2690565);
+        SHOOTER_HUNTER = createEntity(Shooter.class, Shooter::new, 0.6F, 1.95F, 12486764, 2690565);
 //        KNIGHT_HUNTER = createEntity(KnightHunter.class, KnightHunter::new, 0.6F, 1.95F, 12486764, 8552567);
         SQUIRE_HUNTER = createEntity(Squire.class, Squire::new, 0.6F, 1.95F, 12486764, 5318420);
         PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);

@@ -14,13 +14,16 @@ import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 public class Shooter extends Hunter implements ICrossbowUser {
@@ -112,5 +115,9 @@ public class Shooter extends Hunter implements ICrossbowUser {
         } else {
             return this.isAggressive() ? AbstractIllagerEntity.ArmPose.ATTACKING : AbstractIllagerEntity.ArmPose.NEUTRAL;
         }
+    }
+
+    protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.CROSSBOW));
     }
 }
