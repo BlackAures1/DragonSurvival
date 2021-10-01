@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
-import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
 import by.jackraidenph.dragonsurvival.util.PrincessTrades;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -194,8 +193,8 @@ public class PrincessEntity extends VillagerEntity {
         }
         if (!level.isClientSide)
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), new ItemStack(flower)));
-        if (damageSource.getEntity() instanceof PlayerEntity) {
-            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
-        }
+//        if (damageSource.getEntity() instanceof PlayerEntity) {
+//            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
+//        }
     }
 }

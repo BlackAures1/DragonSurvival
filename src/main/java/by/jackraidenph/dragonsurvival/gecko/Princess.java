@@ -6,7 +6,6 @@ import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
 import by.jackraidenph.dragonsurvival.util.PrincessTrades;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -247,8 +246,8 @@ public class Princess extends VillagerEntity implements IAnimatable, CommonTrait
             level.addFreshEntity(princess);
         }
         super.die(damageSource);
-        if (damageSource.getEntity() instanceof PlayerEntity) {
-            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
-        }
+//        if (damageSource.getEntity() instanceof PlayerEntity) {
+//            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
+//        }
     }
 }

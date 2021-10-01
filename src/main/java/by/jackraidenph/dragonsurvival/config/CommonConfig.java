@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.config;
 
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -65,6 +66,15 @@ public class CommonConfig {
 	public final ForgeConfigSpec.BooleanValue spawnHunter;
 	public final ForgeConfigSpec.BooleanValue spawnHound;
 
+	public final ForgeConfigSpec.IntValue xpGain;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> evilDragonStatusGivers;
+
+//	public final ForgeConfigSpec.BooleanValue applyStatusForKnight;
+//	public final ForgeConfigSpec.BooleanValue applyStatusForSquire;
+//	public final ForgeConfigSpec.BooleanValue applyStatusForHound;
+//	public final ForgeConfigSpec.BooleanValue applyStatusForHunter;
+//	public final ForgeConfigSpec.BooleanValue applyStatusForVillagers;
+
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -112,6 +122,8 @@ public class CommonConfig {
 		spawnSquire = builder.comment("Squire spawning enabled?").define("allowSquireSpawning", true);
 		spawnHunter = builder.comment("Hunter spawning enabled?").define("allowHunterSpawning", true);
 		spawnHound = builder.comment("Knight hound spawning enabled?").define("allowHoundSpawning", true);
+		xpGain = builder.comment("How many experience points are gained for killing a villager").defineInRange("villagerKillxp", 100, 10, 1000);
+		evilDragonStatusGivers = builder.comment("Entities which give 'Evil dragon' status on death").defineList("evilDragonStatusGivers", () -> Arrays.asList("minecraft:villager", "dragonsurvival:hunter_hound", "dragonsurvival:knight", "dragonsurvival:shooter", "dragonsurvival:squire", "dragonsurvival:prince", "dragonsurvival:princess", "dragonsurvival:princess_entity"), o -> EntityType.byString((String) o).isPresent());
 		builder.push("knight");
 		knightHealth = builder.comment("Armored Knight health").defineInRange("knightHealth", 40d, 10d, 80d);
 		knightDamage = builder.comment("Armored Knight base damage").defineInRange("knightDamage", 8d, 1d, 32d);
@@ -139,6 +151,12 @@ public class CommonConfig {
 		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
 		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.5d, 0.2d, 0.6d);
 		princeArmor = builder.comment("Prince armor").defineInRange("princeArmor", 0d, 0d, 20d);
+//		builder.pop().push("evilDragonStatus").comment("Controls application of 'Evil dragon status' for killing mobs");
+//		applyStatusForHound=builder.comment("Apply for killing Hound").define("forVillagers",true);
+//		applyStatusForKnight=builder.comment("Apply for killing Knight").define("forKnights",true);
+//		applyStatusForSquire=builder.comment("Apply for killing Squire").define("forSquire",true);
+//		applyStatusForHunter=builder.comment("Apply for killing Hunter").define("forHunter",true);
+//		applyStatusForVillagers=builder.comment("Apply for killing villagers and princes/princesses").define("forVillagers",true);
 		builder.pop();
 	}
 }

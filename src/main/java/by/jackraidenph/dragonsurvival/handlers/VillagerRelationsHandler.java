@@ -58,7 +58,7 @@ public class VillagerRelationsHandler {
             PlayerEntity playerEntity = (PlayerEntity) killer;
             if (livingEntity instanceof AbstractVillagerEntity) {
                 World world = killer.level;
-
+                livingEntity.getType().getRegistryName();
                 if (!(livingEntity instanceof Princess)) {
 
                     if (DragonStateProvider.isDragon(killer)) {
@@ -78,18 +78,18 @@ public class VillagerRelationsHandler {
                             }
 
                             if (!world.isClientSide) {
-                                playerEntity.giveExperiencePoints(level * 100);
-                                applyEvilMarker(playerEntity);
+                                playerEntity.giveExperiencePoints(level * ConfigHandler.COMMON.xpGain.get());
+//                                applyEvilMarker(playerEntity);
                             }
                         } else if (villagerEntity instanceof WanderingTraderEntity) {
                             WanderingTraderEntity wanderingTrader = (WanderingTraderEntity) villagerEntity;
                             if (!world.isClientSide) {
-                                playerEntity.giveExperiencePoints(200);
+                                playerEntity.giveExperiencePoints(2 * ConfigHandler.COMMON.xpGain.get());
                                 if (world.random.nextInt(100) < 30) {
                                     ItemStack itemStack = wanderingTrader.getOffers().stream().filter((merchantOffer -> merchantOffer.getResult().getItem() != Items.EMERALD)).collect(Collectors.toList()).get(wanderingTrader.getRandom().nextInt(wanderingTrader.getOffers().size())).getResult();
                                     world.addFreshEntity(new ItemEntity(world, wanderingTrader.getX(), wanderingTrader.getY(), wanderingTrader.getZ(), itemStack));
                                 }
-                                applyEvilMarker(playerEntity);
+//                                applyEvilMarker(playerEntity);
                             }
                         }
                     }
@@ -97,10 +97,14 @@ public class VillagerRelationsHandler {
                 }
             } else if (livingEntity instanceof by.jackraidenph.dragonsurvival.entity.DragonHunter) {
                 if (DragonStateProvider.isDragon(playerEntity)) {
-                    applyEvilMarker(playerEntity);
+//                    applyEvilMarker(playerEntity);
                 } else if (livingEntity instanceof Knight) {
                     playerEntity.addEffect(new EffectInstance(Effects.BAD_OMEN, Functions.minutesToTicks(5)));
                 }
+            }
+            String typeName = livingEntity.getType().getRegistryName().toString();
+            if (DragonStateProvider.isDragon(playerEntity) && ConfigHandler.COMMON.evilDragonStatusGivers.get().contains(typeName)) {
+                applyEvilMarker(playerEntity);
             }
         }
     }
