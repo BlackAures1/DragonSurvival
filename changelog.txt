@@ -1,3 +1,11 @@
+1.16.5-0.0.41:
+added Armored Knight, Hunter, Knight Hound, Prince, Princesses (with config options);
+added Broken Helmets (trophy);
+hitting or killing villagers (and princesses) gives "Evil dragon" effect to the dragon player;
+"Evil dragon" triggers spawning of dragon hunters;
+Princess or Prince can spawn around random player in overworld, and they have special trades;
+added an option to toggle wing status notification and an option to toggle first person model;
+
 1.16.5-0.0.40:
 added a config option to enable fall damage from dragon flight;
 fall damage from dragon flight is now calculated based on speed and his size, and is non-lethal;

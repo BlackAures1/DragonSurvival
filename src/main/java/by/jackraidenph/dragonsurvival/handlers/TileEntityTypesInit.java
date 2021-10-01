@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.NestPlaceHolder;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
+import by.jackraidenph.dragonsurvival.tiles.HelmetEntity;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
@@ -18,6 +19,7 @@ public class TileEntityTypesInit {
     public static TileEntityType<NestEntity> nestEntityTile;
     public static TileEntityType<NestPlaceHolder> nestPlaceHolder;
     public static TileEntityType<AltarEntity> altarEntityTile;
+    public static TileEntityType<HelmetEntity> helmetTile;
 
     @SubscribeEvent
     public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -31,16 +33,19 @@ public class TileEntityTypesInit {
                 PREDATOR_STAR_TILE_ENTITY_TYPE.setRegistryName(DragonSurvivalMod.MODID, "predator_star_te"));
         nestPlaceHolder = TileEntityType.Builder.of(() -> new NestPlaceHolder(nestPlaceHolder), BlockInit.mediumSeaNest, BlockInit.mediumForestNest, BlockInit.mediumCaveNest, BlockInit.bigForestNest, BlockInit.bigSeaNest, BlockInit.bigCaveNest).build(null);
         registry.register(nestPlaceHolder.setRegistryName("nest_placeholder"));
-        altarEntityTile = TileEntityType.Builder.of(() -> new AltarEntity(altarEntityTile), 
-        		BlockInit.dragon_altar_stone, 
-        		BlockInit.dragon_altar_sandstone, 
-        		BlockInit.dragon_altar_red_sandstone, 
-        		BlockInit.dragon_altar_purpur_block, 
-        		BlockInit.dragon_altar_oak_log, 
-        		BlockInit.dragon_altar_nether_bricks, 
-        		BlockInit.dragon_altar_mossy_cobblestone, 
-        		BlockInit.dragon_altar_blackstone
-        		).build(null);
+        altarEntityTile = TileEntityType.Builder.of(() -> new AltarEntity(altarEntityTile),
+                BlockInit.dragon_altar_stone,
+                BlockInit.dragon_altar_sandstone,
+                BlockInit.dragon_altar_red_sandstone,
+                BlockInit.dragon_altar_purpur_block,
+                BlockInit.dragon_altar_oak_log,
+                BlockInit.dragon_altar_nether_bricks,
+                BlockInit.dragon_altar_mossy_cobblestone,
+                BlockInit.dragon_altar_blackstone
+        ).build(null);
         registry.register(altarEntityTile.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar"));
+        helmetTile = TileEntityType.Builder.of(() -> new HelmetEntity(), BlockInit.helmet1, BlockInit.helmet2, BlockInit.helmet3).build(null);
+        helmetTile.setRegistryName(DragonSurvivalMod.MODID, "knight_helmet");
+        registry.register(helmetTile);
     }
 }

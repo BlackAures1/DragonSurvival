@@ -1,12 +1,12 @@
 {
     "parent": "block/orientable",
     "textures": {
-    "particle": "dragonsurvival:block/dragon_altar_sandstone_top",
-    "east": "dragonsurvival:block/dragon_altar_sandstone_east",
-    "west": "dragonsurvival:block/dragon_altar_sandstone_west",
-    "north": "dragonsurvival:block/dragon_altar_sandstone_north",
-    "south": "dragonsurvival:block/dragon_altar_sandstone_south",
-    "up": "dragonsurvival:block/dragon_altar_sandstone_top",
-    "down": "dragonsurvival:block/dragon_altar_sandstone_top"
+        "particle": "dragonsurvival:block/dragon_altar_sandstone_top",
+        "east": "dragonsurvival:block/dragon_altar_sandstone_east",
+        "west": "dragonsurvival:block/dragon_altar_sandstone_west",
+        "north": "dragonsurvival:block/dragon_altar_sandstone_north",
+        "south": "dragonsurvival:block/dragon_altar_sandstone_south",
+        "up": "dragonsurvival:block/dragon_altar_sandstone_top",
+        "down": "dragonsurvival:block/dragon_altar_sandstone_top"
     }
 }

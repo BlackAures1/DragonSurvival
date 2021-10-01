@@ -72,12 +72,12 @@ public class ClientFlightHandler {
                             double lookY = lookVec.y;
                             double yaw = Math.toRadians(playerEntity.yHeadRot + 90);
                             if (lookY < 0) {
-                                ax += Math.cos(yaw) / 2000;
-                                az += Math.sin(yaw) / 2000;
+                                ax += Math.cos(yaw) / 500;
+                                az += Math.sin(yaw) / 500;
                             } else {
                                 ax *= 0.99;
                                 az *= 0.99;
-                                ay = lookVec.y / 16;
+                                ay = lookVec.y / 8;
                             }
                             double speedLimit = ConfigHandler.SERVER.maxFlightSpeed.get();
                             ax = MathHelper.clamp(ax, -0.2 * speedLimit, 0.2 * speedLimit);
@@ -89,9 +89,6 @@ public class ClientFlightHandler {
                             }
                             motion = motion.multiply(0.99F, 0.98F, 0.99F);
                             playerEntity.setDeltaMovement(motion);
-                            ax = motion.x;
-                            ay = motion.y;
-                            az = motion.z;
                             //end
                         } else {
                             ax = 0;
@@ -112,10 +109,12 @@ public class ClientFlightHandler {
                 if (dragonStateHandler.hasWings()) {
                     wingsEnabled = !wingsEnabled;
                     DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
-                    if (wingsEnabled)
-                        player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
-                    else
-                        player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                    if (ConfigHandler.CLIENT.notifyWingStatus.get()) {
+                        if (wingsEnabled)
+                            player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
+                        else
+                            player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                    }
                 } else {
                     player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"), player.getUUID());
                 }

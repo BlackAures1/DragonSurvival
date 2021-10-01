@@ -1,21 +1,21 @@
 {
-	"required": true,
-	"package": "by.jackraidenph.dragonsurvival.mixins",
-	"compatibilityLevel": "JAVA_8",
-	"refmap": "dragonsurvival.refmap.json",
-	"mixins": [
-        "MixinPlayerEntity",
-        "MixinLivingEntity",
-        "MixinItem",
-		"MixinEntity"
-	],
-	"client": [
-		"AccessorEntityRenderer",
-		"AccessorEntityRendererManager",
-		"AccessorLivingRenderer",
-		"MixinProjectileHelper",
-		"MixinFirstPersonRenderer",
-		"MixinInventoryScreen"
-	],
-	"minVersion": "0.8"
+  "required": true,
+  "package": "by.jackraidenph.dragonsurvival.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "dragonsurvival.refmap.json",
+  "mixins": [
+    "MixinEntity",
+    "MixinItem",
+    "MixinLivingEntity",
+    "MixinPlayerEntity"
+  ],
+  "client": [
+    "AccessorEntityRenderer",
+    "AccessorEntityRendererManager",
+    "AccessorLivingRenderer",
+    "MixinFirstPersonRenderer",
+    "MixinInventoryScreen",
+    "MixinProjectileHelper"
+  ],
+  "minVersion": "0.8"
 }

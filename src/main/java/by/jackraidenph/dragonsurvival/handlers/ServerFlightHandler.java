@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
+import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import net.minecraft.entity.LivingEntity;
@@ -32,8 +33,9 @@ public class ServerFlightHandler {
             } else if (ConfigHandler.SERVER.enableFlightFallDamage.get()) {
                 DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
                     if (dragonStateHandler.isDragon() && DragonSizeHandler.wingsStatusServer.containsKey(livingEntity.getId()) && DragonSizeHandler.wingsStatusServer.get(livingEntity.getId())) {
-                        if (flightSpeed > 0.03) {
-                            double damage = flightSpeed * 70 * dragonStateHandler.getSize() / 20;
+                        if (flightSpeed > 0.08) {
+                            DragonSurvivalMod.LOGGER.info(flightSpeed);
+                            double damage = flightSpeed * 35 * dragonStateHandler.getSize() / 20;
                             damage = MathHelper.clamp(damage, 0, livingEntity.getHealth() - 1);
                             event.setAmount((float) (damage));
                         } else {

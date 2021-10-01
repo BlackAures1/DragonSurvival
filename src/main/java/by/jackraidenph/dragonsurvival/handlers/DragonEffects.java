@@ -1,20 +1,44 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.entity.BolasEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.FoodStats;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.Collections;
+import java.util.List;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DragonEffects {
 
-    public static class Stress extends Effect {
+
+    public static Effect STRESS;
+    public static Effect TRAPPED;
+    public static Effect EVIL_DRAGON;
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public static void registerEffects(RegistryEvent.Register<Effect> effectRegister) {
+        IForgeRegistry<Effect> forgeRegistry = effectRegister.getRegistry();
+        STRESS = new Stress(0xf4a2e8).setRegistryName(DragonSurvivalMod.MODID, "stress");
+        forgeRegistry.register(STRESS);
+        TRAPPED = new Trapped(EffectType.NEUTRAL, 0xdddddd).setRegistryName(DragonSurvivalMod.MODID, "trapped");
+        forgeRegistry.register(TRAPPED);
+        EVIL_DRAGON = new EvilDragon(EffectType.NEUTRAL).setRegistryName(DragonSurvivalMod.MODID, "evil_dragon");
+        forgeRegistry.register(EVIL_DRAGON);
+    }
+
+    private static class Stress extends Effect {
 
         protected Stress(int color) {
             super(EffectType.HARMFUL, color);
@@ -26,10 +50,10 @@ public class DragonEffects {
                 PlayerEntity playerEntity = (PlayerEntity) livingEntity;
                 FoodStats food = playerEntity.getFoodData();
                 if (food.getSaturationLevel() > 0) {
-                	int oldFood = food.getFoodLevel();
-                	food.eat(1, -0.5F * food.getSaturationLevel());
-                	if (oldFood != 20)
-                		food.setFoodLevel(food.getFoodLevel() - 1);
+                    int oldFood = food.getFoodLevel();
+                    food.eat(1, -0.5F * food.getSaturationLevel());
+                    if (oldFood != 20)
+                        food.setFoodLevel(food.getFoodLevel() - 1);
                 }
                 playerEntity.causeFoodExhaustion(1.0f);
             }
@@ -37,21 +61,43 @@ public class DragonEffects {
 
         @Override
         public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
-        	int i = 20 >> p_76397_2_;
+            int i = 20 >> p_76397_2_;
             if (i > 0)
-               return p_76397_1_ % i == 0;
+                return p_76397_1_ % i == 0;
             else
-               return true;
+                return true;
         }
     }
 
-    public static Effect STRESS;
+    private static class Trapped extends Effect {
+        protected Trapped(EffectType effectType, int color) {
+            super(effectType, color);
+        }
 
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public static void registerEffects(RegistryEvent.Register<Effect> effectRegister) {
-        STRESS = new Stress(0xf4a2e8).setRegistryName(DragonSurvivalMod.MODID, "stress");
-        IForgeRegistry<Effect> forgeRegistry = effectRegister.getRegistry();
-        forgeRegistry.register(STRESS);
+        public List<ItemStack> getCurativeItems() {
+            return Collections.emptyList();
+        }
+
+        public boolean isDurationEffectTick(int timeLeft, int p_76397_2_) {
+            return (timeLeft == 1);
+        }
+
+        public void applyEffectTick(LivingEntity livingEntity, int strength) {
+            livingEntity.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(BolasEntity.DISABLE_MOVEMENT);
+            livingEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).removeModifier(BolasEntity.DISABLE_JUMP);
+        }
+    }
+
+    private static class EvilDragon extends Effect {
+
+        protected EvilDragon(EffectType p_i50391_1_) {
+            super(p_i50391_1_, 13700608);
+        }
+
+        @Override
+        public List<ItemStack> getCurativeItems() {
+            return Collections.emptyList();
+        }
+
     }
 }

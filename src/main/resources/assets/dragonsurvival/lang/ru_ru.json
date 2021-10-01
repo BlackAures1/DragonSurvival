@@ -2,7 +2,21 @@
   "itemGroup.dragon.survival.blocks": "Dragons Survival",
 
   "entity.dragonsurvival.magical_predator_entity": "Магический хищник",
+  "entity.dragonsurvival.hunter_hound": "Рыцарская гончая охотников на драконов",
+  "entity.dragonsurvival.knight": "Рыцарь-охотник на драконов",
+  "entity.dragonsurvival.shooter": "Охотник на драконов",
+  "entity.dragonsurvival.squire": "Воин-охотник на драконов",
+  "entity.dragonsurvival.prince": "Принц",
+  "entity.dragonsurvival.princess_entity": "Принцесса",
+  "entity.dragonsurvival.princess": "Принцесса на коне",
 
+  "item.dragonsurvival.hunter_hound_spawn_egg": "Яйцо призыва рыцаря",
+  "item.dragonsurvival.shooter_spawn_egg": "Яйцо призыва охотника на драконов",
+  "item.dragonsurvival.knight_spawn_egg": "Яйцо призыва рыцаря",
+  "item.dragonsurvival.squire_spawn_egg": "Яйцо призыва воина-охотника",
+  "item.dragonsurvival.princess_entity_spawn_egg": "Яйцо призыва принцессы",
+  "item.dragonsurvival.princess_spawn_egg": "Яйцо призыва принцессы на коне",
+  "item.dragonsurvival.prince_spawn_egg": "Яйцо призыва принца",
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "Яйцо призыва магического хищника",
   "item.dragonsurvival.star_bone": "Звёздная кость",
   "item.dragonsurvival.heart_element": "Элемент сердца",
@@ -15,7 +29,6 @@
   "item.dragonsurvival.charred_seafood": "Обугленный морепродукт",
   "item.dragonsurvival.charred_mushroom": "Обугленный гриб",
 
-  
   "block.dragonsurvival.predator_star": "Звезда хищника",
   "block.dragonsurvival.dragon_altar": "Алтарь Драконов",
   "block.dragonsurvival.cave_nest_small": "Маленькое пещерное гнездо",
@@ -27,7 +40,11 @@
   "block.dragonsurvival.big_forest_nest": "Большое лесное гнездо",
   "block.dragonsurvival.big_sea_nest": "Большое морское гнездо",
   "block.dragonsurvival.big_cave_nest": "Большое пещерное гнездо",
-  
+  "block.dragonsurvival.broken_helmet": "Сломанный шлем",
+  "block.dragonsurvival.broken_knight_helmet_1": "Серый рыцарский шлем",
+  "block.dragonsurvival.broken_knight_helmet_2": "Золотой рыцарский шлем",
+  "block.dragonsurvival.broken_knight_helmet_3": "Чёрный рыцарский шлем",
+
   "block.dragonsurvival.dragon_altar_stone": "Алтарь драконов из камня",
   "block.dragonsurvival.dragon_altar_sandstone": "Алтарь драконов из песчаника",
   "block.dragonsurvival.dragon_altar_red_sandstone": "Алтарь драконов из красного песчаника",

@@ -485,6 +485,7 @@ public class ServerConfig {
 						"item:oddwatermobs:raw_mudskipper:6:7",
 						"item:oddwatermobs:raw_coelacanth:9:10",
 						"item:oddwatermobs:raw_anglerfish:6:6",
+						"item:oddwatermobs:deep_sea_fish:4:2",
 						"item:oddwatermobs:crab_leg:5:6",
 						"item:simplefarming:raw_calamari:5:6",
 						"item:unnamedanimalmod:elephantnose_fish:5:6",
@@ -550,8 +551,8 @@ public class ServerConfig {
 						"item:resourcefulbees:gold_honeycomb:5:5",
 						"item:resourcefulbees:rainbow_honey_bottle",
 						"item:wyrmroost:jewelled_apple",
-						"item:freshwarriors:fresh_soup:15:10",
 						"item:aquaculture:sushi:6:5",
+						"item:freshwarriors:fresh_soup:15:10",
 						"item:freshwarriors:beluga_caviar:10:3",
 						"item:freshwarriors:piranha:4:1",
 						"item:freshwarriors:tilapia:4:1",
@@ -581,7 +582,21 @@ public class ServerConfig {
 						"item:untamedwilds:egg_arowana_silver:6:4",
 						"item:untamedwilds:egg_arowana_jardini:6:4",
 						"item:untamedwilds:egg_arowana_green:6:4",
-						"item:mysticalworld:raw_squid:6:5"
+						"item:mysticalworld:raw_squid:6:5",
+						"item:aquafina:fresh_soup:15:10",
+						"item:aquafina:beluga_caviar:10:3",
+						"item:aquafina:raw_piranha:4:1",
+						"item:aquafina:raw_tilapia:4:1",
+						"item:aquafina:stuffed_piranha:4:1",
+						"item:aquafina:tigerfish:5:5",
+						"item:aquafina:toe_biter_leg:3:3",
+						"item:aquafina:raw_angelfish:4:1",
+						"item:aquafina:raw_football_fish:4:1",
+						"item:aquafina:raw_foxface_fish:4:1",
+						"item:aquafina:raw_royal_gramma:4:1",
+						"item:aquafina:raw_starfish:4:1",
+						"item:aquafina:spider_crab_leg:4:1",
+						"item:aquafina:raw_stingray_slice:4:1"
 						), (food) -> isValidFoodConfig(food));
 	}
 	
