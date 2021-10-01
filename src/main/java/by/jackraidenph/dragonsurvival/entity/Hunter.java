@@ -48,7 +48,7 @@ public abstract class Hunter extends CreatureEntity implements DragonHunter {
     }
 
     public AbstractIllagerEntity.ArmPose getArmPose() {
-        return AbstractIllagerEntity.ArmPose.ATTACKING;
+        return isAggressive() ? AbstractIllagerEntity.ArmPose.ATTACKING : AbstractIllagerEntity.ArmPose.NEUTRAL;
     }
 
     @Nullable

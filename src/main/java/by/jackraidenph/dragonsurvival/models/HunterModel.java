@@ -107,7 +107,8 @@ public class HunterModel<T extends Hunter> extends SegmentedModel<T> implements 
         if (armPose == AbstractIllagerEntity.ArmPose.ATTACKING) {
             if (entity.getMainHandItem().isEmpty()) {
                 ModelHelper.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, p_225597_4_);
-            }
+            } else
+                ModelHelper.swingWeaponDown(this.rightArm, this.leftArm, entity, attackTime, p_225597_4_);
         } else if (armPose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
             this.rightArm.z = 0.0F;
             this.rightArm.x = -5.0F;
