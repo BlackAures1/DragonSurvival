@@ -12,33 +12,33 @@ import net.minecraft.util.Util;
 import java.util.Map;
 
 public class PrincessTrades {
-    public static ItemForItemTrade RED1 = new ItemForItemTrade(Items.POPPY, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade RED2 = new ItemForItemTrade(Items.RED_TULIP, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade RED3 = new ItemForItemTrade(Items.ROSE_BUSH, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade RED1 = new ItemForItemTrade(Items.POPPY, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade RED2 = new ItemForItemTrade(Items.RED_TULIP, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade RED3 = new ItemForItemTrade(Items.ROSE_BUSH, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade YELLOW1 = new ItemForItemTrade(Items.DANDELION, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade YELLOW2 = new ItemForItemTrade(Items.SUNFLOWER, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade YELLOW3 = new ItemForItemTrade(Items.ORANGE_TULIP, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade YELLOW1 = new ItemForItemTrade(Items.DANDELION, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade YELLOW2 = new ItemForItemTrade(Items.SUNFLOWER, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade YELLOW3 = new ItemForItemTrade(Items.ORANGE_TULIP, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade PURPLE1 = new ItemForItemTrade(Items.LILAC, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade PURPLE2 = new ItemForItemTrade(Items.ALLIUM, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade PURPLE3 = new ItemForItemTrade(Items.PEONY, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade PURPLE1 = new ItemForItemTrade(Items.LILAC, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade PURPLE2 = new ItemForItemTrade(Items.ALLIUM, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade PURPLE3 = new ItemForItemTrade(Items.PEONY, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade BLUE1 = new ItemForItemTrade(Items.BLUE_ORCHID, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade BLUE2 = new ItemForItemTrade(Items.CORNFLOWER, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade BLUE1 = new ItemForItemTrade(Items.BLUE_ORCHID, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade BLUE2 = new ItemForItemTrade(Items.CORNFLOWER, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade WHITE1 = new ItemForItemTrade(Items.OXEYE_DAISY, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade WHITE2 = new ItemForItemTrade(Items.AZURE_BLUET, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade WHITE3 = new ItemForItemTrade(Items.LILY_OF_THE_VALLEY, 5, Items.GOLD_INGOT, 1, 16, 2);
-    public static ItemForItemTrade WHITE4 = new ItemForItemTrade(Items.WHITE_TULIP, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade WHITE1 = new ItemForItemTrade(Items.OXEYE_DAISY, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade WHITE2 = new ItemForItemTrade(Items.AZURE_BLUET, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade WHITE3 = new ItemForItemTrade(Items.LILY_OF_THE_VALLEY, 5, Items.GOLD_NUGGET, 1, 16, 6);
+    public static ItemForItemTrade WHITE4 = new ItemForItemTrade(Items.WHITE_TULIP, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 5, Items.GOLD_INGOT, 1, 16, 2);
+    public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 5, Items.GOLD_NUGGET, 5, 10, 15);
 
     public static ItemForItemTrade XP_BOTTLE1 = new ItemForItemTrade(Items.GOLD_INGOT, 2, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
     public static ItemForItemTrade XP_BOTTLE2 = new ItemForItemTrade(ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
 
-    public static ItemForItemTrade ELDER_DRAGON_DUST = new ItemForItemTrade(Items.GOLD_INGOT, 5, ItemsInit.elderDragonDust, 1, 12, 8);
-    public static ItemForItemTrade ELDER_DRAGON_DUST2 = new ItemForItemTrade(Items.DIAMOND, 1, ItemsInit.elderDragonDust, 1, 12, 8);
+    public static ItemForItemTrade ELDER_DRAGON_DUST = new ItemForItemTrade(Items.GOLD_INGOT, 5, ItemsInit.elderDragonDust, 1, 12, 15);
+    public static ItemForItemTrade ELDER_DRAGON_DUST2 = new ItemForItemTrade(Items.DIAMOND, 1, ItemsInit.elderDragonDust, 1, 12, 15);
 
     public static Map<Integer, Int2ObjectMap<VillagerTrades.ITrade[]>> colorToTrades;
 

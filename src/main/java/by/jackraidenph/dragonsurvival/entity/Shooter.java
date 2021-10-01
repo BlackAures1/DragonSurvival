@@ -72,7 +72,7 @@ public class Shooter extends Hunter implements ICrossbowUser {
             if (target instanceof PlayerEntity && DragonStateProvider.isDragon(target))
                 if (this.bolasCooldown == 0) {
                     performBolasThrow(target);
-                    this.bolasCooldown = Functions.secondsToTicks(30);
+                    this.bolasCooldown = Functions.secondsToTicks(15);
                 } else {
                     this.bolasCooldown--;
                 }
