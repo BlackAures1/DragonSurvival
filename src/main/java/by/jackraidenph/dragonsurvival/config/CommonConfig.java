@@ -69,12 +69,6 @@ public class CommonConfig {
 	public final ForgeConfigSpec.IntValue xpGain;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> evilDragonStatusGivers;
 
-//	public final ForgeConfigSpec.BooleanValue applyStatusForKnight;
-//	public final ForgeConfigSpec.BooleanValue applyStatusForSquire;
-//	public final ForgeConfigSpec.BooleanValue applyStatusForHound;
-//	public final ForgeConfigSpec.BooleanValue applyStatusForHunter;
-//	public final ForgeConfigSpec.BooleanValue applyStatusForVillagers;
-
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
 
@@ -151,12 +145,6 @@ public class CommonConfig {
 		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
 		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.5d, 0.2d, 0.6d);
 		princeArmor = builder.comment("Prince armor").defineInRange("princeArmor", 0d, 0d, 20d);
-//		builder.pop().push("evilDragonStatus").comment("Controls application of 'Evil dragon status' for killing mobs");
-//		applyStatusForHound=builder.comment("Apply for killing Hound").define("forVillagers",true);
-//		applyStatusForKnight=builder.comment("Apply for killing Knight").define("forKnights",true);
-//		applyStatusForSquire=builder.comment("Apply for killing Squire").define("forSquire",true);
-//		applyStatusForHunter=builder.comment("Apply for killing Hunter").define("forHunter",true);
-//		applyStatusForVillagers=builder.comment("Apply for killing villagers and princes/princesses").define("forVillagers",true);
 		builder.pop();
 	}
 }
