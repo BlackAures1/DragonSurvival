@@ -34,22 +34,20 @@ public class PrincessTrades {
 
     public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 5, Items.GOLD_NUGGET, 5, 10, 15);
 
-    public static ItemForItemTrade XP_BOTTLE1 = new ItemForItemTrade(Items.GOLD_INGOT, 2, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
-    public static ItemForItemTrade XP_BOTTLE2 = new ItemForItemTrade(ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
+    public static ItemFor2ItemsTrade XP_BOTTLE1 = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 2, ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
 
-    public static ItemForItemTrade ELDER_DRAGON_DUST = new ItemForItemTrade(Items.GOLD_INGOT, 5, ItemsInit.elderDragonDust, 1, 12, 15);
-    public static ItemForItemTrade ELDER_DRAGON_DUST2 = new ItemForItemTrade(Items.DIAMOND, 1, ItemsInit.elderDragonDust, 1, 12, 15);
+    public static ItemFor2ItemsTrade ELDER_DRAGON_DUST = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 5, Items.DIAMOND, 1, ItemsInit.elderDragonDust, 1, 12, 15);
 
     public static Map<Integer, Int2ObjectMap<VillagerTrades.ITrade[]>> colorToTrades;
 
     static {
         PrincessTrades.colorToTrades = Util.make(Maps.newHashMap(), objectObjectHashMap -> {
-            objectObjectHashMap.put(DyeColor.RED.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.RED1, PrincessTrades.RED2, PrincessTrades.RED3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
-            objectObjectHashMap.put(DyeColor.YELLOW.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.YELLOW1, PrincessTrades.YELLOW2, PrincessTrades.YELLOW3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
-            objectObjectHashMap.put(DyeColor.PURPLE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.PURPLE1, PrincessTrades.PURPLE2, PrincessTrades.PURPLE3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
-            objectObjectHashMap.put(DyeColor.BLUE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.BLUE1, PrincessTrades.BLUE2}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
-            objectObjectHashMap.put(DyeColor.WHITE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.WHITE1, PrincessTrades.WHITE2, PrincessTrades.WHITE3, PrincessTrades.WHITE4}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
-            objectObjectHashMap.put(DyeColor.BLACK.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.BLACK}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1, PrincessTrades.XP_BOTTLE2}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST, PrincessTrades.ELDER_DRAGON_DUST2})));
+            objectObjectHashMap.put(DyeColor.RED.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.RED1, PrincessTrades.RED2, PrincessTrades.RED3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
+            objectObjectHashMap.put(DyeColor.YELLOW.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.YELLOW1, PrincessTrades.YELLOW2, PrincessTrades.YELLOW3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
+            objectObjectHashMap.put(DyeColor.PURPLE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.PURPLE1, PrincessTrades.PURPLE2, PrincessTrades.PURPLE3}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
+            objectObjectHashMap.put(DyeColor.BLUE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.BLUE1, PrincessTrades.BLUE2}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
+            objectObjectHashMap.put(DyeColor.WHITE.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.WHITE1, PrincessTrades.WHITE2, PrincessTrades.WHITE3, PrincessTrades.WHITE4}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
+            objectObjectHashMap.put(DyeColor.BLACK.getId(), ItemForItemTrade.toIntMap(ImmutableMap.of(1, new VillagerTrades.ITrade[]{PrincessTrades.BLACK}, 2, new VillagerTrades.ITrade[]{PrincessTrades.XP_BOTTLE1}, 3, new VillagerTrades.ITrade[]{PrincessTrades.ELDER_DRAGON_DUST})));
         });
     }
 }
