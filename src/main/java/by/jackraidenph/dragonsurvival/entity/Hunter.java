@@ -33,13 +33,13 @@ public abstract class Hunter extends CreatureEntity implements DragonHunter {
     protected void registerGoals() {
         goalSelector.addGoal(0, new SwimGoal(this));
         goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1));
-        goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
+        goalSelector.addGoal(8, new FollowMobGoal<>(Knight.class, this, 15));
 
         targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, true, true, livingEntity ->
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, true, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
-        targetSelector.addGoal(7, new HurtByTargetGoal(this).setAlertOthers());
+        targetSelector.addGoal(7, new HurtByTargetGoal(this, Shooter.class).setAlertOthers());
     }
 
     @Override
