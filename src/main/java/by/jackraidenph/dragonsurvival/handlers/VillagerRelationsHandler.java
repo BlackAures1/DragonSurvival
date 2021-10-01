@@ -9,6 +9,8 @@ import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Prince;
 import by.jackraidenph.dragonsurvival.gecko.Princess;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;

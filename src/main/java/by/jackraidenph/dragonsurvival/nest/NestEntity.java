@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
-import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
+import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.BaseBlockEntity;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import io.netty.buffer.Unpooled;

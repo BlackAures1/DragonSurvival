@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.renderer;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
+import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.tiles.HelmetEntity;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;

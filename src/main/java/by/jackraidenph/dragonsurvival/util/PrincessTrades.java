@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.util;
 
-import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
+import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

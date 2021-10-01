@@ -1,4 +1,4 @@
-package by.jackraidenph.dragonsurvival.handlers;
+package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.containers.CraftingContainer;

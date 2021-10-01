@@ -2,7 +2,7 @@ package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.RideHorse;
-import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.util.GroundNavigator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;

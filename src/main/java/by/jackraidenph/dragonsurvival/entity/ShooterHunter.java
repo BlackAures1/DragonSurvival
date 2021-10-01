@@ -6,7 +6,7 @@ import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.goals.AlertExceptHunters;
 import by.jackraidenph.dragonsurvival.goals.FollowMobGoal;
-import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;

@@ -1,12 +1,9 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
 
-import javax.annotation.Nullable;
-
-
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.gui.DragonAltarGUI;
-import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
+import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,6 +28,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 
 

@@ -1,4 +1,4 @@
-package by.jackraidenph.dragonsurvival.handlers;
+package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Princess;
+import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;

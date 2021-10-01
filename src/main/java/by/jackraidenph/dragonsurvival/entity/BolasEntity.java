@@ -1,9 +1,9 @@
 package by.jackraidenph.dragonsurvival.entity;
 
 import by.jackraidenph.dragonsurvival.Functions;
-import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
-import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;

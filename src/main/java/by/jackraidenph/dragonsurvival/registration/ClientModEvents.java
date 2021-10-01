@@ -1,8 +1,9 @@
-package by.jackraidenph.dragonsurvival.handlers;
+package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.gecko.*;
 import by.jackraidenph.dragonsurvival.gui.DragonScreen;
+import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.HelmetEntityRenderer;
 import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;

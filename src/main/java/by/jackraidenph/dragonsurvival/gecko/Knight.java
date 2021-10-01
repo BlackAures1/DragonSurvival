@@ -4,7 +4,7 @@ import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.DragonHunter;
 import by.jackraidenph.dragonsurvival.entity.Shooter;
-import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;

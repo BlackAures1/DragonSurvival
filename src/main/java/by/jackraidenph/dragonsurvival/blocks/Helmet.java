@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
-import by.jackraidenph.dragonsurvival.handlers.TileEntityTypesInit;
+import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
