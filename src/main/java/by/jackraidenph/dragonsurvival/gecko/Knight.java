@@ -137,13 +137,15 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter,
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficultyInstance) {
         setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-        ItemStack itemStack = new ItemStack(Items.SHIELD);
-        ListNBT listNBT = Functions.createRandomPattern(new BannerPattern.Builder(), 16);
-        CompoundNBT compoundNBT = new CompoundNBT();
-        compoundNBT.putInt("Base", DyeColor.values()[this.random.nextInt((DyeColor.values()).length)].getId());
-        compoundNBT.put("Patterns", listNBT);
-        itemStack.addTagElement("BlockEntityTag", compoundNBT);
-        setItemInHand(Hand.OFF_HAND, itemStack);
+        if (random.nextDouble() < ConfigHandler.COMMON.knightShieldChance.get()) {
+            ItemStack itemStack = new ItemStack(Items.SHIELD);
+            ListNBT listNBT = Functions.createRandomPattern(new BannerPattern.Builder(), 16);
+            CompoundNBT compoundNBT = new CompoundNBT();
+            compoundNBT.putInt("Base", DyeColor.values()[this.random.nextInt((DyeColor.values()).length)].getId());
+            compoundNBT.put("Patterns", listNBT);
+            itemStack.addTagElement("BlockEntityTag", compoundNBT);
+            setItemInHand(Hand.OFF_HAND, itemStack);
+        }
     }
 
     @Nullable

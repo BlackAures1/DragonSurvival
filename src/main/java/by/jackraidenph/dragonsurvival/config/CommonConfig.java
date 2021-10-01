@@ -32,6 +32,7 @@ public class CommonConfig {
 	public final ForgeConfigSpec.DoubleValue knightDamage;
 	public final ForgeConfigSpec.DoubleValue knightArmor;
 	public final ForgeConfigSpec.DoubleValue knightSpeed;
+	public final ForgeConfigSpec.DoubleValue knightShieldChance;
 
 	public final ForgeConfigSpec.DoubleValue houndHealth;
 	public final ForgeConfigSpec.DoubleValue houndDamage;
@@ -116,6 +117,7 @@ public class CommonConfig {
 		knightDamage = builder.comment("Armored Knight base damage").defineInRange("knightDamage", 8d, 1d, 32d);
 		knightArmor = builder.comment("Armored Knight armor").defineInRange("knightArmor", 10d, 0d, 30d);
 		knightSpeed = builder.comment("Armored Knight speed").defineInRange("knightSpeed", 0.35d, 0.1d, 0.6d);
+		knightShieldChance = builder.comment("Chance of having shield").defineInRange("knightShieldChance", 0.5d, 0.0d, 1d);
 		builder.pop().push("hound");
 		houndHealth = builder.comment("Knight Hound health").defineInRange("houndHealth", 10d, 8d, 40d);
 		houndDamage = builder.comment("Knight Hound damage").defineInRange("houndDamage", 2d, 1d, 10d);
