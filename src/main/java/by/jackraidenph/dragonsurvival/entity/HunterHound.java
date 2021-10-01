@@ -47,9 +47,9 @@ public class HunterHound extends WolfEntity implements DragonHunter {
                 (livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON))));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, 0, true, false, livingEntity ->
                 (livingEntity instanceof net.minecraft.entity.monster.IMob && !(livingEntity instanceof DragonHunter))));
-        targetSelector.addGoal(4, new HurtByTargetGoal(this, ShooterHunter.class).setAlertOthers());
+        targetSelector.addGoal(4, new HurtByTargetGoal(this, Shooter.class).setAlertOthers());
         this.goalSelector.addGoal(7, new FollowMobGoal<>(Knight.class, this, 15));
-        this.goalSelector.addGoal(8, new AlertExceptHunters(this, Knight.class, ShooterHunter.class, SquireHunter.class));
+        this.goalSelector.addGoal(8, new AlertExceptHunters(this, Knight.class, Shooter.class, Squire.class));
     }
 
     protected void defineSynchedData() {

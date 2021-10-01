@@ -3,7 +3,7 @@ package by.jackraidenph.dragonsurvival.gecko;
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.DragonHunter;
-import by.jackraidenph.dragonsurvival.entity.ShooterHunter;
+import by.jackraidenph.dragonsurvival.entity.Shooter;
 import by.jackraidenph.dragonsurvival.handlers.DragonEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -131,7 +131,7 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter,
         targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 1, true, false, livingEntity -> {
             return livingEntity.hasEffect(Effects.BAD_OMEN) || livingEntity.hasEffect(DragonEffects.EVIL_DRAGON);
         }));
-        targetSelector.addGoal(6, new HurtByTargetGoal(this, ShooterHunter.class).setAlertOthers());
+        targetSelector.addGoal(6, new HurtByTargetGoal(this, Shooter.class).setAlertOthers());
     }
 
     @Override
