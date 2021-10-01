@@ -18,9 +18,11 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -55,6 +57,8 @@ public class Shooter extends Hunter implements ICrossbowUser {
     @Override
     public void onCrossbowAttackPerformed() {
         noActionTime = 0;
+        ItemStack crossbow = getItemInHand(Hand.MAIN_HAND);
+        addArrow(crossbow);
     }
 
     @Override
@@ -118,6 +122,17 @@ public class Shooter extends Hunter implements ICrossbowUser {
     }
 
     protected void populateDefaultEquipmentSlots(DifficultyInstance p_180481_1_) {
-        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.CROSSBOW));
+        ItemStack stack = new ItemStack(Items.CROSSBOW);
+        addArrow(stack);
+        this.setItemSlot(EquipmentSlotType.MAINHAND, stack);
+    }
+
+    private void addArrow(ItemStack stack) {
+        CompoundNBT compoundNBT = stack.getOrCreateTag();
+        ListNBT listNBT = compoundNBT.getList("ChargedProjectiles", 10);
+        CompoundNBT nbt = new CompoundNBT();
+        new ItemStack(Items.ARROW).save(nbt);
+        listNBT.add(nbt);
+        compoundNBT.put("ChargedProjectiles", listNBT);
     }
 }
