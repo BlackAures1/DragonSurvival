@@ -138,7 +138,7 @@ public class DragonFoodHandler{
 							sEntry.length == 5 ? Integer.parseInt(sEntry[4]) : item.getFoodProperties() != null ? (int) (item.getFoodProperties().getNutrition() * (item.getFoodProperties().getSaturationModifier() * 2.0F)) : 0,
 							true));
 				} else
-					DragonSurvivalMod.LOGGER.error("Unknown item '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
+					DragonSurvivalMod.LOGGER.warn("Unknown item '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			}
 		}
 		for (Item item : ForgeRegistries.ITEMS.getValues())
