@@ -3,10 +3,9 @@
 
   "entity.dragonsurvival.magical_predator_entity": "Magical Predator",
   "entity.dragonsurvival.hunter_hound": "Knight Hound",
-  "entity.dragonsurvival.knight_hunter": "Armored Knight",
   "entity.dragonsurvival.knight": "Armored Knight",
-  "entity.dragonsurvival.shooter_hunter": "Hunter",
-  "entity.dragonsurvival.squire_hunter": "Squire",
+  "entity.dragonsurvival.shooter": "Hunter",
+  "entity.dragonsurvival.squire": "Squire",
   "entity.dragonsurvival.prince": "Prince",
   "entity.dragonsurvival.princess_entity": "Princess",
   "entity.dragonsurvival.princess": "Princess (rider)",
