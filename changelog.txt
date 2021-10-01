@@ -1,20 +1,26 @@
+1.16.5-0.0.42:
+- updated Chinese, Russian;
+- dragon hunter textures updated;
+- charged charcoal recipe is more complicated;
+- charged soup recipe requires less charged charcoal;
+
 1.16.5-0.0.41:
-added Armored Knight, Hunter, Knight Hound, Prince, Princesses (with config options);
-added Broken Helmets (trophy);
-hitting or killing villagers (and princesses) gives "Evil dragon" effect to the dragon player;
-"Evil dragon" triggers spawning of dragon hunters;
-Princess or Prince can spawn around random player in overworld, and they have special trades;
-added an option to toggle wing status notification and an option to toggle first person model;
+- added Armored Knight, Hunter, Knight Hound, Prince, Princesses (with config options);
+- added 3 Knight Helmets (trophy);
+- hitting or killing villagers (and princesses) gives "Evil dragon" effect to the dragon player;
+- "Evil dragon" triggers spawning of dragon hunters;
+- Princess or Prince can spawn around random player in overworld, and they have special trades;
+- added an option to toggle wing status notification and an option to toggle first person model;
 
 1.16.5-0.0.40:
-added a config option to enable fall damage from dragon flight;
-fall damage from dragon flight is now calculated based on speed and his size, and is non-lethal;
-fixed 'Unknown custom packet identifier' spam in console;
-fixed dragon sliding?
-fixed crash from Dragon Altar if custom dragon food is disabled;
-added an option to toggle first person model rendering;
-added an option to prevent dragons from using Elytra;
-the nests can be placed in water now, and are waterloggable;
+- added a config option to enable fall damage from dragon flight;
+- fall damage from dragon flight is now calculated based on speed and his size, and is non-lethal;
+- fixed 'Unknown custom packet identifier' spam in console;
+- fixed dragon sliding
+- fixed crash from Dragon Altar if custom dragon food is disabled;
+- added an option to toggle first person model rendering;
+- added an option to prevent dragons from using Elytra;
+- the nests can be placed in water now, and are waterloggable;
 
 1.16.5-0.0.39:
 - new languages have been added: Brazilian Portuguese and Traditional Chinese
