@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
-
+@Deprecated
 public class DragonScreen extends DisplayEffectsScreen<DragonContainer> implements IRecipeShownListener {
     private final RecipeBookGui recipeBookGui = new RecipeBookGui();
     static final ResourceLocation BACKGROUND = new ResourceLocation(DragonSurvivalMod.MODID, "textures/ui/dragon_inventory.png");
