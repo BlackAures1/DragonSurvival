@@ -46,27 +46,29 @@ public class BolasEntity extends ProjectileItemEntity {
     protected void onHitEntity(EntityRayTraceResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
         Entity entity = entityRayTraceResult.getEntity();
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
-            ModifiableAttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
-            AttributeModifier bolasTrap = new AttributeModifier(DISABLE_MOVEMENT, "Bolas trap", -attributeInstance.getValue(), AttributeModifier.Operation.ADDITION);
-            boolean addEffect = false;
-            if (!attributeInstance.hasModifier(bolasTrap)) {
-                attributeInstance.addTransientModifier(bolasTrap);
-                addEffect = true;
-            }
-
-            ModifiableAttributeInstance jump = livingEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get());
-            if (jump != null) {
-                AttributeModifier disableJump = new AttributeModifier(DISABLE_JUMP, "Jump debuff", 3, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                if (!jump.hasModifier(disableJump)) {
-                    jump.addTransientModifier(disableJump);
+        if (!entity.level.isClientSide) {
+            if (entity instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity) entity;
+                ModifiableAttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
+                AttributeModifier bolasTrap = new AttributeModifier(DISABLE_MOVEMENT, "Bolas trap", -attributeInstance.getValue(), AttributeModifier.Operation.ADDITION);
+                boolean addEffect = false;
+                if (!attributeInstance.hasModifier(bolasTrap)) {
+                    attributeInstance.addTransientModifier(bolasTrap);
                     addEffect = true;
                 }
-            }
-            if (addEffect)
-                livingEntity.addEffect(new EffectInstance(DragonEffects.TRAPPED, Functions.secondsToTicks(20)));
 
+                ModifiableAttributeInstance jump = livingEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get());
+                if (jump != null) {
+                    AttributeModifier disableJump = new AttributeModifier(DISABLE_JUMP, "Jump debuff", 3, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                    if (!jump.hasModifier(disableJump)) {
+                        jump.addTransientModifier(disableJump);
+                        addEffect = true;
+                    }
+                }
+                if (addEffect)
+                    livingEntity.addEffect(new EffectInstance(DragonEffects.TRAPPED, Functions.secondsToTicks(20)));
+
+            }
         }
     }
 
