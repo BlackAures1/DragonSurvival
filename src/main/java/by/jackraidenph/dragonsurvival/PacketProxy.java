@@ -48,8 +48,8 @@ public class PacketProxy {
                     dragonStateHandler.setDebuffData(syncCapabilityDebuff.timeWithoutWater, syncCapabilityDebuff.timeInDarkness);
                 });
             }
-            context.setPacketHandled(true);
 		 }
+         context.setPacketHandled(true);
 	 }
 	
 	
@@ -85,9 +85,9 @@ public class PacketProxy {
                 DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
                     dragonStateHandler.setSize(syncSize.size, (PlayerEntity)entity);
                 });
-                
-                contextSupplier.get().setPacketHandled(true);
+
             }
+            contextSupplier.get().setPacketHandled(true);
         };
     }
 

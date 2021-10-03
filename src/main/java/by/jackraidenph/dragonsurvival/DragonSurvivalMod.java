@@ -228,8 +228,9 @@ public class DragonSurvivalMod {
                 (setFlyState, contextSupplier) -> {
                     if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                         ClientEvents.dragonsFlying.put(setFlyState.playerid, setFlyState.flying);
-                        contextSupplier.get().setPacketHandled(true);
+
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, DiggingStatus.class, (diggingStatus, packetBuffer) -> {
@@ -258,9 +259,10 @@ public class DragonSurvivalMod {
                         Entity entity = Minecraft.getInstance().level.getEntity(startJump.playerId);
                         if (entity instanceof PlayerEntity) {
                             ClientEvents.dragonsJumpingTicks.put(entity.getId(), startJump.ticks);
-                            contextSupplier.get().setPacketHandled(true);
                         }
                     }
+                    //the spam source was in this handler
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, RefreshDragons.class, (refreshDragons, packetBuffer) -> {
@@ -287,8 +289,8 @@ public class DragonSurvivalMod {
                             }
                         });
                         thread.start();
-                        contextSupplier.get().setPacketHandled(true);
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
         LOGGER.info("Successfully registered packets!");
     }
