@@ -45,3 +45,7 @@ versionRange = "[1.16.5-3,)" #mandatory
 ordering = "NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
 side = "CLIENT"
+[[dependencies.dragonsurvival]]
+modId = "forge"
+mandatory = true
+versionRange = "[36.2.0,)"
