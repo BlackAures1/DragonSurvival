@@ -24,7 +24,7 @@ public class Helmet extends Block {
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 8.0D, 12.0D);
 
     public Helmet(Properties properties) {
-        super(properties);
+        super(properties.requiresCorrectToolForDrops().strength(3, 40));
         registerDefaultState(getStateDefinition().any().setValue(ROTATION, 0));
     }
 
