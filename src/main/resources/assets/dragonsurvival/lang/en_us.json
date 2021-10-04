@@ -137,5 +137,8 @@
   "ds.altar_dragon_info.human.0": "■ §nHuman.§r",
   "ds.altar_dragon_info.human.1": "■ Homo sapiens.§r",
   "ds.altar_dragon_info.human.2": "Traveler, builder and creator.",
-  "ds.hold_shift.for_food": "Hold 'Shift' for food info"
+  "ds.hold_shift.for_food": "Hold 'Shift' for food info",
+  "ds.cave.dragon.food": "Cave dragon food",
+  "ds.forest.dragon.food": "Forest dragon food",
+  "ds.sea.dragon.food": "Sea dragon food"
 }

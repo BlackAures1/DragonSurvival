@@ -47,22 +47,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent.OverlayType;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -578,6 +578,23 @@ public class ClientEvents {
                 matrixStack.translate(0, 0.5, 0);
                 Minecraft.getInstance().getItemRenderer().renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, postEvent.getLight(), LivingRenderer.getOverlayCoords(entity, 0), matrixStack, postEvent.getBuffers());
                 matrixStack.popPose();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void checkIfDragonFood(ItemTooltipEvent tooltipEvent) {
+        if (tooltipEvent.getPlayer() != null) {
+            Item item = tooltipEvent.getItemStack().getItem();
+            List<ITextComponent> toolTip = tooltipEvent.getToolTip();
+            if (DragonFoodHandler.getSafeEdibleFoods(DragonType.CAVE).contains(item)) {
+                toolTip.add(new TranslationTextComponent("ds.cave.dragon.food"));
+            }
+            if (DragonFoodHandler.getSafeEdibleFoods(DragonType.FOREST).contains(item)) {
+                toolTip.add(new TranslationTextComponent("ds.forest.dragon.food"));
+            }
+            if (DragonFoodHandler.getSafeEdibleFoods(DragonType.SEA).contains(item)) {
+                toolTip.add(new TranslationTextComponent("ds.sea.dragon.food"));
             }
         }
     }

@@ -39,17 +39,19 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DragonFoodHandler{
+public class DragonFoodHandler {
 
 	private static Map<DragonType, Map<Item, Food>> DRAGON_FOODS;
-	
+	public static List<Item> CAVE_D_FOOD;
+	public static List<Item> FOREST_D_FOOD;
+	public static List<Item> SEA_D_FOOD;
 	public static boolean isDrawingOverlay;
-	
+
 	private Minecraft mc;
 	private final ResourceLocation FOOD_ICONS;
 	private final Random rand;
-	
-	
+
+
 	public DragonFoodHandler() {
 		if (FMLLoader.getDist() == Dist.CLIENT)
 			mc = Minecraft.getInstance();
