@@ -112,7 +112,6 @@ public class DragonSurvivalMod {
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SynchronizeNest.class, new SynchronizeNest());
-        register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
         register(OpenCrafting.class,new OpenCrafting());

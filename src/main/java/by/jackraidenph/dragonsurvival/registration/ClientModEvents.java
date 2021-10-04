@@ -2,7 +2,6 @@ package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.gecko.*;
-import by.jackraidenph.dragonsurvival.gui.DragonScreen;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.HelmetEntityRenderer;
@@ -88,7 +87,6 @@ public class ClientModEvents {
         ShaderHelper.initShaders();
 
         ScreenManager.register(Containers.nestContainer, NestScreen::new);
-        ScreenManager.register(Containers.dragonContainer, DragonScreen::new);
 
         TOGGLE_WINGS = new KeyBinding("Toggle wings", GLFW.GLFW_KEY_G, "Dragon Survival");
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
