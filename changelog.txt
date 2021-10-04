@@ -2,6 +2,7 @@
 required forge version - 36.2.0;
 fixed knight helmet block drops;
 fixed bolas/net rendering on other entities;
+food items show which dragons they are appropriate to;
 
 1.16.5-0.0.42:
 - updated Chinese, Russian;
