@@ -4,7 +4,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.pathfinding.Path;
-
+@SuppressWarnings("unused")
 public class RideHorse<E extends MobEntity> extends Goal {
     protected E mob;
 
