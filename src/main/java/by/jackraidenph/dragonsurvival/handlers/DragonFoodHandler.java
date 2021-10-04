@@ -81,8 +81,14 @@ public class DragonFoodHandler {
 	}
 	
 	public static List<Item> getSafeEdibleFoods(DragonType dragonType) {
-        List<Item> foods = new ArrayList<>();
-        for (Item item : DRAGON_FOODS.get(dragonType).keySet()) {
+		if (dragonType == DragonType.FOREST && FOREST_D_FOOD != null)
+			return FOREST_D_FOOD;
+		else if (dragonType == DragonType.SEA && SEA_D_FOOD != null)
+			return SEA_D_FOOD;
+		else if (dragonType == DragonType.CAVE && CAVE_D_FOOD != null)
+			return CAVE_D_FOOD;
+		List<Item> foods = new ArrayList<>();
+		for (Item item : DRAGON_FOODS.get(dragonType).keySet()) {
 			boolean safe = true;
 			final Food food = DRAGON_FOODS.get(dragonType).get(item);
 			if (food != null) {
@@ -97,8 +103,14 @@ public class DragonFoodHandler {
 					foods.add(item);
 			}
 		}
-        return foods;
-    }
+		if (dragonType == DragonType.FOREST && FOREST_D_FOOD == null)
+			FOREST_D_FOOD = foods;
+		else if (dragonType == DragonType.CAVE && CAVE_D_FOOD == null)
+			CAVE_D_FOOD = foods;
+		else if (dragonType == DragonType.SEA && SEA_D_FOOD == null)
+			SEA_D_FOOD = foods;
+		return foods;
+	}
 	
 	private static Map<Item, Food> buildDragonFoodMap(DragonType type) {
 		HashMap<Item, Food> foodMap = new HashMap<Item, Food>();
