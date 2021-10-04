@@ -131,7 +131,7 @@ public class DragonFoodHandler {
 								true));
 				}
 				else
-					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
+					DragonSurvivalMod.LOGGER.warn("Null or empty tag '{}:{}' in {} dragon food config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			} else {
 				final Item item = ForgeRegistries.ITEMS.getValue(rlEntry);
 				if (item != null && item != Items.AIR) {
