@@ -163,7 +163,9 @@ public class Knight extends CreatureEntity implements IAnimatable, DragonHunter,
 
     @Override
     public boolean isBlocking() {
-        return random.nextBoolean();
+        if (getOffhandItem().isShield(this))
+            return random.nextBoolean();
+        return false;
     }
 
     @Override
