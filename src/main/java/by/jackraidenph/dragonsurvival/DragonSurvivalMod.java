@@ -303,6 +303,7 @@ public class DragonSurvivalMod {
         if (biomeName == null) return;
         RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, biomeName);
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
+        //TODO fix the zero weight spawn entry
     	if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER) 
     			&& biomeTypes.stream().anyMatch(x -> includeList.contains(x) 
     			&& biomeTypes.stream().noneMatch(excludeList::contains))) {
