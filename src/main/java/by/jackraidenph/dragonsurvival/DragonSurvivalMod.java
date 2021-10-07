@@ -296,19 +296,20 @@ public class DragonSurvivalMod {
     
     @SubscribeEvent
     public void biomeLoadingEvent(BiomeLoadingEvent event) {
-    	List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesInclude.get()));
-        List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesExclude.get()));
-        List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
-        ResourceLocation biomeName = event.getName();
-        if (biomeName == null) return;
-        RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, biomeName);
-        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
-        //TODO fix the zero weight spawn entry
-    	if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER) 
-    			&& biomeTypes.stream().anyMatch(x -> includeList.contains(x) 
-    			&& biomeTypes.stream().noneMatch(excludeList::contains))) {
-    		spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
-    	}
+        if (ConfigHandler.COMMON.predatorSpawnWeight.get() > 0) {
+            List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesInclude.get()));
+            List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesExclude.get()));
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            ResourceLocation biomeName = event.getName();
+            if (biomeName == null) return;
+            RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, biomeName);
+            Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
+            if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER)
+                    && biomeTypes.stream().anyMatch(x -> includeList.contains(x)
+                    && biomeTypes.stream().noneMatch(excludeList::contains))) {
+                spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
+            }
+        }
     }
     
     @SubscribeEvent
