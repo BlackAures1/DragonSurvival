@@ -1,10 +1,7 @@
 package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.blocks.DragonAltarBlock;
-import by.jackraidenph.dragonsurvival.blocks.DragonDoor;
-import by.jackraidenph.dragonsurvival.blocks.Helmet;
-import by.jackraidenph.dragonsurvival.blocks.PredatorStarBlock;
+import by.jackraidenph.dragonsurvival.blocks.*;
 import by.jackraidenph.dragonsurvival.items.DragonDoorItem;
 import by.jackraidenph.dragonsurvival.nest.BigNestBlock;
 import by.jackraidenph.dragonsurvival.nest.MediumNestBlock;
@@ -47,10 +44,10 @@ public class BlockInit {
     public static Block dragon_altar_blackstone;
 
     public static Helmet helmet1, helmet2, helmet3;
+    public static DragonBeacon dragonBeacon;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-        //WARNING: do not use final static initialization outside from here, because it breaks hot-swap
         IForgeRegistry<Block> forgeRegistry = event.getRegistry();
 
         dragon_altar_stone = new DragonAltarBlock(Block.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).harvestLevel(0).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops());
@@ -124,6 +121,8 @@ public class BlockInit {
         helmet1 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_1", forgeRegistry);
         helmet2 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_2", forgeRegistry);
         helmet3 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_3", forgeRegistry);
+
+        dragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(3, 50).harvestLevel(2).requiresCorrectToolForDrops()), "empty_dragon_beacon", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -181,6 +180,8 @@ public class BlockInit {
         registerItem(helmet1, new Item.Properties().setISTER(() -> HelmetStackTileEntityRenderer::new), forgeRegistry);
         registerItem(helmet2, new Item.Properties().setISTER(() -> HelmetStackTileEntityRenderer::new), forgeRegistry);
         registerItem(helmet3, new Item.Properties().setISTER(() -> HelmetStackTileEntityRenderer::new), forgeRegistry);
+
+        registerItem(dragonBeacon, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
