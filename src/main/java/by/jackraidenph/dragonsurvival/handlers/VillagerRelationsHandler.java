@@ -294,6 +294,12 @@ public class VillagerRelationsHandler {
                     if (player != null && player.isAlive() && !player.isCreative() && !player.isSpectator()) {
                         BlockPos blockPos = Functions.findRandomSpawnPosition(player, 1, 2, 20.0F);
                         if (blockPos != null && blockPos.getY() >= ConfigHandler.COMMON.riderSpawnLowerBound.get() && blockPos.getY() <= ConfigHandler.COMMON.riderSpawnUpperBound.get()) {
+                            Optional<RegistryKey<Biome>> biomeRegistryKey = serverWorld.getBiomeName(blockPos);
+                            if (biomeRegistryKey.isPresent()) {
+                                RegistryKey<Biome> biome = biomeRegistryKey.get();
+                                if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
+                                    return;
+                            }
                             EntityType<? extends Princess> entityType = world.random.nextBoolean() ? EntityTypesInit.PRINCESS_ON_HORSE : EntityTypesInit.PRINCE_ON_HORSE;
                             Princess princessEntity = entityType.create(world);
                             princessEntity.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
