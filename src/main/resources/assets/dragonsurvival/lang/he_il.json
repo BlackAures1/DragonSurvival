@@ -1,9 +1,24 @@
 {
-  "itemGroup.dragon.survival.blocks": "הישרדות דרקונים",
+  "itemGroup.dragon.survival.blocks": "הישרדת דורקונים",
 
-  "entity.dragonsurvival.magical_predator_entity": "טורף קסום",
+"entity.dragonsurvival.magical_predator_entity": "טורף קסום",
+  "entity.dragonsurvival.hunter_hound": "כלב צייד של אביר דרקונים",
+  "entity.dragonsurvival.knight": "אביר דרקונים",
+  "entity.dragonsurvival.shooter": "צייד דרקונים",
+  "entity.dragonsurvival.squire": "נושא כלים דרקונים",
+  "entity.dragonsurvival.prince": "נסיך",
+  "entity.dragonsurvival.princess_entity": "נסיכה",
+  "entity.dragonsurvival.princess": "נסיכה על סוס",
 
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "ביצת זימון טורף קסום",
+  "item.dragonsurvival.hunter_hound_spawn_egg": "ביצת זימון כלב צייד של אביר דרקונים",
+  "item.dragonsurvival.shooter_spawn_egg": "ביצת זימון צייד",
+  "item.dragonsurvival.knight_spawn_egg": "ביצת זימון אביר משוריין",
+  "item.dragonsurvival.squire_spawn_egg": "ביצת זימון נושא כלים",
+  "item.dragonsurvival.princess_entity_spawn_egg": "ביצת זימון נסיכה",
+  "item.dragonsurvival.princess_spawn_egg": "ביצת זימון נסיכה על סוס",
+  "item.dragonsurvival.prince_spawn_egg": "ביצת זימון נסיך",
+
   "item.dragonsurvival.star_bone": "עצם כוכבים",
   "item.dragonsurvival.heart_element": "יסוד לב",
   "item.dragonsurvival.elder_dragon_bone": "עצם דרקון זקן",
@@ -27,6 +42,10 @@
   "block.dragonsurvival.big_forest_nest": "קן יער גדול",
   "block.dragonsurvival.big_sea_nest": "קן ים גדול",
   "block.dragonsurvival.big_cave_nest": "קן מערות גדול",
+  "block.dragonsurvival.broken_helmet": "קסדה שבורה",
+  "block.dragonsurvival.broken_knight_helmet_1": "קסדת אביר אפורה",
+  "block.dragonsurvival.broken_knight_helmet_2": "קסדת אביר מוזהבת",
+  "block.dragonsurvival.broken_knight_helmet_3": "קסדת אביר שחורה",
 
   "block.dragonsurvival.dragon_altar1": "מזבח דרקונים מאלון",
   "block.dragonsurvival.dragon_altar2": "מזבח דרקונים מאבן",
@@ -59,6 +78,8 @@
   "block.dragonsurvival.legacy_dragon_door": "דלת דרקונים מורשת",
 
   "effect.dragonsurvival.stress": "לחץ",
+  "effect.dragonsurvival.evil_dragon": "דרקון מרושע",
+  "effect.dragonsurvival.trapped": "לכוד",
 
   "dragonsurvival:config.category.general.tooltip": "הגדרות תצורה כלליות להישרדות דרקונים",
   "dragonsurvival:config.category.spawnchances.tooltip": "סיכויי ההשרצה הניתנים להגדרה עבור ישויות",
@@ -95,7 +116,7 @@
   "ds.altar_dragon_info.cave_dragon.5":"",
   "ds.altar_dragon_info.cave_dragon.6":"§6■ תזונה:§r",
   "ds.altar_dragon_info.cave_dragon.7":"",
-  "ds.altar_dragon_info.cave_dragon.8":"--אוכל--",
+  "ds.altar_dragon_info.cave_dragon.8":"--food--",
   "ds.altar_dragon_info.forest_dragon.0":"§a■ דרקון יער.§r",
   "ds.altar_dragon_info.forest_dragon.1":"",
   "ds.altar_dragon_info.forest_dragon.2":"§2■ מאפיינים:§f§r נפילה רכה, טפריי גרזן, קסם רעל, תנועה מהירה יותר על בלוקיי יער.",
@@ -104,7 +125,7 @@
   "ds.altar_dragon_info.forest_dragon.5":"",
   "ds.altar_dragon_info.forest_dragon.6":"§6■ תזונה:§r",
   "ds.altar_dragon_info.forest_dragon.7":"",
-  "ds.altar_dragon_info.forest_dragon.8":"--אוכל--",
+  "ds.altar_dragon_info.forest_dragon.8":"--food--",
   "ds.altar_dragon_info.sea_dragon.0":"§3■ דרקון ים.§r",
   "ds.altar_dragon_info.sea_dragon.1":"",
   "ds.altar_dragon_info.sea_dragon.2":"§2■ מאפיינים:§f§r נשימה תת-מימית, טפריי את חפירה, קסם חשמלי, תנועה מהירה יותר על בלוקיי ים.",
@@ -116,5 +137,6 @@
   "ds.altar_dragon_info.sea_dragon.8":"--food--",
   "ds.altar_dragon_info.human.0":"■ §nבן אדם.§r",
   "ds.altar_dragon_info.human.1":"■ הומו ספיינס.§r",
-  "ds.altar_dragon_info.human.2":"נוסע, בונה ויוצר."
+  "ds.altar_dragon_info.human.2":"נוסע, בונה ויוצר.",
+  "ds.hold_shift.for_food": "החזק את 'Shift' למידע על מזון"
 }

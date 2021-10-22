@@ -1,9 +1,10 @@
 1.16.5-0.0.43:
-required forge version - 36.2.0;
-fixed knight helmet block drops;
-fixed bolas/net rendering on other entities;
-food items show which dragons they are appropriate to;
-Knight won't block attacks without a shield;
+- required forge version - 36.2.0;
+- fixed knight helmet block drops;
+- fixed bolas/net rendering on other entities;
+- food items show which dragons they are appropriate to;
+- Knight won't block attacks without a shield;
+- Noses are returned to princesses.
 
 1.16.5-0.0.42:
 - updated Chinese, Russian;
