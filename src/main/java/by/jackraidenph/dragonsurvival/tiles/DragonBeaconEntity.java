@@ -1,12 +1,12 @@
 package by.jackraidenph.dragonsurvival.tiles;
 
+import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
 
 public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTileEntity {
-    protected Type type = Type.NONE;
+    public Type type = Type.NONE;
 
     public enum Type {
         PEACE,
@@ -15,8 +15,8 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
         NONE
     }
 
-    public DragonBeaconEntity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public DragonBeaconEntity() {
+        super(TileEntityTypesInit.dragonBeacon);
     }
 
     @Override
