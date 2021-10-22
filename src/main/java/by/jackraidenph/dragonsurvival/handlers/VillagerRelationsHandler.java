@@ -254,7 +254,7 @@ public class VillagerRelationsHandler {
                     Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
                         if (villageRelationShips.hunterSpawnDelay == 0) {
                             BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 14.0F);
-                            if (spawnPosition != null && spawnPosition.getY() > 32 && spawnPosition.getY() < 80) {
+                            if (spawnPosition != null && spawnPosition.getY() >= ConfigHandler.COMMON.riderSpawnLowerBound.get() && spawnPosition.getY() <= ConfigHandler.COMMON.riderSpawnUpperBound.get()) {
                                 Optional<RegistryKey<Biome>> biomeRegistryKey = serverWorld.getBiomeName(spawnPosition);
                                 if (biomeRegistryKey.isPresent()) {
                                     RegistryKey<Biome> biome = biomeRegistryKey.get();
