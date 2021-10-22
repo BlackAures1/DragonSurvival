@@ -44,7 +44,7 @@ public class BlockInit {
     public static Block dragon_altar_blackstone;
 
     public static Helmet helmet1, helmet2, helmet3;
-    public static DragonBeacon dragonBeacon;
+    public static DragonBeacon dragonBeacon, peaceDragonBeacon, magicDragonBeacon, vetoDragonBeacon;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -123,6 +123,9 @@ public class BlockInit {
         helmet3 = registerBlock(new Helmet(AbstractBlock.Properties.of(Material.METAL)), "broken_knight_helmet_3", forgeRegistry);
 
         dragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(3, 50).harvestLevel(2).requiresCorrectToolForDrops()), "empty_dragon_beacon", forgeRegistry);
+        peaceDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_peace", forgeRegistry);
+        magicDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_magic", forgeRegistry);
+        vetoDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_veto", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -182,6 +185,9 @@ public class BlockInit {
         registerItem(helmet3, new Item.Properties().setISTER(() -> HelmetStackTileEntityRenderer::new), forgeRegistry);
 
         registerItem(dragonBeacon, new Item.Properties(), forgeRegistry);
+        registerItem(peaceDragonBeacon, new Item.Properties(), forgeRegistry);
+        registerItem(magicDragonBeacon, new Item.Properties(), forgeRegistry);
+        registerItem(vetoDragonBeacon, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
