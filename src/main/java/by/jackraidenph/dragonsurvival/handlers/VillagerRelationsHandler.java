@@ -31,9 +31,12 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -240,7 +243,6 @@ public class VillagerRelationsHandler {
         }
     }
 
-
     @SubscribeEvent
     public static void spawnHunters(TickEvent.PlayerTickEvent playerTickEvent) {
         if (!dragonHunters.isEmpty() && playerTickEvent.phase == TickEvent.Phase.END) {
@@ -252,7 +254,13 @@ public class VillagerRelationsHandler {
                     Capabilities.getVillageRelationships(player).ifPresent(villageRelationShips -> {
                         if (villageRelationShips.hunterSpawnDelay == 0) {
                             BlockPos spawnPosition = Functions.findRandomSpawnPosition(player, 1, 4, 14.0F);
-                            if (spawnPosition != null) {
+                            if (spawnPosition != null && spawnPosition.getY() > 32 && spawnPosition.getY() < 80) {
+                                Optional<RegistryKey<Biome>> biomeRegistryKey = serverWorld.getBiomeName(spawnPosition);
+                                if (biomeRegistryKey.isPresent()) {
+                                    RegistryKey<Biome> biome = biomeRegistryKey.get();
+                                    if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
+                                        return;
+                                }
                                 int levelOfEvil = computeLevelOfEvil(player);
                                 for (int i = 0; i < levelOfEvil; i++) {
                                     Functions.spawn(Objects.requireNonNull((dragonHunters.get(serverWorld.random.nextInt(dragonHunters.size()))).create(serverWorld)), spawnPosition, serverWorld);
