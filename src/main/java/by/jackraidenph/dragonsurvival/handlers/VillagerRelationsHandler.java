@@ -293,7 +293,7 @@ public class VillagerRelationsHandler {
                     ServerPlayerEntity player = serverWorld.getRandomPlayer();
                     if (player != null && player.isAlive() && !player.isCreative() && !player.isSpectator()) {
                         BlockPos blockPos = Functions.findRandomSpawnPosition(player, 1, 2, 20.0F);
-                        if (blockPos != null) {
+                        if (blockPos != null && blockPos.getY() >= ConfigHandler.COMMON.riderSpawnLowerBound.get() && blockPos.getY() <= ConfigHandler.COMMON.riderSpawnUpperBound.get()) {
                             EntityType<? extends Princess> entityType = world.random.nextBoolean() ? EntityTypesInit.PRINCESS_ON_HORSE : EntityTypesInit.PRINCE_ON_HORSE;
                             Princess princessEntity = entityType.create(world);
                             princessEntity.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
