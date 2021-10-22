@@ -68,6 +68,7 @@ public class CommonConfig {
 
 	public final ForgeConfigSpec.IntValue xpGain;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> evilDragonStatusGivers;
+	public final ForgeConfigSpec.BooleanValue preserveEvilDragonEffectAfterDeath;
 
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
@@ -118,6 +119,7 @@ public class CommonConfig {
 		spawnHound = builder.comment("Dragon Knight hound spawning enabled?").define("allowHoundSpawning", true);
 		xpGain = builder.comment("How many experience points are gained for killing a villager").defineInRange("villagerKillxp", 10, 10, 1000);
 		evilDragonStatusGivers = builder.comment("Entities which give 'Evil dragon' status on death").defineList("evilDragonStatusGivers", () -> Arrays.asList("minecraft:villager", "dragonsurvival:hunter_hound", "dragonsurvival:knight", "dragonsurvival:shooter", "dragonsurvival:squire", "dragonsurvival:prince", "dragonsurvival:princess", "dragonsurvival:princess_entity"), o -> EntityType.byString((String) o).isPresent());
+		preserveEvilDragonEffectAfterDeath = builder.comment("Preserve effect 'Evil dragon' after death?").define("preserveEvilDragonAfterDeath", false);
 		builder.push("knight");
 		knightHealth = builder.comment("Dragon Knight health").defineInRange("knightHealth", 40d, 10d, 80d);
 		knightDamage = builder.comment("Dragon Knight base damage").defineInRange("knightDamage", 12d, 1d, 32d);

@@ -64,7 +64,7 @@ public class CapabilityController {
                 villageRelationShips.evilStatusDuration = old.evilStatusDuration;
                 villageRelationShips.crimeLevel = old.crimeLevel;
                 villageRelationShips.hunterSpawnDelay = old.hunterSpawnDelay;
-                if (villageRelationShips.evilStatusDuration > 0) {
+                if (ConfigHandler.COMMON.preserveEvilDragonEffectAfterDeath.get() && villageRelationShips.evilStatusDuration > 0) {
                     player.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, villageRelationShips.evilStatusDuration));
                 }
             });
