@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
 import net.minecraft.block.Block;
@@ -28,16 +29,21 @@ public class DragonBeacon extends Block {
     public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult p_225533_6_) {
         ItemStack itemStack = playerEntity.getItemInHand(hand);
         Item item = itemStack.getItem();
-        DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
         if (item == Items.GOLD_BLOCK) {
+            world.setBlockAndUpdate(pos, BlockInit.peaceDragonBeacon.defaultBlockState());
+            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
             dragonBeaconEntity.type = DragonBeaconEntity.Type.PEACE;
             itemStack.shrink(1);
             return ActionResultType.SUCCESS;
         } else if (item == Items.DIAMOND_BLOCK) {
+            world.setBlockAndUpdate(pos, BlockInit.magicDragonBeacon.defaultBlockState());
+            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
             dragonBeaconEntity.type = DragonBeaconEntity.Type.MAGIC;
             itemStack.shrink(1);
             return ActionResultType.SUCCESS;
         } else if (item == Items.NETHERITE_INGOT) {
+            world.setBlockAndUpdate(pos, BlockInit.vetoDragonBeacon.defaultBlockState());
+            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
             dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
             itemStack.shrink(1);
             return ActionResultType.SUCCESS;
