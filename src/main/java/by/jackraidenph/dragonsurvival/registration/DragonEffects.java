@@ -25,6 +25,7 @@ public class DragonEffects {
     public static Effect STRESS;
     public static Effect TRAPPED;
     public static Effect EVIL_DRAGON;
+    public static Effect PEACE, MAGIC, VETO;
 
     @SuppressWarnings("unused")
     @SubscribeEvent
@@ -36,6 +37,26 @@ public class DragonEffects {
         forgeRegistry.register(TRAPPED);
         EVIL_DRAGON = new EvilDragon(EffectType.NEUTRAL).setRegistryName(DragonSurvivalMod.MODID, "evil_dragon");
         forgeRegistry.register(EVIL_DRAGON);
+        PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "peace");
+        forgeRegistry.register(PEACE);
+        MAGIC = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "magic");
+        forgeRegistry.register(MAGIC);
+        VETO = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "veto");
+        forgeRegistry.register(VETO);
+    }
+
+    private static class Effect2 extends Effect {
+        boolean uncurable;
+
+        protected Effect2(EffectType type, int color, boolean uncurable) {
+            super(type, color);
+            this.uncurable = uncurable;
+        }
+
+        @Override
+        public List<ItemStack> getCurativeItems() {
+            return uncurable ? Collections.emptyList() : super.getCurativeItems();
+        }
     }
 
     private static class Stress extends Effect {
