@@ -1,6 +1,8 @@
 package by.jackraidenph.dragonsurvival.entity;
 
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.util.PrincessTrades;
 import com.mojang.serialization.Dynamic;
@@ -42,6 +44,9 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Horseless princess
+ */
 public class PrincessEntity extends VillagerEntity {
     private static final List<DyeColor> colors = Arrays.asList(DyeColor.RED, DyeColor.YELLOW, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.BLACK, DyeColor.WHITE);
     public static DataParameter<Integer> color = EntityDataManager.defineId(PrincessEntity.class, DataSerializers.INT);
@@ -193,8 +198,10 @@ public class PrincessEntity extends VillagerEntity {
         }
         if (!level.isClientSide)
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), new ItemStack(flower)));
-//        if (damageSource.getEntity() instanceof PlayerEntity) {
-//            VillagerRelationsHandler.applyEvilMarker((PlayerEntity) damageSource.getEntity());
-//        }
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double p_213397_1_) {
+        return !this.hasCustomName() && tickCount >= Functions.minutesToTicks(ConfigHandler.COMMON.princessDespawnDelay.get());
     }
 }
