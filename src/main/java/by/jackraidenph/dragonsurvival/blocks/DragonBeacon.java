@@ -14,6 +14,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -27,8 +30,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 
 public class DragonBeacon extends Block {
+    public static BooleanProperty LIT = BlockStateProperties.LIT;
     public DragonBeacon(Properties p_i48440_1_) {
         super(p_i48440_1_);
+        registerDefaultState(getStateDefinition().any().setValue(LIT, false));
     }
 
     @Override
@@ -91,5 +96,11 @@ public class DragonBeacon extends Block {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return TileEntityTypesInit.dragonBeacon.create();
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
+        super.createBlockStateDefinition(p_206840_1_);
+        p_206840_1_.add(LIT);
     }
 }

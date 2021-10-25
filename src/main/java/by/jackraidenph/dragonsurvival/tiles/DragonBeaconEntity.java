@@ -1,6 +1,7 @@
 package by.jackraidenph.dragonsurvival.tiles;
 
 import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
@@ -32,6 +33,9 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
     public void tick() {
         BlockState below = level.getBlockState(getBlockPos().below());
         if (below.getBlock() == BlockInit.dragonMemoryBlock && type != Type.NONE) {
+            BlockState blockState = getBlockState();
+            if (!blockState.getValue(DragonBeacon.LIT))
+                level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
             List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
             switch (type) {
                 case PEACE:
@@ -44,6 +48,10 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                     dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20))));
                     break;
             }
+        } else {
+            BlockState blockState = getBlockState();
+            if (blockState.getValue(DragonBeacon.LIT))
+                level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
         }
     }
 
