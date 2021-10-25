@@ -1,8 +1,11 @@
 package by.jackraidenph.dragonsurvival.blocks;
 
+import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
+import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
+import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -26,9 +30,10 @@ public class DragonBeacon extends Block {
     }
 
     @Override
-    public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult p_225533_6_) {
+    public ActionResultType use(BlockState blockState, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult p_225533_6_) {
         ItemStack itemStack = playerEntity.getItemInHand(hand);
         Item item = itemStack.getItem();
+        //upgrading
         if (item == Items.GOLD_BLOCK) {
             world.setBlockAndUpdate(pos, BlockInit.peaceDragonBeacon.defaultBlockState());
             DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
@@ -47,6 +52,26 @@ public class DragonBeacon extends Block {
             dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
             itemStack.shrink(1);
             return ActionResultType.SUCCESS;
+        }
+        //apply temporary benefits
+        if (itemStack.isEmpty()) {
+            LazyOptional<DragonStateHandler> dragonState = DragonStateProvider.getCap(playerEntity);
+            if (dragonState.isPresent()) {
+                DragonStateHandler dragonStateHandler = dragonState.orElse(null);
+                if (dragonStateHandler.isDragon()) {
+                    if (this == BlockInit.peaceDragonBeacon && dragonStateHandler.getType() == DragonType.SEA) {
+                        //apply effect
+                        return ActionResultType.SUCCESS;
+                    } else if (this == BlockInit.magicDragonBeacon && dragonStateHandler.getType() == DragonType.FOREST) {
+                        //apply effect
+                        return ActionResultType.SUCCESS;
+                    } else if (this == BlockInit.vetoDragonBeacon && dragonStateHandler.getType() == DragonType.CAVE) {
+                        //apply effect
+                        return ActionResultType.SUCCESS;
+                    }
+                }
+            }
+
         }
         playerEntity.hurt(DamageSource.GENERIC, 1);
         return ActionResultType.SUCCESS;
