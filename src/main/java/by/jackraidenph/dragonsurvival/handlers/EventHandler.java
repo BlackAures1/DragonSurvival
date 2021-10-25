@@ -32,6 +32,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -100,13 +101,13 @@ public class EventHandler {
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
         LivingEntity livingEntity = e.getEntityLiving();
-        if (livingEntity instanceof PlayerEntity || livingEntity instanceof MagicalPredatorEntity)
-            return;
-
+        World world = livingEntity.level;
         if (livingEntity instanceof AnimalEntity && livingEntity.level.getRandom().nextDouble() < ConfigHandler.COMMON.predatorAnimalSpawnChance.get()) {
-            MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
-            livingEntity.level.addFreshEntity(beast);
-            beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+            if (world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(livingEntity.blockPosition()).inflate(64), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty()) {
+                MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
+                livingEntity.level.addFreshEntity(beast);
+                beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+            }
         }
     }
 

@@ -73,7 +73,7 @@ public class DragonTraitHandler {
                             dragonStateHandler.setLavaAirSupply(Math.min(dragonStateHandler.getLavaAirSupply() + (int) Math.ceil(ConfigHandler.SERVER.caveLavaSwimmingTicks.get() * 0.0133333F), ConfigHandler.SERVER.caveLavaSwimmingTicks.get()));
                         break;
                     case FOREST:
-                        if (ConfigHandler.SERVER.penalties.get() && ConfigHandler.SERVER.forestStressTicks.get() > 0 && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
+                        if (ConfigHandler.SERVER.penalties.get() && !playerEntity.hasEffect(DragonEffects.MAGIC) && ConfigHandler.SERVER.forestStressTicks.get() > 0 && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
                             WorldLightManager lightManager = world.getChunkSource().getLightEngine();
                             if ((lightManager.getLayerListener(LightType.BLOCK).getLightValue(playerEntity.blockPosition()) < 3 && lightManager.getLayerListener(LightType.SKY).getLightValue(playerEntity.blockPosition()) < 3)) {
                                 if (dragonStateHandler.getDebuffData().timeInDarkness < ConfigHandler.SERVER.forestStressTicks.get())
