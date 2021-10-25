@@ -45,6 +45,7 @@ public class BlockInit {
 
     public static Helmet helmet1, helmet2, helmet3;
     public static DragonBeacon dragonBeacon, peaceDragonBeacon, magicDragonBeacon, vetoDragonBeacon;
+    public static Block dragonMemoryBlock;
 
     @SubscribeEvent
     public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -126,6 +127,7 @@ public class BlockInit {
         peaceDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_peace", forgeRegistry);
         magicDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_magic", forgeRegistry);
         vetoDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_beacon_veto", forgeRegistry);
+        dragonMemoryBlock = registerBlock(new Block(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_memory_block", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -188,6 +190,7 @@ public class BlockInit {
         registerItem(peaceDragonBeacon, new Item.Properties(), forgeRegistry);
         registerItem(magicDragonBeacon, new Item.Properties(), forgeRegistry);
         registerItem(vetoDragonBeacon, new Item.Properties(), forgeRegistry);
+        registerItem(dragonMemoryBlock, new Item.Properties(), forgeRegistry);
     }
     
     @SuppressWarnings("ConstantConditions")
