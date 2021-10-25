@@ -33,6 +33,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unchecked,rawtypes")
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityTypesInit {
 
