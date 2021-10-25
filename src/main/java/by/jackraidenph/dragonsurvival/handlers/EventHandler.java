@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -86,13 +87,13 @@ public class EventHandler {
 
             ((AnimalEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
                     (AnimalEntity) entity, PlayerEntity.class,
-                    livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity),
+                    livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity) && !((PlayerEntity) livingEntity).hasEffect(DragonEffects.PEACE),
                     20.0F, 1.3F, 1.5F, EntityPredicates.ATTACK_ALLOWED));
         }
         if (entity instanceof HorseEntity) {
             HorseEntity horseEntity = (HorseEntity) entity;
             horseEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(horseEntity, PlayerEntity.class, 0, true, false, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElseGet(null).getLevel() != DragonLevel.ADULT));
-            horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT, 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
+            horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT && !livingEntity.hasEffect(DragonEffects.PEACE), 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
         }
     }
 
