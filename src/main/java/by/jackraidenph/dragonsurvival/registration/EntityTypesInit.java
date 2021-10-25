@@ -33,7 +33,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unchecked,rawtypes")
+@SuppressWarnings("rawtypes")
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityTypesInit {
 
@@ -82,7 +82,7 @@ public class EntityTypesInit {
         for (EntityType entity : entities) {
             Preconditions.checkNotNull(entity.getRegistryName(), "registryName");
             registry.register(entity);
-            EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> p_test_2_.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(64), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty() && MonsterEntity.checkAnyLightMonsterSpawnRules((EntityType<? extends MonsterEntity>) p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_));
+            EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> p_test_2_.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(64), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty() && MonsterEntity.checkAnyLightMonsterSpawnRules(cast(p_test_1_), p_test_2_, p_test_3_, p_test_4_, p_test_5_));
         }
 
         DRAGON = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
