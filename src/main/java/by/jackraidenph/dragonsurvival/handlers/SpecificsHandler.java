@@ -15,7 +15,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -57,7 +56,6 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -264,42 +262,30 @@ public class SpecificsHandler {
     private static FluidBlockRenderer prevFluidRenderer;
     
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public void onRenderWorldLastEvent(RenderWorldLastEvent event) { // TODO: clean up time :)
-    	ClientPlayerEntity player = Minecraft.getInstance().player;
-    	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-    		if (playerStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get()) {
-    			if (!wasCaveDragon) {
-    				RenderType lavaType = RenderType.translucent();
-                    RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
-                    RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
-                    try {
-                    	Field field = BlockRendererDispatcher.class.getDeclaredFields()[2];
-                    	field.setAccessible(true);
-                    	FluidBlockRenderer fluidRenderer = (FluidBlockRenderer)field.get(Minecraft.getInstance().getBlockRenderer());
-                    	prevFluidRenderer = fluidRenderer;
-                    	field.set(Minecraft.getInstance().getBlockRenderer(), new CaveLavaFluidRenderer());
-                    } catch(Exception ex) {
-                    	ex.printStackTrace();
-                    }
-                    Minecraft.getInstance().levelRenderer.allChanged();
-    			}
+	@OnlyIn(Dist.CLIENT)
+	public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
+		Minecraft minecraft = Minecraft.getInstance();
+		ClientPlayerEntity player = minecraft.player;
+		DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+			if (playerStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveLavaSwimming.get()) {
+				if (!wasCaveDragon) {
+					RenderType lavaType = RenderType.translucent();
+					RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
+					RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
+					FluidBlockRenderer fluidRenderer = minecraft.getBlockRenderer().liquidBlockRenderer;
+					prevFluidRenderer = fluidRenderer;
+					minecraft.getBlockRenderer().liquidBlockRenderer = new CaveLavaFluidRenderer();
+					minecraft.levelRenderer.allChanged();
+				}
     		}else {
     			if (wasCaveDragon) {
     				if (prevFluidRenderer != null) {
     					RenderType lavaType = RenderType.solid();
                         RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
-                        RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
-                        try {
-                        	Field field = BlockRendererDispatcher.class.getDeclaredFields()[2];
-                        	field.setAccessible(true);
-                        	FluidBlockRenderer fluidRenderer = (FluidBlockRenderer)field.get(Minecraft.getInstance().getBlockRenderer());
-                        	field.set(Minecraft.getInstance().getBlockRenderer(), prevFluidRenderer);
-                        } catch(Exception ex) {
-                        	ex.printStackTrace();
-                        }
+						RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
+						minecraft.getBlockRenderer().liquidBlockRenderer = prevFluidRenderer;
     				}
-    				Minecraft.getInstance().levelRenderer.allChanged();
+					minecraft.levelRenderer.allChanged();
     			}
     		}
     		wasCaveDragon = playerStateHandler.getType() == DragonType.CAVE;
