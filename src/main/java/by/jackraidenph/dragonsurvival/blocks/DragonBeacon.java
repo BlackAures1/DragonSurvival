@@ -7,7 +7,6 @@ import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
-import by.jackraidenph.dragonsurvival.util.DragonType;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -62,15 +61,15 @@ public class DragonBeacon extends Block {
             if (dragonState.isPresent()) {
                 DragonStateHandler dragonStateHandler = dragonState.orElse(null);
                 if (dragonStateHandler.isDragon()) {
-                    if (this == BlockInit.peaceDragonBeacon && dragonStateHandler.getType() == DragonType.SEA) {
+                    if (this == BlockInit.peaceDragonBeacon) {
                         //apply effect
                         playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
-                    } else if (this == BlockInit.magicDragonBeacon && dragonStateHandler.getType() == DragonType.FOREST) {
+                    } else if (this == BlockInit.magicDragonBeacon) {
                         //apply effect
                         playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
-                    } else if (this == BlockInit.vetoDragonBeacon && dragonStateHandler.getType() == DragonType.CAVE) {
+                    } else if (this == BlockInit.vetoDragonBeacon) {
                         //apply effect
                         playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
