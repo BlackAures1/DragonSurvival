@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity> {
     public DragonBeaconRenderer(TileEntityRendererDispatcher p_i226006_1_) {
@@ -47,6 +48,9 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                     break;
             }
         }
+        matrixStack.translate(0.5, 0.25, 0.5);
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(dragonBeaconEntity.tick));
+        matrixStack.scale(2, 2, 2);
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(item), ItemCameraTransforms.TransformType.GROUND, light, overlay, matrixStack, iRenderTypeBuffer);
         matrixStack.popPose();
     }

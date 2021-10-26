@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTileEntity {
     public Type type = Type.NONE;
-
+    public int tick;
     public enum Type {
         PEACE,
         MAGIC,
@@ -40,13 +40,13 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
                 switch (type) {
                     case PEACE:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(20))));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(20) + 5)));
                         break;
                     case MAGIC:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(20))));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(20) + 5)));
                         break;
                     case VETO:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20))));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20) + 5)));
                         break;
                 }
             }
@@ -55,6 +55,7 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
             if (blockState.getValue(DragonBeacon.LIT))
                 level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
         }
+        tick++;
     }
 
     @Override
