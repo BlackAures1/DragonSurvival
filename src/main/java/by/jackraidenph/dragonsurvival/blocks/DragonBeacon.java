@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -105,5 +106,10 @@ public class DragonBeacon extends Block {
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
         super.createBlockStateDefinition(p_206840_1_);
         p_206840_1_.add(LIT);
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

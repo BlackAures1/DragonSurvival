@@ -1,13 +1,12 @@
 package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.gecko.PrinceRenderer;
 import by.jackraidenph.dragonsurvival.gecko.*;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.nest.NestScreen;
-import by.jackraidenph.dragonsurvival.renderer.HelmetEntityRenderer;
-import by.jackraidenph.dragonsurvival.renderer.MagicalPredatorRenderer;
-import by.jackraidenph.dragonsurvival.renderer.PredatorStarTESR;
 import by.jackraidenph.dragonsurvival.renderer.PrincessRenderer;
+import by.jackraidenph.dragonsurvival.renderer.*;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.client.Minecraft;
@@ -71,6 +70,9 @@ public class ClientModEvents {
         RenderTypeLookup.setRenderLayer(BlockInit.bigSeaNest, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.birchDoor, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.acaciaDoor, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.peaceDragonBeacon, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.vetoDragonBeacon, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.magicDragonBeacon, RenderType.cutout());
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.BOLAS_ENTITY, manager -> new SpriteRenderer<>(manager, minecraft.getItemRenderer()));
@@ -82,6 +84,7 @@ public class ClientModEvents {
 
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.PREDATOR_STAR_TILE_ENTITY_TYPE, PredatorStarTESR::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.helmetTile, HelmetEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityTypesInit.dragonBeacon, DragonBeaconRenderer::new);
         ShaderHelper.initShaders();
 
         ScreenManager.register(Containers.nestContainer, NestScreen::new);
