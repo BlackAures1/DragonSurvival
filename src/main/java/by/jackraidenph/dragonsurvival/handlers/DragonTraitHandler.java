@@ -121,13 +121,13 @@ public class DragonTraitHandler {
                 // Dragon Particles
                 // TODO: Randomize along dragon body
                 if (world.isClientSide && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
-                    if (dragonStateHandler.getType() == DragonType.SEA && dragonStateHandler.getDebuffData().timeWithoutWater >= ConfigHandler.SERVER.seaTicksWithoutWater.get())
+                    if (dragonStateHandler.getType() == DragonType.SEA && !playerEntity.hasEffect(DragonEffects.PEACE) && dragonStateHandler.getDebuffData().timeWithoutWater >= ConfigHandler.SERVER.seaTicksWithoutWater.get())
                         world.addParticle(ParticleTypes.WHITE_ASH,
                                 playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
                                 playerEntity.getY() + 0.5F,
                                 playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
                                 0, 0, 0);
-                    if (dragonStateHandler.getType() == DragonType.FOREST && dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get())
+                    if (dragonStateHandler.getType() == DragonType.FOREST && !playerEntity.hasEffect(DragonEffects.MAGIC) && dragonStateHandler.getDebuffData().timeInDarkness == ConfigHandler.SERVER.forestStressTicks.get())
                         world.addParticle(ParticleTypes.SMOKE,
                                 playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
                                 playerEntity.getY() + 0.5F,
