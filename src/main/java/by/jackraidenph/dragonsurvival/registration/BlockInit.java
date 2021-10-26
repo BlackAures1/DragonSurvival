@@ -136,7 +136,6 @@ public class BlockInit {
         return block;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> forgeRegistry = event.getRegistry();
@@ -202,6 +201,7 @@ public class BlockInit {
         registerItem(block, properties.stacksTo(1), forgeRegistry);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void registerDoor(Block block, Item.Properties itemProps, IForgeRegistry<Item> forgeRegistry) {
         forgeRegistry.register(new DragonDoorItem(block, itemProps.tab(ItemsInit.items)).setRegistryName(block.getRegistryName()));
     }
