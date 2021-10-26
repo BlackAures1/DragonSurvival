@@ -26,18 +26,6 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
         if (dragonBeaconEntity.getLevel().getBlockState(dragonBeaconEntity.getBlockPos().below()).is(BlockInit.dragonMemoryBlock)) {
             switch (type) {
                 case PEACE:
-                    item = ItemsInit.activePeaceBeacon;
-                    break;
-                case MAGIC:
-                    item = ItemsInit.activeMagicBeacon;
-                    break;
-                case VETO:
-                    item = ItemsInit.activeVetoBeacon;
-                    break;
-            }
-        } else {
-            switch (type) {
-                case PEACE:
                     item = BlockInit.peaceDragonBeacon.asItem();
                     break;
                 case MAGIC:
@@ -45,6 +33,18 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                     break;
                 case VETO:
                     item = BlockInit.vetoDragonBeacon.asItem();
+                    break;
+            }
+        } else {
+            switch (type) {
+                case PEACE:
+                    item = ItemsInit.passivePeaceBeacon;
+                    break;
+                case MAGIC:
+                    item = ItemsInit.passiveMagicBeacon;
+                    break;
+                case VETO:
+                    item = ItemsInit.passiveVetoBeacon;
                     break;
             }
         }
