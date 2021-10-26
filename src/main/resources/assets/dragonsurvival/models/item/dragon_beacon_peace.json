@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "dragonsurvival:item/beacon_peace_0"
+    "layer0": "dragonsurvival:item/beacon_peace_1"
   }
 }
