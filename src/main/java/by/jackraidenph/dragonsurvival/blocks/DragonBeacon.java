@@ -68,15 +68,18 @@ public class DragonBeacon extends Block {
                 if (dragonStateHandler.isDragon()) {
                     if (this == BlockInit.peaceDragonBeacon) {
                         //apply effect
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(10)));
+                        if (!world.isClientSide)
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
                     } else if (this == BlockInit.magicDragonBeacon) {
                         //apply effect
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(10)));
+                        if (!world.isClientSide)
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
                     } else if (this == BlockInit.vetoDragonBeacon) {
                         //apply effect
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(10)));
+                        if (!world.isClientSide)
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(10)));
                         return ActionResultType.SUCCESS;
                     }
                 }

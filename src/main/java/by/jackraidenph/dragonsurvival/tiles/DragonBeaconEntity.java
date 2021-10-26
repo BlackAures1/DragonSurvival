@@ -36,17 +36,19 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
             BlockState blockState = getBlockState();
             if (!blockState.getValue(DragonBeacon.LIT))
                 level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
-            List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
-            switch (type) {
-                case PEACE:
-                    dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(20))));
-                    break;
-                case MAGIC:
-                    dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(20))));
-                    break;
-                case VETO:
-                    dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20))));
-                    break;
+            if (!level.isClientSide) {
+                List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
+                switch (type) {
+                    case PEACE:
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(20))));
+                        break;
+                    case MAGIC:
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(20))));
+                        break;
+                    case VETO:
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20))));
+                        break;
+                }
             }
         } else {
             BlockState blockState = getBlockState();
