@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:experience_bottle"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:netherite_scrap"
+    },
+    {
+      "item": "dragonsurvival:heart_element"
+    },
+    {
+      "item": "dragonsurvival:heart_element"
+    }
+  ],
+  "result": {
+    "item": "dragonsurvival:dragon_memory_block"
+  }
+}
