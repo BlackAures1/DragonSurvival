@@ -127,7 +127,7 @@ public class BlockInit {
         peaceDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_peace", forgeRegistry);
         magicDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_magic", forgeRegistry);
         vetoDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_veto", forgeRegistry);
-        dragonMemoryBlock = registerBlock(new Block(AbstractBlock.Properties.copy(dragonBeacon)), "dragon_memory_block", forgeRegistry);
+        dragonMemoryBlock = registerBlock(new Block(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(3, 50).requiresCorrectToolForDrops()), "dragon_memory_block", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
