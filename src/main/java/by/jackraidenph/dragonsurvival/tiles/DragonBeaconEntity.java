@@ -7,6 +7,7 @@ import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,8 +33,17 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
     @Override
     public void tick() {
         BlockState below = level.getBlockState(getBlockPos().below());
+        BlockState blockState = getBlockState();
+        Block beacon = blockState.getBlock();
+        if (type == Type.NONE) {
+            if (beacon == BlockInit.magicDragonBeacon)
+                type = Type.MAGIC;
+            else if (beacon == BlockInit.peaceDragonBeacon)
+                type = Type.PEACE;
+            else if (beacon == BlockInit.vetoDragonBeacon)
+                type = Type.VETO;
+        }
         if (below.getBlock() == BlockInit.dragonMemoryBlock && type != Type.NONE) {
-            BlockState blockState = getBlockState();
             if (!blockState.getValue(DragonBeacon.LIT))
                 level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
             if (!level.isClientSide) {
@@ -51,9 +61,9 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 }
             }
         } else {
-            BlockState blockState = getBlockState();
-            if (blockState.getValue(DragonBeacon.LIT))
-                level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
+            BlockState thisState = getBlockState();
+            if (thisState.getValue(DragonBeacon.LIT))
+                level.setBlockAndUpdate(getBlockPos(), thisState.cycle(DragonBeacon.LIT));
         }
         tick++;
     }
