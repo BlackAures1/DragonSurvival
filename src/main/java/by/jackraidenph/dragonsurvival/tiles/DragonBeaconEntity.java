@@ -1,7 +1,7 @@
 package by.jackraidenph.dragonsurvival.tiles;
 
 import by.jackraidenph.dragonsurvival.Functions;
-import by.jackraidenph.dragonsurvival.blocks.DragonMemoryBlock;
+import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
@@ -33,8 +33,9 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
     public void tick() {
         BlockState below = level.getBlockState(getBlockPos().below());
         if (below.getBlock() == BlockInit.dragonMemoryBlock && type != Type.NONE) {
-            if (!below.getValue(DragonMemoryBlock.LIT))
-                level.setBlockAndUpdate(getBlockPos(), below.cycle(DragonMemoryBlock.LIT));
+            BlockState blockState = getBlockState();
+            if (!blockState.getValue(DragonBeacon.LIT))
+                level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
             if (!level.isClientSide) {
                 List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
                 switch (type) {
@@ -50,8 +51,9 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 }
             }
         } else {
-            if (below.getValue(DragonMemoryBlock.LIT))
-                level.setBlockAndUpdate(getBlockPos(), below.cycle(DragonMemoryBlock.LIT));
+            BlockState blockState = getBlockState();
+            if (blockState.getValue(DragonBeacon.LIT))
+                level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
         }
         tick++;
     }
