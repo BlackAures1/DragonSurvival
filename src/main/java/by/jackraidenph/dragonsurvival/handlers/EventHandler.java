@@ -23,10 +23,8 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.tags.ITag;
@@ -42,6 +40,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -227,4 +226,14 @@ public class EventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void returnBeacon(PlayerEvent.ItemCraftedEvent craftedEvent) {
+        IInventory inventory = craftedEvent.getInventory();
+        ItemStack result = craftedEvent.getCrafting();
+        if (result.getItem() == BlockInit.dragonBeacon.asItem()) {
+            craftedEvent.getPlayer().addItem(new ItemStack(Items.BEACON));
+        }
+    }
+
 }
