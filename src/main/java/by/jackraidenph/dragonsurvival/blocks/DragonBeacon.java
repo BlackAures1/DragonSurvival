@@ -42,24 +42,26 @@ public class DragonBeacon extends Block {
         ItemStack itemStack = playerEntity.getItemInHand(hand);
         Item item = itemStack.getItem();
         //upgrading
-        if (item == Items.GOLD_BLOCK) {
-            world.setBlockAndUpdate(pos, BlockInit.peaceDragonBeacon.defaultBlockState());
-            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
-            dragonBeaconEntity.type = DragonBeaconEntity.Type.PEACE;
-            itemStack.shrink(1);
-            return ActionResultType.SUCCESS;
-        } else if (item == Items.DIAMOND_BLOCK) {
-            world.setBlockAndUpdate(pos, BlockInit.magicDragonBeacon.defaultBlockState());
-            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
-            dragonBeaconEntity.type = DragonBeaconEntity.Type.MAGIC;
-            itemStack.shrink(1);
-            return ActionResultType.SUCCESS;
-        } else if (item == Items.NETHERITE_INGOT) {
-            world.setBlockAndUpdate(pos, BlockInit.vetoDragonBeacon.defaultBlockState());
-            DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
-            dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
-            itemStack.shrink(1);
-            return ActionResultType.SUCCESS;
+        if (this == BlockInit.dragonBeacon) {
+            if (item == Items.GOLD_BLOCK) {
+                world.setBlockAndUpdate(pos, BlockInit.peaceDragonBeacon.defaultBlockState());
+                DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
+                dragonBeaconEntity.type = DragonBeaconEntity.Type.PEACE;
+                itemStack.shrink(1);
+                return ActionResultType.SUCCESS;
+            } else if (item == Items.DIAMOND_BLOCK) {
+                world.setBlockAndUpdate(pos, BlockInit.magicDragonBeacon.defaultBlockState());
+                DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
+                dragonBeaconEntity.type = DragonBeaconEntity.Type.MAGIC;
+                itemStack.shrink(1);
+                return ActionResultType.SUCCESS;
+            } else if (item == Items.NETHERITE_INGOT) {
+                world.setBlockAndUpdate(pos, BlockInit.vetoDragonBeacon.defaultBlockState());
+                DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
+                dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
+                itemStack.shrink(1);
+                return ActionResultType.SUCCESS;
+            }
         }
         //apply temporary benefits
         if (itemStack.isEmpty()) {
