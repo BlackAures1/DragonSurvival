@@ -17,6 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
 
+import java.util.Random;
+
 public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity> {
     public DragonBeaconRenderer(TileEntityRendererDispatcher p_i226006_1_) {
         super(p_i226006_1_);
@@ -30,12 +32,15 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
         ClientWorld clientWorld = (ClientWorld) dragonBeaconEntity.getLevel();
         if (dragonBeaconEntity.getLevel().getBlockState(dragonBeaconEntity.getBlockPos().below()).is(BlockInit.dragonMemoryBlock)) {
             Minecraft minecraft = Minecraft.getInstance();
+            Random random = clientWorld.random;
+            double x = 0.25 + random.nextInt(5) / 10d;
+            double z = 0.25 + random.nextInt(5) / 10d;
             switch (type) {
                 case PEACE:
                     item = ItemsInit.passivePeaceBeacon;
                     try {
-                        if (!minecraft.isPaused() && v > 0.7)
-                            clientWorld.addParticle(ParticleRegistry.peaceBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.peaceBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + 0.5, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + 0.5, 0, 0, 0);
+                        if (!minecraft.isPaused() && dragonBeaconEntity.tick % 5 == 0)
+                            clientWorld.addParticle(ParticleRegistry.peaceBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.peaceBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + x, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + z, 0, 0, 0);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                     }
@@ -43,8 +48,8 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                 case MAGIC:
                     item = ItemsInit.passiveMagicBeacon;
                     try {
-                        if (!minecraft.isPaused() && v > 0.7)
-                            clientWorld.addParticle(ParticleRegistry.magicBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.magicBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + 0.5, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + 0.5, 0, 0, 0);
+                        if (!minecraft.isPaused() && dragonBeaconEntity.tick % 5 == 0)
+                            clientWorld.addParticle(ParticleRegistry.magicBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.magicBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + x, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + z, 0, 0, 0);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                     }
@@ -52,14 +57,14 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                 case VETO:
                     item = ItemsInit.passiveVetoBeacon;
                     try {
-                        if (!minecraft.isPaused() && v > 0.7)
-                            clientWorld.addParticle(ParticleRegistry.vetoBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.vetoBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + 0.5, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + 0.5, 0, 0, 0);
+                        if (!minecraft.isPaused() && dragonBeaconEntity.tick % 5 == 0)
+                            clientWorld.addParticle(ParticleRegistry.vetoBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.vetoBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + x, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + z, 0, 0, 0);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                     }
                     break;
             }
-            ;
+
         } else {
             switch (type) {
                 case PEACE:
