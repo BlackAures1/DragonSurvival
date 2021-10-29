@@ -73,23 +73,20 @@ public class DragonBeacon extends Block {
             LazyOptional<DragonStateHandler> dragonState = DragonStateProvider.getCap(playerEntity);
             if (dragonState.isPresent()) {
                 DragonStateHandler dragonStateHandler = dragonState.orElse(null);
-                if (dragonStateHandler.isDragon()) {
+                if (dragonStateHandler.isDragon() && (playerEntity.totalExperience >= 30 || playerEntity.isCreative())) {
                     if (this == BlockInit.peaceDragonBeacon) {
                         if (!world.isClientSide)
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(10)));
-                        world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
-                        return ActionResultType.SUCCESS;
                     } else if (this == BlockInit.magicDragonBeacon) {
                         if (!world.isClientSide)
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(10)));
-                        world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
-                        return ActionResultType.SUCCESS;
                     } else if (this == BlockInit.vetoDragonBeacon) {
                         if (!world.isClientSide)
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(10)));
-                        world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
-                        return ActionResultType.SUCCESS;
                     }
+                    playerEntity.giveExperiencePoints(-30);
+                    world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
+                    return ActionResultType.SUCCESS;
                 }
             }
         }
