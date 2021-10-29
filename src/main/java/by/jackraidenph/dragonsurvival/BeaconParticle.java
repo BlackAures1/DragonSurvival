@@ -31,10 +31,7 @@ public class BeaconParticle extends SpriteTexturedParticle {
                 this.xd *= 1.1D;
                 this.zd *= 1.1D;
             }
-
-//            this.xd *= 0.96F;
             this.yd *= 0.96F;
-//            this.zd *= 0.96F;
             if (this.onGround) {
                 this.xd *= 0.7F;
                 this.zd *= 0.7F;
