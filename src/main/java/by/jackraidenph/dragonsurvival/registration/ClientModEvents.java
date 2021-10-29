@@ -1,5 +1,6 @@
 package by.jackraidenph.dragonsurvival.registration;
 
+import by.jackraidenph.dragonsurvival.BeaconParticle;
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.gecko.PrinceRenderer;
 import by.jackraidenph.dragonsurvival.gecko.*;
@@ -11,16 +12,22 @@ import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -29,6 +36,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -40,6 +48,7 @@ public class ClientModEvents {
     public static KeyBinding TOGGLE_WINGS;
 
     public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
+
 
     @SubscribeEvent
     public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
@@ -96,6 +105,39 @@ public class ClientModEvents {
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT, manager -> new KnightRenderer(manager, new KnightModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS_ON_HORSE, manager -> new by.jackraidenph.dragonsurvival.gecko.PrincessRenderer(manager, new PrincessModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE_ON_HORSE, manager -> new PrinceRenderer(manager, new PrinceModel()));
+    }
+
+    @SubscribeEvent
+    public static void registerParticleFactories(ParticleFactoryRegisterEvent factoryRegisterEvent) {
+        ParticleManager particleManager = Minecraft.getInstance().particleEngine;
+        particleManager.register(ParticleRegistry.vetoBeaconParticle, p_create_1_ -> new IParticleFactory<BasicParticleType>() {
+            @Nullable
+            @Override
+            public Particle createParticle(BasicParticleType p_199234_1_, ClientWorld clientWorld, double v, double v1, double v2, double v3, double v4, double v5) {
+                BeaconParticle beaconParticle = new BeaconParticle(clientWorld, v, v1, v2, v3, v4, v5);
+                beaconParticle.pickSprite(p_create_1_);
+                return beaconParticle;
+            }
+        });
+        particleManager.register(ParticleRegistry.magicBeaconParticle, p_create_1_ -> new IParticleFactory<BasicParticleType>() {
+            @Nullable
+            @Override
+            public Particle createParticle(BasicParticleType p_199234_1_, ClientWorld clientWorld, double v, double v1, double v2, double v3, double v4, double v5) {
+                BeaconParticle beaconParticle = new BeaconParticle(clientWorld, v, v1, v2, v3, v4, v5);
+                beaconParticle.pickSprite(p_create_1_);
+                return beaconParticle;
+            }
+        });
+        particleManager.register(ParticleRegistry.peaceBeaconParticle, p_create_1_ -> new IParticleFactory<BasicParticleType>() {
+            @Nullable
+            @Override
+            public Particle createParticle(BasicParticleType p_199234_1_, ClientWorld clientWorld, double v, double v1, double v2, double v3, double v4, double v5) {
+                BeaconParticle beaconParticle = new BeaconParticle(clientWorld, v, v1, v2, v3, v4, v5);
+                beaconParticle.pickSprite(p_create_1_);
+                return beaconParticle;
+            }
+        });
+
     }
 
     /**
