@@ -8,6 +8,15 @@
     "sounds": [
       "dragonsurvival:beacon_deactivate"
     ]
+  },
+  "upgrade_beacon": {
+    "sounds": [
+      "dragonsurvival:upgrade"
+    ]
+  },
+  "apply_effect": {
+    "sounds": [
+      "dragonsurvival:get_effect"
+    ]
   }
-
 }
