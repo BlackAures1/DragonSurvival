@@ -1,0 +1,13 @@
+{
+  "activate_beacon": {
+    "sounds": [
+      "dragonsurvival:beacon_activate"
+    ]
+  },
+  "deactivate_beacon": {
+    "sounds": [
+      "dragonsurvival:beacon_deactivate"
+    ]
+  }
+
+}

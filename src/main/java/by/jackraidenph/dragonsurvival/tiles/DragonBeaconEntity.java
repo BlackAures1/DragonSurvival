@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.Sounds;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.block.Block;
@@ -12,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
@@ -44,8 +46,10 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 type = Type.VETO;
         }
         if (below.getBlock() == BlockInit.dragonMemoryBlock && type != Type.NONE) {
-            if (!blockState.getValue(DragonBeacon.LIT))
+            if (!blockState.getValue(DragonBeacon.LIT)) {
                 level.setBlockAndUpdate(getBlockPos(), blockState.cycle(DragonBeacon.LIT));
+                level.playSound(null, getBlockPos(), Sounds.activateBeacon, SoundCategory.BLOCKS, 1, 1);
+            }
             if (!level.isClientSide) {
                 List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
                 switch (type) {
@@ -62,8 +66,10 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
             }
         } else {
             BlockState thisState = getBlockState();
-            if (thisState.getValue(DragonBeacon.LIT))
+            if (thisState.getValue(DragonBeacon.LIT)) {
                 level.setBlockAndUpdate(getBlockPos(), thisState.cycle(DragonBeacon.LIT));
+                level.playSound(null, getBlockPos(), Sounds.deactivateBeacon, SoundCategory.BLOCKS, 1, 1);
+            }
         }
         tick++;
     }
