@@ -17,19 +17,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Effect;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
@@ -80,15 +79,34 @@ public class DragonBeacon extends Block {
                 DragonStateHandler dragonStateHandler = dragonState.orElse(null);
                 if (dragonStateHandler.isDragon() && (playerEntity.totalExperience >= 30 || playerEntity.isCreative())) {
                     if (this == BlockInit.peaceDragonBeacon) {
-                        if (!world.isClientSide)
+                        if (!world.isClientSide) {
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            });
+                        }
                     } else if (this == BlockInit.magicDragonBeacon) {
-                        if (!world.isClientSide)
+                        if (!world.isClientSide) {
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            ConfigHandler.COMMON.magicBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            });
+                        }
                     } else if (this == BlockInit.vetoDragonBeacon) {
-                        if (!world.isClientSide)
+                        if (!world.isClientSide) {
                             playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
+                            });
+                        }
                     }
+
                     playerEntity.giveExperiencePoints(-30);
                     world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
                     return ActionResultType.SUCCESS;
