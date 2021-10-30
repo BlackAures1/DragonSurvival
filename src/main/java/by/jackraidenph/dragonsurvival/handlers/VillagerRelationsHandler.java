@@ -138,25 +138,25 @@ public class VillagerRelationsHandler {
                 } else {
                     int duration = effectInstance.getDuration();
                     if (duration <= Functions.minutesToTicks(10)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30), 1));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(1), 1));
                     } else if (duration <= Functions.minutesToTicks(30)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(60), 2));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(10), 2));
                     } else if (duration <= Functions.minutesToTicks(60)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(100), 3));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(15), 3));
                     } else if (duration <= Functions.minutesToTicks(100)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(120), 4));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(30), 4));
                     } else if (duration <= Functions.minutesToTicks(120)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(150), 5));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(60), 5));
                     } else if (duration <= Functions.minutesToTicks(150)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(200), 6));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(150), 6));
                     } else if (duration <= Functions.minutesToTicks(200)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(250), 7));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(200), 7));
                     } else if (duration <= Functions.minutesToTicks(250)) {
                         playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(300), 8));
                     } else if (duration <= Functions.minutesToTicks(300)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(350), 9));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(400), 9));
                     } else if (duration <= Functions.minutesToTicks(350)) {
-                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(400), 10));
+                        playerEntity.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.minutesToTicks(500), 10));
                     }
                 }
             }
@@ -168,25 +168,25 @@ public class VillagerRelationsHandler {
             EffectInstance effectInstance = playerEntity.getEffect(DragonEffects.EVIL_DRAGON);
             assert effectInstance != null;
             int timeLeft = effectInstance.getDuration();
-            if (timeLeft >= Functions.minutesToTicks(350))
+            if (timeLeft >= Functions.minutesToTicks(1000))
                 return 10;
-            if (timeLeft >= Functions.minutesToTicks(300))
+            if (timeLeft >= Functions.minutesToTicks(400))
                 return 9;
-            if (timeLeft >= Functions.minutesToTicks(250))
+            if (timeLeft >= Functions.minutesToTicks(300))
                 return 8;
             if (timeLeft >= Functions.minutesToTicks(200))
                 return 7;
             if (timeLeft >= Functions.minutesToTicks(150))
                 return 6;
-            if (timeLeft >= Functions.minutesToTicks(120))
-                return 5;
-            if (timeLeft >= Functions.minutesToTicks(100))
-                return 4;
             if (timeLeft >= Functions.minutesToTicks(60))
-                return 3;
+                return 5;
             if (timeLeft >= Functions.minutesToTicks(30))
-                return 2;
+                return 4;
+            if (timeLeft >= Functions.minutesToTicks(15))
+                return 3;
             if (timeLeft >= Functions.minutesToTicks(10))
+                return 2;
+            if (timeLeft >= Functions.minutesToTicks(1))
                 return 1;
         }
         return 0;
