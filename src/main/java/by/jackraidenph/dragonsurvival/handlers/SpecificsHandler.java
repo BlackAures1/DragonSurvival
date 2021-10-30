@@ -87,7 +87,7 @@ public class SpecificsHandler {
 	}
 	
 	private static void rebuildSpeedupBlocksMap() {
-		HashMap<DragonType, List<Block>> speedupMap = new HashMap<DragonType, List<Block>>();
+		HashMap<DragonType, List<Block>> speedupMap = new HashMap<>();
 		speedupMap.put(DragonType.CAVE, buildDragonSpeedupMap(DragonType.CAVE));
 		speedupMap.put(DragonType.FOREST, buildDragonSpeedupMap(DragonType.FOREST));
 		speedupMap.put(DragonType.SEA, buildDragonSpeedupMap(DragonType.SEA));
@@ -95,7 +95,7 @@ public class SpecificsHandler {
 	}
 	
 	private static List<Block> buildDragonSpeedupMap(DragonType type) {
-		ArrayList<Block> speedupMap = new ArrayList<Block>();
+		ArrayList<Block> speedupMap = new ArrayList<>();
 		String[] configSpeedups;
 		switch (type) {
 			case CAVE:
@@ -117,8 +117,7 @@ public class SpecificsHandler {
 			if (sEntry[0].equalsIgnoreCase("tag")) {
 				final ITag<Block> tag = BlockTags.getAllTags().getTag(rlEntry);
 				if (tag != null && tag.getValues().size() != 0)
-					for (Block block : tag.getValues())
-						speedupMap.add(block);
+					speedupMap.addAll(tag.getValues());
 				else
 					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in {} dragon speedup block config.", sEntry[1], sEntry[2], type.toString().toLowerCase());
 			} else {
@@ -133,7 +132,7 @@ public class SpecificsHandler {
 	}
 	
 	private static void rebuildSeaHydrationLists() {
-		ArrayList<Block> hydrationBlocks = new ArrayList<Block>();
+		ArrayList<Block> hydrationBlocks = new ArrayList<>();
 		String[] configHydrationBlocks = ConfigHandler.SERVER.seaHydrationBlocks.get().toArray(new String[0]);
 		for (String entry : configHydrationBlocks) {
 			final String[] sEntry = entry.split(":");
@@ -141,20 +140,19 @@ public class SpecificsHandler {
 			if (sEntry[0].equalsIgnoreCase("tag")) {
 				final ITag<Block> tag = BlockTags.getAllTags().getTag(rlEntry);
 				if (tag != null && tag.getValues().size() != 0)
-					for (Block block : tag.getValues())
-						hydrationBlocks.add(block);
+					hydrationBlocks.addAll(tag.getValues());
 				else
-					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in sea dragon hydraton block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.warn("Null or empty tag '{}:{}' in sea dragon hydraton block config.", sEntry[1], sEntry[2]);
 			} else {
 				final Block block = ForgeRegistries.BLOCKS.getValue(rlEntry);
 				if (block != null)
 					hydrationBlocks.add(block);
 				else
-					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.warn("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			}
 		}
 		SEA_DRAGON_HYDRATION_BLOCKS = hydrationBlocks;
-		ArrayList<Item> hydrationItems = new ArrayList<Item>();
+		ArrayList<Item> hydrationItems = new ArrayList<>();
 		String[] configHydrationItems = ConfigHandler.SERVER.seaAdditionalWaterUseables.get().toArray(new String[0]);
 		for (String entry : configHydrationItems) {
 			final String[] sEntry = entry.split(":");
@@ -162,16 +160,15 @@ public class SpecificsHandler {
 			if (sEntry[0].equalsIgnoreCase("tag")) {
 				final ITag<Item> tag = ItemTags.getAllTags().getTag(rlEntry);
 				if (tag != null && tag.getValues().size() != 0)
-					for (Item item : tag.getValues())
-						hydrationItems.add(item);
+					hydrationItems.addAll(tag.getValues());
 				else
-					DragonSurvivalMod.LOGGER.error("Null or empty tag '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.warn("Null or empty tag '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			} else {
 				final Item item = ForgeRegistries.ITEMS.getValue(rlEntry);
 				if (item != null)
 					hydrationItems.add(item);
 				else
-					DragonSurvivalMod.LOGGER.error("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
+					DragonSurvivalMod.LOGGER.warn("Unknown block '{}:{}' in sea dragon hydration block config.", sEntry[1], sEntry[2]);
 			}
 		}
 		SEA_DRAGON_HYDRATION_USE_ALTERNATIVES = hydrationItems;
@@ -272,8 +269,7 @@ public class SpecificsHandler {
 					RenderType lavaType = RenderType.translucent();
 					RenderTypeLookup.setRenderLayer(Fluids.LAVA, lavaType);
 					RenderTypeLookup.setRenderLayer(Fluids.FLOWING_LAVA, lavaType);
-					FluidBlockRenderer fluidRenderer = minecraft.getBlockRenderer().liquidBlockRenderer;
-					prevFluidRenderer = fluidRenderer;
+					prevFluidRenderer = minecraft.getBlockRenderer().liquidBlockRenderer;
 					minecraft.getBlockRenderer().liquidBlockRenderer = new CaveLavaFluidRenderer();
 					minecraft.levelRenderer.allChanged();
 				}
