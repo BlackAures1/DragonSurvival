@@ -63,7 +63,7 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                             ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
-                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             });
                         });
                         break;
@@ -73,7 +73,7 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                             ConfigHandler.COMMON.magicBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
-                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             });
                         });
                         break;
@@ -83,7 +83,7 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                             ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
-                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             });
                         });
                         break;
