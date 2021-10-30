@@ -3,6 +3,7 @@ package by.jackraidenph.dragonsurvival.tiles;
 import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.Sounds;
@@ -54,13 +55,13 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
                 switch (type) {
                     case PEACE:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(20) + 5)));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
                         break;
                     case MAGIC:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(20) + 5)));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
                         break;
                     case VETO:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(20) + 5)));
+                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
                         break;
                 }
             }

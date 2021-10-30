@@ -70,6 +70,7 @@ public class CommonConfig {
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> evilDragonStatusGivers;
 	public final ForgeConfigSpec.BooleanValue preserveEvilDragonEffectAfterDeath;
 	public final ForgeConfigSpec.IntValue riderSpawnLowerBound, riderSpawnUpperBound;
+	public final ForgeConfigSpec.IntValue secondsOfBeaconEffect, minutesOfDragonEffect;
 
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
@@ -150,6 +151,10 @@ public class CommonConfig {
 		princeDamage = builder.comment("Prince base damage").defineInRange("princeDamage", 1d, 1d, 20d);
 		princeSpeed = builder.comment("Prince speed").defineInRange("princeSpeed", 0.3d, 0.2d, 0.6d);
 		princeArmor = builder.comment("Prince armor").defineInRange("princeArmor", 6d, 0d, 20d);
+		builder.pop();
+		builder.push("dragonBeacons");
+		secondsOfBeaconEffect = builder.comment("Duration of effect given by beacon constantly in seconds").defineInRange("constantEffect", 20, 1, 60 * 60);
+		minutesOfDragonEffect = builder.comment("Duration of effect given in exchange for experience in minutes").defineInRange("temporaryEffect", 10, 1, 60 * 2);
 		builder.pop();
 	}
 }
