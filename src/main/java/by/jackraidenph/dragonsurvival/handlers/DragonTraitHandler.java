@@ -28,7 +28,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber
 public class DragonTraitHandler {
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
+    public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         if (playerTickEvent.phase != TickEvent.Phase.START)
             return;
         PlayerEntity playerEntity = playerTickEvent.player;
