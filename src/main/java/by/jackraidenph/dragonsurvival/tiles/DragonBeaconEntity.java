@@ -13,9 +13,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Effect;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -55,13 +58,34 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 List<PlayerEntity> dragons = level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(getBlockPos()).inflate(50).expandTowards(0, level.getMaxBuildHeight(), 0), DragonStateProvider::isDragon);
                 switch (type) {
                     case PEACE:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
+                        dragons.forEach(playerEntity -> {
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
+                            ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                            });
+                        });
                         break;
                     case MAGIC:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
+                        dragons.forEach(playerEntity -> {
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
+                            ConfigHandler.COMMON.magicBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                            });
+                        });
                         break;
                     case VETO:
-                        dragons.forEach(playerEntity -> playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5)));
+                        dragons.forEach(playerEntity -> {
+                            playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
+                            ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
+                                Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
+                                if (effect != null)
+                                    playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get())));
+                            });
+                        });
                         break;
                 }
             }
