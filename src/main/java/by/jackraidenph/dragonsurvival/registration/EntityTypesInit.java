@@ -1,12 +1,14 @@
 package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Princess;
 import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
+import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -23,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -97,7 +100,14 @@ public class EntityTypesInit {
 
     @SubscribeEvent
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
-        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> p_test_2_.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty());
+        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> p_test_2_.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty() && !BlockPos.findClosestMatch(p_test_4_, 10, 64, blockPos -> {
+            //this is expensive, might need to remove
+            if (p_test_2_.getBlockEntity(blockPos) instanceof DragonBeaconEntity) {
+                DragonBeaconEntity dbe = (DragonBeaconEntity) p_test_2_.getBlockEntity(blockPos);
+                return dbe.type == DragonBeaconEntity.Type.MAGIC && p_test_2_.getBlockState(blockPos).getValue(DragonBeacon.LIT);
+            }
+            return false;
+        }).isPresent());
         HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192, null);
         SHOOTER_HUNTER = createEntity(Shooter.class, Shooter::new, 0.6F, 1.95F, 12486764, 2690565, null);
         SQUIRE_HUNTER = createEntity(Squire.class, Squire::new, 0.6F, 1.95F, 12486764, 5318420, null);
