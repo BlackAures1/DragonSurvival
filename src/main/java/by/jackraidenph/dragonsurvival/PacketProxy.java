@@ -67,10 +67,10 @@ public class PacketProxy {
             Entity entity = world.getEntity(syncCapabilityMovement.playerId);
             if (entity instanceof PlayerEntity) {
                 DragonStateProvider.getCap(entity).ifPresent(dragonStateHandler -> {
-                	if ((PlayerEntity)entity == thisPlayer)
-                		dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, ((PlayerEntity)entity).yHeadRot, entity.xRot, syncCapabilityMovement.bite);
-                	else
-                		dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.bite);
+                	if (entity == thisPlayer)
+                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, ((PlayerEntity) entity).yHeadRot, entity.xRot, syncCapabilityMovement.bite);
+                    else
+                        dragonStateHandler.setMovementData(syncCapabilityMovement.bodyYaw, syncCapabilityMovement.headYaw, syncCapabilityMovement.headPitch, syncCapabilityMovement.bite);
                 });
             }
         }
