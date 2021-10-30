@@ -2,8 +2,10 @@ package by.jackraidenph.dragonsurvival.config;
 
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,6 +73,7 @@ public class CommonConfig {
 	public final ForgeConfigSpec.BooleanValue preserveEvilDragonEffectAfterDeath;
 	public final ForgeConfigSpec.IntValue riderSpawnLowerBound, riderSpawnUpperBound;
 	public final ForgeConfigSpec.IntValue secondsOfBeaconEffect, minutesOfDragonEffect;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> vetoBeaconEffects, magicBeaconEffects, peaceBeaconEffects;
 
 	CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.push("common");
@@ -155,6 +158,9 @@ public class CommonConfig {
 		builder.push("dragonBeacons");
 		secondsOfBeaconEffect = builder.comment("Duration of effect given by beacon constantly in seconds").defineInRange("constantEffect", 20, 1, 60 * 60);
 		minutesOfDragonEffect = builder.comment("Duration of effect given in exchange for experience in minutes").defineInRange("temporaryEffect", 10, 1, 60 * 2);
+		peaceBeaconEffects = builder.comment("Extra effects of Peace beacon").defineList("peaceBeaconExtra", Collections::emptyList, o -> o instanceof String && ForgeRegistries.POTIONS.containsKey(new ResourceLocation((String) o)));
+		magicBeaconEffects = builder.comment("Extra effects of Magic beacon").defineList("magicBeaconExtra", Collections::emptyList, o -> o instanceof String && ForgeRegistries.POTIONS.containsKey(new ResourceLocation((String) o)));
+		vetoBeaconEffects = builder.comment("Extra effects of Veto beacon").defineList("vetoBeaconExtra", Collections::emptyList, o -> o instanceof String && ForgeRegistries.POTIONS.containsKey(new ResourceLocation((String) o)));
 		builder.pop();
 	}
 }
