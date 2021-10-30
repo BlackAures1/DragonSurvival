@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
-import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.Sounds;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
@@ -80,7 +79,6 @@ public class DragonBeacon extends Block {
                 if (dragonStateHandler.isDragon() && (playerEntity.totalExperience >= 30 || playerEntity.isCreative())) {
                     if (this == BlockInit.peaceDragonBeacon) {
                         if (!world.isClientSide) {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
                             ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
@@ -89,7 +87,6 @@ public class DragonBeacon extends Block {
                         }
                     } else if (this == BlockInit.magicDragonBeacon) {
                         if (!world.isClientSide) {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
                             ConfigHandler.COMMON.magicBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
@@ -98,7 +95,6 @@ public class DragonBeacon extends Block {
                         }
                     } else if (this == BlockInit.vetoDragonBeacon) {
                         if (!world.isClientSide) {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
                             ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)

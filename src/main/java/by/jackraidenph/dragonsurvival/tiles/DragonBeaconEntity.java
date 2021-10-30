@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
-import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.Sounds;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.EffectInstance2;
@@ -59,7 +58,6 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 switch (type) {
                     case PEACE:
                         dragons.forEach(playerEntity -> {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.PEACE, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
@@ -69,7 +67,6 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                         break;
                     case MAGIC:
                         dragons.forEach(playerEntity -> {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.MAGIC, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             ConfigHandler.COMMON.magicBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
@@ -79,7 +76,6 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                         break;
                     case VETO:
                         dragons.forEach(playerEntity -> {
-                            playerEntity.addEffect(new EffectInstance2(DragonEffects.VETO, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));
                             ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
