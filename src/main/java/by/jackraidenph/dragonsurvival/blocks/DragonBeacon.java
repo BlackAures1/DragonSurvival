@@ -45,10 +45,12 @@ public class DragonBeacon extends Block {
         Item item = itemStack.getItem();
         //upgrading
         if (this == BlockInit.dragonBeacon) {
+            DragonBeaconEntity old = (DragonBeaconEntity) world.getBlockEntity(pos);
             if (item == Items.GOLD_BLOCK) {
                 world.setBlockAndUpdate(pos, BlockInit.peaceDragonBeacon.defaultBlockState());
                 DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
                 dragonBeaconEntity.type = DragonBeaconEntity.Type.PEACE;
+                dragonBeaconEntity.tick = old.tick;
                 itemStack.shrink(1);
                 world.playSound(playerEntity, pos, Sounds.upgradeBeacon, SoundCategory.BLOCKS, 1, 1);
                 return ActionResultType.SUCCESS;
@@ -56,6 +58,7 @@ public class DragonBeacon extends Block {
                 world.setBlockAndUpdate(pos, BlockInit.magicDragonBeacon.defaultBlockState());
                 DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
                 dragonBeaconEntity.type = DragonBeaconEntity.Type.MAGIC;
+                dragonBeaconEntity.tick = old.tick;
                 itemStack.shrink(1);
                 world.playSound(playerEntity, pos, Sounds.upgradeBeacon, SoundCategory.BLOCKS, 1, 1);
                 return ActionResultType.SUCCESS;
@@ -63,6 +66,7 @@ public class DragonBeacon extends Block {
                 world.setBlockAndUpdate(pos, BlockInit.vetoDragonBeacon.defaultBlockState());
                 DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
                 dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
+                dragonBeaconEntity.tick = old.tick;
                 itemStack.shrink(1);
                 world.playSound(playerEntity, pos, Sounds.upgradeBeacon, SoundCategory.BLOCKS, 1, 1);
                 return ActionResultType.SUCCESS;
