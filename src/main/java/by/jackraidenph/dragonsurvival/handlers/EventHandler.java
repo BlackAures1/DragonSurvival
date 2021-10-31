@@ -102,7 +102,7 @@ public class EventHandler {
         LivingEntity livingEntity = e.getEntityLiving();
         World world = livingEntity.level;
         if (livingEntity instanceof AnimalEntity && livingEntity.level.getRandom().nextDouble() < ConfigHandler.COMMON.predatorAnimalSpawnChance.get()) {
-            if (world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(livingEntity.blockPosition()).inflate(64), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty()) {
+            if (world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(livingEntity.blockPosition()).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty()) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
                 livingEntity.level.addFreshEntity(beast);
                 beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());

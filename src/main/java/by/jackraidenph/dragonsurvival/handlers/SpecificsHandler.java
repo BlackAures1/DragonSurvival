@@ -294,7 +294,7 @@ public class SpecificsHandler {
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-				if (damageSource.isFire() && livingEntity.hasEffect(DragonEffects.VETO))
+				if (damageSource.isFire() && livingEntity.hasEffect(DragonEffects.FIRE_IMMUNITY))
 					event.setCanceled(true);
 				if (damageSource.isFire() && dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveFireImmunity.get())
 					event.setCanceled(true);

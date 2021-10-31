@@ -100,11 +100,11 @@ public class EntityTypesInit {
 
     @SubscribeEvent
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
-        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> p_test_2_.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty() && !BlockPos.findClosestMatch(p_test_4_, 10, 64, blockPos -> {
+        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF, (p_test_1_, serverWorld, p_test_3_, p_test_4_, p_test_5_) -> serverWorld.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty() && !BlockPos.findClosestMatch(p_test_4_, 10, 64, blockPos -> {
             //this is expensive, might need to remove
-            if (p_test_2_.getBlockEntity(blockPos) instanceof DragonBeaconEntity) {
-                DragonBeaconEntity dbe = (DragonBeaconEntity) p_test_2_.getBlockEntity(blockPos);
-                return dbe.type == DragonBeaconEntity.Type.MAGIC && p_test_2_.getBlockState(blockPos).getValue(DragonBeacon.LIT);
+            if (serverWorld.getBlockEntity(blockPos) instanceof DragonBeaconEntity) {
+                DragonBeaconEntity dbe = (DragonBeaconEntity) serverWorld.getBlockEntity(blockPos);
+                return dbe.type == DragonBeaconEntity.Type.MAGIC && serverWorld.getBlockState(blockPos).getValue(DragonBeacon.LIT);
             }
             return false;
         }).isPresent());

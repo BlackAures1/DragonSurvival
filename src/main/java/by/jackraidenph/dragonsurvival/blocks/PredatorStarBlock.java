@@ -70,7 +70,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         	LivingEntity target = (LivingEntity)entity;
         	target.hurt(DamageSources.STAR_DRAIN, Float.MAX_VALUE);
             worldIn.destroyBlock(pos, false);
-            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get() && worldIn.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(target.blockPosition()).inflate(64), playerEntity -> playerEntity.hasEffect(DragonEffects.MAGIC)).isEmpty()) {
+            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get() && worldIn.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(target.blockPosition()).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty()) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addFreshEntity(beast);
                 beast.teleportTo(pos.getX(), pos.getY(), pos.getZ());
