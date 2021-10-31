@@ -87,6 +87,9 @@
   "effect.dragonsurvival.peace": "Peace",
   "effect.dragonsurvival.magic": "Magic",
   "effect.dragonsurvival.veto": "Veto",
+  "effect.dragonsurvival.animal_peace": "Animal Peace",
+  "effect.dragonsurvival.fire_immunity": "Fire Immunity",
+  "effect.dragonsurvival.predator_anti_spawn": "Anti-Predator",
 
   "dragonsurvival:config.category.general.tooltip": "General config options for Dragon Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Configurable spawn chances for entities",
