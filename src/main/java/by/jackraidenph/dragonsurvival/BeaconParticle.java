@@ -13,8 +13,8 @@ public class BeaconParticle extends SpriteTexturedParticle {
 
     public BeaconParticle(ClientWorld p_i232448_1_, double x, double y, double z, double xd, double yd, double zd) {
         super(p_i232448_1_, x, y, z, xd, yd, zd);
-        this.gravity = 0.5f;
-        fallSpeed = 0.01;
+        this.gravity = 0.9f;
+        fallSpeed = 0.02;
     }
 
     public void tick() {
@@ -31,10 +31,10 @@ public class BeaconParticle extends SpriteTexturedParticle {
                 this.xd *= 1.1D;
                 this.zd *= 1.1D;
             }
-            this.yd *= 0.96F;
+            this.yd *= 0.7F;
             if (this.onGround) {
-                this.xd *= 0.7F;
-                this.zd *= 0.7F;
+                this.xd *= 0.96F;
+                this.zd *= 0.96F;
             }
 
         }

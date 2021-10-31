@@ -76,7 +76,7 @@ public class DragonBeacon extends Block {
             LazyOptional<DragonStateHandler> dragonState = DragonStateProvider.getCap(playerEntity);
             if (dragonState.isPresent()) {
                 DragonStateHandler dragonStateHandler = dragonState.orElse(null);
-                if (dragonStateHandler.isDragon() && (playerEntity.totalExperience >= 30 || playerEntity.isCreative())) {
+                if (dragonStateHandler.isDragon() && (playerEntity.totalExperience >= 60 || playerEntity.isCreative())) {
                     if (this == BlockInit.peaceDragonBeacon) {
                         if (!world.isClientSide) {
                             ConfigHandler.COMMON.peaceBeaconEffects.get().forEach(s -> {
