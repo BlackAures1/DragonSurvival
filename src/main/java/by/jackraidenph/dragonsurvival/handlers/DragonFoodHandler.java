@@ -237,43 +237,49 @@ public class DragonFoodHandler {
 	}
 	
 	@SubscribeEvent
-	@OnlyIn(Dist.DEDICATED_SERVER)
 	public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
 		DragonStateProvider.getCap(event.getEntityLiving()).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
-				ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
-				ServerWorld level = player.getLevel();
-				Hand hand = event.getHand();
-				ItemStack stack = player.getItemInHand(event.getHand());
-				
-				int i = stack.getCount();
-				int j = stack.getDamageValue();
-				ActionResult<ItemStack> actionresult = stack.use(level, player, hand);
-				ItemStack itemstack = actionresult.getObject();
-				if (itemstack == stack && itemstack.getCount() == i && getUseDuration(itemstack, dragonStateHandler.getType()) <= 0 && itemstack.getDamageValue() == j) {
-					event.setCancellationResult(actionresult.getResult());
-				} else if (actionresult.getResult() == ActionResultType.FAIL && getUseDuration(itemstack, dragonStateHandler.getType()) > 0 && !player.isUsingItem()) {
-					event.setCancellationResult(actionresult.getResult());
-				} else {
-					player.setItemInHand(hand, itemstack);
-					if (player.isCreative()) {
-						itemstack.setCount(i);
-						if (itemstack.isDamageableItem() && itemstack.getDamageValue() != j) {
-							itemstack.setDamageValue(j);
+				if (!event.getPlayer().level.isClientSide) {
+					ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+					ServerWorld level = player.getLevel();
+					Hand hand = event.getHand();
+					ItemStack stack = player.getItemInHand(event.getHand());
+
+					int i = stack.getCount();
+					int j = stack.getDamageValue();
+					ActionResult<ItemStack> actionresult = stack.use(level, player, hand);
+					ItemStack itemstack = actionresult.getObject();
+					if (itemstack == stack && itemstack.getCount() == i && getUseDuration(itemstack, dragonStateHandler.getType()) <= 0 && itemstack.getDamageValue() == j) {
+						{
+							event.setCancellationResult(actionresult.getResult());
 						}
-					}
+					} else if (actionresult.getResult() == ActionResultType.FAIL && getUseDuration(itemstack, dragonStateHandler.getType()) > 0 && !player.isUsingItem()) {
+						{
+							event.setCancellationResult(actionresult.getResult());
+							event.setCanceled(true);
+						}
+					} else {
+						player.setItemInHand(hand, itemstack);
+						if (player.isCreative()) {
+							itemstack.setCount(i);
+							if (itemstack.isDamageableItem() && itemstack.getDamageValue() != j) {
+								itemstack.setDamageValue(j);
+							}
+						}
 
-					if (itemstack.isEmpty()) {
-						player.setItemInHand(hand, ItemStack.EMPTY);
-					}
+						if (itemstack.isEmpty()) {
+							player.setItemInHand(hand, ItemStack.EMPTY);
+						}
 
-					if (!player.isUsingItem()) {
-						player.refreshContainer(player.inventoryMenu);
-					}
+						if (!player.isUsingItem()) {
+							player.refreshContainer(player.inventoryMenu);
+						}
 
-		            event.setCancellationResult(actionresult.getResult());
+						event.setCancellationResult(actionresult.getResult());
+						event.setCanceled(true);
+					}
 				}
-				event.setCanceled(true);
 			}
 		});
 	}
