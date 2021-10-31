@@ -103,7 +103,7 @@ public class DragonBeacon extends Block {
                         }
                     }
 
-                    playerEntity.giveExperiencePoints(-30);
+                    playerEntity.giveExperiencePoints(-60);
                     world.playSound(playerEntity, pos, Sounds.applyEffect, SoundCategory.PLAYERS, 1, 1);
                     return ActionResultType.SUCCESS;
                 }
