@@ -1,12 +1,14 @@
 package by.jackraidenph.dragonsurvival.registration;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.blocks.DragonBeacon;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.*;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Princess;
 import by.jackraidenph.dragonsurvival.handlers.VillagerRelationsHandler;
+import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -18,9 +20,12 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.monster.VindicatorEntity;
 import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -31,6 +36,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("rawtypes,unchecked")
 @Mod.EventBusSubscriber(modid = DragonSurvivalMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityTypesInit {
 
@@ -48,7 +54,7 @@ public class EntityTypesInit {
     public static EntityType<Princess> PRINCESS_ON_HORSE;
     public static EntityType<by.jackraidenph.dragonsurvival.gecko.Prince> PRINCE_ON_HORSE;
 
-    private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary) {
+    private static <T extends CreatureEntity> EntityType<T> createEntity(Class<T> entityClass, EntityType.IFactory<T> factory, float width, float height, int eggPrimary, int eggSecondary, EntitySpawnPlacementRegistry.IPlacementPredicate spawnPlacementPredicate) {
 
         ResourceLocation location = new ResourceLocation(DragonSurvivalMod.MODID, classToString(entityClass));
         EntityType<T> entity = EntityType.Builder.of(factory, EntityClassification.MONSTER).sized(width, height).setTrackingRange(64).setUpdateInterval(1).build(location.toString());
@@ -57,7 +63,10 @@ public class EntityTypesInit {
         Item spawnEgg = new SpawnEggItem(entity, eggPrimary, eggSecondary, (new Item.Properties()).tab(ItemsInit.items));
         spawnEgg.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, classToString(entityClass) + "_spawn_egg"));
         spawnEggs.add(spawnEgg);
-
+        if (spawnPlacementPredicate == null)
+            EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (p_test_1_, p_test_2_, p_test_3_, p_test_4_, p_test_5_) -> MonsterEntity.checkAnyLightMonsterSpawnRules(cast(p_test_1_), p_test_2_, p_test_3_, p_test_4_, p_test_5_));
+        else
+            EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spawnPlacementPredicate);
         return entity;
     }
 
@@ -79,7 +88,6 @@ public class EntityTypesInit {
         for (EntityType entity : entities) {
             Preconditions.checkNotNull(entity.getRegistryName(), "registryName");
             registry.register(entity);
-            EntitySpawnPlacementRegistry.register(entity, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkAnyLightMonsterSpawnRules);
         }
 
         DRAGON = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
@@ -92,13 +100,20 @@ public class EntityTypesInit {
 
     @SubscribeEvent
     public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
-        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF);
-        HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192);
-        SHOOTER_HUNTER = createEntity(Shooter.class, Shooter::new, 0.6F, 1.95F, 12486764, 2690565);
-        SQUIRE_HUNTER = createEntity(Squire.class, Squire::new, 0.6F, 1.95F, 12486764, 5318420);
-        PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864);
-        KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707);
-        PRINCE_ON_HORSE = createEntity(by.jackraidenph.dragonsurvival.gecko.Prince.class, by.jackraidenph.dragonsurvival.gecko.Prince::new, 0.8f, 2.5f, 0xffdd1f, 0x2ab10);
+        MAGICAL_BEAST = createEntity(MagicalPredatorEntity.class, MagicalPredatorEntity::new, 1.1f, 1.5625f, 0x000000, 0xFFFFFF, (p_test_1_, serverWorld, p_test_3_, p_test_4_, p_test_5_) -> serverWorld.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(p_test_4_).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty() && !BlockPos.findClosestMatch(p_test_4_, 10, 64, blockPos -> {
+            //this is expensive, might need to remove
+            if (serverWorld.getBlockEntity(blockPos) instanceof DragonBeaconEntity) {
+                DragonBeaconEntity dbe = (DragonBeaconEntity) serverWorld.getBlockEntity(blockPos);
+                return dbe.type == DragonBeaconEntity.Type.MAGIC && serverWorld.getBlockState(blockPos).getValue(DragonBeacon.LIT);
+            }
+            return false;
+        }).isPresent());
+        HUNTER_HOUND = createEntity(HunterHound.class, HunterHound::new, 0.6F, 0.85F, 10510648, 8934192, null);
+        SHOOTER_HUNTER = createEntity(Shooter.class, Shooter::new, 0.6F, 1.95F, 12486764, 2690565, null);
+        SQUIRE_HUNTER = createEntity(Squire.class, Squire::new, 0.6F, 1.95F, 12486764, 5318420, null);
+        PRINCESS = createEntity(PrincessEntity.class, PrincessEntity::new, 0.6F, 1.9F, 16766495, 174864, null);
+        KNIGHT = createEntity(Knight.class, Knight::new, 0.8f, 2.5f, 0, 0x510707, null);
+        PRINCE_ON_HORSE = createEntity(by.jackraidenph.dragonsurvival.gecko.Prince.class, by.jackraidenph.dragonsurvival.gecko.Prince::new, 0.8f, 2.5f, 0xffdd1f, 0x2ab10, null);
         VillagerRelationsHandler.dragonHunters = new ArrayList<>(4);
         if (ConfigHandler.COMMON.spawnHound.get())
             VillagerRelationsHandler.dragonHunters.add(cast(HUNTER_HOUND));
@@ -108,7 +123,7 @@ public class EntityTypesInit {
             VillagerRelationsHandler.dragonHunters.add(cast(SHOOTER_HUNTER));
         if (ConfigHandler.COMMON.spawnKnight.get())
             VillagerRelationsHandler.dragonHunters.add(cast(KNIGHT));
-        PRINCESS_ON_HORSE = createEntity(Princess.class, Princess::new, 0.8f, 2.5f, 0xffd61f, 0x2ab10);
+        PRINCESS_ON_HORSE = createEntity(Princess.class, Princess::new, 0.8f, 2.5f, 0xffd61f, 0x2ab10, null);
         for (Item spawnEgg : spawnEggs) {
             Preconditions.checkNotNull(spawnEgg.getRegistryName(), "registry name is null");
             event.getRegistry().register(spawnEgg);

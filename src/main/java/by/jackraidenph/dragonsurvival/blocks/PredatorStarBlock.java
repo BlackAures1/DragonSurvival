@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
@@ -26,6 +27,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -68,7 +70,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         	LivingEntity target = (LivingEntity)entity;
         	target.hurt(DamageSources.STAR_DRAIN, Float.MAX_VALUE);
             worldIn.destroyBlock(pos, false);
-            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get()) {
+            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get() && worldIn.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(target.blockPosition()).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty()) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addFreshEntity(beast);
                 beast.teleportTo(pos.getX(), pos.getY(), pos.getZ());

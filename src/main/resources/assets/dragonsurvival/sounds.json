@@ -1,0 +1,22 @@
+{
+  "activate_beacon": {
+    "sounds": [
+      "dragonsurvival:beacon_activate"
+    ]
+  },
+  "deactivate_beacon": {
+    "sounds": [
+      "dragonsurvival:beacon_deactivate"
+    ]
+  },
+  "upgrade_beacon": {
+    "sounds": [
+      "dragonsurvival:upgrade"
+    ]
+  },
+  "apply_effect": {
+    "sounds": [
+      "dragonsurvival:get_effect"
+    ]
+  }
+}

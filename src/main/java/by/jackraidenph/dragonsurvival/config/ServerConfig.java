@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ServerConfig {
@@ -162,7 +163,7 @@ public class ServerConfig {
 						"tag:forge:sandstone",
 						"tag:forge:stone",
 						"tag:forge:ores"
-						), (block) -> isValidBlockConfig(block));
+				), this::isValidBlockConfig);
 		builder.pop().push("forest"); // Forest Dragon Bonuses
 		forestFallReduction = builder
 				.comment("How many blocks of fall damage is mitigated for forest dragons. Set to 0.0 to disable.")
@@ -177,7 +178,7 @@ public class ServerConfig {
 						"tag:minecraft:leaves",
 						"tag:minecraft:planks",
 						"tag:forge:dirt"
-						), (block) -> isValidBlockConfig(block));
+				), this::isValidBlockConfig);
 		builder.pop().push("sea"); // Sea Dragon Bonuses
 		seaSwimmingBonuses = builder
 				.comment("Whether sea dragons gain bonus swim speed and unlimited air.")
@@ -200,7 +201,7 @@ public class ServerConfig {
 						"block:minecraft:chiseled_red_sandstone",
 						"block:minecraft:smooth_red_sandstone",
 						"block:minecraft:water"
-						), (block) -> isValidBlockConfig(block));
+				), this::isValidBlockConfig);
 		builder.pop(2).push("penalties");
 		penalties = builder
 				.comment("Set to false to toggle off all dragon penalties.")
@@ -235,7 +236,7 @@ public class ServerConfig {
 						"tag:minecraft:ice",
 						"block:minecraft:snow",
 						"block:minecraft:snow_block"
-						), (item) -> isValidBlockConfig(item));
+				), this::isValidBlockConfig);
 		seaAllowWaterBottles = builder
 				.comment("Set to false to disable sea dragons using vanilla water bottles to avoid dehydration.")
 				.define("allowWaterBottles", true);
@@ -244,9 +245,9 @@ public class ServerConfig {
 				.defineInRange("waterItemRestorationTicks", 5000, 0, 100000);
 		seaAdditionalWaterUseables = builder
 				.comment("Additional modded USEABLE items that restore water when used (called from LivingEntityUseItemEvent.Finish). Format: item/tag:modid:id")
-				.defineList("seaHydrationItems", Arrays.asList(
+				.defineList("seaHydrationItems", Collections.singletonList(
 						"item:minecraft:enchanted_golden_apple"
-						), (item) -> isValidItemConfig(item));
+				), this::isValidItemConfig);
 		// Ore Loot
 		builder.pop(3).push("oreLoot");
 		humanOreDustChance = builder
@@ -307,7 +308,7 @@ public class ServerConfig {
 						"item:thermal:basalz_rod:2:4",
 						"item:thermal:basalz_powder:1:2",
 						"item:druidcraft:fiery_glass:2:2"
-						), (food) -> isValidFoodConfig(food));
+				), this::isValidFoodConfig);
 		forestDragonFoods = builder
 				.defineList("forestDragon", Arrays.asList(
 						"tag:forge:raw_meats:5:7",
@@ -451,7 +452,7 @@ public class ServerConfig {
 						"item:leescreatures:raw_boarlin:6:6",
 						"item:mysticalworld:venison:5:5",
 						"item:toadterror:toad_chops:8:7"
-						), (food) -> isValidFoodConfig(food));
+				), this::isValidFoodConfig);
 		seaDragonFoods = builder
 				.defineList("seaDragon", Arrays.asList(
 						"tag:forge:raw_fishes:6:7",
@@ -597,7 +598,7 @@ public class ServerConfig {
 						"item:aquafina:raw_starfish:4:1",
 						"item:aquafina:spider_crab_leg:4:1",
 						"item:aquafina:raw_stingray_slice:4:1"
-						), (food) -> isValidFoodConfig(food));
+				), this::isValidFoodConfig);
 	}
 	
 	private boolean isValidFoodConfig(Object food) {
@@ -619,16 +620,12 @@ public class ServerConfig {
 	
 	private boolean isValidBlockConfig(Object block) {
 		final String[] blockSplit = String.valueOf(block).split(":");
-		if (blockSplit.length != 3 ||!(blockSplit[0].equalsIgnoreCase("block") || blockSplit[0].equalsIgnoreCase("tag")))
-			return false;
-		return true;
+		return blockSplit.length == 3 && (blockSplit[0].equalsIgnoreCase("block") || blockSplit[0].equalsIgnoreCase("tag"));
 	}
 	
 	private boolean isValidItemConfig(Object item) {
 		final String[] itemSplit = String.valueOf(item).split(":");
-		if (itemSplit.length != 3 ||!(itemSplit[0].equalsIgnoreCase("item") || itemSplit[0].equalsIgnoreCase("tag")))
-			return false;
-		return true;
+		return itemSplit.length == 3 && (itemSplit[0].equalsIgnoreCase("item") || itemSplit[0].equalsIgnoreCase("tag"));
 	}
     
 }

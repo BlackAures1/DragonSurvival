@@ -5,6 +5,7 @@ import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.registration.BlockInit;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -22,15 +23,14 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -40,6 +40,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -86,26 +87,26 @@ public class EventHandler {
 
             ((AnimalEntity) entity).goalSelector.addGoal(5, new AvoidEntityGoal(
                     (AnimalEntity) entity, PlayerEntity.class,
-                    livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity),
+                    livingEntity -> DragonStateProvider.isDragon((PlayerEntity) livingEntity) && !((PlayerEntity) livingEntity).hasEffect(DragonEffects.PEACE),
                     20.0F, 1.3F, 1.5F, EntityPredicates.ATTACK_ALLOWED));
         }
         if (entity instanceof HorseEntity) {
             HorseEntity horseEntity = (HorseEntity) entity;
             horseEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(horseEntity, PlayerEntity.class, 0, true, false, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElseGet(null).getLevel() != DragonLevel.ADULT));
-            horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT, 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
+            horseEntity.targetSelector.addGoal(4, new AvoidEntityGoal<>(horseEntity, PlayerEntity.class, livingEntity -> livingEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).getLevel() == DragonLevel.ADULT && !livingEntity.hasEffect(DragonEffects.PEACE), 20, 1.3, 1.5, EntityPredicates.ATTACK_ALLOWED::test));
         }
     }
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
         LivingEntity livingEntity = e.getEntityLiving();
-        if (livingEntity instanceof PlayerEntity || livingEntity instanceof MagicalPredatorEntity)
-            return;
-
+        World world = livingEntity.level;
         if (livingEntity instanceof AnimalEntity && livingEntity.level.getRandom().nextDouble() < ConfigHandler.COMMON.predatorAnimalSpawnChance.get()) {
-            MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
-            livingEntity.level.addFreshEntity(beast);
-            beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+            if (world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(livingEntity.blockPosition()).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty()) {
+                MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(livingEntity.level);
+                livingEntity.level.addFreshEntity(beast);
+                beast.teleportToWithTicket(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+            }
         }
     }
 
@@ -225,4 +226,14 @@ public class EventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void returnBeacon(PlayerEvent.ItemCraftedEvent craftedEvent) {
+        IInventory inventory = craftedEvent.getInventory();
+        ItemStack result = craftedEvent.getCrafting();
+        if (result.getItem() == BlockInit.dragonBeacon.asItem()) {
+            craftedEvent.getPlayer().addItem(new ItemStack(Items.BEACON));
+        }
+    }
+
 }

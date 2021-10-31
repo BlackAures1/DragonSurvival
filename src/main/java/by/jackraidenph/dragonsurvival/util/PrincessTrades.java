@@ -34,7 +34,7 @@ public class PrincessTrades {
 
     public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 5, Items.GOLD_NUGGET, 5, 10, 15);
 
-    public static ItemFor2ItemsTrade XP_BOTTLE1 = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 2, ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 4);
+    public static ItemFor2ItemsTrade XP_BOTTLE1 = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 2, ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 10);
 
     public static ItemFor2ItemsTrade ELDER_DRAGON_DUST = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 5, Items.DIAMOND, 1, ItemsInit.elderDragonDust, 1, 12, 15);
 

@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.NestPlaceHolder;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
+import by.jackraidenph.dragonsurvival.tiles.DragonBeaconEntity;
 import by.jackraidenph.dragonsurvival.tiles.HelmetEntity;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -20,6 +21,7 @@ public class TileEntityTypesInit {
     public static TileEntityType<NestPlaceHolder> nestPlaceHolder;
     public static TileEntityType<AltarEntity> altarEntityTile;
     public static TileEntityType<HelmetEntity> helmetTile;
+    public static TileEntityType<DragonBeaconEntity> dragonBeacon;
 
     @SubscribeEvent
     public static void registerBlockEntities(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -44,8 +46,11 @@ public class TileEntityTypesInit {
                 BlockInit.dragon_altar_blackstone
         ).build(null);
         registry.register(altarEntityTile.setRegistryName(DragonSurvivalMod.MODID, "dragon_altar"));
-        helmetTile = TileEntityType.Builder.of(() -> new HelmetEntity(), BlockInit.helmet1, BlockInit.helmet2, BlockInit.helmet3).build(null);
+        helmetTile = TileEntityType.Builder.of(HelmetEntity::new, BlockInit.helmet1, BlockInit.helmet2, BlockInit.helmet3).build(null);
         helmetTile.setRegistryName(DragonSurvivalMod.MODID, "knight_helmet");
         registry.register(helmetTile);
+        dragonBeacon = TileEntityType.Builder.of(DragonBeaconEntity::new, BlockInit.dragonBeacon, BlockInit.peaceDragonBeacon, BlockInit.magicDragonBeacon, BlockInit.vetoDragonBeacon).build(null);
+        dragonBeacon.setRegistryName(DragonSurvivalMod.MODID, "dragon_beacon");
+        registry.register(dragonBeacon);
     }
 }
