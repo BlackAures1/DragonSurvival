@@ -1,6 +1,6 @@
 1.16.5-0.0.44:
-- added effects: peace, magic, veto, calm animals, ban predators;
-- added blocks: dragon memory, beacon empty, beacon peace, beacon magic, beacon veto;
+- added effects: sea peace, forest magic, cave fire, calm animals, anti-predators;
+- added blocks: dragon memory, beacon empty, sea beacon peace, forest beacon magic, cave beacon fire;
 - added mechanics: buying an effect from a lighthouse for experience, damaging the player when he lacks experience, improving the lighthouse with items, creating a protected area with effects thanks to the memory block.
 - added beacon sounds;
 - added beacon textures;
@@ -8,8 +8,11 @@
 - added beacon configurations;
 - removed glare textures on horse riders;
 - added Spanish. Thanks Dgarden7!
+- improved translation in English and Russian;
 - re-frying cave food has been accelerated;
-- changed trade with the prince and princesses (now easier to pump them, but some items have become much more expensive)
+- changed trade with the prince and princesses (now easier to pump them, but some items have become much more expensive);
+- improved the spawn of dragon hunters;
+- vanilla beacon returns in recipes.
 
 1.16.5-0.0.43:
 - required forge version - 36.2.0;

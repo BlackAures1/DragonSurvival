@@ -30,7 +30,6 @@
   "item.dragonsurvival.charred_mushroom": "Обугленный гриб",
 
   "block.dragonsurvival.predator_star": "Звезда хищника",
-  "block.dragonsurvival.dragon_altar": "Алтарь Драконов",
   "block.dragonsurvival.cave_nest_small": "Маленькое пещерное гнездо",
   "block.dragonsurvival.forest_nest_small": "Маленькое лесное гнездо",
   "block.dragonsurvival.water_nest_small": "Маленькое морское гнездо",
@@ -54,6 +53,11 @@
   "block.dragonsurvival.dragon_altar_mossy_cobblestone": "Алтарь драконов из замшелого булыжника",
   "block.dragonsurvival.dragon_altar_blackstone": "Алтарь драконов из чернита",
 
+  "block.dragonsurvival.empty_dragon_beacon": "Опустошённый маяк дракона",
+  "block.dragonsurvival.dragon_beacon_peace": "Морской маяк Спокойствия",
+  "block.dragonsurvival.dragon_beacon_magic": "Лесной маяк Магии",
+  "block.dragonsurvival.dragon_beacon_fire": "Пещерный маяк Огня",
+  "block.dragonsurvival.dragon_memory_block": "Память дракона для маяков",
 
   "block.dragonsurvival.spruce_dragon_door": "Еловая драконья дверь",
   "block.dragonsurvival.acacia_dragon_door": "Акациевая драконья дверь",
@@ -73,6 +77,13 @@
   "block.dragonsurvival.legacy_dragon_door": "Легендарная драконья дверь",
 
   "effect.dragonsurvival.stress": "Стресс",
+  "effect.dragonsurvival.evil_dragon": "Злой Дракон",
+  "effect.dragonsurvival.trapped": "Путы",
+  "effect.dragonsurvival.peace": "Спокойствие Моря",
+  "effect.dragonsurvival.magic": "Лесная Магия",
+  "effect.dragonsurvival.fire": "Пещерный Огонь",
+  "effect.dragonsurvival.animal_peace": "Умиротворение",
+  "effect.dragonsurvival.predator_anti_spawn": "Анти-Хищник",
 
   "dragonsurvival:config.category.general.tooltip": "Общие параметры конфигурации для Dragons Survival",
   "dragonsurvival:config.category.spawnchances.tooltip": "Настройка спавна сущностей",
@@ -83,13 +94,13 @@
   "death.attack.dehydration": "%1$s иссушен солнцем.",
   "death.attack.dehydration.player": "%1$s иссушен при попытке убежать от %2$s.",
   
-  "ds.cave_dragon_choice": "Глубого внутри вас начинает бурлить раскаленная лава. Вы стали пещерным драконом.",
-  "ds.forest_dragon_choice": "Вы чувствуете потребность в сыром мясе и покрываетесь зелеными чешуйками. Вы стали лесным драконом.",
-  "ds.sea_dragon_choice": "Бушующее море и рыба манят вас. Вы стали морским драконом.",
+  "ds.cave_dragon_choice": "Глубого внутри вас начинает бурлить раскаленная лава. Вы стали §nПещерным драконом.§r",
+  "ds.forest_dragon_choice": "Вы чувствуете потребность в сыром мясе и покрываетесь зелеными чешуйками. Вы стали §aЛесным драконом.§r",
+  "ds.sea_dragon_choice": "Бушующее море и рыба манят вас. Вы стали §3Морским драконом.§r",
   "ds.choice_human": "Вы проснулись ото сна и стали человеком.",
   "ds.wings.enabled": "Крылья расправлены.",
   "ds.wings.disabled": "Крылья сложены.",
-  "ds.you.have.no.wings": "У вас ещё нет крыльев.",
+  "ds.you.have.no.wings": "У вас ещё §cнет крыльев§r. Обратитесь к Эндер дракону за помощью.",
   "ds.dragon.grants.wings": "<Ender dragon> Я дарю тебе крылья. А теперь убирайся отсюда!",
   "ds.space.occupied": "Нет свободного места для увеличения размера",
   "ds.cooldown.active": "Вы истощили магию алтаря. Нужно время, чтобы восстановить её",
@@ -116,7 +127,6 @@
   "ds.endmessage.17": "Оставь меня и мое гнездо в покое, в обмен я дам тебе часть своей силы. Ты сможешь покорить небеса.",
   "ds.endmessage.18": "Еще одна душа, пришедшая через портал.... Но ты отличаешься от них. В тебе есть сила. Скрытая сила. Я могу пробудить ее. Но в обмен на это ты покинешь мои земли и больше никогда не потревожишь меня. Согласен?",
   
-  
   "ds.altar_dragon_info.cave_dragon.0":"■ §nПещерный дракон.§r",
   "ds.altar_dragon_info.cave_dragon.1":"",
   "ds.altar_dragon_info.cave_dragon.2":"§2■ Особенности:§f§r огнестойкость, когти-кирки, огненная магия, ускорение на пещерных блоках.",
@@ -126,7 +136,7 @@
   "ds.altar_dragon_info.cave_dragon.6":"§6■ Рацион:§r",
   "ds.altar_dragon_info.cave_dragon.7":"",
   "ds.altar_dragon_info.cave_dragon.8":"--food--",
-  "ds.altar_dragon_info.forest_dragon.0":"■ §nЛесной дракон.§r",
+  "ds.altar_dragon_info.forest_dragon.0":"§a■ Лесной дракон.§r",
   "ds.altar_dragon_info.forest_dragon.1":"",
   "ds.altar_dragon_info.forest_dragon.2":"§2■ Особенности:§f§r мягкое падение, когти-топоры, отравляющая магия, ускорение на лесных блоках. ",
   "ds.altar_dragon_info.forest_dragon.3":"",
@@ -135,7 +145,7 @@
   "ds.altar_dragon_info.forest_dragon.6":"§6■ Рацион:§r",
   "ds.altar_dragon_info.forest_dragon.7":"",
   "ds.altar_dragon_info.forest_dragon.8":"--food--",
-  "ds.altar_dragon_info.sea_dragon.0":"■ §nМорской дракон.§r",
+  "ds.altar_dragon_info.sea_dragon.0":"§3■ Морской дракон.§r",
   "ds.altar_dragon_info.sea_dragon.1":"",
   "ds.altar_dragon_info.sea_dragon.2":"§2■ Особенности:§f§r подводное дыхание, когти-лопаты, электрическая магия, ускорение на морских блоках.",
   "ds.altar_dragon_info.sea_dragon.3":"",
@@ -146,5 +156,10 @@
   "ds.altar_dragon_info.sea_dragon.8":"--food--",
   "ds.altar_dragon_info.human.0":"■ §nЧеловек.§r",
   "ds.altar_dragon_info.human.1":"■ Homo sapiens.",
-  "ds.altar_dragon_info.human.2":"Путешественник, строитель и изобретатель."
+  "ds.altar_dragon_info.human.2":"Путешественник, строитель и изобретатель.",
+
+  "ds.hold_shift.for_food": "Зажмите 'Shift' чтобы раскрыть полный список",
+  "ds.cave.dragon.food": "Еда пещерного дракона",
+  "ds.forest.dragon.food": "Еда лесного дракона",
+  "ds.sea.dragon.food": "Еда морского дракона"
 }

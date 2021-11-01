@@ -59,6 +59,11 @@
   "block.dragonsurvival.dragon_altar_nether_bricks": "מזבח דרקונים מלבני נת'ר",
   "block.dragonsurvival.dragon_altar_mossy_cobblestone": "מזבח דרקונים מאבן טחב מרוסקת",
   "block.dragonsurvival.dragon_altar_blackstone": "מזבח דרקונים מאבן שחורה",
+  "block.dragonsurvival.empty_dragon_beacon": "משואת דרקון ריקה",
+  "block.dragonsurvival.dragon_beacon_peace": "משואת דרקון של שלום",
+  "block.dragonsurvival.dragon_beacon_magic": "משואת דרקון של קסם",
+  "block.dragonsurvival.dragon_beacon_fire": "משואת דרקון של וטו",
+  "block.dragonsurvival.dragon_memory_block": "זיכרון דרקון",
 
   "block.dragonsurvival.spruce_dragon_door": "דלת דרקונים מאשוחית",
   "block.dragonsurvival.acacia_dragon_door": "דלת דרקונים משיטה",
@@ -80,6 +85,9 @@
   "effect.dragonsurvival.stress": "לחץ",
   "effect.dragonsurvival.evil_dragon": "דרקון מרושע",
   "effect.dragonsurvival.trapped": "לכוד",
+  "effect.dragonsurvival.peace": "שלום",
+  "effect.dragonsurvival.magic": "קסם",
+  "effect.dragonsurvival.fire": "וטו",
 
   "dragonsurvival:config.category.general.tooltip": "הגדרות תצורה כלליות להישרדות דרקונים",
   "dragonsurvival:config.category.spawnchances.tooltip": "סיכויי ההשרצה הניתנים להגדרה עבור ישויות",
