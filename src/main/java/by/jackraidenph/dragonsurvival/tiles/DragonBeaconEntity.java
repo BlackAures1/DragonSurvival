@@ -27,7 +27,7 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
     public enum Type {
         PEACE,
         MAGIC,
-        VETO,
+        FIRE,
         NONE
     }
 
@@ -45,8 +45,8 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                 type = Type.MAGIC;
             else if (beacon == BlockInit.peaceDragonBeacon)
                 type = Type.PEACE;
-            else if (beacon == BlockInit.vetoDragonBeacon)
-                type = Type.VETO;
+            else if (beacon == BlockInit.fireDragonBeacon)
+                type = Type.FIRE;
         }
         if (below.getBlock() == BlockInit.dragonMemoryBlock && type != Type.NONE) {
             if (!blockState.getValue(DragonBeacon.LIT)) {
@@ -74,9 +74,9 @@ public class DragonBeaconEntity extends BaseBlockEntity implements ITickableTile
                             });
                         });
                         break;
-                    case VETO:
+                    case FIRE:
                         dragons.forEach(playerEntity -> {
-                            ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
+                            ConfigHandler.COMMON.fireBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
                                     playerEntity.addEffect(new EffectInstance2(effect, Functions.secondsToTicks(ConfigHandler.COMMON.minutesOfDragonEffect.get()) + 5));

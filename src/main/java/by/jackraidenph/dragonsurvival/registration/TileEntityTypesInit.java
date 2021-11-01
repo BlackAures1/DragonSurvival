@@ -49,7 +49,7 @@ public class TileEntityTypesInit {
         helmetTile = TileEntityType.Builder.of(HelmetEntity::new, BlockInit.helmet1, BlockInit.helmet2, BlockInit.helmet3).build(null);
         helmetTile.setRegistryName(DragonSurvivalMod.MODID, "knight_helmet");
         registry.register(helmetTile);
-        dragonBeacon = TileEntityType.Builder.of(DragonBeaconEntity::new, BlockInit.dragonBeacon, BlockInit.peaceDragonBeacon, BlockInit.magicDragonBeacon, BlockInit.vetoDragonBeacon).build(null);
+        dragonBeacon = TileEntityType.Builder.of(DragonBeaconEntity::new, BlockInit.dragonBeacon, BlockInit.peaceDragonBeacon, BlockInit.magicDragonBeacon, BlockInit.fireDragonBeacon).build(null);
         dragonBeacon.setRegistryName(DragonSurvivalMod.MODID, "dragon_beacon");
         registry.register(dragonBeacon);
     }

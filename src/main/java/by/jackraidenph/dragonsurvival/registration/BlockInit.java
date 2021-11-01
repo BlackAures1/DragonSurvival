@@ -44,7 +44,7 @@ public class BlockInit {
     public static Block dragon_altar_blackstone;
 
     public static Helmet helmet1, helmet2, helmet3;
-    public static DragonBeacon dragonBeacon, peaceDragonBeacon, magicDragonBeacon, vetoDragonBeacon;
+    public static DragonBeacon dragonBeacon, peaceDragonBeacon, magicDragonBeacon, fireDragonBeacon;
     public static Block dragonMemoryBlock;
 
     @SubscribeEvent
@@ -127,7 +127,7 @@ public class BlockInit {
         dragonMemoryBlock = registerBlock(new Block(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(3, 30).requiresCorrectToolForDrops()), "dragon_memory_block", forgeRegistry);
         peaceDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_peace", forgeRegistry);
         magicDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_magic", forgeRegistry);
-        vetoDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_veto", forgeRegistry);
+        fireDragonBeacon = registerBlock(new DragonBeacon(AbstractBlock.Properties.copy(dragonBeacon).lightLevel(value -> value.getValue(DragonBeacon.LIT) ? 15 : 0)), "dragon_beacon_fire", forgeRegistry);
     }
 
     private static <B extends Block> B registerBlock(B block, String identifier, IForgeRegistry<Block> forgeRegistry) {
@@ -188,7 +188,7 @@ public class BlockInit {
         registerItem(dragonBeacon, new Item.Properties(), forgeRegistry);
         registerItem(peaceDragonBeacon, new Item.Properties(), forgeRegistry);
         registerItem(magicDragonBeacon, new Item.Properties(), forgeRegistry);
-        registerItem(vetoDragonBeacon, new Item.Properties(), forgeRegistry);
+        registerItem(fireDragonBeacon, new Item.Properties(), forgeRegistry);
         registerItem(dragonMemoryBlock, new Item.Properties(), forgeRegistry);
     }
     

@@ -54,11 +54,11 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                         e.printStackTrace();
                     }
                     break;
-                case VETO:
-                    item = ItemsInit.passiveVetoBeacon;
+                case FIRE:
+                    item = ItemsInit.passiveFireBeacon;
                     try {
                         if (!minecraft.isPaused() && dragonBeaconEntity.tick % 5 == 0)
-                            clientWorld.addParticle(ParticleRegistry.vetoBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.vetoBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + x, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + z, 0, 0, 0);
+                            clientWorld.addParticle(ParticleRegistry.fireBeaconParticle.getDeserializer().fromCommand(ParticleRegistry.fireBeaconParticle, new StringReader("")), dragonBeaconEntity.getX() + x, dragonBeaconEntity.getY() + 0.5, dragonBeaconEntity.getZ() + z, 0, 0, 0);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                     }
@@ -73,8 +73,8 @@ public class DragonBeaconRenderer extends TileEntityRenderer<DragonBeaconEntity>
                 case MAGIC:
                     item = BlockInit.magicDragonBeacon.asItem();
                     break;
-                case VETO:
-                    item = BlockInit.vetoDragonBeacon.asItem();
+                case FIRE:
+                    item = BlockInit.fireDragonBeacon.asItem();
                     break;
             }
         }

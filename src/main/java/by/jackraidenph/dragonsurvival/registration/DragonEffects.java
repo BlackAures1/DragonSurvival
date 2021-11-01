@@ -25,7 +25,7 @@ public class DragonEffects {
     public static Effect STRESS;
     public static Effect TRAPPED;
     public static Effect EVIL_DRAGON;
-    public static Effect PEACE, MAGIC, VETO;
+    public static Effect PEACE, MAGIC, FIRE;
     public static Effect ANIMAL_PEACE;
     public static Effect PREDATOR_ANTI_SPAWN;
 
@@ -43,8 +43,8 @@ public class DragonEffects {
         forgeRegistry.register(PEACE);
         MAGIC = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "magic");
         forgeRegistry.register(MAGIC);
-        VETO = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "veto");
-        forgeRegistry.register(VETO);
+        FIRE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "fire");
+        forgeRegistry.register(FIRE);
         ANIMAL_PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "animal_peace");
         forgeRegistry.register(ANIMAL_PEACE);
         PREDATOR_ANTI_SPAWN = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "predator_anti_spawn");

@@ -80,7 +80,7 @@ public class ClientModEvents {
         RenderTypeLookup.setRenderLayer(BlockInit.birchDoor, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.acaciaDoor, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.peaceDragonBeacon, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockInit.vetoDragonBeacon, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockInit.fireDragonBeacon, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockInit.magicDragonBeacon, RenderType.cutout());
 
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.MAGICAL_BEAST, MagicalPredatorRenderer::new);
@@ -110,7 +110,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent factoryRegisterEvent) {
         ParticleManager particleManager = Minecraft.getInstance().particleEngine;
-        particleManager.register(ParticleRegistry.vetoBeaconParticle, p_create_1_ -> new IParticleFactory<BasicParticleType>() {
+        particleManager.register(ParticleRegistry.fireBeaconParticle, p_create_1_ -> new IParticleFactory<BasicParticleType>() {
             @Nullable
             @Override
             public Particle createParticle(BasicParticleType p_199234_1_, ClientWorld clientWorld, double v, double v1, double v2, double v3, double v4, double v5) {

@@ -62,9 +62,9 @@ public class DragonBeacon extends Block {
                 world.playSound(playerEntity, pos, Sounds.upgradeBeacon, SoundCategory.BLOCKS, 1, 1);
                 return ActionResultType.SUCCESS;
             } else if (item == Items.NETHERITE_INGOT) {
-                world.setBlockAndUpdate(pos, BlockInit.vetoDragonBeacon.defaultBlockState());
+                world.setBlockAndUpdate(pos, BlockInit.fireDragonBeacon.defaultBlockState());
                 DragonBeaconEntity dragonBeaconEntity = (DragonBeaconEntity) world.getBlockEntity(pos);
-                dragonBeaconEntity.type = DragonBeaconEntity.Type.VETO;
+                dragonBeaconEntity.type = DragonBeaconEntity.Type.FIRE;
                 dragonBeaconEntity.tick = old.tick;
                 itemStack.shrink(1);
                 world.playSound(playerEntity, pos, Sounds.upgradeBeacon, SoundCategory.BLOCKS, 1, 1);
@@ -93,9 +93,9 @@ public class DragonBeacon extends Block {
                                     playerEntity.addEffect(new EffectInstance2(effect, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));
                             });
                         }
-                    } else if (this == BlockInit.vetoDragonBeacon) {
+                    } else if (this == BlockInit.fireDragonBeacon) {
                         if (!world.isClientSide) {
-                            ConfigHandler.COMMON.vetoBeaconEffects.get().forEach(s -> {
+                            ConfigHandler.COMMON.fireBeaconEffects.get().forEach(s -> {
                                 Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s));
                                 if (effect != null)
                                     playerEntity.addEffect(new EffectInstance2(effect, Functions.minutesToTicks(ConfigHandler.COMMON.secondsOfBeaconEffect.get())));

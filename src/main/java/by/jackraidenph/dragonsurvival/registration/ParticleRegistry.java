@@ -10,14 +10,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ParticleRegistry {
-    public static ParticleType<BasicParticleType> vetoBeaconParticle, magicBeaconParticle, peaceBeaconParticle;
+    public static ParticleType<BasicParticleType> fireBeaconParticle, magicBeaconParticle, peaceBeaconParticle;
 
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> registryEvent) {
         IForgeRegistry<ParticleType<?>> particleTypes = registryEvent.getRegistry();
-        vetoBeaconParticle = new BasicParticleType(false);
-        vetoBeaconParticle.setRegistryName(DragonSurvivalMod.MODID, "netherite_particle");
-        particleTypes.register(vetoBeaconParticle);
+        fireBeaconParticle = new BasicParticleType(false);
+        fireBeaconParticle.setRegistryName(DragonSurvivalMod.MODID, "netherite_particle");
+        particleTypes.register(fireBeaconParticle);
         peaceBeaconParticle = new BasicParticleType(false);
         peaceBeaconParticle.setRegistryName(DragonSurvivalMod.MODID, "gold_particle");
         particleTypes.register(peaceBeaconParticle);

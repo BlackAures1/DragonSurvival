@@ -37,7 +37,7 @@ public class ItemsInit {
     };
     public static Item charredMeat, charredVegetable, charredMushroom, charredSeafood, chargedCoal, charredSoup;
     public static Item huntingNet;
-    public static Item passiveVetoBeacon, passiveMagicBeacon, passivePeaceBeacon;
+    public static Item passiveFireBeacon, passiveMagicBeacon, passivePeaceBeacon;
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<Item> event) {
@@ -142,7 +142,7 @@ public class ItemsInit {
         registry.register(passiveMagicBeacon);
         passivePeaceBeacon = new Item(new Item.Properties()).setRegistryName(DragonSurvivalMod.MODID, "beacon_peace_1");
         registry.register(passivePeaceBeacon);
-        passiveVetoBeacon = new Item(new Item.Properties()).setRegistryName(DragonSurvivalMod.MODID, "beacon_veto_1");
-        registry.register(passiveVetoBeacon);
+        passiveFireBeacon = new Item(new Item.Properties()).setRegistryName(DragonSurvivalMod.MODID, "beacon_fire_1");
+        registry.register(passiveFireBeacon);
     }
 }
