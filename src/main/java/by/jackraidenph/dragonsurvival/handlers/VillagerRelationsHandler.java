@@ -4,6 +4,7 @@ import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
+import by.jackraidenph.dragonsurvival.entity.DragonHunter;
 import by.jackraidenph.dragonsurvival.entity.PrincessEntity;
 import by.jackraidenph.dragonsurvival.gecko.Knight;
 import by.jackraidenph.dragonsurvival.gecko.Prince;
@@ -233,7 +234,7 @@ public class VillagerRelationsHandler {
     public static void hurtEntity(AttackEntityEvent attackEntityEvent) {
         Entity attacked = attackEntityEvent.getTarget();
         PlayerEntity attacker = attackEntityEvent.getPlayer();
-        if (attacked instanceof AbstractVillagerEntity) {
+        if (attacked instanceof AbstractVillagerEntity || attacked instanceof DragonHunter) {
             if (attacker.hasEffect(DragonEffects.EVIL_DRAGON)) {
                 int duration = attacker.getEffect(DragonEffects.EVIL_DRAGON).getDuration();
                 int amplifier = attacker.getEffect(DragonEffects.EVIL_DRAGON).getAmplifier();
