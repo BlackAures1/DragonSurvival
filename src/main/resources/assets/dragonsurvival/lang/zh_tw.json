@@ -2,8 +2,24 @@
   "itemGroup.dragon.survival.blocks": "Dragons Survival",
 
   "entity.dragonsurvival.magical_predator_entity": "魔法獵食者",
+  "entity.dragonsurvival.hunter_hound": "騎士獵犬",
+  "entity.dragonsurvival.knight_hunter": "裝甲騎士",
+  "entity.dragonsurvival.knight": "裝甲騎士",
+  "entity.dragonsurvival.shooter_hunter": "獵龍人",
+  "entity.dragonsurvival.squire_hunter": "扈從",
+  "entity.dragonsurvival.prince": "王子",
+  "entity.dragonsurvival.princess_entity": "公主",
+  "entity.dragonsurvival.princess": "馬上公主",
 
   "item.dragonsurvival.magical_predator_entity_spawn_egg": "魔法獵食者 生怪蛋",
+  "item.dragonsurvival.hunter_hound_spawn_egg": "騎士獵犬 生怪蛋",
+  "item.dragonsurvival.shooter_hunter_spawn_egg": "獵龍人 生怪蛋",
+  "item.dragonsurvival.knight_hunter_spawn_egg": "裝甲騎士 生怪蛋",
+  "item.dragonsurvival.knight_spawn_egg": "裝甲騎士 生怪蛋",
+  "item.dragonsurvival.squire_hunter_spawn_egg": "扈從 生怪蛋",
+  "item.dragonsurvival.princess_entity_spawn_egg": "公主 生怪蛋",
+  "item.dragonsurvival.prince_spawn_egg": "王子 生怪蛋",
+  "item.dragonsurvival.princess_spawn_egg": "馬上公主 生怪蛋",
   "item.dragonsurvival.heart_element": "心之素",
   "item.dragonsurvival.star_bone": "星骨",
   "item.dragonsurvival.elder_dragon_bone": "古龍之骨",
@@ -26,6 +42,10 @@
   "block.dragonsurvival.big_forest_nest": "大型森林龍巢",
   "block.dragonsurvival.big_sea_nest": "大型海洋龍巢",
   "block.dragonsurvival.big_cave_nest": "大型洞穴龍巢",
+  "block.dragonsurvival.broken_helmet": "破碎的頭盔",
+  "block.dragonsurvival.broken_knight_helmet_1": "灰色騎士頭盔",
+  "block.dragonsurvival.broken_knight_helmet_2": "金色騎士頭盔",
+  "block.dragonsurvival.broken_knight_helmet_3": "黑色騎士頭盔",
 
   "block.dragonsurvival.dragon_altar_stone": "石質神龍祭壇",
   "block.dragonsurvival.dragon_altar_sandstone": "砂岩神龍祭壇",
@@ -35,6 +55,11 @@
   "block.dragonsurvival.dragon_altar_nether_bricks": "地獄磚神龍祭壇",
   "block.dragonsurvival.dragon_altar_mossy_cobblestone": "苔覆神龍祭壇",
   "block.dragonsurvival.dragon_altar_blackstone": "黑石神龍祭壇",
+  "block.dragonsurvival.empty_dragon_beacon": "龍之烽火台",
+  "block.dragonsurvival.dragon_beacon_peace": "平靜龍之烽火台",
+  "block.dragonsurvival.dragon_beacon_magic": "魔力龍之烽火台",
+  "block.dragonsurvival.dragon_beacon_fire": "抵抗龍之烽火台",
+  "block.dragonsurvival.dragon_memory_block": "回憶之塊",
 
   "block.dragonsurvival.spruce_dragon_door": "杉木龍門",
   "block.dragonsurvival.acacia_dragon_door": "相思木龍門",
@@ -54,6 +79,11 @@
   "block.dragonsurvival.legacy_dragon_door": "遺跡龍門",
 
   "effect.dragonsurvival.stress": "壓力",
+  "effect.dragonsurvival.evil_dragon": "惡龍",
+  "effect.dragonsurvival.trapped": "受困",
+  "effect.dragonsurvival.peace": "平靜",
+  "effect.dragonsurvival.magic": "魔力",
+  "effect.dragonsurvival.fire": "抵抗",
 
   "dragonsurvival:config.category.general.tooltip": "通用工具配置",
   "dragonsurvival:config.category.spawnchances.tooltip": "實體生成幾率配置",
@@ -126,5 +156,9 @@
   "ds.altar_dragon_info.sea_dragon.8":"--food--",
   "ds.altar_dragon_info.human.0":"■ §n人類§r",
   "ds.altar_dragon_info.human.1":"■ 智人",
-  "ds.altar_dragon_info.human.2":"旅行者、建造者和發明家"
+  "ds.altar_dragon_info.human.2":"旅行者、建造者和發明家",
+  "ds.hold_shift.for_food": "按住shift鍵以查看食物信息",
+  "ds.cave.dragon.food": "洞穴龍的食物",
+  "ds.forest.dragon.food": "森林龍的食物",
+  "ds.sea.dragon.food": "海洋龍的食物"
 }

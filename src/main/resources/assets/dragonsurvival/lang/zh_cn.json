@@ -42,7 +42,7 @@
   "block.dragonsurvival.big_forest_nest": "大型森林龙巢",
   "block.dragonsurvival.big_sea_nest": "大型海洋龙巢",
   "block.dragonsurvival.big_cave_nest": "大型洞穴龙巢",
- "block.dragonsurvival.broken_helmet": "破碎的头盔",
+  "block.dragonsurvival.broken_helmet": "破碎的头盔",
   "block.dragonsurvival.broken_knight_helmet_1": "灰色骑士头盔",
   "block.dragonsurvival.broken_knight_helmet_2": "金色骑士头盔",
   "block.dragonsurvival.broken_knight_helmet_3": "黑色骑士头盔",
@@ -55,6 +55,11 @@
   "block.dragonsurvival.dragon_altar_nether_bricks": "下界砖神龙祭坛",
   "block.dragonsurvival.dragon_altar_mossy_cobblestone": "苔覆神龙祭坛",
   "block.dragonsurvival.dragon_altar_blackstone": "黑石神龙祭坛",
+  "block.dragonsurvival.empty_dragon_beacon": "龙之信标",
+  "block.dragonsurvival.dragon_beacon_peace": "平静龙之信标",
+  "block.dragonsurvival.dragon_beacon_magic": "魔力龙之信标",
+  "block.dragonsurvival.dragon_beacon_fire": "抵抗龙之信标",
+  "block.dragonsurvival.dragon_memory_block": "回忆之块",
 
   "block.dragonsurvival.spruce_dragon_door": "云杉木龙门",
   "block.dragonsurvival.acacia_dragon_door": "金合欢木龙门",
@@ -76,6 +81,9 @@
   "effect.dragonsurvival.stress": "压力",
   "effect.dragonsurvival.evil_dragon": "恶龙",
   "effect.dragonsurvival.trapped": "受困",
+  "effect.dragonsurvival.peace": "平静",
+  "effect.dragonsurvival.magic": "魔力",
+  "effect.dragonsurvival.fire": "抵抗",
 
   "dragonsurvival:config.category.general.tooltip": "通用工具配置",
   "dragonsurvival:config.category.spawnchances.tooltip": "实体生成几率配置",
@@ -148,5 +156,9 @@
   "ds.altar_dragon_info.sea_dragon.8":"--food--",
   "ds.altar_dragon_info.human.0":"■ §n人类§r",
   "ds.altar_dragon_info.human.1":"■ 智人",
-  "ds.altar_dragon_info.human.2":"旅行者、建造者和发明家"
+  "ds.altar_dragon_info.human.2":"旅行者、建造者和发明家",
+  "ds.hold_shift.for_food": "按住shift键以查看食物信息",
+  "ds.cave.dragon.food": "洞穴龙的食物",
+  "ds.forest.dragon.food": "森林龙的食物",
+  "ds.sea.dragon.food": "海洋龙的食物"
 }

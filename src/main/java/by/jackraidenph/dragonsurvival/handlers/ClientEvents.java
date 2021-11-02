@@ -342,7 +342,7 @@ public class ClientEvents {
 	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
 	                if (neckHead != null)
 	                	 neckHead.setHidden(false);
-	                if (player.isCrouching()) { // FIXME why does this exist... Why do the models auto-crouch align perfectly but when shift key is down they break?
+	                if (player.isCrouching()) {
 	                	switch (dragonStage) {
 	                        case ADULT:
 	                            matrixStack.translate(0, 0.125, 0);
@@ -374,8 +374,7 @@ public class ClientEvents {
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
                     dummyDragon.isArmorModel = true;
-                    //scale to try to prevent texture fighting (problem is in consecutive renders)
-                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Causes issues with head turn
+                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Armor shift during head turns due to pivots scaling with the model. Need to disable pivot scaling along with the whole model or take another model that we will specifically make for the armor.
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
