@@ -39,15 +39,15 @@ public class DragonEffects {
         forgeRegistry.register(TRAPPED);
         EVIL_DRAGON = new EvilDragon(EffectType.NEUTRAL).setRegistryName(DragonSurvivalMod.MODID, "evil_dragon");
         forgeRegistry.register(EVIL_DRAGON);
-        PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "peace");
+        PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "peace");
         forgeRegistry.register(PEACE);
-        MAGIC = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "magic");
+        MAGIC = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "magic");
         forgeRegistry.register(MAGIC);
-        FIRE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "fire");
+        FIRE = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "fire");
         forgeRegistry.register(FIRE);
-        ANIMAL_PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "animal_peace");
+        ANIMAL_PEACE = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "animal_peace");
         forgeRegistry.register(ANIMAL_PEACE);
-        PREDATOR_ANTI_SPAWN = new Effect2(EffectType.BENEFICIAL, 0x0, true).setRegistryName(DragonSurvivalMod.MODID, "predator_anti_spawn");
+        PREDATOR_ANTI_SPAWN = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "predator_anti_spawn");
         forgeRegistry.register(PREDATOR_ANTI_SPAWN);
     }
 
