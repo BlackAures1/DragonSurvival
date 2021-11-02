@@ -236,7 +236,8 @@ public class VillagerRelationsHandler {
         if (attacked instanceof AbstractVillagerEntity) {
             if (attacker.hasEffect(DragonEffects.EVIL_DRAGON)) {
                 int duration = attacker.getEffect(DragonEffects.EVIL_DRAGON).getDuration();
-                attacker.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, duration + Functions.secondsToTicks(5)));
+                int amplifier = attacker.getEffect(DragonEffects.EVIL_DRAGON).getAmplifier();
+                attacker.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, duration + Functions.secondsToTicks(5), amplifier));
             } else {
                 attacker.addEffect(new EffectInstance2(DragonEffects.EVIL_DRAGON, Functions.secondsToTicks(5)));
             }
