@@ -2,9 +2,9 @@
 - added effects: sea peace, forest magic, cave fire, calm animals, anti-predators;
 - added blocks: dragon memory, beacon empty, sea beacon peace, forest beacon magic, cave beacon fire;
 - added mechanics: buying an effect from a lighthouse for experience, damaging the player when he lacks experience, improving the lighthouse with items, creating a protected area with effects thanks to the memory block.
-- added beacon sounds;
+- added beacon sounds - dragonsurvival:beacon_activate, dragonsurvival:beacon_deactivate, dragonsurvival:upgrade, dragonsurvival:get_effect;
 - added beacon textures;
-- added beacon particles;
+- added beacon particles - netherite_particle, gold_particle, diamond_particle;
 - added beacon configurations;
 - removed glare textures on horse riders;
 - added Spanish. Thanks Dgarden7!

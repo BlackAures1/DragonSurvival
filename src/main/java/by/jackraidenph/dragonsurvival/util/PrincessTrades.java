@@ -32,7 +32,7 @@ public class PrincessTrades {
     public static ItemForItemTrade WHITE3 = new ItemForItemTrade(Items.LILY_OF_THE_VALLEY, 5, Items.GOLD_NUGGET, 1, 16, 6);
     public static ItemForItemTrade WHITE4 = new ItemForItemTrade(Items.WHITE_TULIP, 5, Items.GOLD_NUGGET, 1, 16, 6);
 
-    public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 5, Items.GOLD_NUGGET, 5, 10, 15);
+    public static ItemForItemTrade BLACK = new ItemForItemTrade(Items.WITHER_ROSE, 1, Items.GOLD_NUGGET, 5, 10, 15);
 
     public static ItemFor2ItemsTrade XP_BOTTLE1 = new ItemFor2ItemsTrade(Items.GOLD_INGOT, 2, ItemsInit.elderDragonDust, 3, Items.EXPERIENCE_BOTTLE, 1, 12, 10);
 
