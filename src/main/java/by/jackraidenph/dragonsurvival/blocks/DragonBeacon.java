@@ -12,7 +12,11 @@ import by.jackraidenph.dragonsurvival.util.EffectInstance2;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -25,17 +29,20 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
-public class DragonBeacon extends Block {
+public class DragonBeacon extends Block implements IWaterLoggable {
     public static BooleanProperty LIT = BlockStateProperties.LIT;
+    public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public DragonBeacon(Properties p_i48440_1_) {
         super(p_i48440_1_);
-        registerDefaultState(getStateDefinition().any().setValue(LIT, false));
+        registerDefaultState(getStateDefinition().any().setValue(LIT, false).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -127,11 +134,29 @@ public class DragonBeacon extends Block {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
         super.createBlockStateDefinition(p_206840_1_);
-        p_206840_1_.add(LIT);
+        p_206840_1_.add(LIT, WATERLOGGED);
     }
 
     @Override
     public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    //methods below are required for waterlogged property to work
+
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, IWorld world, BlockPos blockPos, BlockPos blockPos1) {
+        if (blockState.getValue(WATERLOGGED)) {
+            world.getLiquidTicks().scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        }
+        return super.updateShape(blockState, direction, blockState1, world, blockPos, blockPos1);
+    }
+
+    public FluidState getFluidState(BlockState blockState) {
+        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
 }

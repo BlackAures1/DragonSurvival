@@ -46,8 +46,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
 
     public PredatorStarBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
-        registerDefaultState(getStateDefinition().any()
-        		.setValue(WATERLOGGED, false));
+        registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -116,7 +115,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
     
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER));
+        return this.defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
     
     @Override
@@ -129,7 +128,6 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         if (state.getValue(WATERLOGGED)) {
         	level.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-
         return super.updateShape(state, dir, state2, level, pos, pos2);
     }
     
