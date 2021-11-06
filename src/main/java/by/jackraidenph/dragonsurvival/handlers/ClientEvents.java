@@ -374,20 +374,20 @@ public class ClientEvents {
                         case ADULT:
                             matrixStack.translate(0, -0.35, 0);
                             break;
-                        case YOUNG:
-                            matrixStack.translate(0, -0.25, 0);
-                            break;
-                        case BABY:
-                            matrixStack.translate(0, -0.15, 0);
+                            case YOUNG:
+                                matrixStack.translate(0, -0.25, 0);
+                                break;
+                            case BABY:
+                                matrixStack.translate(0, -0.15, 0);
                         }
                     }
-                    if (!player.isInvisible())
-                        dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    if (!player.isInvisible()) {
+                        //render call count must match armor model render call count to be synchronized
+                        for (int i = 0; i < 4; i++) {
+                            dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        }
+                    }
 
-                    String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
-                    String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
-                    String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
-                    String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
 //                    dummyDragon.isArmorModel = true;
 //                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Armor shift during head turns due to pivots scaling with the model. Need to disable pivot scaling along with the whole model or take another model that we will specifically make for the armor.
@@ -400,9 +400,21 @@ public class ClientEvents {
 //                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
 //                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
+                    String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
+                    String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
+                    String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
+                    String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
+
                     DragonEntity dragonArmor = playerArmorMap.get(player.getId());
                     dragonArmor.copyPosition(player);
                     EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
+                    dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
