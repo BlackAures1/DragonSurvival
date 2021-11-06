@@ -2,10 +2,8 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -32,16 +30,13 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 	public void setupBones() {
 		if (hasBones || this.getAnimationProcessor().getModelRendererList().size() == 0)
 			return;
-
 		AnimationProcessor<DragonEntity> ap = this.getAnimationProcessor();
-
 		neck = ap.getBone("Neck");
 		neck1 = ap.getBone("Neck1");
 		neck2 = ap.getBone("Neck2");
 		neck3 = ap.getBone("Neck3");
 		neck4 = ap.getBone("Neck4");
 		head = ap.getBone("Head");
-
 		hasBones = true;
 	}
 
@@ -61,7 +56,6 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     @Override
 	public Animation getAnimation(String name, IAnimatable animatable) {
-    	DragonEntity dragonEntity = (DragonEntity)animatable;
     	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.animations.json");
     	AnimationFile animation = GeckoLibCache.getInstance().getAnimations().get(animLocation);
     	if (animation == null) {
@@ -74,8 +68,6 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 	public ResourceLocation getAnimationFileLocation(DragonEntity animatable) {
 		return null;
 	}
-
-	private int biteTicks;
 
 	@Override
 	public void setLivingAnimations(DragonEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
@@ -126,14 +118,8 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				head.setPositionX(-1F * 0.716197F * rotation);
 				head.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation);
 				head.setPositionZ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation);
-					
+
 			});
 		}
-		
-		
-		
-    	
-		
 	}
-    
 }
