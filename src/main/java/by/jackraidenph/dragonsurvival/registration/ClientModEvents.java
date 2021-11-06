@@ -102,6 +102,7 @@ public class ClientModEvents {
         ClientRegistry.registerKeyBinding(TOGGLE_WINGS);
         //Gecko renderers
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON, manager -> new DragonRenderer(manager, ClientEvents.dragonModel = new DragonModel()));
+        RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.DRAGON_ARMOR, manager -> new DragonRenderer(manager, ClientEvents.dragonArmorModel = new DragonArmorModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.KNIGHT, manager -> new KnightRenderer(manager, new KnightModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCESS_ON_HORSE, manager -> new by.jackraidenph.dragonsurvival.gecko.PrincessRenderer(manager, new PrincessModel()));
         RenderingRegistry.registerEntityRenderingHandler(EntityTypesInit.PRINCE_ON_HORSE, manager -> new PrinceRenderer(manager, new PrinceModel()));

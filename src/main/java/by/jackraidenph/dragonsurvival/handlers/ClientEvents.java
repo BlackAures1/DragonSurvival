@@ -6,6 +6,7 @@ import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
 import by.jackraidenph.dragonsurvival.entity.BolasEntity;
+import by.jackraidenph.dragonsurvival.gecko.DragonArmorModel;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
@@ -72,10 +73,19 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClientEvents {
 
     public static DragonModel dragonModel;
+    public static DragonArmorModel dragonArmorModel;
+    /**
+     * First-person armor instance
+     */
+    public static DragonEntity dragonArmor;
+    /**
+     * Third-person armor instances
+     */
+    public static ConcurrentHashMap<Integer, DragonEntity> playerArmorMap = new ConcurrentHashMap<>(20);
     static boolean showingInventory;
-    
+
     private static final ResourceLocation DRAGON_HUD = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_hud.png");
-    
+
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     /**
      * Default skins
@@ -287,7 +297,7 @@ public class ClientEvents {
         Minecraft mc = Minecraft.getInstance();
 
         // TODO come up with actual solution instead of just not rendering your passenger in first person.
-        if (mc.options.getCameraType() == PointOfView.FIRST_PERSON && mc.player.hasPassenger(player)){
+        if (mc.options.getCameraType() == PointOfView.FIRST_PERSON && mc.player.hasPassenger(player)) {
             renderPlayerEvent.setCanceled(true);
             return;
         }
@@ -296,6 +306,11 @@ public class ClientEvents {
             DragonEntity dummyDragon = EntityTypesInit.DRAGON.create(player.level);
             dummyDragon.player = player.getId();
             playerDragonHashMap.put(player.getId(), new AtomicReference<>(dummyDragon));
+        }
+        if (!playerArmorMap.containsKey(player.getId())) {
+            DragonEntity dragonEntity = EntityTypesInit.DRAGON_ARMOR.create(player.level);
+            dragonEntity.player = player.getId();
+            playerArmorMap.put(player.getId(), dragonEntity);
         }
 
         DragonStateProvider.getCap(player).ifPresent(cap -> {
@@ -364,26 +379,31 @@ public class ClientEvents {
                             break;
                         case BABY:
                             matrixStack.translate(0, -0.15, 0);
-	                	}
-	                }
-	                if (!player.isInvisible())
-	                	dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        }
+                    }
+                    if (!player.isInvisible())
+                        dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
                     String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
                     String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
                     String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
-                    dummyDragon.isArmorModel = true;
-                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Armor shift during head turns due to pivots scaling with the model. Need to disable pivot scaling along with the whole model or take another model that we will specifically make for the armor.
-                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+//                    dummyDragon.isArmorModel = true;
+//                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Armor shift during head turns due to pivots scaling with the model. Need to disable pivot scaling along with the whole model or take another model that we will specifically make for the armor.
+//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
+//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
+//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
+//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
+//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+
+                    DragonEntity dragonArmor = playerArmorMap.get(player.getId());
+                    dragonArmor.copyPosition(player);
+                    EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
                         if (layer instanceof ParrotVariantLayer) {
