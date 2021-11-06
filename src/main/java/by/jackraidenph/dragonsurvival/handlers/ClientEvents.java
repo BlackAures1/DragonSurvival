@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.entity.layers.ParrotVariantLayer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.settings.PointOfView;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -384,9 +385,9 @@ public class ClientEvents {
                     dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                     dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
-                    for (LayerRenderer layer : ((AccessorLivingRenderer)playerRenderer).getRenderLayers()) {
+                    for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
                         if (layer instanceof ParrotVariantLayer) {
-                            matrixStack.scale(1.0F / scale, 1.0F / scale ,1.0F / scale);
+                            matrixStack.scale(1.0F / scale, 1.0F / scale, 1.0F / scale);
                             matrixStack.mulPose(Vector3f.XN.rotationDegrees(180.0F));
                             double height = 1.3 * scale;
                             double forward = 0.3 * scale;
