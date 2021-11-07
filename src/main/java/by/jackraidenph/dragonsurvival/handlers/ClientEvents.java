@@ -535,41 +535,43 @@ public class ClientEvents {
         if (item instanceof ArmorItem) {
             ArmorItem armorItem = (ArmorItem) item;
             IArmorMaterial armorMaterial = armorItem.getMaterial();
-            if (armorMaterial == ArmorMaterial.NETHERITE) {
-            	texture += "netherite_";
-            } else if (armorMaterial == ArmorMaterial.DIAMOND) {
-                texture += "diamond_";
-            } else if (armorMaterial == ArmorMaterial.IRON) {
-                texture += "iron_";
-            } else if (armorMaterial == ArmorMaterial.LEATHER) {
-                texture += "leather_";
-            } else if (armorMaterial == ArmorMaterial.GOLD) {
-                texture += "gold_";
-            } else if (armorMaterial == ArmorMaterial.CHAIN) {
-                texture += "chainmail_";
-            } else if (armorMaterial == ArmorMaterial.TURTLE)
-                texture += "turtle_";
-            else {
-                return texture + "empty_armor.png";
-            }
+            if (armorMaterial.getClass() == ArmorMaterial.class) {
+                if (armorMaterial == ArmorMaterial.NETHERITE) {
+                    texture += "netherite_";
+                } else if (armorMaterial == ArmorMaterial.DIAMOND) {
+                    texture += "diamond_";
+                } else if (armorMaterial == ArmorMaterial.IRON) {
+                    texture += "iron_";
+                } else if (armorMaterial == ArmorMaterial.LEATHER) {
+                    texture += "leather_";
+                } else if (armorMaterial == ArmorMaterial.GOLD) {
+                    texture += "gold_";
+                } else if (armorMaterial == ArmorMaterial.CHAIN) {
+                    texture += "chainmail_";
+                } else if (armorMaterial == ArmorMaterial.TURTLE)
+                    texture += "turtle_";
+                else {
+                    return texture + "empty_armor.png";
+                }
 
-            texture += "dragon_";
-            switch (equipmentSlot) {
-                case HEAD:
-                    texture += "helmet";
-                    break;
-                case CHEST:
-                    texture += "chestplate";
-                    break;
-                case LEGS:
-                    texture += "leggings";
-                    break;
-                case FEET:
-                    texture += "boots";
-                    break;
+                texture += "dragon_";
+                switch (equipmentSlot) {
+                    case HEAD:
+                        texture += "helmet";
+                        break;
+                    case CHEST:
+                        texture += "chestplate";
+                        break;
+                    case LEGS:
+                        texture += "leggings";
+                        break;
+                    case FEET:
+                        texture += "boots";
+                        break;
+                }
+                texture += ".png";
+                return texture;
             }
-            texture += ".png";
-            return texture;
         }
         return texture + "empty_armor.png";
     }
