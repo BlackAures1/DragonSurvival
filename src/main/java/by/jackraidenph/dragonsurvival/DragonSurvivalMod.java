@@ -277,8 +277,8 @@ public class DragonSurvivalMod {
                                 e.printStackTrace();
                             }
                             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                            ClientEvents.dummyDragon2.getAndSet(EntityTypesInit.DRAGON.create(myPlayer.level));
-                            ClientEvents.dummyDragon2.get().player = myPlayer.getId();
+                            ClientEvents.dragonEntity.getAndSet(EntityTypesInit.DRAGON.create(myPlayer.level));
+                            ClientEvents.dragonEntity.get().player = myPlayer.getId();
 
                             PlayerEntity thatPlayer = (PlayerEntity) myPlayer.level.getEntity(refreshDragons.playerId);
                             if (thatPlayer != null) {

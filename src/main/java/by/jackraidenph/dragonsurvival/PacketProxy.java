@@ -97,8 +97,8 @@ public class PacketProxy {
             if (myPlayer != null) {
                 World world = myPlayer.level;
 
-                if (ClientEvents.dummyDragon2 != null) {
-                    ClientEvents.dummyDragon2.get().player = myPlayer.getId();
+                if (ClientEvents.dragonEntity != null) {
+                    ClientEvents.dragonEntity.get().player = myPlayer.getId();
                 }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntity(synchronizeDragonCap.playerId);
 
