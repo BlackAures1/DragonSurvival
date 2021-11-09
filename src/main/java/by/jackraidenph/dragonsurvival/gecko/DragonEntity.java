@@ -25,8 +25,7 @@ import java.util.Collections;
 
 public class DragonEntity extends LivingEntity implements IAnimatable {
     AnimationFactory animationFactory = new AnimationFactory(this);
-    public boolean isArmorModel;
-    
+
     /**
      * This reference must be updated whenever player is remade, for example, when changing dimensions
      */

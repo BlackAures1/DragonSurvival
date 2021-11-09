@@ -147,7 +147,6 @@ public class ClientEvents {
                         IRenderTypeBuffer buffers = renderHandEvent.getBuffers();
                         int light = renderHandEvent.getLight();
 
-                        dragonEntity.get().isArmorModel = false;
                         EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragonEntity.get());
                         dragonEntity.get().copyPosition(player);
                         dragonModel.setCurrentTexture(texture);
@@ -163,7 +162,6 @@ public class ClientEvents {
                         if (!player.isInvisible())
                             dragonRenderer.render(dragonEntity.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
-                        dragonEntity.get().isArmorModel = true;
                         eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
                         ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
                         dragonModel.setCurrentTexture(chestplate);
@@ -346,8 +344,7 @@ public class ClientEvents {
 
                     ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius((3.0F * size + 62.0F) / 260.0F);
 	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
-	                dummyDragon.isArmorModel = false;
-	                EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
+                    EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
 	                dummyDragon.copyPosition(player);
 	                dragonModel.setCurrentTexture(texture);
 	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
