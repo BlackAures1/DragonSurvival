@@ -571,6 +571,23 @@ public class ClientEvents {
                 }
                 texture += ".png";
                 return texture;
+            } else {
+                int defense = armorItem.getDefense();
+                switch (equipmentSlot) {
+                    case FEET:
+                        texture += defense + "_dragon_boots";
+                        break;
+                    case CHEST:
+                        texture += defense / 2 + "_dragon_chestplate";
+                        break;
+                    case HEAD:
+                        texture += defense + "_dragon_helmet";
+                        break;
+                    case LEGS:
+                        texture += defense / 2 + "_dragon_leggings";
+                        break;
+                }
+                return texture + ".png";
             }
         }
         return texture + "empty_armor.png";
