@@ -290,6 +290,7 @@ public class ClientEvents {
     /**
      * Called for every player.
      */
+    @SuppressWarnings("unchecked,rawtypes")
     @SubscribeEvent
     public static void thirdPersonPreRender(RenderPlayerEvent.Pre renderPlayerEvent) {
 
@@ -387,18 +388,6 @@ public class ClientEvents {
                             dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                         }
                     }
-
-
-//                    dummyDragon.isArmorModel = true;
-//                    matrixStack.scale(1.08f, 1.02f, 1.02f); // FIXME Armor shift during head turns due to pivots scaling with the model. Need to disable pivot scaling along with the whole model or take another model that we will specifically make for the armor.
-//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
-//                    dragonModel.setCurrentTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-//                    dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                     String helmetTexture = constructArmorTexture(player, EquipmentSlotType.HEAD);
                     String chestPlateTexture = constructArmorTexture(player, EquipmentSlotType.CHEST);
