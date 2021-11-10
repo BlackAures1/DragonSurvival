@@ -314,19 +314,19 @@ public class ClientEvents {
         DragonStateProvider.getCap(player).ifPresent(cap -> {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
-                float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
-                float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.animationSpeedOld, player.animationSpeed);
-                float yaw = player.getViewYRot(partialRenderTick);
-                float pitch = player.getViewXRot(partialRenderTick);
+                final float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
+                final float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.animationSpeedOld, player.animationSpeed);
+                final float yaw = player.getViewYRot(partialRenderTick);
+                final float pitch = player.getViewXRot(partialRenderTick);
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 try {
-	                matrixStack.pushPose();
-	                float size = cap.getSize();
-	                float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
-                    String playerModelType = ((AbstractClientPlayerEntity)player).getModelName();
-                    LivingRenderer playerRenderer = ((AccessorEntityRendererManager)mc.getEntityRenderDispatcher()).getPlayerRenderers().get(playerModelType);
+                    matrixStack.pushPose();
+                    float size = cap.getSize();
+                    float scale = Math.max(size / 40, DragonLevel.BABY.maxWidth);
+                    String playerModelType = ((AbstractClientPlayerEntity) player).getModelName();
+                    LivingRenderer playerRenderer = ((AccessorEntityRendererManager) mc.getEntityRenderDispatcher()).getPlayerRenderers().get(playerModelType);
                     int eventLight = renderPlayerEvent.getLight();
                     final IRenderTypeBuffer renderTypeBuffer = renderPlayerEvent.getBuffers();
                     if (ConfigHandler.CLIENT.dragonNameTags.get()) {
@@ -380,7 +380,7 @@ public class ClientEvents {
                     if (!player.isInvisible()) {
                         //render call count must match armor model render call count to be synchronized
                         for (int i = 0; i < 4; i++) {
-                            dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                            dragonRenderer.render(dummyDragon, yaw, partialRenderTick - i, matrixStack, renderTypeBuffer, eventLight);
                         }
                     }
 
@@ -393,13 +393,13 @@ public class ClientEvents {
                     dragonArmor.copyPosition(player);
                     EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
                     dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 1, matrixStack, renderTypeBuffer, eventLight);
                     dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 2, matrixStack, renderTypeBuffer, eventLight);
                     dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 3, matrixStack, renderTypeBuffer, eventLight);
                     dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                    dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 4, matrixStack, renderTypeBuffer, eventLight);
 
                     for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
                         if (layer instanceof ParrotVariantLayer) {
