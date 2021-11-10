@@ -19,6 +19,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.RainType;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,6 +39,7 @@ public class DragonTraitHandler {
                 World world = playerEntity.level;
                 BlockState blockUnder = world.getBlockState(playerEntity.blockPosition().below());
                 Block block = blockUnder.getBlock();
+                Biome biome = world.getBiome(playerEntity.blockPosition());
                 if (!world.isClientSide && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.speedupEffectLevel.get() > 0 && SpecificsHandler.DRAGON_SPEEDUP_BLOCKS != null && SpecificsHandler.DRAGON_SPEEDUP_BLOCKS.get(dragonStateHandler.getType()).contains(block))
                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, ConfigHandler.SERVER.speedupEffectLevel.get() - 1, false, false));
                 switch (dragonStateHandler.getType()) {
@@ -95,12 +98,13 @@ public class DragonTraitHandler {
                         if (ConfigHandler.SERVER.penalties.get() && !playerEntity.hasEffect(DragonEffects.PEACE) && ConfigHandler.SERVER.seaTicksWithoutWater.get() > 0 && !playerEntity.isCreative() && !playerEntity.isSpectator()) {
                             DragonStateHandler.DragonDebuffData debuffData = dragonStateHandler.getDebuffData();
                             if (!playerEntity.isInWaterRainOrBubble() && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && !SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) && !SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock()))) {
-                                if (debuffData.timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2)
-                                    debuffData.timeWithoutWater++;
+                                if (debuffData.timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2){
+                                    debuffData.timeWithoutWater += (world.isNight() ? 0.5F : 1.0) * (biome.getPrecipitation() == RainType.NONE && biome.getBaseTemperature() > 1.0 ? biome.getBaseTemperature() : 1F);
+                                }
                                 if (debuffData.timeWithoutWater == ConfigHandler.SERVER.seaTicksWithoutWater.get() + 1 && !playerEntity.level.isClientSide)
                                     DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), debuffData.timeWithoutWater, debuffData.timeInDarkness));
                             } else if (debuffData.timeWithoutWater > 0) {
-                                int old = debuffData.timeWithoutWater;
+                                double old = debuffData.timeWithoutWater;
                                 debuffData.timeWithoutWater = (Math.max(debuffData.timeWithoutWater - (int) Math.ceil(ConfigHandler.SERVER.seaTicksWithoutWater.get() * 0.005F), 0));
                                 if (old > ConfigHandler.SERVER.seaTicksWithoutWater.get() + 1 && debuffData.timeWithoutWater <= ConfigHandler.SERVER.seaTicksWithoutWater.get() && !playerEntity.level.isClientSide)
                                     DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), debuffData.timeWithoutWater, debuffData.timeInDarkness));

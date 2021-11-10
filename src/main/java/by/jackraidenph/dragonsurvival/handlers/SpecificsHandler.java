@@ -193,7 +193,7 @@ public class SpecificsHandler {
     				ForgeIngameGui.right_height += 10;
 
     				int maxTimeWithoutWater = ConfigHandler.SERVER.seaTicksWithoutWater.get();
-    				int timeWithoutWater = maxTimeWithoutWater - playerStateHandler.getDebuffData().timeWithoutWater;
+				    double timeWithoutWater = maxTimeWithoutWater - playerStateHandler.getDebuffData().timeWithoutWater;
     				boolean flag = false;
     				if (timeWithoutWater < 0) {
     					flag = true;
