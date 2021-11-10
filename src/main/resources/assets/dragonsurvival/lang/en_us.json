@@ -103,6 +103,7 @@
   "ds.choice_human": "You have chosen to become a human.",
   "ds.wings.enabled": "You have spread your wings",
   "ds.wings.disabled": "You have folded your wings",
+  "ds.wings.nohunger": "You are too hungry to fly",
   "ds.you.have.no.wings": "You have §cno wings§r. You need to talk to the Ender dragon.",
   "ds.dragon.grants.wings": "<Ender dragon> I bestow wings on you. Now get out of here!",
   "ds.space.occupied": "Not enough free space around",
