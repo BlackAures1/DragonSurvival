@@ -50,7 +50,7 @@ public class DragonEntity extends LivingEntity implements IAnimatable, CommonTra
         if (player != null) {
             DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
                 Vector3d motio = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
-                boolean isMovingHorizontal = getMovementSpeed(this) > 0.005;
+                boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
                 // Main
                 if (player.isSleeping())
                     builder.addAnimation("sleep", true);
