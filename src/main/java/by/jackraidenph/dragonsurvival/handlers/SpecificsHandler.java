@@ -298,6 +298,8 @@ public class SpecificsHandler {
 					event.setCanceled(true);
 				else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestBushImmunity.get())
 					event.setCanceled(true);
+				else if ((damageSource == DamageSource.CACTUS) && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestCactiImmunity.get())
+					event.setCanceled(true);
 			}
         });
     }

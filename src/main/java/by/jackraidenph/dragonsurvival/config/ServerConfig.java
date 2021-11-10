@@ -41,6 +41,7 @@ public class ServerConfig {
     // Forest Dragon
     public final ForgeConfigSpec.DoubleValue forestFallReduction; // 0.0 = Disabled
     public final ForgeConfigSpec.BooleanValue forestBushImmunity;
+	public final ForgeConfigSpec.BooleanValue forestCactiImmunity;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestSpeedupBlocks;
     // Sea Dragon
     public final ForgeConfigSpec.BooleanValue seaSwimmingBonuses;
@@ -171,6 +172,9 @@ public class ServerConfig {
 		forestBushImmunity = builder
 				.comment("Whether forest dragons are immune to Sweet Berry Bush damage.")
 				.define("bushImmunity", true);
+		forestCactiImmunity = builder
+				.comment("Whether forest dragons are immune to Cactus damage.")
+				.define("cactiImmunity", true);
 		forestSpeedupBlocks = builder
 				.comment("Blocks forest dragons gain speed when standing above. Formatting: block/tag:modid:id")
 				.defineList("forestSpeedupBlocks", Arrays.asList(
