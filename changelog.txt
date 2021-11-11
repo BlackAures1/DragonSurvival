@@ -1,3 +1,5 @@
+1.16.5-0.0.45:
+
 1.16.5-0.0.44:
 - added effects: sea peace, forest magic, cave fire, calm animals, anti-predators;
 - added blocks: dragon memory, beacon empty, sea beacon peace, forest beacon magic, cave beacon fire;
