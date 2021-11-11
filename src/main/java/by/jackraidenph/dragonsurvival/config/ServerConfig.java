@@ -18,6 +18,7 @@ public class ServerConfig {
 	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
 	public final ForgeConfigSpec.IntValue levelHungerForFly;
 	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
+	public final ForgeConfigSpec.BooleanValue flyingUsesHunger;
 	public final ForgeConfigSpec.IntValue altarUsageCooldown;
 	public final ForgeConfigSpec.DoubleValue newbornJump;
 	public final ForgeConfigSpec.DoubleValue youngJump;
@@ -114,6 +115,9 @@ public class ServerConfig {
 		levelHungerForFly = builder
 				.comment("If the player's hunger is below this parameter, he can't open his wings.")
 				.defineInRange("altarUsageCooldown", 6, 0, 20);
+		flyingUsesHunger = builder
+				.comment("Whether you use up hunger while flying")
+				.define("flyingUsesHunger", true);
 		enableFlightFallDamage = builder
 				.comment("Whether damage from flight falling is enabled")
 				.define("enableFlightFallDamage", true);

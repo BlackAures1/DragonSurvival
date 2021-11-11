@@ -6,6 +6,8 @@ import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,5 +47,21 @@ public class ServerFlightHandler {
                 });
             }
         }
+    }
+    
+    @SubscribeEvent
+    public static void playerFoodExhaustion(TickEvent.PlayerTickEvent playerTickEvent) {
+        if(!ConfigHandler.SERVER.flyingUsesHunger.get()) return;
+        
+        DragonStateProvider.getCap(playerTickEvent.player).ifPresent(dragonStateHandler -> {
+            if (dragonStateHandler.isDragon() &&  DragonSizeHandler.wingsStatusServer.containsKey(playerTickEvent.player.getId()) && DragonSizeHandler.wingsStatusServer.get(playerTickEvent.player.getId())) {
+                if(!playerTickEvent.player.isFallFlying() && !playerTickEvent.player.isOnGround()){
+                    Vector3d delta = playerTickEvent.player.getDeltaMovement();
+                    float l = Math.round(MathHelper.sqrt(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z));
+                    float exhaustion = 0.005F * l;
+                    playerTickEvent.player.causeFoodExhaustion(exhaustion);
+                }
+            }
+        });
     }
 }
