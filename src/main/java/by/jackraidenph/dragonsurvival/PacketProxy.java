@@ -97,8 +97,11 @@ public class PacketProxy {
             if (myPlayer != null) {
                 World world = myPlayer.level;
 
-                if (ClientEvents.dummyDragon2 != null) {
-                    ClientEvents.dummyDragon2.get().player = myPlayer.getId();
+                if (ClientEvents.dragonEntity != null) {
+                    ClientEvents.dragonEntity.get().player = myPlayer.getId();
+                }
+                if (ClientEvents.dragonArmor != null) {
+                    ClientEvents.dragonArmor.player = myPlayer.getId();
                 }
                 PlayerEntity thatPlayer = (PlayerEntity) world.getEntity(synchronizeDragonCap.playerId);
 
@@ -118,6 +121,9 @@ public class PacketProxy {
                         DragonEntity dragonEntity = EntityTypesInit.DRAGON.create(world);
                         dragonEntity.player = thatPlayer.getId();
                         ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
+                        DragonEntity dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(world);
+                        dragonArmor.player = thatPlayer.getId();
+                        ClientEvents.playerArmorMap.computeIfAbsent(thatPlayer.getId(), integer -> dragonArmor);
                     }
                     thatPlayer.setForcedPose(null);
                     thatPlayer.refreshDimensions();

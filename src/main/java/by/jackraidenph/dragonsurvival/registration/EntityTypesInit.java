@@ -44,7 +44,7 @@ public class EntityTypesInit {
     private static final List<Item> spawnEggs = Lists.newArrayList();
 
     public static EntityType<MagicalPredatorEntity> MAGICAL_BEAST;
-    public static EntityType<DragonEntity> DRAGON;
+    public static EntityType<DragonEntity> DRAGON, DRAGON_ARMOR;
     public static EntityType<BolasEntity> BOLAS_ENTITY;
     public static EntityType<HunterHound> HUNTER_HOUND;
     public static EntityType<Shooter> SHOOTER_HUNTER;
@@ -91,8 +91,11 @@ public class EntityTypesInit {
         }
 
         DRAGON = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
-        DRAGON.setRegistryName(new ResourceLocation(DragonSurvivalMod.MODID, "dummy_dragon"));
+        DRAGON.setRegistryName(DragonSurvivalMod.MODID, "dummy_dragon");
         registry.register(DRAGON);
+        DRAGON_ARMOR = new EntityType<>(DragonEntity::new, EntityClassification.MISC, true, false, false, false, ImmutableSet.of(), EntitySize.fixed(0.9f, 1.9f), 0, 0);
+        DRAGON_ARMOR.setRegistryName(DragonSurvivalMod.MODID, "dragon_armor");
+        registry.register(DRAGON_ARMOR);
         BOLAS_ENTITY = cast(EntityType.Builder.of((p_create_1_, p_create_2_) -> new BolasEntity(p_create_2_), EntityClassification.MISC).sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10).build("bolas"));
         BOLAS_ENTITY.setRegistryName("dragonsurvival", "bolas");
         registry.register(BOLAS_ENTITY);
@@ -134,6 +137,7 @@ public class EntityTypesInit {
     public static void attributeCreationEvent(EntityAttributeCreationEvent event) {
         event.put(MAGICAL_BEAST, MagicalPredatorEntity.createMonsterAttributes().build());
         event.put(DRAGON, DragonEntity.createLivingAttributes().build());
+        event.put(DRAGON_ARMOR, DragonEntity.createLivingAttributes().build());
         event.put(HUNTER_HOUND, WolfEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.houndSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.houndDamage.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.houndHealth.get()).build());
         event.put(SHOOTER_HUNTER, PillagerEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.hunterSpeed.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.houndHealth.get()).add(Attributes.ARMOR, ConfigHandler.COMMON.hunterArmor.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.hunterDamage.get()).build());
         event.put(SQUIRE_HUNTER, VindicatorEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, ConfigHandler.COMMON.squireSpeed.get()).add(Attributes.ATTACK_DAMAGE, ConfigHandler.COMMON.squireDamage.get()).add(Attributes.ARMOR, ConfigHandler.COMMON.squireArmor.get()).add(Attributes.MAX_HEALTH, ConfigHandler.COMMON.squireHealth.get()).build());

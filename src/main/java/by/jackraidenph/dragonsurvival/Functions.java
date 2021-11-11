@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -78,5 +79,21 @@ public class Functions {
             builder = builder.addPattern(BannerPattern.values()[random.nextInt(BannerPattern.values().length)], DyeColor.values()[random.nextInt(DyeColor.values().length)]);
         }
         return builder.toListTag();
+    }
+
+    public static void copyBoneRotation(GeoBone from, GeoBone to) {
+        to.setRotationX(from.getRotationX());
+        to.setRotationY(from.getRotationY());
+        to.setRotationZ(from.getRotationZ());
+        if (!to.childBones.isEmpty()) {
+            for (GeoBone childBone : to.childBones) {
+                for (GeoBone bone : from.childBones) {
+                    if (childBone.getName().equals(bone.getName())) {
+                        copyBoneRotation(bone, childBone);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
