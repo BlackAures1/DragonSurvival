@@ -60,7 +60,6 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveDrinkDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
-	public final ForgeConfigSpec.IntValue waterProtectionDuration; // 0 = Disabled
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveHurtByDrinkItems;
 	
 	// Forest Dragon
@@ -265,9 +264,6 @@ public class ServerConfig {
 						"item:minecraft:milk_bucket",
 						"item:minecraft:honey_bottle"
 				), this::isValidItemConfig);
-		waterProtectionDuration = builder
-				.comment("How long in seconds should the water protection from charged soup last. (Default to 5min) Set to 0 to disable.")
-				.defineInRange("waterProtectionDuration", 300, 0, 10000);
 		builder.pop().push("forest"); // Forest Dragon Penalties
 		forestStressTicks = builder
 				.comment("The number of ticks in darkness before the forest dragon gets the Stressed effect. Set to 0 to disable to stress effect.")
