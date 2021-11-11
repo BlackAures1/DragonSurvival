@@ -7,9 +7,9 @@ import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
+import by.jackraidenph.dragonsurvival.util.DamageSources;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.passive.PigEntity;
@@ -27,6 +28,8 @@ import net.minecraft.entity.passive.StriderEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
@@ -35,8 +38,11 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -45,6 +51,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -417,6 +424,88 @@ public class SpecificsHandler {
             }
         });
     }
+	
+	@SubscribeEvent
+	public void caveDragonDrink(LivingEntityUseItemEvent.Finish destroyItemEvent) {
+		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveHurtByDrinkItems.get().size() == 0
+			|| ConfigHandler.SERVER.caveDrinkDamage.get() == 0.0)
+			return;
+		
+		DragonStateProvider.getCap(destroyItemEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
+			if (dragonStateHandler.isDragon()) {
+				if(dragonStateHandler.getType() != DragonType.CAVE) return;
+				
+				PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
+				ItemStack itemStack = destroyItemEvent.getItem();
+				
+				List<String> drinkItems = new ArrayList<>(ConfigHandler.SERVER.caveHurtByDrinkItems.get());
+				ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+				
+				if(itemId != null){
+					boolean isDrink = drinkItems.contains("item:" + itemId);
+					
+					if(!isDrink) {
+						for (ResourceLocation tag : itemStack.getItem().getTags()) {
+							if (drinkItems.contains("tag:" + tag)) {
+								isDrink = true;
+								break;
+							}
+						}
+					}
+					
+					if(isDrink){
+						//TODO Might want to use another damage source then GENERIC here
+						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
+					}
+				}
+			}
+		});
+	}
+	
+	@SubscribeEvent
+	public void hitBySnowball(LivingAttackEvent attackEvent) {
+		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveSplashDamage.get() == 0.0)
+			return;
+		if(attackEvent.getSource() instanceof IndirectEntityDamageSource){
+			IndirectEntityDamageSource damageSource = (IndirectEntityDamageSource)attackEvent.getSource();
+			if(damageSource.getDirectEntity() instanceof SnowballEntity){
+				DragonStateProvider.getCap(attackEvent.getEntityLiving().getEntity()).ifPresent(dragonStateHandler -> {
+					if (dragonStateHandler.isDragon()) {
+						if(dragonStateHandler.getType() != DragonType.CAVE) return;
+						
+						PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
+						//TODO Might want to use another damage source then GENERIC here
+						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+					}
+				});
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void hitByPotion(ProjectileImpactEvent.Throwable potionEvent) {
+		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveSplashDamage.get() == 0.0)
+			return;
+
+		if(potionEvent.getThrowable() instanceof PotionEntity){
+			PotionEntity potionEntity = (PotionEntity)potionEvent.getThrowable();
+			if(potionEntity.getItem().getItem() != Items.SPLASH_POTION) return;
+			if(PotionUtils.getPotion(potionEntity.getItem()).getEffects().size() > 0) return; //Remove this line if you want potions with effects to also damage rather then just water ones.
+			
+			Vector3d pos = potionEvent.getRayTraceResult().getLocation();
+			List<PlayerEntity> entities = potionEntity.level.getEntities(EntityType.PLAYER, new AxisAlignedBB(pos.x - 5, pos.y - 1, pos.z - 5, pos.x + 5, pos.y + 1, pos.z + 5), (entity) -> entity.position().distanceTo(pos) <= 4);
+			
+			for(PlayerEntity player : entities){
+				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+					if (dragonStateHandler.isDragon()) {
+						if(dragonStateHandler.getType() != DragonType.CAVE) return;
+						
+						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+					}
+				});
+			}
+		}
+	}
 
     @SubscribeEvent
     public void onJump(LivingEvent.LivingJumpEvent jumpEvent) {

@@ -57,7 +57,11 @@ public class ServerConfig {
     // Cave Dragon
     public final ForgeConfigSpec.DoubleValue caveWaterDamage; // 0.0 = Disabled
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
-    // Forest Dragon
+	public final ForgeConfigSpec.DoubleValue caveDrinkDamage; // 0.0 = Disabled
+	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveHurtByDrinkItems;
+	
+	// Forest Dragon
     public final ForgeConfigSpec.IntValue forestStressTicks; // 0 = Disabled
     public final ForgeConfigSpec.IntValue forestStressEffectDuration;
     public final ForgeConfigSpec.DoubleValue stressExhaustion;
@@ -242,6 +246,20 @@ public class ServerConfig {
 		caveRainDamage = builder
 				.comment("The amount of damage taken per rain damage tick (once every 40 ticks). Set to 0.0 to disable rain damage.")
 				.defineInRange("rainDamage", 1.0, 0.0, 100.0);
+		caveDrinkDamage = builder
+				.comment("The amount of damage taken each time a cave dragon consumes a liquid item. Set to 0.0 to disable drinking damage.")
+				.defineInRange("drinkingDamage", 2.0, 0.0, 100.0);
+		caveSplashDamage = builder
+				.comment("The amount of damage taken when hit with a snowball or a water bottle. Set to 0.0 to disable splash damage.")
+				.defineInRange("splashDamage", 2.0, 0.0, 100.0);
+		caveHurtByDrinkItems = builder
+				.comment("Items which will cause damage to cave dragons when consumed. Formatting: item/tag:modid:id")
+				.defineList("drinkingItems", Arrays.asList(
+						"item:minecraft:potion",
+						"item:minecraft:water_bottle",
+						"item:minecraft:milk_bucket",
+						"item:minecraft:honey_bottle"
+				), this::isValidItemConfig);
 		builder.pop().push("forest"); // Forest Dragon Penalties
 		forestStressTicks = builder
 				.comment("The number of ticks in darkness before the forest dragon gets the Stressed effect. Set to 0 to disable to stress effect.")
