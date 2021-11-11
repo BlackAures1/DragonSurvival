@@ -454,8 +454,7 @@ public class SpecificsHandler {
 					}
 					
 					if(isDrink){
-						//TODO Might want to use another damage source then GENERIC here
-						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
+						playerEntity.hurt(DamageSource.DROWN, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
 					}
 				}
 			}
@@ -474,7 +473,6 @@ public class SpecificsHandler {
 						if(dragonStateHandler.getType() != DragonType.CAVE) return;
 						
 						PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
-						//TODO Might want to use another damage source then GENERIC here
 						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
 					}
 				});
@@ -499,7 +497,6 @@ public class SpecificsHandler {
 				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 					if (dragonStateHandler.isDragon()) {
 						if(dragonStateHandler.getType() != DragonType.CAVE) return;
-						
 						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
 					}
 				});
