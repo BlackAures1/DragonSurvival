@@ -650,7 +650,7 @@ public class ServerConfig {
 						"item:aquafina:raw_stingray_slice:4:1"
 				), this::isValidFoodConfig);
 		
-		builder.push("hurtful_items");
+		builder.push("hurtful");
 		builder.comment("Dragon food formatting: item/tag:modid:itemid:damage.");
 		
 		caveDragonHurtfulItems = builder
@@ -659,15 +659,27 @@ public class ServerConfig {
 						"item:minecraft:potion:2",
 						"item:minecraft:water_bottle:2",
 						"item:minecraft:milk_bucket:2"
-				), this::isValidItemConfig);
+				), this::isValidHurtfulItem);
 		
 		seaDragonHurtfulItems = builder
 				.comment("Items which will cause damage to sea dragons when consumed. Formatting: item/tag:modid:itemid:damage")
-				.defineList("hurtfulToSeaDragon", Arrays.asList(), this::isValidItemConfig);
+				.defineList("hurtfulToSeaDragon", Arrays.asList(), this::isValidHurtfulItem);
 		
 		forestDragonHurtfulItems = builder
 				.comment("Items which will cause damage to forest dragons when consumed. Formatting: item/tag:modid:itemid:damage")
-				.defineList("hurtfulToForestDragon", Arrays.asList(), this::isValidItemConfig);
+				.defineList("hurtfulToForestDragon", Arrays.asList(),  this::isValidHurtfulItem);
+	}
+	
+	private boolean isValidHurtfulItem(Object food){
+		final String[] foodSplit = String.valueOf(food).split(":");
+		if (foodSplit.length != 4 || !(foodSplit[0].equalsIgnoreCase("item") || foodSplit[0].equalsIgnoreCase("tag")))
+			return false;
+		try {
+			final float damage = Float.parseFloat(foodSplit[3]);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+		return true;
 	}
 	
 	private boolean isValidFoodConfig(Object food) {
