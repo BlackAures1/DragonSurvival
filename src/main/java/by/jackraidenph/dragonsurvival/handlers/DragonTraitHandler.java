@@ -44,19 +44,21 @@ public class DragonTraitHandler {
                     playerEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 65, ConfigHandler.SERVER.speedupEffectLevel.get() - 1, false, false));
                 switch (dragonStateHandler.getType()) {
                     case CAVE:
-                        if (ConfigHandler.SERVER.penalties.get() && !playerEntity.hasEffect(DragonEffects.FIRE) && !playerEntity.isCreative() && !playerEntity.isSpectator() && ((playerEntity.isInWaterOrBubble() && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0) || (playerEntity.isInWaterOrRain() && !playerEntity.isInWater() && ConfigHandler.SERVER.caveRainDamage.get() != 0.0) || (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())) && ConfigHandler.SERVER.caveRainDamage.get() != 0.0))) {
-                            if (playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 10 == 0 && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0)
-                                playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveWaterDamage.get().floatValue());
-                            else if (((playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble()) || (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())))) && playerEntity.tickCount % 40 == 0 && ConfigHandler.SERVER.caveRainDamage.get() != 0.0)
-                                playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveRainDamage.get().floatValue());
-                            if (playerEntity.tickCount % 5 == 0)
-                                playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
-                            if (world.isClientSide)
-                                world.addParticle(ParticleTypes.POOF,
-                                        playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
-                                        playerEntity.getY() + 0.5F,
-                                        playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
-                                        0, 0, 0);
+                        if(!playerEntity.hasEffect(DragonEffects.WATER_PROTECTION)){
+                            if (ConfigHandler.SERVER.penalties.get() && !playerEntity.hasEffect(DragonEffects.FIRE) && !playerEntity.isCreative() && !playerEntity.isSpectator() && ((playerEntity.isInWaterOrBubble() && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0) || (playerEntity.isInWaterOrRain() && !playerEntity.isInWater() && ConfigHandler.SERVER.caveRainDamage.get() != 0.0) || (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())) && ConfigHandler.SERVER.caveRainDamage.get() != 0.0))) {
+                                if (playerEntity.isInWaterOrBubble() && playerEntity.tickCount % 10 == 0 && ConfigHandler.SERVER.caveWaterDamage.get() != 0.0)
+                                    playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveWaterDamage.get().floatValue());
+                                else if (((playerEntity.isInWaterOrRain() && !playerEntity.isInWaterOrBubble()) || (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) || SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock())))) && playerEntity.tickCount % 40 == 0 && ConfigHandler.SERVER.caveRainDamage.get() != 0.0)
+                                    playerEntity.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveRainDamage.get().floatValue());
+                                if (playerEntity.tickCount % 5 == 0)
+                                    playerEntity.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, (playerEntity.getRandom().nextFloat() - playerEntity.getRandom().nextFloat()) * 0.2F + 1.0F);
+                                if (world.isClientSide)
+                                    world.addParticle(ParticleTypes.POOF,
+                                            playerEntity.getX() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
+                                            playerEntity.getY() + 0.5F,
+                                            playerEntity.getZ() + world.random.nextDouble() * (world.random.nextBoolean() ? 1 : -1),
+                                            0, 0, 0);
+                            }
                         }
                         if (playerEntity.isOnFire() && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveFireImmunity.get())
                             playerEntity.clearFire();

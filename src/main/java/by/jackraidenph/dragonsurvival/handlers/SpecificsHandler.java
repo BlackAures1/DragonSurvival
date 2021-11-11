@@ -1,11 +1,13 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
+import by.jackraidenph.dragonsurvival.Functions;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
 import by.jackraidenph.dragonsurvival.util.DamageSources;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
@@ -32,6 +34,7 @@ import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.tags.BlockTags;
@@ -438,23 +441,31 @@ public class SpecificsHandler {
 				PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
 				ItemStack itemStack = destroyItemEvent.getItem();
 				
-				List<String> drinkItems = new ArrayList<>(ConfigHandler.SERVER.caveHurtByDrinkItems.get());
-				ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
-				
-				if(itemId != null){
-					boolean isDrink = drinkItems.contains("item:" + itemId);
+				if(!playerEntity.hasEffect(DragonEffects.WATER_PROTECTION)) {
+					List<String> drinkItems = new ArrayList<>(ConfigHandler.SERVER.caveHurtByDrinkItems.get());
+					ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
 					
-					if(!isDrink) {
-						for (ResourceLocation tag : itemStack.getItem().getTags()) {
-							if (drinkItems.contains("tag:" + tag)) {
-								isDrink = true;
-								break;
+					if (itemId != null) {
+						boolean isDrink = drinkItems.contains("item:" + itemId);
+						
+						if (!isDrink) {
+							for (ResourceLocation tag : itemStack.getItem().getTags()) {
+								if (drinkItems.contains("tag:" + tag)) {
+									isDrink = true;
+									break;
+								}
 							}
 						}
+						
+						if (isDrink) {
+							playerEntity.hurt(DamageSource.DROWN, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
+						}
 					}
-					
-					if(isDrink){
-						playerEntity.hurt(DamageSource.DROWN, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
+				}
+				
+				if(itemStack.getItem() == ItemsInit.chargedSoup){
+					if(ConfigHandler.SERVER.waterProtectionDuration.get() != 0) {
+						playerEntity.addEffect(new EffectInstance(DragonEffects.WATER_PROTECTION, Functions.secondsToTicks(ConfigHandler.SERVER.waterProtectionDuration.get())));
 					}
 				}
 			}
@@ -465,17 +476,24 @@ public class SpecificsHandler {
 	public void hitBySnowball(LivingAttackEvent attackEvent) {
 		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveSplashDamage.get() == 0.0)
 			return;
+		
+		
 		if(attackEvent.getSource() instanceof IndirectEntityDamageSource){
 			IndirectEntityDamageSource damageSource = (IndirectEntityDamageSource)attackEvent.getSource();
 			if(damageSource.getDirectEntity() instanceof SnowballEntity){
-				DragonStateProvider.getCap(attackEvent.getEntityLiving().getEntity()).ifPresent(dragonStateHandler -> {
-					if (dragonStateHandler.isDragon()) {
-						if(dragonStateHandler.getType() != DragonType.CAVE) return;
-						
-						PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
-						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+				if(attackEvent.getEntityLiving().getEntity() instanceof PlayerEntity){
+					PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
+					
+					if(!playerEntity.hasEffect(DragonEffects.WATER_PROTECTION)) {
+						DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+							if (dragonStateHandler.isDragon()) {
+								if (dragonStateHandler.getType() != DragonType.CAVE) return;
+								
+								playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+							}
+						});
 					}
-				});
+				}
 			}
 		}
 	}
@@ -494,12 +512,14 @@ public class SpecificsHandler {
 			List<PlayerEntity> entities = potionEntity.level.getEntities(EntityType.PLAYER, new AxisAlignedBB(pos.x - 5, pos.y - 1, pos.z - 5, pos.x + 5, pos.y + 1, pos.z + 5), (entity) -> entity.position().distanceTo(pos) <= 4);
 			
 			for(PlayerEntity player : entities){
-				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
-					if (dragonStateHandler.isDragon()) {
-						if(dragonStateHandler.getType() != DragonType.CAVE) return;
-						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
-					}
-				});
+				if(!player.hasEffect(DragonEffects.WATER_PROTECTION)) {
+					DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+						if (dragonStateHandler.isDragon()) {
+							if (dragonStateHandler.getType() != DragonType.CAVE) return;
+							player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+						}
+					});
+				}
 			}
 		}
 	}

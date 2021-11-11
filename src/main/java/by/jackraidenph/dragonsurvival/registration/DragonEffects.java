@@ -23,6 +23,7 @@ public class DragonEffects {
 
 
     public static Effect STRESS;
+    public static Effect WATER_PROTECTION;
     public static Effect TRAPPED;
     public static Effect EVIL_DRAGON;
     public static Effect PEACE, MAGIC, FIRE;
@@ -35,6 +36,8 @@ public class DragonEffects {
         IForgeRegistry<Effect> forgeRegistry = effectRegister.getRegistry();
         STRESS = new Stress(0xf4a2e8).setRegistryName(DragonSurvivalMod.MODID, "stress");
         forgeRegistry.register(STRESS);
+        WATER_PROTECTION = new Effect2(EffectType.BENEFICIAL, 0x0, false).setRegistryName(DragonSurvivalMod.MODID, "water_protection");
+        forgeRegistry.register(WATER_PROTECTION);
         TRAPPED = new Trapped(EffectType.NEUTRAL, 0xdddddd).setRegistryName(DragonSurvivalMod.MODID, "trapped");
         forgeRegistry.register(TRAPPED);
         EVIL_DRAGON = new EvilDragon(EffectType.NEUTRAL).setRegistryName(DragonSurvivalMod.MODID, "evil_dragon");

@@ -35,7 +35,7 @@ public class ItemsInit {
             return new ItemStack(elderDragonBone);
         }
     };
-    public static Item charredMeat, charredVegetable, charredMushroom, charredSeafood, chargedCoal, charredSoup;
+    public static Item charredMeat, charredVegetable, charredMushroom, charredSeafood, chargedCoal, chargedSoup;
     public static Item huntingNet;
     public static Item passiveFireBeacon, passiveMagicBeacon, passivePeaceBeacon;
 
@@ -130,11 +130,11 @@ public class ItemsInit {
         charredSeafood = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
                 .effect(() -> new EffectInstance(Effects.HUNGER, 20 * 15, 0), 1.0F)
                 .build())).setRegistryName(DragonSurvivalMod.MODID, "charred_seafood");
-        charredSoup = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat()
+        chargedSoup = new Item(new Item.Properties().tab(items).food(new Food.Builder().nutrition(1).saturationMod(0.4F).meat().alwaysEat()
                 .effect(() -> new EffectInstance(Effects.POISON, 20 * 15, 0), 1.0F)
                 .build())).setRegistryName(DragonSurvivalMod.MODID, "charged_soup");
         IForgeRegistry<Item> registry = event.getRegistry();
-        registry.registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, charredVegetable, charredMushroom, charredSoup, charredSeafood, elderDragonDust);
+        registry.registerAll(heartElement, starBone, elderDragonBone, chargedCoal, charredMeat, charredVegetable, charredMushroom, chargedSoup, charredSeafood, elderDragonDust);
 
         huntingNet = new Item(new Item.Properties()).setRegistryName("dragonsurvival", "dragon_hunting_mesh");
         registry.register(huntingNet);
