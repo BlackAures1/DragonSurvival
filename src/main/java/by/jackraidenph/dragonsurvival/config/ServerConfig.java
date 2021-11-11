@@ -58,10 +58,8 @@ public class ServerConfig {
     // Cave Dragon
     public final ForgeConfigSpec.DoubleValue caveWaterDamage; // 0.0 = Disabled
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
-	public final ForgeConfigSpec.DoubleValue caveDrinkDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.IntValue chargedSoupBuffDuration; // 0 = Disabled
-	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveHurtByDrinkItems;
 	
 	// Forest Dragon
     public final ForgeConfigSpec.IntValue forestStressTicks; // 0 = Disabled
@@ -82,6 +80,11 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue humanOreBoneChance;
     public final ForgeConfigSpec.DoubleValue dragonOreBoneChance;
     public final ForgeConfigSpec.ConfigValue<String> oresTag;
+	
+	//Items that deal damage when consumed by a specific dragon type
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaDragonHurtfulItems;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonHurtfulItems;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestDragonHurtfulItems;
 	
     // Dragon Food (Networked for Dragonfruit)
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonFoods;
@@ -254,20 +257,9 @@ public class ServerConfig {
 		caveRainDamage = builder
 				.comment("The amount of damage taken per rain damage tick (once every 40 ticks). Set to 0.0 to disable rain damage.")
 				.defineInRange("rainDamage", 1.0, 0.0, 100.0);
-		caveDrinkDamage = builder
-				.comment("The amount of damage taken each time a cave dragon consumes a liquid item. Set to 0.0 to disable drinking damage.")
-				.defineInRange("drinkingDamage", 2.0, 0.0, 100.0);
 		caveSplashDamage = builder
 				.comment("The amount of damage taken when hit with a snowball or a water bottle. Set to 0.0 to disable splash damage.")
 				.defineInRange("splashDamage", 2.0, 0.0, 100.0);
-		caveHurtByDrinkItems = builder
-				.comment("Items which will cause damage to cave dragons when consumed. Formatting: item/tag:modid:id")
-				.defineList("drinkingItems", Arrays.asList(
-						"item:minecraft:potion",
-						"item:minecraft:water_bottle",
-						"item:minecraft:milk_bucket",
-						"item:minecraft:honey_bottle"
-				), this::isValidItemConfig);
 		builder.pop().push("forest"); // Forest Dragon Penalties
 		forestStressTicks = builder
 				.comment("The number of ticks in darkness before the forest dragon gets the Stressed effect. Set to 0 to disable to stress effect.")
@@ -657,6 +649,25 @@ public class ServerConfig {
 						"item:aquafina:spider_crab_leg:4:1",
 						"item:aquafina:raw_stingray_slice:4:1"
 				), this::isValidFoodConfig);
+		
+		builder.push("hurtful_items");
+		builder.comment("Dragon food formatting: item/tag:modid:itemid:damage.");
+		
+		caveDragonHurtfulItems = builder
+				.comment("Items which will cause damage to cave dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToCaveDragon", Arrays.asList(
+						"item:minecraft:potion:2",
+						"item:minecraft:water_bottle:2",
+						"item:minecraft:milk_bucket:2"
+				), this::isValidItemConfig);
+		
+		seaDragonHurtfulItems = builder
+				.comment("Items which will cause damage to sea dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToSeaDragon", Arrays.asList(), this::isValidItemConfig);
+		
+		forestDragonHurtfulItems = builder
+				.comment("Items which will cause damage to forest dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToForestDragon", Arrays.asList(), this::isValidItemConfig);
 	}
 	
 	private boolean isValidFoodConfig(Object food) {

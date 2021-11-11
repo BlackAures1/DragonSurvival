@@ -302,12 +302,31 @@ public class SpecificsHandler {
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-				if (damageSource.isFire() && dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveFireImmunity.get())
-					event.setCanceled(true);
-				else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestBushImmunity.get())
-					event.setCanceled(true);
-				else if ((damageSource == DamageSource.CACTUS) && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestCactiImmunity.get())
-					event.setCanceled(true);
+				if(ConfigHandler.SERVER.bonuses.get()){
+					if (dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.caveFireImmunity.get()){
+						if(damageSource.isFire() && ConfigHandler.SERVER.caveFireImmunity.get()){
+							event.setCanceled(true);
+						}
+						
+					}else if(dragonStateHandler.getType() == DragonType.FOREST){
+						if(damageSource == DamageSource.SWEET_BERRY_BUSH && ConfigHandler.SERVER.forestBushImmunity.get()){
+							event.setCanceled(true);
+						}else if(damageSource == DamageSource.CACTUS && ConfigHandler.SERVER.forestCactiImmunity.get()){
+							event.setCanceled(true);
+						}
+					}
+				}
+
+				
+				if(ConfigHandler.SERVER.caveSplashDamage.get() != 0.0) {
+					if (dragonStateHandler.getType() == DragonType.CAVE && !livingEntity.hasEffect(DragonEffects.FIRE)) {
+						if (damageSource instanceof IndirectEntityDamageSource) {
+							if (damageSource.getDirectEntity() instanceof SnowballEntity) {
+								livingEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+							}
+						}
+					}
+				}
 			}
         });
     }
@@ -426,61 +445,46 @@ public class SpecificsHandler {
     }
 	
 	@SubscribeEvent
-	public void caveDragonDrink(LivingEntityUseItemEvent.Finish destroyItemEvent) {
-		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveHurtByDrinkItems.get().size() == 0
-			|| ConfigHandler.SERVER.caveDrinkDamage.get() == 0.0)
+	public void consumeItem(LivingEntityUseItemEvent.Finish destroyItemEvent) {
+		if (!ConfigHandler.SERVER.penalties.get())
 			return;
 		
 		PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
-		if(playerEntity.hasEffect(DragonEffects.FIRE)) return;
+		ItemStack itemStack = destroyItemEvent.getItem();
 		
-		DragonStateProvider.getCap(destroyItemEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
+		DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
-				if(dragonStateHandler.getType() != DragonType.CAVE) return;
-				
-				ItemStack itemStack = destroyItemEvent.getItem();
-				List<String> drinkItems = new ArrayList<>(ConfigHandler.SERVER.caveHurtByDrinkItems.get());
-				ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
-				
-				if(itemId != null){
-					boolean isDrink = drinkItems.contains("item:" + itemId);
+				List<String> hurtfulItems = new ArrayList<>(
+						dragonStateHandler.getType() == DragonType.FOREST ? ConfigHandler.SERVER.forestDragonHurtfulItems.get() :
+						dragonStateHandler.getType() == DragonType.CAVE ? ConfigHandler.SERVER.caveDragonHurtfulItems.get() :
+						dragonStateHandler.getType() == DragonType.SEA ? ConfigHandler.SERVER.seaDragonHurtfulItems.get() : new ArrayList<>());
+
+				if(hurtfulItems.size() > 0){
+					ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
 					
-					if(!isDrink) {
-						for (ResourceLocation tag : itemStack.getItem().getTags()) {
-							if (drinkItems.contains("tag:" + tag)) {
-								isDrink = true;
+					if(itemId != null){
+						for(String item : hurtfulItems){
+							boolean match = item.startsWith("item:" + itemId + ":");
+							
+							if(!match){
+								for(ResourceLocation tag : itemStack.getItem().getTags()){
+									if(item.startsWith("tag:" + tag + ":")){
+										match = true;
+										break;
+									}
+								}
+							}
+							
+							if(match){
+								String damage = item.substring(item.lastIndexOf(":") + 1);
+								playerEntity.hurt(DamageSource.GENERIC, Float.parseFloat(damage));
 								break;
 							}
 						}
 					}
-					
-					if(isDrink){
-						playerEntity.hurt(DamageSource.DROWN, ConfigHandler.SERVER.caveDrinkDamage.get().floatValue());
-					}
 				}
 			}
 		});
-	}
-	
-	@SubscribeEvent
-	public void hitBySnowball(LivingAttackEvent attackEvent) {
-		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveSplashDamage.get() == 0.0)
-			return;
-		if(attackEvent.getSource() instanceof IndirectEntityDamageSource){
-			IndirectEntityDamageSource damageSource = (IndirectEntityDamageSource)attackEvent.getSource();
-			if(damageSource.getDirectEntity() instanceof SnowballEntity){
-				DragonStateProvider.getCap(attackEvent.getEntityLiving().getEntity()).ifPresent(dragonStateHandler -> {
-					if (dragonStateHandler.isDragon()) {
-						if(dragonStateHandler.getType() != DragonType.CAVE) return;
-						
-						PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
-						if(playerEntity.hasEffect(DragonEffects.FIRE)) return;
-						
-						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
-					}
-				});
-			}
-		}
 	}
 	
 	@SubscribeEvent
@@ -497,10 +501,11 @@ public class SpecificsHandler {
 			List<PlayerEntity> entities = potionEntity.level.getEntities(EntityType.PLAYER, new AxisAlignedBB(pos.x - 5, pos.y - 1, pos.z - 5, pos.x + 5, pos.y + 1, pos.z + 5), (entity) -> entity.position().distanceTo(pos) <= 4);
 			
 			for(PlayerEntity player : entities){
+				if(player.hasEffect(DragonEffects.FIRE)) continue;
+				
 				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 					if (dragonStateHandler.isDragon()) {
 						if(dragonStateHandler.getType() != DragonType.CAVE) return;
-						if(player.hasEffect(DragonEffects.FIRE)) return;
 						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
 					}
 				});
