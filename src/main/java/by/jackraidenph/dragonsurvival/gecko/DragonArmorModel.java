@@ -7,11 +7,30 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class DragonArmorModel extends AnimatedGeoModel<DragonEntity> {
+
+    @SuppressWarnings("unchecked")
+    public DragonArmorModel(DragonModel dragonModel) {
+        List<IBone> armorBones = dragonModel.getAnimationProcessor().getModelRendererList();
+        List<IBone> dragonBones = this.getAnimationProcessor().getModelRendererList();
+        for (IBone armorBone : armorBones) {
+            GeoBone armorGeoBone = (GeoBone) armorBone;
+            for (IBone dragonBone : dragonBones) {
+                GeoBone dragonGeobone = (GeoBone) dragonBone;
+                if (armorGeoBone.name.equals(dragonGeobone.name)) {
+                    dragonGeobone.childBones.add(armorGeoBone);
+                    break;
+                }
+            }
+        }
+    }
+
     private ResourceLocation armorTexture = new ResourceLocation(DragonSurvivalMod.MODID, "textures/armor/empty_armor.png");
 
     @Override
