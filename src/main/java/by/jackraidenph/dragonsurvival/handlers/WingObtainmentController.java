@@ -105,7 +105,7 @@ public class WingObtainmentController {
 	    		Language language = Minecraft.getInstance().getLanguageManager().getSelected();
 	    		ClientPlayerEntity player = Minecraft.getInstance().player;
 	    		int messageId = player.getRandom().nextInt(dragonPhrases.getOrDefault(language.getCode(), dragonPhrases.getOrDefault("en_us", 1))) + 1;
-	    		event.setMessage(new StringTextComponent((new TranslationTextComponent("ds.endmessage." + messageId)).getString().replace("()", player.getDisplayName().getString())));
+	    		event.setMessage(new StringTextComponent((new TranslationTextComponent("ds.endmessage." + messageId, player.getDisplayName().getString())).getString()));
 			} else if (event.getMessage().getString().equals("ds.dragon.grants.wings")) {
 				event.setMessage(new TranslationTextComponent("ds.dragon.grants.wings"));
 			}

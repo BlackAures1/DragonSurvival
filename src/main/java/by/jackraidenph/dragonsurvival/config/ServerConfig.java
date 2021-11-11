@@ -16,8 +16,10 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue hitboxGrowsPastHuman;
 	public final ForgeConfigSpec.BooleanValue startWithWings;
 	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
-    
-    // Specifics
+	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
+	public final ForgeConfigSpec.IntValue altarUsageCooldown;
+	
+	// Specifics
     public final ForgeConfigSpec.BooleanValue customDragonFoods;
     public final ForgeConfigSpec.BooleanValue healthAdjustments;
     public final ForgeConfigSpec.IntValue minHealth;
@@ -57,7 +59,8 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue stressExhaustion;
     // Sea Dragon
     public final ForgeConfigSpec.IntValue seaTicksWithoutWater; // 0 = Disabled
-    public final ForgeConfigSpec.DoubleValue seaDehydrationDamage;
+	public final ForgeConfigSpec.BooleanValue seaTicksBasedOnTemperature;
+	public final ForgeConfigSpec.DoubleValue seaDehydrationDamage;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaHydrationBlocks;
     public final ForgeConfigSpec.BooleanValue seaAllowWaterBottles;
     public final ForgeConfigSpec.IntValue seaTicksWithoutWaterRestored; // 0 = Disabled
@@ -85,6 +88,9 @@ public class ServerConfig {
 		mineStarBlock = builder
 				.comment("Whether silk touch hoes can be used to harvest Predator Stars.")
 				.define("harvestableStarBlock", false);
+		altarUsageCooldown = builder
+				.comment("How long of a cooldown in seconds the altar has after each use.")
+				.defineInRange("altarUsageCooldown", 1, 0, 1000);
 		sizeChangesHitbox = builder
 				.comment("Whether the dragon size determines its hitbox size.")
 				.define("sizeChangesHitbox", true);
@@ -94,7 +100,9 @@ public class ServerConfig {
 		startWithWings = builder
 				.comment("Whether dragons start out with wings.")
 				.define("startWithWings", false);
-
+		allowFlyingWithoutHunger = builder
+				.comment("Whether dragons can fly when out of hunger")
+				.define("allowFlyingWithoutHunger", false);
 		enableFlightFallDamage = builder.comment("Whether damage from flight falling is enabled")
 				.define("enableFlightFallDamage", true);
 
@@ -231,6 +239,9 @@ public class ServerConfig {
 		seaTicksWithoutWater = builder
 				.comment("The number of ticks out of water before the sea dragon will start taking dehydration damage. Set to 0 to disable. Note: This value can stack up to double while dehydrated.")
 				.defineInRange("ticksWithoutWater", 15000, 0, 100000);
+		seaTicksBasedOnTemperature = builder
+				.comment("Whether the sea dragon should lose more water in warmer biomes and less during the night.")
+				.define("waterConsumptionWithTemperature", true);
 		seaDehydrationDamage = builder
 				.comment("The amount of damage taken per tick while dehydrated (once every 40 ticks unless fully dehydrated, then once every 20 ticks).")
 				.defineInRange("dehydrationDamage", 1.0, 0.5, 100.0);

@@ -99,7 +99,7 @@ public class DragonTraitHandler {
                             DragonStateHandler.DragonDebuffData debuffData = dragonStateHandler.getDebuffData();
                             if (!playerEntity.isInWaterRainOrBubble() && (SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS != null && !SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(block) && !SpecificsHandler.SEA_DRAGON_HYDRATION_BLOCKS.contains(world.getBlockState(playerEntity.blockPosition()).getBlock()))) {
                                 if (debuffData.timeWithoutWater < ConfigHandler.SERVER.seaTicksWithoutWater.get() * 2){
-                                    debuffData.timeWithoutWater += (world.isNight() ? 0.5F : 1.0) * (biome.getPrecipitation() == RainType.NONE && biome.getBaseTemperature() > 1.0 ? biome.getBaseTemperature() : 1F);
+                                    debuffData.timeWithoutWater += ConfigHandler.SERVER.seaTicksBasedOnTemperature.get() ? (world.isNight() ? 0.5F : 1.0) * (biome.getPrecipitation() == RainType.NONE && biome.getBaseTemperature() > 1.0 ? biome.getBaseTemperature() : 1F) : 1;
                                 }
                                 if (debuffData.timeWithoutWater == ConfigHandler.SERVER.seaTicksWithoutWater.get() + 1 && !playerEntity.level.isClientSide)
                                     DragonSurvivalMod.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new SyncCapabilityDebuff(playerEntity.getId(), debuffData.timeWithoutWater, debuffData.timeInDarkness));

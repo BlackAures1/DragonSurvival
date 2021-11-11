@@ -107,11 +107,11 @@
   "ds.you.have.no.wings": "You have §cno wings§r. You need to talk to the Ender dragon.",
   "ds.dragon.grants.wings": "<Ender dragon> I bestow wings on you. Now get out of here!",
   "ds.space.occupied": "Not enough free space around",
-  "ds.cooldown.active": "The altar is on cooldown",
+  "ds.cooldown.active": "The altar is on cooldown: {0}",
 
-  "ds.endmessage.1": "Have you come here for the wings, ()? Get out, before it's too late.",
-  "ds.endmessage.2": "This is my land, (), show some respect. Go away, but first answer, why have you come here. Is it for wings?",
-  "ds.endmessage.3": "You have gone through lot to get here, (), what do you wish?",
+  "ds.endmessage.1": "Have you come here for the wings, {0}? Get out, before it's too late.",
+  "ds.endmessage.2": "This is my land, {0}, show some respect. Go away, but first answer, why have you come here. Is it for wings?",
+  "ds.endmessage.3": "You have gone through lot to get here, {0}, what do you wish?",
 
   "ds.altar_dragon_info.cave_dragon.0": "§c■ Cave dragon.§r",
   "ds.altar_dragon_info.cave_dragon.1": "",

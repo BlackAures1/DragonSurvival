@@ -78,14 +78,14 @@
   "ds.you.have.no.wings": "Você não tem asas",
   "ds.dragon.grants.wings": "<Ender dragon> Eu concedo asas para você. Agora dá o Fora!",
   "ds.space.occupied": "Espaço livre insuficiente ao redor",
-  "ds.cooldown.active": "O altar está em tempo de recarrega",
+  "ds.cooldown.active": "O altar está em tempo de recarrega: {0}",
   
   "ds.regen.on": "Regeneração de ninho ativada.",
   "ds.regen.off": "Regeneração de ninho desativada.",
   
-  "ds.endmessage.1": "Você veio aqui pelas asas, ()? Saia, antes que seja tarde demais.",
-  "ds.endmessage.2": "Esta é minha terra, (), mostre algum respeito. Vá embora, mas primeiro, responda por que você veio aqui, é para asas?",
-  "ds.endmessage.3": "Você passou por muita coisa para chegar até aqui, (), o que você deseja?",
+  "ds.endmessage.1": "Você veio aqui pelas asas, {0}? Saia, antes que seja tarde demais.",
+  "ds.endmessage.2": "Esta é minha terra, {0}, mostre algum respeito. Vá embora, mas primeiro, responda por que você veio aqui, é para asas?",
+  "ds.endmessage.3": "Você passou por muita coisa para chegar até aqui, {0}, o que você deseja?",
 
   "ds.altar_dragon_info.cave_dragon.0": "§c■ Dragão da caverna.§r",
   "ds.altar_dragon_info.cave_dragon.1": "",

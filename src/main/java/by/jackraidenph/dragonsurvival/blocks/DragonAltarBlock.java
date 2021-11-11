@@ -2,6 +2,7 @@ package by.jackraidenph.dragonsurvival.blocks;
 
 
 import by.jackraidenph.dragonsurvival.Functions;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gui.DragonAltarGUI;
 import by.jackraidenph.dragonsurvival.registration.TileEntityTypesInit;
 import by.jackraidenph.dragonsurvival.tiles.AltarEntity;
@@ -61,16 +62,20 @@ public class DragonAltarBlock extends Block {
     	TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof AltarEntity) {
             AltarEntity altarEntity = (AltarEntity) tileEntity;
-            int cooldown=altarEntity.usageCooldowns.getOrDefault(player.getUUID(),0);
+            int cooldown = altarEntity.usageCooldowns.getOrDefault(player.getUUID(),0);
             if (cooldown > 0) {
-                if (worldIn.isClientSide)
-                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active").append(": "+ Functions.ticksToSeconds(cooldown)), player.getUUID());
+                if (worldIn.isClientSide){
+                    //Show the current cooldown in minutes and seconds in cases where the cooldown is set high in the config
+                    int mins = Functions.ticksToMinutes(cooldown);
+                    int secs = Functions.ticksToSeconds(cooldown - Functions.minutesToTicks(mins));
+                    player.sendMessage(new TranslationTextComponent("ds.cooldown.active", (mins > 0 ? mins + "m" : "") + secs + (mins > 0 ? "s" : "")), player.getUUID());
+                }
                 return ActionResultType.CONSUME;
             } else {
                 if (worldIn.isClientSide) {
                     openGUi();
                 }
-                altarEntity.usageCooldowns.put(player.getUUID(),Functions.secondsToTicks(1));
+                altarEntity.usageCooldowns.put(player.getUUID(),Functions.secondsToTicks(ConfigHandler.SERVER.altarUsageCooldown.get()));
             }
         }
         return ActionResultType.SUCCESS;
