@@ -19,6 +19,9 @@ public class ServerConfig {
 	public final ForgeConfigSpec.IntValue levelHungerForFly;
 	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
 	public final ForgeConfigSpec.IntValue altarUsageCooldown;
+	public final ForgeConfigSpec.DoubleValue newbornJump;
+	public final ForgeConfigSpec.DoubleValue youngJump;
+	public final ForgeConfigSpec.DoubleValue adultJump;
 	
 	// Specifics
     public final ForgeConfigSpec.BooleanValue customDragonFoods;
@@ -141,6 +144,15 @@ public class ServerConfig {
 		adultBonusDamage = builder
 				.comment("Attack modifier for adult dragons.")
 				.defineInRange("adultAttackMod", 3.0, 0.0, 100.0);
+		newbornJump = builder
+				.comment("Jumping height for a newborn dragon. Default is 1 block.")
+				.defineInRange("newbornJump", 0.025, 0, 0.9);
+		youngJump = builder
+				.comment("Jumping height for a young dragon. Default is 1.5 block.")
+				.defineInRange("youngJump", 0.1, 0, 0.9);
+		adultJump = builder
+				.comment("Jumping height for a adult dragon. Default is 2 block.")
+				.defineInRange("adultJump", 0.15, 0, 0.9);
 		clawsAreTools = builder
 				.comment("Whether dragon claws function as tools.")
 				.define("clawsAreTools", true);

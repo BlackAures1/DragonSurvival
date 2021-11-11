@@ -9,6 +9,7 @@ import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
+import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -418,19 +419,19 @@ public class SpecificsHandler {
     }
 
     @SubscribeEvent
-    public void onJump(LivingEvent.LivingJumpEvent jumpEvent) { //TODO: Add config here
+    public void onJump(LivingEvent.LivingJumpEvent jumpEvent) {
         final LivingEntity livingEntity = jumpEvent.getEntityLiving();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
                 switch (dragonStateHandler.getLevel()) {
                     case BABY:
-                        livingEntity.push(0, 0.025, 0); //1+ block
+                        livingEntity.push(0, ConfigHandler.SERVER.newbornJump.get(), 0); //1+ block
                         break;
                     case YOUNG:
-                        livingEntity.push(0, 0.1, 0); //1.5+ block
+                        livingEntity.push(0, ConfigHandler.SERVER.youngJump.get(), 0); //1.5+ block
                         break;
                     case ADULT:
-                        livingEntity.push(0, 0.15, 0); //2+ blocks
+                        livingEntity.push(0, ConfigHandler.SERVER.adultJump.get(), 0); //2+ blocks
                         break;
                 }
                 if (livingEntity instanceof ServerPlayerEntity) {
