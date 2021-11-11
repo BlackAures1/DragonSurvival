@@ -39,9 +39,9 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
 	
-	private static Map<String, Integer> dragonPhrases = new HashMap<String, Integer>();
+	private static final Map<String, Integer> dragonPhrases = new HashMap<String, Integer>();
 
-	private static UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
+    private static final UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
 
 	public static void loadDragonPhrases() {
 		if (FMLLoader.getDist() != Dist.CLIENT)
