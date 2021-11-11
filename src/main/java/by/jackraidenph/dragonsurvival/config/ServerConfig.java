@@ -114,7 +114,7 @@ public class ServerConfig {
 				.define("allowFlyingWhenTotallyHungry", false);
 		levelHungerForFly = builder
 				.comment("If the player's hunger is below this parameter, he can't open his wings.")
-				.defineInRange("altarUsageCooldown", 6, 0, 20);
+				.defineInRange("hungerLevelForFlight", 6, 0, 20);
 		flyingUsesHunger = builder
 				.comment("Whether you use up hunger while flying")
 				.define("flyingUsesHunger", true);
