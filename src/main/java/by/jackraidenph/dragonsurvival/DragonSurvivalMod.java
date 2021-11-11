@@ -277,14 +277,19 @@ public class DragonSurvivalMod {
                                 e.printStackTrace();
                             }
                             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                            ClientEvents.dummyDragon2.getAndSet(EntityTypesInit.DRAGON.create(myPlayer.level));
-                            ClientEvents.dummyDragon2.get().player = myPlayer.getId();
-
+                            ClientEvents.dragonEntity.getAndSet(EntityTypesInit.DRAGON.create(myPlayer.level));
+                            ClientEvents.dragonEntity.get().player = myPlayer.getId();
+                            ClientEvents.dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(myPlayer.level);
+                            if (ClientEvents.dragonArmor != null)
+                                ClientEvents.dragonArmor.player = myPlayer.getId();
                             PlayerEntity thatPlayer = (PlayerEntity) myPlayer.level.getEntity(refreshDragons.playerId);
                             if (thatPlayer != null) {
                                 DragonEntity dragonEntity = EntityTypesInit.DRAGON.create(myPlayer.level);
                                 dragonEntity.player = thatPlayer.getId();
                                 ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
+                                DragonEntity dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(myPlayer.level);
+                                dragonArmor.player = thatPlayer.getId();
+                                ClientEvents.playerArmorMap.computeIfAbsent(thatPlayer.getId(), integer -> dragonArmor);
                             }
                         });
                         thread.start();
