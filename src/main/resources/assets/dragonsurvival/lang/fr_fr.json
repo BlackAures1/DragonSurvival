@@ -111,14 +111,14 @@
   "ds.you.have.no.wings": "§cTu n'as pas d'ailes.§r Il faut que tu parles à l'Ender Dragon",
   "ds.dragon.grants.wings": "<Ender dragon> Je t'octroie des ailes. Maintenant dégerpis !",
   "ds.space.occupied": "Pas assez d'espace disponible",
-  "ds.cooldown.active": "L'autel est en cours de rechargement",
+  "ds.cooldown.active": "L'autel est en cours de rechargement: {0}",
 
   "ds.regen.on": "Régénération au nid activée.",
   "ds.regen.off": "Régénération au nid désactivée.",
 
-  "ds.endmessage.1": "Vous êtes venu ici pour les ailes, ()? Va t'en, avant qu'il ne soit trop tard.",
-  "ds.endmessage.2": "Ceci sont mes terres, (), fait preuve de respect. Pars, mais avant cela réponds moi, pourquoi est tu venu ici, est-ce pour les ailes ?",
-  "ds.endmessage.3": "Vous avez traversé beaucoup pour arriver ici, (), que souhaitez vous ?",
+  "ds.endmessage.1": "Vous êtes venu ici pour les ailes, {0}? Va t'en, avant qu'il ne soit trop tard.",
+  "ds.endmessage.2": "Ceci sont mes terres, {0}, fait preuve de respect. Pars, mais avant cela réponds moi, pourquoi est tu venu ici, est-ce pour les ailes ?",
+  "ds.endmessage.3": "Vous avez traversé beaucoup pour arriver ici, {0}, que souhaitez vous ?",
 
 
   "ds.altar_dragon_info.cave_dragon.0": "§l■ §nDragon des cavernes.§r",

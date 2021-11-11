@@ -108,13 +108,16 @@ public class ClientFlightHandler {
         if (player != null && ClientModEvents.TOGGLE_WINGS.consumeClick()) {
             DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.hasWings()) {
-                    wingsEnabled = !wingsEnabled;
-                    DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
-                    if (ConfigHandler.CLIENT.notifyWingStatus.get()) {
-                        if (wingsEnabled)
-                            player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
-                        else
-                            player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                    //Allows toggling the wings if food level is above 0, player is creative, wings are already enabled (allows disabling even when hungry) or if config options is turned on
+                    if((player.getFoodData().getFoodLevel() > 0 || player.isCreative()) || wingsEnabled || ConfigHandler.SERVER.allowFlyingWithoutHunger.get()) {
+                        wingsEnabled = !wingsEnabled;
+                        DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
+                        if (ConfigHandler.CLIENT.notifyWingStatus.get()) {
+                            if (wingsEnabled) player.sendMessage(new TranslationTextComponent("ds.wings.enabled"), player.getUUID());
+                            else player.sendMessage(new TranslationTextComponent("ds.wings.disabled"), player.getUUID());
+                        }
+                    }else{
+                        player.sendMessage(new TranslationTextComponent("ds.wings.nohunger"), player.getUUID());
                     }
                 } else {
                     player.sendMessage(new TranslationTextComponent("ds.you.have.no.wings"), player.getUUID());

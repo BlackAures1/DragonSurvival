@@ -193,7 +193,7 @@ public class SpecificsHandler {
     				ForgeIngameGui.right_height += 10;
 
     				int maxTimeWithoutWater = ConfigHandler.SERVER.seaTicksWithoutWater.get();
-    				int timeWithoutWater = maxTimeWithoutWater - playerStateHandler.getDebuffData().timeWithoutWater;
+				    double timeWithoutWater = maxTimeWithoutWater - playerStateHandler.getDebuffData().timeWithoutWater;
     				boolean flag = false;
     				if (timeWithoutWater < 0) {
     					flag = true;
@@ -297,6 +297,8 @@ public class SpecificsHandler {
 				if (damageSource.isFire() && dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveFireImmunity.get())
 					event.setCanceled(true);
 				else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestBushImmunity.get())
+					event.setCanceled(true);
+				else if ((damageSource == DamageSource.CACTUS) && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestCactiImmunity.get())
 					event.setCanceled(true);
 			}
         });

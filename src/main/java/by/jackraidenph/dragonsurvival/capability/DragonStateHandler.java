@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolType;
 
@@ -212,7 +211,7 @@ public class DragonStateHandler {
         return this.movementData;
     }
     
-    public void setDebuffData(int timeWithoutWater, int timeInDarkness) {
+    public void setDebuffData(double timeWithoutWater, int timeInDarkness) {
     	debuffData.timeWithoutWater = timeWithoutWater;
     	debuffData.timeInDarkness = timeInDarkness;
     }
@@ -268,10 +267,10 @@ public class DragonStateHandler {
     }
     
     public static class DragonDebuffData {
-    	public int timeWithoutWater;
+    	public double timeWithoutWater;
     	public int timeInDarkness;
     	
-    	public DragonDebuffData(int timeWithoutWater, int timeInDarkness) {
+    	public DragonDebuffData(double timeWithoutWater, int timeInDarkness) {
     		this.timeWithoutWater = timeWithoutWater;
     		this.timeInDarkness = timeInDarkness;
     	}

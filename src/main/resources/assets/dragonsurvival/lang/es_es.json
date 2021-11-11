@@ -109,14 +109,14 @@
   "ds.you.have.no.wings": "No tienes §cAlas§r. Necesitas hablar con el Dragon del End.",
   "ds.dragon.grants.wings": "<Dragón del End> Te concedo tus alas. ¡Ahora vete de aquí!",
   "ds.space.occupied": "No hay suficiente espacio libre alrededor",
-  "ds.cooldown.active": "El altar está recargandose",
+  "ds.cooldown.active": "El altar está recargandose: {0}",
 
   "ds.regen.on": "Activar la regeneración del nido.",
   "ds.regen.off": "Desactivar la regeneración del nido.",
 
-  "ds.endmessage.1": "Has venido aquí por las alas, ()? Vete, antes de que sea demasiado tarde.",
-  "ds.endmessage.2": "Esta es mi tierra, (), muestra un poco de respeto. Vete, pero primero responde, por qué has venido aquí. Es por las alas?",
-  "ds.endmessage.3": "Has pasado por mucho para llegar hasta aquí, (), qué deseas?",
+  "ds.endmessage.1": "Has venido aquí por las alas, {0}? Vete, antes de que sea demasiado tarde.",
+  "ds.endmessage.2": "Esta es mi tierra, {0}, muestra un poco de respeto. Vete, pero primero responde, por qué has venido aquí. Es por las alas?",
+  "ds.endmessage.3": "Has pasado por mucho para llegar hasta aquí, {0}, qué deseas?",
 
   "ds.altar_dragon_info.cave_dragon.0": "§c■ Dragón de las Cuevas.§r",
   "ds.altar_dragon_info.cave_dragon.1": "",
