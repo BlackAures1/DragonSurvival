@@ -101,8 +101,8 @@ public class ServerConfig {
 				.comment("Whether dragons start out with wings.")
 				.define("startWithWings", false);
 		allowFlyingWithoutHunger = builder
-				.comment("Whether dragons can fly when out of hunger")
-				.define("allowFlyingWithoutHunger", false);
+				.comment("Whether dragons can fly when totally hungry")
+				.define("allowFlyingWhenTotallyHungry", false);
 		enableFlightFallDamage = builder.comment("Whether damage from flight falling is enabled")
 				.define("enableFlightFallDamage", true);
 
@@ -241,7 +241,7 @@ public class ServerConfig {
 				.defineInRange("ticksWithoutWater", 15000, 0, 100000);
 		seaTicksBasedOnTemperature = builder
 				.comment("Whether the sea dragon should lose more water in warmer biomes and less during the night.")
-				.define("waterConsumptionWithTemperature", true);
+				.define("waterConsumptionDependsOnTemperature", true);
 		seaDehydrationDamage = builder
 				.comment("The amount of damage taken per tick while dehydrated (once every 40 ticks unless fully dehydrated, then once every 20 ticks).")
 				.defineInRange("dehydrationDamage", 1.0, 0.5, 100.0);
