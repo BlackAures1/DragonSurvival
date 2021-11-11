@@ -16,6 +16,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue hitboxGrowsPastHuman;
 	public final ForgeConfigSpec.BooleanValue startWithWings;
 	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
+	public final ForgeConfigSpec.IntValue levelHungerForFly;
 	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
 	public final ForgeConfigSpec.IntValue altarUsageCooldown;
 	
@@ -103,7 +104,11 @@ public class ServerConfig {
 		allowFlyingWithoutHunger = builder
 				.comment("Whether dragons can fly when totally hungry")
 				.define("allowFlyingWhenTotallyHungry", false);
-		enableFlightFallDamage = builder.comment("Whether damage from flight falling is enabled")
+		levelHungerForFly = builder
+				.comment("If the player's hunger is below this parameter, he can't open his wings.")
+				.defineInRange("altarUsageCooldown", 6, 0, 20);
+		enableFlightFallDamage = builder
+				.comment("Whether damage from flight falling is enabled")
 				.define("enableFlightFallDamage", true);
 
 		// Specifics
