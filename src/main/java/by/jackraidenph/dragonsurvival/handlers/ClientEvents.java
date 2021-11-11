@@ -135,7 +135,6 @@ public class ClientEvents {
                         eventMatrixStack.pushPose();
                         float partialTicks = renderHandEvent.getPartialTicks();
                         float playerYaw = player.getViewYRot(partialTicks);
-                        float playerPitch = player.getViewXRot(partialTicks);
                         ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
                         eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
                         eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
@@ -314,9 +313,7 @@ public class ClientEvents {
             if (cap.isDragon()) {
                 renderPlayerEvent.setCanceled(true);
                 final float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
-                final float limbSwingAmount = MathHelper.lerp(partialRenderTick, player.animationSpeedOld, player.animationSpeed);
                 final float yaw = player.getViewYRot(partialRenderTick);
-                final float pitch = player.getViewXRot(partialRenderTick);
                 DragonLevel dragonStage = cap.getLevel();
                 ResourceLocation texture = getSkin(player, cap, dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
@@ -413,16 +410,11 @@ public class ClientEvents {
                                 break;
                             }
                         }
-                        if (BOLAS == null)
-                            BOLAS = new ItemStack(ItemsInit.huntingNet);
+
                         ItemRenderer itemRenderer = mc.getItemRenderer();
                         final int combinedOverlayIn = LivingRenderer.getOverlayCoords(player, 0);
                         if (player.hasEffect(DragonEffects.TRAPPED)) {
-                            matrixStack.pushPose();
-                            matrixStack.scale(3, 3, 3);
-                            matrixStack.translate(0, 0.5, 0);
-                            itemRenderer.renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, eventLight, combinedOverlayIn, matrixStack, renderTypeBuffer);
-                            matrixStack.popPose();
+                            renderBolas(eventLight, combinedOverlayIn, renderTypeBuffer, matrixStack);
                         }
                         ItemStack right = player.getMainHandItem();
                         matrixStack.pushPose();
@@ -602,16 +594,23 @@ public class ClientEvents {
         if (!(entity instanceof PlayerEntity) && entity.getAttributes().hasAttribute(Attributes.MOVEMENT_SPEED)) {
             AttributeModifier bolasTrap = new AttributeModifier(BolasEntity.DISABLE_MOVEMENT, "Bolas trap", -entity.getAttribute(Attributes.MOVEMENT_SPEED).getValue(), AttributeModifier.Operation.ADDITION);
             if (entity.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(bolasTrap)) {
-                if (BOLAS == null)
-                    BOLAS = new ItemStack(ItemsInit.huntingNet);
+                int light = postEvent.getLight();
+                int overlayCoords = LivingRenderer.getOverlayCoords(entity, 0);
+                IRenderTypeBuffer buffers = postEvent.getBuffers();
                 MatrixStack matrixStack = postEvent.getMatrixStack();
-                matrixStack.pushPose();
-                matrixStack.scale(3, 3, 3);
-                matrixStack.translate(0, 0.5, 0);
-                Minecraft.getInstance().getItemRenderer().renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, postEvent.getLight(), LivingRenderer.getOverlayCoords(entity, 0), matrixStack, postEvent.getBuffers());
-                matrixStack.popPose();
+                renderBolas(light, overlayCoords, buffers, matrixStack);
             }
         }
+    }
+
+    private static void renderBolas(int light, int overlayCoords, IRenderTypeBuffer buffers, MatrixStack matrixStack) {
+        matrixStack.pushPose();
+        matrixStack.scale(3, 3, 3);
+        matrixStack.translate(0, 0.5, 0);
+        if (BOLAS == null)
+            BOLAS = new ItemStack(ItemsInit.huntingNet);
+        Minecraft.getInstance().getItemRenderer().renderStatic(BOLAS, ItemCameraTransforms.TransformType.NONE, light, overlayCoords, matrixStack, buffers);
+        matrixStack.popPose();
     }
 
     @SubscribeEvent
