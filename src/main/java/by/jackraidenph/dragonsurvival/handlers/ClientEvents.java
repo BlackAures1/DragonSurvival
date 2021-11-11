@@ -64,12 +64,14 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
-@SuppressWarnings("unused")
 public class ClientEvents {
 
     public static DragonModel dragonModel;
@@ -82,9 +84,6 @@ public class ClientEvents {
      * Third-person armor instances
      */
     public static ConcurrentHashMap<Integer, DragonEntity> playerArmorMap = new ConcurrentHashMap<>(20);
-    static boolean showingInventory;
-
-    private static final ResourceLocation DRAGON_HUD = new ResourceLocation(DragonSurvivalMod.MODID + ":textures/gui/dragon_hud.png");
 
     static HashMap<String, Boolean> warningsForName = new HashMap<>();
     /**
@@ -200,89 +199,89 @@ public class ClientEvents {
     private static Vector3d getInputVector(Vector3d movement, float fricSpeed, float yRot) {
         double d0 = movement.lengthSqr();
         if (d0 < 1.0E-7D) {
-           return Vector3d.ZERO;
+            return Vector3d.ZERO;
         } else {
-           Vector3d vector3d = (d0 > 1.0D ? movement.normalize() : movement).scale((double)fricSpeed);
-           float f = MathHelper.sin(yRot * ((float)Math.PI / 180F));
-           float f1 = MathHelper.cos(yRot * ((float)Math.PI / 180F));
-           return new Vector3d(vector3d.x * (double)f1 - vector3d.z * (double)f, vector3d.y, vector3d.z * (double)f1 + vector3d.x * (double)f);
+            Vector3d vector3d = (d0 > 1.0D ? movement.normalize() : movement).scale((double) fricSpeed);
+            float f = MathHelper.sin(yRot * ((float) Math.PI / 180F));
+            float f1 = MathHelper.cos(yRot * ((float) Math.PI / 180F));
+            return new Vector3d(vector3d.x * (double) f1 - vector3d.z * (double) f, vector3d.y, vector3d.z * (double) f1 + vector3d.x * (double) f);
         }
-     }
-    
+    }
+
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent clientTickEvent) {
         if (clientTickEvent.phase == TickEvent.Phase.START) {
             Minecraft minecraft = Minecraft.getInstance();
             ClientPlayerEntity player = minecraft.player;
             if (player != null) {
-            	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-            		if (playerStateHandler.isDragon()) {
-            			float bodyAndHeadYawDiff = (((float)playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
-            			
-	                    Vector3d moveVector = getInputVector(new Vector3d(player.input.leftImpulse, 0, player.input.forwardImpulse), 1F, player.yRot);
-	                    boolean isFlying = false;
-	                    if (ClientFlightHandler.wingsEnabled && !player.isOnGround() && !player.isInWater() && !player.isInLava()) { // TODO: Remove this when fixing flight system
+                DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+                    if (playerStateHandler.isDragon()) {
+                        float bodyAndHeadYawDiff = (((float) playerStateHandler.getMovementData().bodyYaw) - player.yHeadRot);
+
+                        Vector3d moveVector = getInputVector(new Vector3d(player.input.leftImpulse, 0, player.input.forwardImpulse), 1F, player.yRot);
+                        boolean isFlying = false;
+                        if (ClientFlightHandler.wingsEnabled && !player.isOnGround() && !player.isInWater() && !player.isInLava()) { // TODO: Remove this when fixing flight system
                             moveVector = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
                             isFlying = true;
                         }
-	                    float f = (float)MathHelper.atan2(moveVector.z, moveVector.x) * (180F / (float)Math.PI) - 90F;
-	                    float f1 = (float)(Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
-	                    
-	                    if (f1 > 0.000028) {
-	                    	if (isFlying || (minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
-	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
-	            				float f2 = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
-	            				playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
-	                    	} else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
-	                    			minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
-	                    		
-	                    		float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f);
-	                    		if (95.0F < f5 && f5 < 265.0F) {
-	                    			f -= 180.0F;
-	                    		}
-                    			
-                    			float _f = MathHelper.wrapDegrees(f - (float)playerStateHandler.getMovementData().bodyYaw);
-                    			playerStateHandler.getMovementData().bodyYaw += _f * 0.3F;
-                    			float _f1 = MathHelper.wrapDegrees(player.yRot - (float)playerStateHandler.getMovementData().bodyYaw);
-                    			boolean flag = _f1 < -90.0F || _f1 >= 90.0F;
-                    			
-                    			if (_f1 < -75.0F) {
-                    				_f1 = -75.0F;
-                    			}
+                        float f = (float) MathHelper.atan2(moveVector.z, moveVector.x) * (180F / (float) Math.PI) - 90F;
+                        float f1 = (float) (Math.pow(moveVector.x, 2) + Math.pow(moveVector.z, 2));
 
-                    			if (_f1 >= 75.0F) {
-                    				_f1 = 75.0F;
-                    			}
+                        if (f1 > 0.000028) {
+                            if (isFlying || (minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) ||
+                                    minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.DRAGON) {
+                                float f2 = MathHelper.wrapDegrees(f - (float) playerStateHandler.getMovementData().bodyYaw);
+                                playerStateHandler.getMovementData().bodyYaw += 0.5F * f2;
+                            } else if ((minecraft.options.getCameraType() != PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.thirdPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) ||
+                                    minecraft.options.getCameraType() == PointOfView.FIRST_PERSON && ConfigHandler.CLIENT.firstPersonBodyMovement.get() == DragonBodyMovementType.VANILLA) {
 
-                    			playerStateHandler.getMovementData().bodyYaw = player.yRot - _f1;
-                    			if (_f1 * _f1 > 2500.0F) {
-                    				playerStateHandler.getMovementData().bodyYaw += _f1 * 0.2F;
-                    			}
-	                    	}
-            				if (bodyAndHeadYawDiff > 180)
-            					playerStateHandler.getMovementData().bodyYaw -= 360;
-            				if (bodyAndHeadYawDiff <= -180)
-            					playerStateHandler.getMovementData().bodyYaw += 360;
-	                    	playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
-		                	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
-	                	} else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
-	                    	if (Math.abs(bodyAndHeadYawDiff) > 360F)
-	                    		playerStateHandler.getMovementData().bodyYaw -= bodyAndHeadYawDiff;
-	                    	else {
-	                    		float turnSpeed = Math.min(1F + (float)Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
-	                    		playerStateHandler.setMovementData((float)playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
-	                    	}
-	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
-	                    } else if (playerStateHandler.getMovementData().bite != (player.swinging && player.getAttackStrengthScale(-3.0f) != 1) || player.yHeadRot != playerStateHandler.getMovementData().headYaw) {
-	                    	playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
-	                    	DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
-	                    }
-            		}
-            	});
+                                float f5 = MathHelper.abs(MathHelper.wrapDegrees(player.yRot) - f);
+                                if (95.0F < f5 && f5 < 265.0F) {
+                                    f -= 180.0F;
+                                }
+
+                                float _f = MathHelper.wrapDegrees(f - (float) playerStateHandler.getMovementData().bodyYaw);
+                                playerStateHandler.getMovementData().bodyYaw += _f * 0.3F;
+                                float _f1 = MathHelper.wrapDegrees(player.yRot - (float) playerStateHandler.getMovementData().bodyYaw);
+                                boolean flag = _f1 < -90.0F || _f1 >= 90.0F;
+
+                                if (_f1 < -75.0F) {
+                                    _f1 = -75.0F;
+                                }
+
+                                if (_f1 >= 75.0F) {
+                                    _f1 = 75.0F;
+                                }
+
+                                playerStateHandler.getMovementData().bodyYaw = player.yRot - _f1;
+                                if (_f1 * _f1 > 2500.0F) {
+                                    playerStateHandler.getMovementData().bodyYaw += _f1 * 0.2F;
+                                }
+                            }
+                            if (bodyAndHeadYawDiff > 180)
+                                playerStateHandler.getMovementData().bodyYaw -= 360;
+                            if (bodyAndHeadYawDiff <= -180)
+                                playerStateHandler.getMovementData().bodyYaw += 360;
+                            playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
+                        } else if (Math.abs(bodyAndHeadYawDiff) > 180F) {
+                            if (Math.abs(bodyAndHeadYawDiff) > 360F)
+                                playerStateHandler.getMovementData().bodyYaw -= bodyAndHeadYawDiff;
+                            else {
+                                float turnSpeed = Math.min(1F + (float) Math.pow(Math.abs(bodyAndHeadYawDiff) - 180F, 1.5F) / 30F, 50F);
+                                playerStateHandler.setMovementData((float) playerStateHandler.getMovementData().bodyYaw - Math.signum(bodyAndHeadYawDiff) * turnSpeed, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
+                            }
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
+                        } else if (playerStateHandler.getMovementData().bite != (player.swinging && player.getAttackStrengthScale(-3.0f) != 1) || player.yHeadRot != playerStateHandler.getMovementData().headYaw) {
+                            playerStateHandler.setMovementData(playerStateHandler.getMovementData().bodyYaw, player.yHeadRot, player.xRot, player.swinging && player.getAttackStrengthScale(-3.0f) != 1);
+                            DragonSurvivalMod.CHANNEL.send(PacketDistributor.SERVER.noArg(), new PacketSyncCapabilityMovement(player.getId(), playerStateHandler.getMovementData().bodyYaw, playerStateHandler.getMovementData().headYaw, playerStateHandler.getMovementData().headPitch, playerStateHandler.getMovementData().bite));
+                        }
+                    }
+                });
             }
         }
     }
-    
+
     private static ItemStack BOLAS;
     /**
      * Called for every player.
@@ -332,44 +331,44 @@ public class ClientEvents {
                     if (ConfigHandler.CLIENT.dragonNameTags.get()) {
                         net.minecraftforge.client.event.RenderNameplateEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameplateEvent(player, player.getDisplayName(), playerRenderer, matrixStack, renderTypeBuffer, eventLight, partialRenderTick);
                         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
-                        if (renderNameplateEvent.getResult() != net.minecraftforge.eventbus.api.Event.Result.DENY && (renderNameplateEvent.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW || ((AccessorLivingRenderer)playerRenderer).callShouldShowName(player))) {
-                            ((AccessorEntityRenderer)playerRenderer).callRenderNameTag(player, renderNameplateEvent.getContent(), matrixStack, renderTypeBuffer, eventLight);
+                        if (renderNameplateEvent.getResult() != net.minecraftforge.eventbus.api.Event.Result.DENY && (renderNameplateEvent.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW || ((AccessorLivingRenderer) playerRenderer).callShouldShowName(player))) {
+                            ((AccessorEntityRenderer) playerRenderer).callRenderNameTag(player, renderNameplateEvent.getContent(), matrixStack, renderTypeBuffer, eventLight);
                         }
                     }
 
-                    matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)cap.getMovementData().bodyYaw));
-	                matrixStack.scale(scale, scale, scale);
+                    matrixStack.mulPose(Vector3f.YN.rotationDegrees((float) cap.getMovementData().bodyYaw));
+                    matrixStack.scale(scale, scale, scale);
+                    ((AccessorEntityRenderer) renderPlayerEvent.getRenderer()).setShadowRadius((3.0F * size + 62.0F) / 260.0F);
+                    DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
 
-                    ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius((3.0F * size + 62.0F) / 260.0F);
-	                DragonEntity dummyDragon = playerDragonHashMap.get(player.getId()).get();
                     EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
-	                dummyDragon.copyPosition(player);
-	                dragonModel.setCurrentTexture(texture);
-	                final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
-	                final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
-	                if (leftwing != null)
-	                    leftwing.setHidden(!cap.hasWings());
-	                if (rightWing != null)
-	                    rightWing.setHidden(!cap.hasWings());
-	                IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
-	                if (neckHead != null)
-	                	 neckHead.setHidden(false);
-	                if (player.isCrouching()) {
-	                	switch (dragonStage) {
-	                        case ADULT:
-	                            matrixStack.translate(0, 0.125, 0);
-	                            break;
-	                        case YOUNG:
-	                            matrixStack.translate(0, 0.25, 0);
-	                            break;
-	                        case BABY:
-	                            matrixStack.translate(0, 0.325, 0);
-	                    }
-	                } else if (player.isSwimming() || player.isAutoSpinAttack() || (dragonsFlying.getOrDefault(player.getId(), false) && !player.isOnGround() && !player.isInWater() && !player.isInLava())) { // FIXME yea this too, I just copied what was up there to shift the model for swimming but I swear this should be done differently...
-	                	switch (dragonStage) {
-                        case ADULT:
-                            matrixStack.translate(0, -0.35, 0);
-                            break;
+                    dummyDragon.copyPosition(player);
+                    dragonModel.setCurrentTexture(texture);
+                    final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
+                    final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
+                    if (leftwing != null)
+                        leftwing.setHidden(!cap.hasWings());
+                    if (rightWing != null)
+                        rightWing.setHidden(!cap.hasWings());
+                    IBone neckHead = dragonModel.getAnimationProcessor().getBone("Neck");
+                    if (neckHead != null)
+                        neckHead.setHidden(false);
+                    if (player.isCrouching()) {
+                        switch (dragonStage) {
+                            case ADULT:
+                                matrixStack.translate(0, 0.125, 0);
+                                break;
+                            case YOUNG:
+                                matrixStack.translate(0, 0.25, 0);
+                                break;
+                            case BABY:
+                                matrixStack.translate(0, 0.325, 0);
+                        }
+                    } else if (player.isSwimming() || player.isAutoSpinAttack() || (dragonsFlying.getOrDefault(player.getId(), false) && !player.isOnGround() && !player.isInWater() && !player.isInLava())) { // FIXME yea this too, I just copied what was up there to shift the model for swimming but I swear this should be done differently...
+                        switch (dragonStage) {
+                            case ADULT:
+                                matrixStack.translate(0, -0.35, 0);
+                                break;
                             case YOUNG:
                                 matrixStack.translate(0, -0.25, 0);
                                 break;
@@ -378,10 +377,7 @@ public class ClientEvents {
                         }
                     }
                     if (!player.isInvisible()) {
-                        //render call count must match armor model render call count to be synchronized
-                        for (int i = 0; i < 4; i++) {
-                            dragonRenderer.render(dummyDragon, yaw, partialRenderTick - i, matrixStack, renderTypeBuffer, eventLight);
-                        }
+                        dragonRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                     }
 
                     if (!player.isSpectator()) {
@@ -394,13 +390,13 @@ public class ClientEvents {
                         dragonArmor.copyPosition(player);
                         EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
-                        dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 1, matrixStack, renderTypeBuffer, eventLight);
+                        dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
-                        dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 2, matrixStack, renderTypeBuffer, eventLight);
+                        dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
-                        dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 3, matrixStack, renderTypeBuffer, eventLight);
+                        dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
-                        dragonArmorRenderer.render(dragonArmor, yaw, partialRenderTick - 4, matrixStack, renderTypeBuffer, eventLight);
+                        dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
 
                         for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
                             if (layer instanceof ParrotVariantLayer) {
@@ -441,11 +437,11 @@ public class ClientEvents {
                         matrixStack.popPose();
                     }
                 } catch (Throwable throwable) {
-                	 if (!(throwable instanceof NullPointerException))
-                         throwable.printStackTrace();
+                    if (!(throwable instanceof NullPointerException))
+                        throwable.printStackTrace();
                     matrixStack.popPose();
                 } finally {
-                	matrixStack.popPose();
+                    matrixStack.popPose();
                 }
             }
             else
@@ -455,7 +451,6 @@ public class ClientEvents {
 
     private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
         ResourceLocation texture;
-        UUID playerUniqueID = player.getUUID();
         final String playerName = player.getGameProfile().getName();
 
         Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(playerName.toLowerCase()+"_"+dragonStage.name)+"")).findFirst();
@@ -582,13 +577,13 @@ public class ClientEvents {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void removeLavaFog(EntityViewRenderEvent.FogDensity event) {
-    	ClientPlayerEntity player = Minecraft.getInstance().player;
-    	DragonStateProvider.getCap(player).ifPresent(cap -> {
-    		if (cap.isDragon() && cap.getType() == DragonType.CAVE && event.getInfo().getFluidInCamera().is(FluidTags.LAVA)) {
-    			event.setDensity(0.1F);
-    			event.setCanceled(true);
-    		}
-    	});
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        DragonStateProvider.getCap(player).ifPresent(cap -> {
+            if (cap.isDragon() && cap.getType() == DragonType.CAVE && event.getInfo().getFluidInCamera().is(FluidTags.LAVA)) {
+                event.setDensity(0.1F);
+                event.setCanceled(true);
+            }
+        });
     }
 
     @SubscribeEvent
