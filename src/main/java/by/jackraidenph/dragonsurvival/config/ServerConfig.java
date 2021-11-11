@@ -60,6 +60,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveDrinkDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
+	public final ForgeConfigSpec.IntValue chargedSoupBuffDuration; // 0 = Disabled
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveHurtByDrinkItems;
 	
 	// Forest Dragon
@@ -198,6 +199,9 @@ public class ServerConfig {
 						"tag:forge:stone",
 						"tag:forge:ores"
 				), this::isValidBlockConfig);
+		chargedSoupBuffDuration = builder
+				.comment("How long in seconds should the cave fire effect from charged soup last. (Default to 5min) Set to 0 to disable.")
+				.defineInRange("chargedSoupBuffDuration", 300, 0, 10000);
 		builder.pop().push("forest"); // Forest Dragon Bonuses
 		forestFallReduction = builder
 				.comment("How many blocks of fall damage is mitigated for forest dragons. Set to 0.0 to disable.")

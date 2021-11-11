@@ -431,13 +431,14 @@ public class SpecificsHandler {
 			|| ConfigHandler.SERVER.caveDrinkDamage.get() == 0.0)
 			return;
 		
+		PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
+		if(playerEntity.hasEffect(DragonEffects.FIRE)) return;
+		
 		DragonStateProvider.getCap(destroyItemEvent.getEntityLiving()).ifPresent(dragonStateHandler -> {
 			if (dragonStateHandler.isDragon()) {
 				if(dragonStateHandler.getType() != DragonType.CAVE) return;
 				
-				PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
 				ItemStack itemStack = destroyItemEvent.getItem();
-				
 				List<String> drinkItems = new ArrayList<>(ConfigHandler.SERVER.caveHurtByDrinkItems.get());
 				ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
 				
@@ -473,6 +474,8 @@ public class SpecificsHandler {
 						if(dragonStateHandler.getType() != DragonType.CAVE) return;
 						
 						PlayerEntity playerEntity = (PlayerEntity)attackEvent.getEntityLiving().getEntity();
+						if(playerEntity.hasEffect(DragonEffects.FIRE)) return;
+						
 						playerEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
 					}
 				});
@@ -497,6 +500,7 @@ public class SpecificsHandler {
 				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
 					if (dragonStateHandler.isDragon()) {
 						if(dragonStateHandler.getType() != DragonType.CAVE) return;
+						if(player.hasEffect(DragonEffects.FIRE)) return;
 						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
 					}
 				});
