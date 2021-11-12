@@ -1,3 +1,5 @@
+1.16.5-0.0.46:
+
 1.16.5-0.0.45:
 - changes in dragon model: fixed ancient bug with UV shoulder cubes location, fixed location of all ridges, partly fixed "gap" between ridge cubes during animation, fixed z-fighting of ridges, fixed jaw, all dragon parts united into common group, body sections now have separate parent-groups with suffix _sThanks, AIS!;
 - new decorative parts added to dragon model (about 100 new parts): several types of horns, two pairs of "ear" cubes with different angles, horizontal tail ridges, moustache, beard, one horn on the nose and one on the forehead. Thanks, AIS!;

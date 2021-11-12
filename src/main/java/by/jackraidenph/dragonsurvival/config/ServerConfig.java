@@ -24,7 +24,7 @@ public class ServerConfig {
 	public final ForgeConfigSpec.DoubleValue newbornJump;
 	public final ForgeConfigSpec.DoubleValue youngJump;
 	public final ForgeConfigSpec.DoubleValue adultJump;
-	
+
 	// Specifics
     public final ForgeConfigSpec.BooleanValue customDragonFoods;
     public final ForgeConfigSpec.BooleanValue healthAdjustments;
@@ -61,7 +61,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
 	public final ForgeConfigSpec.IntValue chargedSoupBuffDuration; // 0 = Disabled
-	
+
 	// Forest Dragon
     public final ForgeConfigSpec.IntValue forestStressTicks; // 0 = Disabled
     public final ForgeConfigSpec.IntValue forestStressEffectDuration;
@@ -74,27 +74,27 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue seaAllowWaterBottles;
     public final ForgeConfigSpec.IntValue seaTicksWithoutWaterRestored; // 0 = Disabled
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaAdditionalWaterUseables;
-    
+
     // Ore Loot (Networked for JEI) TODO: Addon for JEI to display the ore droprates when clicking on dust or bones.
     public final ForgeConfigSpec.DoubleValue humanOreDustChance;
     public final ForgeConfigSpec.DoubleValue dragonOreDustChance;
     public final ForgeConfigSpec.DoubleValue humanOreBoneChance;
     public final ForgeConfigSpec.DoubleValue dragonOreBoneChance;
     public final ForgeConfigSpec.ConfigValue<String> oresTag;
-	
+
 	//Items that deal damage when consumed by a specific dragon type
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaDragonHurtfulItems;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonHurtfulItems;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestDragonHurtfulItems;
-	
+
     // Dragon Food (Networked for Dragonfruit)
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonFoods;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestDragonFoods;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaDragonFoods;
-    
+
 	ServerConfig(ForgeConfigSpec.Builder builder){
 		builder.push("server");
-		
+
 		// General
 		builder.push("general");
 		maxFlightSpeed = builder
@@ -319,7 +319,7 @@ public class ServerConfig {
         oresTag = builder
         		.comment("The tag that contains all ores that can drop dust/bones when harvested. Will not drop if the ore drops another of the items in this tag. Format: modid:id")
         		.define("oresTag", "forge:ores");
-        
+
 		// Dragon Food
 		builder.pop().push("food");
 		builder.comment("Dragon food formatting: item/tag:modid:id:food:saturation. Food/saturation values are optional as the human values will be used if missing.");
@@ -653,10 +653,10 @@ public class ServerConfig {
 						"item:aquafina:spider_crab_leg:4:1",
 						"item:aquafina:raw_stingray_slice:4:1"
 				), this::isValidFoodConfig);
-		
+
 		builder.push("hurtful");
 		builder.comment("Dragon food formatting: item/tag:modid:itemid:damage.");
-		
+
 		caveDragonHurtfulItems = builder
 				.comment("Items which will cause damage to cave dragons when consumed. Formatting: item/tag:modid:itemid:damage")
 				.defineList("hurtfulToCaveDragon", Arrays.asList(
@@ -664,16 +664,16 @@ public class ServerConfig {
 						"item:minecraft:water_bottle:2",
 						"item:minecraft:milk_bucket:2"
 				), this::isValidHurtfulItem);
-		
+
 		seaDragonHurtfulItems = builder
 				.comment("Items which will cause damage to sea dragons when consumed. Formatting: item/tag:modid:itemid:damage")
 				.defineList("hurtfulToSeaDragon", Arrays.asList(), this::isValidHurtfulItem);
-		
+
 		forestDragonHurtfulItems = builder
 				.comment("Items which will cause damage to forest dragons when consumed. Formatting: item/tag:modid:itemid:damage")
 				.defineList("hurtfulToForestDragon", Arrays.asList(),  this::isValidHurtfulItem);
 	}
-	
+
 	private boolean isValidHurtfulItem(Object food){
 		final String[] foodSplit = String.valueOf(food).split(":");
 		if (foodSplit.length != 4 || !(foodSplit[0].equalsIgnoreCase("item") || foodSplit[0].equalsIgnoreCase("tag")))
@@ -685,7 +685,7 @@ public class ServerConfig {
 		}
 		return true;
 	}
-	
+
 	private boolean isValidFoodConfig(Object food) {
 		final String[] foodSplit = String.valueOf(food).split(":");
 		if (foodSplit.length < 3 || foodSplit.length > 5 || foodSplit.length == 4 ||!(foodSplit[0].equalsIgnoreCase("item") || foodSplit[0].equalsIgnoreCase("tag")))
@@ -702,15 +702,15 @@ public class ServerConfig {
 		}
 		return true;
 	}
-	
+
 	private boolean isValidBlockConfig(Object block) {
 		final String[] blockSplit = String.valueOf(block).split(":");
 		return blockSplit.length == 3 && (blockSplit[0].equalsIgnoreCase("block") || blockSplit[0].equalsIgnoreCase("tag"));
 	}
-	
+
 	private boolean isValidItemConfig(Object item) {
 		final String[] itemSplit = String.valueOf(item).split(":");
 		return itemSplit.length == 3 && (itemSplit[0].equalsIgnoreCase("item") || itemSplit[0].equalsIgnoreCase("tag"));
 	}
-    
+
 }
