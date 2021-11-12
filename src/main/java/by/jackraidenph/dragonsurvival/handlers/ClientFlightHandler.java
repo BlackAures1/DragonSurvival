@@ -37,6 +37,10 @@ public class ClientFlightHandler {
      */
     @SubscribeEvent
     public static void flightControl(TickEvent.PlayerTickEvent playerTickEvent) {
+        if(ConfigHandler.SERVER.creativeFlight.get()){
+            return;
+        }
+        
         PlayerEntity playerEntity = playerTickEvent.player;
         PlayerEntity currentPlayer = Minecraft.getInstance().player;
         if (playerEntity == currentPlayer && !playerEntity.isPassenger()) {

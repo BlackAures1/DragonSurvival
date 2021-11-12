@@ -51,15 +51,24 @@ public class ServerFlightHandler {
     
     @SubscribeEvent
     public static void playerFoodExhaustion(TickEvent.PlayerTickEvent playerTickEvent) {
-        if(!ConfigHandler.SERVER.flyingUsesHunger.get()) return;
-        
         DragonStateProvider.getCap(playerTickEvent.player).ifPresent(dragonStateHandler -> {
-            if (dragonStateHandler.isDragon() &&  DragonSizeHandler.wingsStatusServer.containsKey(playerTickEvent.player.getId()) && DragonSizeHandler.wingsStatusServer.get(playerTickEvent.player.getId())) {
-                if(!playerTickEvent.player.isFallFlying() && !playerTickEvent.player.isOnGround()){
-                    Vector3d delta = playerTickEvent.player.getDeltaMovement();
-                    float l = Math.round(MathHelper.sqrt(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z));
-                    float exhaustion = 0.005F * l;
-                    playerTickEvent.player.causeFoodExhaustion(exhaustion);
+            if(dragonStateHandler.isDragon()) {
+                boolean wingsSpread = DragonSizeHandler.wingsStatusServer.containsKey(playerTickEvent.player.getId()) && DragonSizeHandler.wingsStatusServer.get(playerTickEvent.player.getId());
+                if(ConfigHandler.SERVER.creativeFlight.get()){
+                    if(playerTickEvent.player.abilities.flying != wingsSpread){
+                        playerTickEvent.player.abilities.flying = wingsSpread;
+                    }
+                }
+                
+                if (wingsSpread) {
+                    if (ConfigHandler.SERVER.flyingUsesHunger.get()) {
+                        if (!playerTickEvent.player.isOnGround()) {
+                            Vector3d delta = playerTickEvent.player.getDeltaMovement();
+                            float l = Math.round(MathHelper.sqrt(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z));
+                            float exhaustion = ConfigHandler.SERVER.creativeFlight.get() ? (playerTickEvent.player.abilities.flying ?  playerTickEvent.player.flyingSpeed : 0F) : (0.005F * l);
+                            playerTickEvent.player.causeFoodExhaustion(exhaustion);
+                        }
+                    }
                 }
             }
         });
