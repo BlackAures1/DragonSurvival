@@ -10,6 +10,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
     public DragonRenderer(EntityRendererManager renderManager, AnimatedGeoModel<DragonEntity> modelProvider) {
@@ -21,5 +22,17 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
 			@Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn,
 			ResourceLocation textureLocation) {
 		return RenderType.entityCutout(textureLocation);
+	}
+	
+	public Color renderColor = new Color(255, 255, 255);
+	
+	@Override
+	public Color getRenderColor(DragonEntity animatable, float partialTicks, MatrixStack stack,
+			@Nullable
+					IRenderTypeBuffer renderTypeBuffer,
+			@Nullable
+					IVertexBuilder vertexBuilder, int packedLightIn)
+	{
+		return renderColor;
 	}
 }
