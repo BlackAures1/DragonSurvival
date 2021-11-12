@@ -30,6 +30,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.command.arguments.EntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.player.PlayerEntity;
@@ -321,37 +323,64 @@ public class DragonSurvivalMod {
     public void serverRegisterCommandsEvent(RegisterCommandsEvent event) {
     	CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
         RootCommandNode<CommandSource> rootCommandNode = commandDispatcher.getRoot();
-        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermission(2)).build();
+        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermission(2)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            return runCommand(type, 1, false, context.getSource().getPlayerOrException());
+        }).build();
 
-        ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest"}, builder)).build();
+        ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest", "human"}, builder)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
+            return runCommand(type, 1, false, serverPlayerEntity);
+        }).build();
 
-        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).build();
+        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            int stage = context.getArgument("dragon_stage", Integer.TYPE);
+            ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
+            return runCommand(type, stage, false, serverPlayerEntity);
+        }).build();
 
         ArgumentCommandNode<CommandSource, Boolean> giveWings = argument("wings", BoolArgumentType.bool()).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             boolean wings = context.getArgument("wings", Boolean.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
-            serverPlayerEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).ifPresent(dragonStateHandler -> {
-                DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
-                dragonStateHandler.setType(dragonType1);
-                DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setHasWings(wings);
-                dragonStateHandler.setSize(dragonLevel.size, serverPlayerEntity);
-                dragonStateHandler.setPassengerId(0);
-                CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), dragonStateHandler.getPassengerId()));
-                serverPlayerEntity.refreshDimensions();
-            });
-            return 1;
+            return runCommand(type, stage, wings, serverPlayerEntity);
+        }).build();
+    
+        ArgumentCommandNode<CommandSource, EntitySelector> target = argument("target", EntityArgument.player()).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            int stage = context.getArgument("dragon_stage", Integer.TYPE);
+            boolean wings = context.getArgument("wings", Boolean.TYPE);
+            EntitySelector selector = context.getArgument("target", EntitySelector.class);
+            ServerPlayerEntity serverPlayerEntity = selector.findSinglePlayer(context.getSource());
+            return runCommand(type, stage, wings, serverPlayerEntity);
         }).build();
 
         rootCommandNode.addChild(dragon);
         dragon.addChild(dragonType);
         dragonType.addChild(dragonStage);
         dragonStage.addChild(giveWings);
+        giveWings.addChild(target);
         LOGGER.info("Registered commands");
     	
     }
-
+    
+    private int runCommand(String type, int stage, boolean wings, ServerPlayerEntity serverPlayerEntity)
+    {
+        serverPlayerEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).ifPresent(dragonStateHandler -> {
+            DragonType dragonType1 = type.equalsIgnoreCase("human") ? DragonType.NONE : DragonType.valueOf(type.toUpperCase());
+            dragonStateHandler.setType(dragonType1);
+            DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
+            dragonStateHandler.setHasWings(wings);
+            dragonStateHandler.setSize(dragonLevel.size, serverPlayerEntity);
+            dragonStateHandler.setPassengerId(0);
+            CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), dragonStateHandler.getPassengerId()));
+            serverPlayerEntity.refreshDimensions();
+        });
+        return 1;
+    }
+    
     
 }
