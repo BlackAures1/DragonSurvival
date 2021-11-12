@@ -121,12 +121,17 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent renderHandEvent) {
+    public static void renderFirstPerson(RenderHandEvent renderHandEvent) {
         if (ConfigHandler.CLIENT.renderInFirstPerson.get()) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (dragonEntity == null) {
                 dragonEntity = new AtomicReference<>(EntityTypesInit.DRAGON.create(player.level));
                 dragonEntity.get().player = player.getId();
+            }
+            if (dragonArmor == null) {
+                dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(player.level);
+                assert dragonArmor != null;
+                dragonArmor.player = player.getId();
             }
             DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
                 if (playerStateHandler.isDragon()) {
@@ -159,16 +164,20 @@ public class ClientEvents {
                         if (!player.isInvisible())
                             dragonRenderer.render(dragonEntity.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
-                        eventMatrixStack.scale(1.02f, 1.02f, 1.02f);
+                        EntityRenderer<? super DragonEntity> dragonArmorRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragonArmor);
+                        dragonArmor.copyPosition(player);
+                        final IBone neck = dragonArmorModel.getAnimationProcessor().getBone("Neck");
+                        if (neck != null)
+                            neck.setHidden(true);
                         ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-                        dragonModel.setCurrentTexture(chestplate);
-                        dragonRenderer.render(dragonEntity.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        dragonArmorModel.setArmorTexture(chestplate);
+                        dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                         ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-                        dragonModel.setCurrentTexture(legs);
-                        dragonRenderer.render(dragonEntity.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        dragonArmorModel.setArmorTexture(legs);
+                        dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                         ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
-                        dragonModel.setCurrentTexture(boots);
-                        dragonRenderer.render(dragonEntity.get(), playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        dragonArmorModel.setArmorTexture(boots);
+                        dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
 
                         eventMatrixStack.translate(0, 0, 0.15);
                     } catch (Throwable ignored) {
@@ -385,6 +394,9 @@ public class ClientEvents {
 
                         DragonEntity dragonArmor = playerArmorMap.get(player.getId());
                         dragonArmor.copyPosition(player);
+                        final IBone neck = dragonArmorModel.getAnimationProcessor().getBone("Neck");
+                        if (neck != null)
+                            neck.setHidden(false);
                         EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                         dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
