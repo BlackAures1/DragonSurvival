@@ -560,28 +560,16 @@ public class ClientEvents {
                 int defense = armorItem.getDefense();
                 switch (equipmentSlot) {
                     case FEET:
-                        if (defense >= 4)
-                            texture += 4 + "_dragon_boots";
-                        else
-                            texture += defense + "_dragon_boots";
+                            texture += MathHelper.clamp(defense, 1, 4) + "_dragon_boots";
                         break;
                     case CHEST:
-                        if (defense >= 8)
-                            texture += 4 + "_dragon_chestplate";
-                        else
-                            texture += (defense / 2) + "_dragon_chestplate";
+                        texture += MathHelper.clamp(defense / 2, 1, 4) + "_dragon_chestplate";
                         break;
                     case HEAD:
-                        if (defense >= 4)
-                            texture += 4 + "_dragon_helmet";
-                        else
-                            texture += defense + "_dragon_helmet";
+                        texture += MathHelper.clamp(defense, 1, 4) + "_dragon_helmet";
                         break;
                     case LEGS:
-                        if (defense >= 6)
-                            texture += 4 + "_dragon_leggings";
-                        else
-                            texture += (int) (defense / 1.5) + "_dragon_leggings";
+                        texture += MathHelper.clamp((int) (defense / 1.5), 1, 4) + "_dragon_leggings";
                         break;
                 }
                 return texture + ".png";
