@@ -334,7 +334,7 @@ public class DragonSurvivalMod {
             return runCommand(type, 1, false, serverPlayerEntity);
         }).build();
 
-        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).executes(context -> {
+        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"1", "2", "3"}, builder)).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
@@ -349,13 +349,14 @@ public class DragonSurvivalMod {
             return runCommand(type, stage, wings, serverPlayerEntity);
         }).build();
     
-        ArgumentCommandNode<CommandSource, EntitySelector> target = argument("target", EntityArgument.player()).executes(context -> {
+        ArgumentCommandNode<CommandSource, EntitySelector> target = argument("target", EntityArgument.players()).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             boolean wings = context.getArgument("wings", Boolean.TYPE);
             EntitySelector selector = context.getArgument("target", EntitySelector.class);
-            ServerPlayerEntity serverPlayerEntity = selector.findSinglePlayer(context.getSource());
-            return runCommand(type, stage, wings, serverPlayerEntity);
+            List<ServerPlayerEntity> serverPlayers = selector.findPlayers(context.getSource());
+            serverPlayers.forEach((player) -> runCommand(type, stage, wings, player));
+            return 1;
         }).build();
 
         rootCommandNode.addChild(dragon);
@@ -364,7 +365,6 @@ public class DragonSurvivalMod {
         dragonStage.addChild(giveWings);
         giveWings.addChild(target);
         LOGGER.info("Registered commands");
-    	
     }
     
     private int runCommand(String type, int stage, boolean wings, ServerPlayerEntity serverPlayerEntity)
@@ -381,6 +381,4 @@ public class DragonSurvivalMod {
         });
         return 1;
     }
-    
-    
 }
