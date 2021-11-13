@@ -125,7 +125,7 @@ public class ClientEvents {
                         eventMatrixStack.pushPose();
                         float partialTicks = renderHandEvent.getPartialTicks();
                         float playerYaw = player.getViewYRot(partialTicks);
-                        ResourceLocation texture = DragonSkins.getSkin(player, playerStateHandler, playerStateHandler.getLevel());
+                        ResourceLocation texture = DragonSkins.getPlayerSkin(player, playerStateHandler.getType(), playerStateHandler.getLevel());
                         eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
                         eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
                         eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(player.yRot));
@@ -138,7 +138,7 @@ public class ClientEvents {
                         dragonEntity.get().copyPosition(player);
                         dragonModel.setCurrentTexture(texture);
     
-                        ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getSkinGlow(player, playerStateHandler, playerStateHandler.getLevel());
+                        ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, playerStateHandler.getType(), playerStateHandler.getLevel());
     
                         final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
                         if (neckandHead != null)
@@ -312,7 +312,7 @@ public class ClientEvents {
                 final float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
                 final float yaw = player.getViewYRot(partialRenderTick);
                 DragonLevel dragonStage = cap.getLevel();
-                ResourceLocation texture = DragonSkins.getSkin(player, cap, dragonStage);
+                ResourceLocation texture = DragonSkins.getPlayerSkin(player, cap.getType(), dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 try {
                     matrixStack.pushPose();
@@ -339,7 +339,7 @@ public class ClientEvents {
                     dummyDragon.copyPosition(player);
                     dragonModel.setCurrentTexture(texture);
                     
-                    ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getSkinGlow(player, cap, dragonStage);
+                    ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, cap.getType(), dragonStage);
                     
                     final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
                     final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");

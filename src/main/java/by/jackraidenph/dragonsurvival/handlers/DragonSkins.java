@@ -1,221 +1,128 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import com.google.common.collect.HashMultimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.UUID;
 
 public class DragonSkins
 {
 	public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
-	/**
-	 * Default skins
-	 */
-	static HashMultimap<String, ResourceLocation> skinCache = HashMultimap.create(1, 3);
-	/**
-	 * Skins by name
-	 */
-	static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
 	
-	static HashMap<String, Boolean> warningsForName = new HashMap<>();
+	private static HashMap<String, ResourceLocation> defaultSkinCache = new HashMap<>();
+	private static HashMap<String, ResourceLocation> playerSkinCache = new HashMap<>();
 	
-	public static boolean hasCustomSkin(PlayerEntity playerEntity, DragonLevel stage){
-		final String playerName = playerEntity.getGameProfile().getName();
-		Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> location.toString().endsWith(playerName.toLowerCase() + "_" +stage.name)).findFirst();
-		return skinForName.isPresent();
-	}
+	private static HashMap<String, ResourceLocation> defaultGlowCache = new HashMap<>();
+	private static HashMap<String, ResourceLocation> playerGlowCache = new HashMap<>();
 	
-	public static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
-		ResourceLocation texture;
-		final String playerName = player.getGameProfile().getName();
+	private static ArrayList<UUID> hasFailedFetch = new ArrayList<>();
+	
+	public static ResourceLocation getPlayerSkin(PlayerEntity player, DragonType type, DragonLevel dragonStage) {
+		ResourceLocation texture = null;
+		UUID id = player.getGameProfile().getId();
+		String playerKey = id + "_" + dragonStage.name;
+		String defaultKey = type + "_" + dragonStage.name;
 		
-		Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(playerName.toLowerCase()+"_"+dragonStage.name)+"")).findFirst();
-		if (skinForName.isPresent()) {
-			return skinForName.get();
-		} else {
-			Optional<ResourceLocation> defSkin = skinCache.get(playerName).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
-			
-			if (defSkin.isPresent()) {
-				return defSkin.get();
-			}
-			
-			try {
-				texture = loadCustomSkinForName(player, dragonStage);
-				skinCacheForName.put(playerName, texture);
-			} catch (IOException e) {
-				if (warningsForName.get(playerName) == null) {
-					DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", playerName);
-					warningsForName.put(playerName, true);
-				}
-			} finally {
-				texture = constructTexture(cap.getType(), dragonStage);
-				skinCache.put(playerName, texture);
-			}
-		}
-		return texture;
-	}
-	
-	/**
-	 * Loads a custom image for skin based on profile name
-	 */
-	public static ResourceLocation loadCustomSkinForName(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
-		String name = playerEntity.getGameProfile().getName();
-		URL url;
-		switch (dragonStage) {
-			case BABY:
-				url = new URL(SKINS + name + "_newborn.png");
-				break;
-			case YOUNG:
-				url = new URL(SKINS + name + "_young.png");
-				break;
-			case ADULT:
-				url = new URL(SKINS + name + "_adult.png");
-				break;
-			default:
-				url = null;
-		}
-		InputStream inputStream = url.openConnection().getInputStream();
-		NativeImage customTexture = NativeImage.read(inputStream);
-		ResourceLocation resourceLocation;
-		Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name), new DynamicTexture(customTexture));
-		return resourceLocation;
-	}
-	
-	public static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
-		String texture = getResourcePath(dragonType, stage) + ".png";
-	    return new ResourceLocation(DragonSurvivalMod.MODID, texture);
-	}
-	
-	
-	private static String getResourcePath(DragonType dragonType, DragonLevel stage)
-	{
-		String texture;
-		texture = "textures/dragon/";
-		switch (dragonType) {
-			case SEA:
-				texture += "sea";
-				break;
-			case CAVE:
-				texture += "cave";
-				break;
-			case FOREST:
-				texture += "forest";
-				break;
+		if(playerSkinCache.containsKey(playerKey)){
+			return playerSkinCache.get(playerKey);
 		}
 		
-		switch (stage) {
-			case BABY:
-				texture += "_newborn";
-				break;
-			case YOUNG:
-				texture += "_young";
-				break;
-			case ADULT:
-				texture += "_adult";
-				break;
+		if(!hasFailedFetch.contains(id)){
+			texture = fetchSkinFile(player, dragonStage);
+			
+			if(texture != null) {
+				playerSkinCache.put(playerKey, texture);
+			}
+		}
+		
+		if(texture == null){
+			if(defaultSkinCache.containsKey(defaultKey)){
+				texture = defaultSkinCache.get(defaultKey);
+			}else {
+				texture = constructTexture(type, dragonStage);
+				defaultSkinCache.put(defaultKey, texture);
+			}
 		}
 		
 		return texture;
 	}
 	
-	//Skin glows
-	static HashMap<String, ResourceLocation> defaultGlows = new HashMap<>();
-	/**
-	 * Player glows
-	 */
-	static HashMap<String, ResourceLocation> glowCacheForName = new HashMap<>();
-	
-	
-	public static boolean hasCustomGlow(PlayerEntity playerEntity, DragonLevel stage){
-		final String playerName = playerEntity.getGameProfile().getName();
-		return glowCacheForName.containsKey(playerName + "_" + stage);
-	}
-	
-	
-	public static ResourceLocation getCustomGlow(PlayerEntity playerEntity, DragonLevel stage){
-		final String playerName = playerEntity.getGameProfile().getName();
-		return glowCacheForName.get(playerName + "_" + stage);
-	}
-	
-	
-	public static ResourceLocation loadCustomGlowForName(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
-		String name = playerEntity.getGameProfile().getName();
-		URL url;
-		switch (dragonStage) {
-			case BABY:
-				url = new URL(SKINS + name + "_newborn_glow.png");
-				break;
-			case YOUNG:
-				url = new URL(SKINS + name + "_young_glow.png");
-				break;
-			case ADULT:
-				url = new URL(SKINS + name + "_adult_glow.png");
-				break;
-			default:
-				url = null;
-		}
-		InputStream inputStream = url.openConnection().getInputStream();
-		NativeImage customTexture = NativeImage.read(inputStream);
-		ResourceLocation resourceLocation;
-		Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name+"_glow"), new DynamicTexture(customTexture));
-		return resourceLocation;
-	}
-	
-	public static ResourceLocation constructGlowTexture(DragonType dragonType, DragonLevel stage) {
-		String texture = getResourcePath(dragonType, stage) + "_glow.png";
-		return new ResourceLocation(DragonSurvivalMod.MODID, texture);
-	}
-	
-	
-	public static ResourceLocation getSkinGlow(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
-		ResourceLocation texture;
-		final String playerName = player.getGameProfile().getName();
-		boolean hasCustomSkin = hasCustomSkin(player, dragonStage);
+	public static ResourceLocation getGlowTexture(PlayerEntity player, DragonType type, DragonLevel dragonStage) {
+		ResourceLocation texture = null;
+		String playerKey = player.getGameProfile().getId() + "_" + dragonStage.name;
+		String defaultKey = type + "_" + dragonStage.name;
 		
-		if (hasCustomSkin) {
-			if(hasCustomGlow(player, dragonStage)){
-				return getCustomGlow(player, dragonStage);
+		if (playerSkinCache.containsKey(playerKey)) {
+			if(playerGlowCache.containsKey(playerKey)){
+				return playerGlowCache.get(playerKey);
 				
 			}else{
-				try {
-					texture = loadCustomGlowForName(player, dragonStage);
-					glowCacheForName.put(playerName + "_" + dragonStage, texture);
-					return texture;
-				} catch (IOException e) {
-					glowCacheForName.put(playerName + "_" + dragonStage, null);
-				}
+				texture = fetchSkinFile(player, dragonStage, "glow");
+				playerGlowCache.put(playerKey, texture);
 			}
 			
 		} else {
-			if(defaultGlows.containsKey(cap.getType() + "_" + dragonStage.name)){
-				texture = defaultGlows.get(cap.getType() + "_" + dragonStage.name);
+			if(defaultGlowCache.containsKey(defaultKey)){
+				texture = defaultGlowCache.get(defaultKey);
 				
 				if(texture != null && Minecraft.getInstance().textureManager.getTexture(texture) == MissingTextureSprite.getTexture()){
 					return null;
 				}
 				
-				return texture;
 			}else {
-				texture = constructGlowTexture(cap.getType(), dragonStage);
-				defaultGlows.put(cap.getType() + "_" + dragonStage.name, texture);
-				return texture;
+				texture = constructTexture(type, dragonStage, "glow");
+				defaultGlowCache.put(defaultKey, texture);
 			}
 		}
 		
-		return null;
+		return texture;
+	}
+	
+	public static ResourceLocation fetchSkinFile(PlayerEntity playerEntity, DragonLevel dragonStage, String... extra) {
+		ResourceLocation resourceLocation = null;
+		String name = playerEntity.getGameProfile().getName();
+		UUID id = playerEntity.getGameProfile().getId();
+		
+		String[] text = ArrayUtils.addAll(new String[]{name, dragonStage.name}, extra);
+		String searchText = StringUtils.join(text, "_");
+		
+		try{
+			URL url = new URL(SKINS + searchText + ".png");
+			InputStream inputStream = url.openConnection().getInputStream();
+			NativeImage customTexture = NativeImage.read(inputStream);
+			resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID, searchText.toLowerCase(Locale.ROOT));
+			Minecraft.getInstance().getTextureManager().register(resourceLocation, new DynamicTexture(customTexture));
+			
+		}catch (IOException e){
+			if (!hasFailedFetch.contains(id)) {
+				DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", name);
+				hasFailedFetch.add(id);
+			}
+			
+			return null;
+		}
+		
+		return resourceLocation;
+	}
+	
+	private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage, String... extra) {
+		String[] text = ArrayUtils.addAll(new String[]{dragonType.name().toLowerCase(Locale.ROOT), stage.name}, extra);
+		String texture = "textures/dragon/" + StringUtils.join(text, "_") + ".png";
+	    return new ResourceLocation(DragonSurvivalMod.MODID, texture);
 	}
 }
