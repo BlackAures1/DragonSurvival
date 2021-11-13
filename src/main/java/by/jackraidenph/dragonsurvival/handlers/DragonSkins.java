@@ -129,24 +129,22 @@ public class DragonSkins
 	
 	
 	//Skin glows
-	static HashMultimap<String, ResourceLocation> defaultGlows = HashMultimap.create(1, 3);
+	static HashMap<String, ResourceLocation> defaultGlows = new HashMap<>();
 	/**
 	 * Player glows
 	 */
-	static HashMultimap<String, ResourceLocation> glowCacheForName = HashMultimap.create(1, 3);
+	static HashMap<String, ResourceLocation> glowCacheForName = new HashMap<>();
 	
 	
 	public static boolean hasCustomGlow(PlayerEntity playerEntity, DragonLevel stage){
 		final String playerName = playerEntity.getGameProfile().getName();
-		Optional<ResourceLocation> glowForName = glowCacheForName.get(playerName).stream().filter(location -> location.getPath().endsWith(playerName.toLowerCase()+"_"+stage.name)).findFirst();
-		return glowForName.isPresent();
+		return glowCacheForName.containsKey(playerName + "_" + stage);
 	}
 	
 	
 	public static ResourceLocation getCustomGlow(PlayerEntity playerEntity, DragonLevel stage){
 		final String playerName = playerEntity.getGameProfile().getName();
-		Optional<ResourceLocation> glowForName = glowCacheForName.get(playerName).stream().filter(location -> location.getPath().endsWith(playerName.toLowerCase()+"_"+stage.name)).findFirst();
-		return glowForName.orElse(null);
+		return glowCacheForName.get(playerName + "_" + stage);
 	}
 	
 	
@@ -155,13 +153,13 @@ public class DragonSkins
 		URL url;
 		switch (dragonStage) {
 			case BABY:
-				url = new URL(SKINS + name + "_newborn.png");
+				url = new URL(SKINS + name + "_newborn_glow.png");
 				break;
 			case YOUNG:
-				url = new URL(SKINS + name + "_young.png");
+				url = new URL(SKINS + name + "_young_glow.png");
 				break;
 			case ADULT:
-				url = new URL(SKINS + name + "_adult.png");
+				url = new URL(SKINS + name + "_adult_glow.png");
 				break;
 			default:
 				url = null;
@@ -169,7 +167,7 @@ public class DragonSkins
 		InputStream inputStream = url.openConnection().getInputStream();
 		NativeImage customTexture = NativeImage.read(inputStream);
 		ResourceLocation resourceLocation;
-		Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name), new DynamicTexture(customTexture));
+		Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name+"_glow"), new DynamicTexture(customTexture));
 		return resourceLocation;
 	}
 	
@@ -216,15 +214,16 @@ public class DragonSkins
 			}else{
 				try {
 					texture = loadCustomGlowForName(player, dragonStage);
-					glowCacheForName.put(playerName, texture);
+					glowCacheForName.put(playerName + "_" + dragonStage, texture);
 					return texture;
-				} catch (IOException e) {}
+				} catch (IOException e) {
+					glowCacheForName.put(playerName + "_" + dragonStage, null);
+				}
 			}
 			
 		} else {
-			if(defaultGlows.containsKey(cap.getType())){
-				Optional<ResourceLocation> defGlow = defaultGlows.get(cap.getType() + "_" + dragonStage.name).stream().findFirst();
-				texture = defGlow.orElse(null);
+			if(defaultGlows.containsKey(cap.getType() + "_" + dragonStage.name)){
+				texture = defaultGlows.get(cap.getType() + "_" + dragonStage.name);
 				
 				if(texture != null && Minecraft.getInstance().textureManager.getTexture(texture) == MissingTextureSprite.getTexture()){
 					return null;
