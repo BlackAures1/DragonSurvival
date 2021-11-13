@@ -16,7 +16,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue hitboxGrowsPastHuman;
 	public final ForgeConfigSpec.BooleanValue startWithWings;
 	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
-	public final ForgeConfigSpec.IntValue levelHungerForFly;
+	public final ForgeConfigSpec.IntValue flightHungerThreshold;
 	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
 	public final ForgeConfigSpec.IntValue altarUsageCooldown;
 	public final ForgeConfigSpec.DoubleValue newbornJump;
@@ -107,7 +107,7 @@ public class ServerConfig {
 		allowFlyingWithoutHunger = builder
 				.comment("Whether dragons can fly when totally hungry")
 				.define("allowFlyingWhenTotallyHungry", false);
-		levelHungerForFly = builder
+		flightHungerThreshold = builder
 				.comment("If the player's hunger is below this parameter, he can't open his wings.")
 				.defineInRange("flightHungerThreshold", 6, 0, 20);
 		enableFlightFallDamage = builder
@@ -309,7 +309,7 @@ public class ServerConfig {
 						"item:minecraft:enchanted_golden_apple",
 						"item:dragonsurvival:charged_coal:4:2",
 						"item:dragonsurvival:charred_meat:10:12",
-						"item:dragonsurvival:charred_seafood:8:10",
+						"item:dragonsurvival:charred_secharged_soupafood:8:10",
 						"item:dragonsurvival:charred_vegetable:8:9",
 						"item:dragonsurvival:charred_mushroom:8:5",
 						"item:dragonsurvival:charged_soup:20:15",

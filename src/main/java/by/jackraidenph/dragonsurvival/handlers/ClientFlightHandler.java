@@ -109,7 +109,7 @@ public class ClientFlightHandler {
             DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
                 if (dragonStateHandler.hasWings()) {
                     //Allows toggling the wings if food level is above 0, player is creative, wings are already enabled (allows disabling even when hungry) or if config options is turned on
-                    if((player.getFoodData().getFoodLevel() > ConfigHandler.SERVER.levelHungerForFly.get() || player.isCreative()) || wingsEnabled || ConfigHandler.SERVER.allowFlyingWithoutHunger.get()) {
+                    if((player.getFoodData().getFoodLevel() > ConfigHandler.SERVER.flightHungerThreshold.get() || player.isCreative()) || wingsEnabled || ConfigHandler.SERVER.allowFlyingWithoutHunger.get()) {
                         wingsEnabled = !wingsEnabled;
                         DragonSurvivalMod.CHANNEL.sendToServer(new ToggleWings(wingsEnabled));
                         if (ConfigHandler.CLIENT.notifyWingStatus.get()) {
