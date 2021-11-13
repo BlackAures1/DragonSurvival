@@ -96,37 +96,41 @@ public class DragonSkins
 	}
 	
 	public static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
-	
-	    String texture;
-	    texture = "textures/dragon/";
-	    switch (dragonType) {
-	        case SEA:
-	            texture += "sea";
-	            break;
-	        case CAVE:
-	            texture += "cave";
-	            break;
-	        case FOREST:
-	            texture += "forest";
-	            break;
-	    }
-	
-	    switch (stage) {
-	        case BABY:
-	            texture += "_newborn";
-	            break;
-	        case YOUNG:
-	            texture += "_young";
-	            break;
-	        case ADULT:
-	            texture += "_adult";
-	            break;
-	    }
-	    texture += ".png";
-	
+		String texture = getResourcePath(dragonType, stage) + ".png";
 	    return new ResourceLocation(DragonSurvivalMod.MODID, texture);
 	}
 	
+	
+	private static String getResourcePath(DragonType dragonType, DragonLevel stage)
+	{
+		String texture;
+		texture = "textures/dragon/";
+		switch (dragonType) {
+			case SEA:
+				texture += "sea";
+				break;
+			case CAVE:
+				texture += "cave";
+				break;
+			case FOREST:
+				texture += "forest";
+				break;
+		}
+		
+		switch (stage) {
+			case BABY:
+				texture += "_newborn";
+				break;
+			case YOUNG:
+				texture += "_young";
+				break;
+			case ADULT:
+				texture += "_adult";
+				break;
+		}
+		
+		return texture;
+	}
 	
 	//Skin glows
 	static HashMap<String, ResourceLocation> defaultGlows = new HashMap<>();
@@ -172,35 +176,10 @@ public class DragonSkins
 	}
 	
 	public static ResourceLocation constructGlowTexture(DragonType dragonType, DragonLevel stage) {
-		String texture;
-		texture = "textures/dragon/";
-		switch (dragonType) {
-			case SEA:
-				texture += "sea";
-				break;
-			case CAVE:
-				texture += "cave";
-				break;
-			case FOREST:
-				texture += "forest";
-				break;
-		}
-		
-		switch (stage) {
-			case BABY:
-				texture += "_newborn";
-				break;
-			case YOUNG:
-				texture += "_young";
-				break;
-			case ADULT:
-				texture += "_adult";
-				break;
-		}
-		
-		texture += "_glow.png";
+		String texture = getResourcePath(dragonType, stage) + "_glow.png";
 		return new ResourceLocation(DragonSurvivalMod.MODID, texture);
 	}
+	
 	
 	public static ResourceLocation getSkinGlow(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
 		ResourceLocation texture;
