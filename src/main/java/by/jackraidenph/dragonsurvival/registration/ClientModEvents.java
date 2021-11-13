@@ -9,7 +9,6 @@ import by.jackraidenph.dragonsurvival.nest.NestScreen;
 import by.jackraidenph.dragonsurvival.renderer.PrincessRenderer;
 import by.jackraidenph.dragonsurvival.renderer.*;
 import by.jackraidenph.dragonsurvival.shader.ShaderHelper;
-import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.IParticleFactory;
@@ -18,11 +17,8 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -37,19 +33,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 @SuppressWarnings("unused")
 public class ClientModEvents {
 
     public static KeyBinding TOGGLE_WINGS;
-
-    public static final String SKINS = "https://raw.githubusercontent.com/DragonSurvivalTeam/DragonSurvival/master/src/test/resources/";
-
-
+    
     @SubscribeEvent
     public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
         event.addSprite(new ResourceLocation(DragonSurvivalMod.MODID, "te/star/cage"));
@@ -139,32 +129,5 @@ public class ClientModEvents {
                 return beaconParticle;
             }
         });
-
-    }
-
-    /**
-     * Loads a custom image for skin based on profile name
-     */
-    public static ResourceLocation loadCustomSkinForName(PlayerEntity playerEntity, DragonLevel dragonStage) throws IOException {
-        String name = playerEntity.getGameProfile().getName();
-        URL url;
-        switch (dragonStage) {
-            case BABY:
-                url = new URL(SKINS + name + "_newborn.png");
-                break;
-            case YOUNG:
-                url = new URL(SKINS + name + "_young.png");
-                break;
-            case ADULT:
-                url = new URL(SKINS + name + "_adult.png");
-                break;
-            default:
-                url = null;
-        }
-        InputStream inputStream = url.openConnection().getInputStream();
-        NativeImage customTexture = NativeImage.read(inputStream);
-        ResourceLocation resourceLocation;
-        Minecraft.getInstance().getTextureManager().register(resourceLocation = new ResourceLocation(DragonSurvivalMod.MODID,name.toLowerCase()+"_"+dragonStage.name), new DynamicTexture(customTexture));
-        return resourceLocation;
     }
 }
