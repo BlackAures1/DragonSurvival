@@ -1,4 +1,6 @@
 1.16.5-0.0.46:
+- missing armor fix;
+- fix for first-person shaders.
 
 1.16.5-0.0.45:
 - changes in dragon model: fixed ancient bug with UV shoulder cubes location, fixed location of all ridges, partly fixed "gap" between ridge cubes during animation, fixed z-fighting of ridges, fixed jaw, all dragon parts united into common group, body sections now have separate parent-groups with suffix _sThanks, AIS!;
@@ -6,8 +8,8 @@
 - changed dragon textures: fixes standard dragon textures to the new UV and fixes asymmetry/transitions/ladder pixels/missUV, etc. Thanks, AIS!;
 - many animation fixes and several new animations. New animation temporarily unused. Thanks, AIS!;
 - fixed dragon armor textures: extra pixels removed, wrong mirrors, dragon no longer blinks along with netherite armor grids;
-- added a new model for dragon armor rendering.
-- added 4 new types of armor for other mods;
+- added a new model for dragon armor rendering;
+- added 4 new types of armor for other mods.
 
 - dragon can not unfold wings if hungry below 6 units.Thanks, Horeak!;
 - cacti do not damage the forest dragon. Thanks, Horeak!;
@@ -17,6 +19,7 @@
 - fixed the bug that made the head turn animation stop moving (F3+T);
 - fixed the fishing bug;
 - fixed a very important and old bug with armor rendering!
+- English, Chinese (Ice flare+Gairlading), and Russian translations updated.
 
 1.16.5-0.0.44:
 - added effects: sea peace, forest magic, cave fire, calm animals, anti-predators;
