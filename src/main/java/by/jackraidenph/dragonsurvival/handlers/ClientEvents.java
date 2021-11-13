@@ -8,6 +8,7 @@ import by.jackraidenph.dragonsurvival.entity.BolasEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonArmorModel;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
 import by.jackraidenph.dragonsurvival.gecko.DragonModel;
+import by.jackraidenph.dragonsurvival.gecko.DragonRenderer;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRenderer;
 import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRendererManager;
 import by.jackraidenph.dragonsurvival.mixins.AccessorLivingRenderer;
@@ -60,12 +61,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 import software.bernie.geckolib3.core.processor.IBone;
 
-<<<<<<< Updated upstream
-import java.io.IOException;
-import java.util.HashMap;
-=======
-import java.awt.*;
->>>>>>> Stashed changes
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;

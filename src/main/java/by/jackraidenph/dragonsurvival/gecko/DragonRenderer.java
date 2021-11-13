@@ -13,6 +13,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
 	public ResourceLocation glowTexture = null;
@@ -45,9 +46,7 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
 			ResourceLocation textureLocation) {
 		return renderType == null ? RenderType.entityCutout(textureLocation) : renderType;
 	}
-<<<<<<< Updated upstream
-=======
-	
+
 	@Override
 	public Color getRenderColor(DragonEntity animatable, float partialTicks, MatrixStack stack,
 			@Nullable IRenderTypeBuffer renderTypeBuffer,
@@ -55,5 +54,4 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
 	{
 		return renderColor;
 	}
->>>>>>> Stashed changes
 }
