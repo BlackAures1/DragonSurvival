@@ -449,6 +449,8 @@ public class SpecificsHandler {
 		if (!ConfigHandler.SERVER.penalties.get())
 			return;
 		
+		if(!(destroyItemEvent.getEntityLiving() instanceof PlayerEntity)) return;
+		
 		PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
 		ItemStack itemStack = destroyItemEvent.getItem();
 		

@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.handlers;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
-import by.jackraidenph.dragonsurvival.capability.DragonStateHandler;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.config.DragonBodyMovementType;
@@ -15,13 +14,11 @@ import by.jackraidenph.dragonsurvival.mixins.AccessorEntityRendererManager;
 import by.jackraidenph.dragonsurvival.mixins.AccessorLivingRenderer;
 import by.jackraidenph.dragonsurvival.network.OpenCrafting;
 import by.jackraidenph.dragonsurvival.network.PacketSyncCapabilityMovement;
-import by.jackraidenph.dragonsurvival.registration.ClientModEvents;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -65,11 +62,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import software.bernie.geckolib3.core.processor.IBone;
 
 import java.awt.*;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -87,15 +80,6 @@ public class ClientEvents {
      */
     public static ConcurrentHashMap<Integer, DragonEntity> playerArmorMap = new ConcurrentHashMap<>(20);
 
-    static HashMap<String, Boolean> warningsForName = new HashMap<>();
-    /**
-     * Default skins
-     */
-    static HashMultimap<String, ResourceLocation> skinCache = HashMultimap.create(1, 3);
-    /**
-     * Skins by name
-     */
-    static HashMultimap<String, ResourceLocation> skinCacheForName = HashMultimap.create(1, 3);
     /**
      * Instance used for rendering first-person dragon model
      */
@@ -142,7 +126,7 @@ public class ClientEvents {
                         eventMatrixStack.pushPose();
                         float partialTicks = renderHandEvent.getPartialTicks();
                         float playerYaw = player.getViewYRot(partialTicks);
-                        ResourceLocation texture = getSkin(player, playerStateHandler, playerStateHandler.getLevel());
+                        ResourceLocation texture = DragonSkins.getPlayerSkin(player, playerStateHandler.getType(), playerStateHandler.getLevel());
                         eventMatrixStack.mulPose(Vector3f.XP.rotationDegrees(player.xRot));
                         eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
                         eventMatrixStack.mulPose(Vector3f.YP.rotationDegrees(player.yRot));
@@ -154,6 +138,9 @@ public class ClientEvents {
                         EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragonEntity.get());
                         dragonEntity.get().copyPosition(player);
                         dragonModel.setCurrentTexture(texture);
+
+                        ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, playerStateHandler.getType(), playerStateHandler.getLevel());
+
                         final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
                         if (neckandHead != null)
                             neckandHead.setHidden(true);
@@ -171,45 +158,45 @@ public class ClientEvents {
                         final IBone neck = dragonArmorModel.getAnimationProcessor().getBone("Neck");
                         if (neck != null)
                             neck.setHidden(true);
-    
+
                         ItemStack chestPlateItem = player.getItemBySlot(EquipmentSlotType.CHEST);
                         ItemStack legsItem = player.getItemBySlot(EquipmentSlotType.LEGS);
                         ItemStack bootsItem = player.getItemBySlot(EquipmentSlotType.FEET);
-    
+
                         Color renderColor = ((DragonRenderer)dragonArmorRenderer).renderColor;
-    
+
                         if(chestPlateItem.getItem() instanceof IDyeableArmorItem){
                             int colorCode = ((IDyeableArmorItem)chestPlateItem.getItem()).getColor(chestPlateItem);
                             ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
                         }
-                        
+
                         ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
-                        
+
                         dragonArmorModel.setArmorTexture(chestplate);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                         ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
-    
+
                         if(legsItem.getItem() instanceof IDyeableArmorItem){
                             int colorCode = ((IDyeableArmorItem)legsItem.getItem()).getColor(legsItem);
                             ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
                         }
-                        
+
                         ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
-                        
+
                         dragonArmorModel.setArmorTexture(legs);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                         ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
-    
+
                         if(bootsItem.getItem() instanceof IDyeableArmorItem){
                             int colorCode = ((IDyeableArmorItem)bootsItem.getItem()).getColor(bootsItem);
                             ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
                         }
-                        
+
                         ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
                         dragonArmorModel.setArmorTexture(boots);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
                         ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
-                        
+
                         eventMatrixStack.translate(0, 0, 0.15);
                     } catch (Throwable ignored) {
                         if (!(ignored instanceof NullPointerException))
@@ -355,7 +342,7 @@ public class ClientEvents {
                 final float partialRenderTick = renderPlayerEvent.getPartialRenderTick();
                 final float yaw = player.getViewYRot(partialRenderTick);
                 DragonLevel dragonStage = cap.getLevel();
-                ResourceLocation texture = getSkin(player, cap, dragonStage);
+                ResourceLocation texture = DragonSkins.getPlayerSkin(player, cap.getType(), dragonStage);
                 MatrixStack matrixStack = renderPlayerEvent.getMatrixStack();
                 try {
                     matrixStack.pushPose();
@@ -381,6 +368,9 @@ public class ClientEvents {
                     EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
                     dummyDragon.copyPosition(player);
                     dragonModel.setCurrentTexture(texture);
+
+                    ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, cap.getType(), dragonStage);
+
                     final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
                     final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
                     if (leftwing != null)
@@ -516,67 +506,6 @@ public class ClientEvents {
             else
                 ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius(0.5F);
         });
-    }
-
-    private static ResourceLocation getSkin(PlayerEntity player, DragonStateHandler cap, DragonLevel dragonStage) {
-        ResourceLocation texture;
-        final String playerName = player.getGameProfile().getName();
-
-        Optional<ResourceLocation> skinForName = skinCacheForName.get(playerName).stream().filter(location -> Boolean.parseBoolean(location.toString().endsWith(playerName.toLowerCase()+"_"+dragonStage.name)+"")).findFirst();
-        if (skinForName.isPresent()) {
-            return skinForName.get();
-        } else {
-            Optional<ResourceLocation> defSkin = skinCache.get(playerName).stream().filter(location -> location.toString().endsWith(cap.getType().toString().toLowerCase(Locale.ROOT) + "_" + dragonStage.name + ".png")).findFirst();
-            if (defSkin.isPresent()) {
-                return defSkin.get();
-            }
-
-            try {
-                texture = ClientModEvents.loadCustomSkinForName(player, dragonStage);
-                skinCacheForName.put(playerName, texture);
-            } catch (IOException e) {
-                if (warningsForName.get(playerName) == null) {
-                    DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", playerName);
-                    warningsForName.put(playerName, true);
-                }
-            } finally {
-                texture = constructTexture(cap.getType(), dragonStage);
-                skinCache.put(playerName, texture);
-            }
-        }
-        return texture;
-    }
-
-    private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage) {
-
-        String texture;
-        texture = "textures/dragon/";
-        switch (dragonType) {
-            case SEA:
-                texture += "sea";
-                break;
-            case CAVE:
-                texture += "cave";
-                break;
-            case FOREST:
-                texture += "forest";
-                break;
-        }
-
-        switch (stage) {
-            case BABY:
-                texture += "_newborn";
-                break;
-            case YOUNG:
-                texture += "_young";
-                break;
-            case ADULT:
-                texture += "_adult";
-                break;
-        }
-        texture += ".png";
-
-        return new ResourceLocation(DragonSurvivalMod.MODID, texture);
     }
 
     private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
