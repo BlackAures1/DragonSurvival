@@ -30,7 +30,7 @@ public class DragonSkins
 	private static HashMap<String, ResourceLocation> defaultGlowCache = new HashMap<>();
 	private static HashMap<String, ResourceLocation> playerGlowCache = new HashMap<>();
 	
-	private static ArrayList<UUID> hasFailedFetch = new ArrayList<>();
+	private static ArrayList<String> hasFailedFetch = new ArrayList<>();
 	
 	public static ResourceLocation getPlayerSkin(PlayerEntity player, DragonType type, DragonLevel dragonStage) {
 		ResourceLocation texture = null;
@@ -42,7 +42,7 @@ public class DragonSkins
 			return playerSkinCache.get(playerKey);
 		}
 		
-		if(!hasFailedFetch.contains(id)){
+		if(!hasFailedFetch.contains(playerKey)){
 			texture = fetchSkinFile(player, dragonStage);
 			
 			if(texture != null) {
@@ -97,6 +97,7 @@ public class DragonSkins
 		ResourceLocation resourceLocation = null;
 		String name = playerEntity.getGameProfile().getName();
 		UUID id = playerEntity.getGameProfile().getId();
+		String playerKey = id + "_" + dragonStage.name;
 		
 		String[] text = ArrayUtils.addAll(new String[]{name, dragonStage.name}, extra);
 		String searchText = StringUtils.join(text, "_");
@@ -110,9 +111,9 @@ public class DragonSkins
 			
 		}catch (IOException e){
 			if(extra == null || extra.length == 0) { //Fetching glow layer failing must not affect normal skin fetches
-				if (!hasFailedFetch.contains(id)) {
+				if (!hasFailedFetch.contains(playerKey)) {
 					DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", name);
-					hasFailedFetch.add(id);
+					hasFailedFetch.add(playerKey);
 				}
 			}
 			
