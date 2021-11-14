@@ -5,7 +5,6 @@ import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -15,10 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class DragonSkins
 {
@@ -38,11 +34,11 @@ public class DragonSkins
 		String playerKey = id + "_" + dragonStage.name;
 		String defaultKey = type + "_" + dragonStage.name;
 		
-		if(playerSkinCache.containsKey(playerKey)){
+		if(playerSkinCache.containsKey(playerKey) && playerSkinCache.get(playerKey) != null){
 			return playerSkinCache.get(playerKey);
 		}
 		
-		if(!hasFailedFetch.contains(playerKey)){
+		if(!hasFailedFetch.contains(playerKey) && !playerSkinCache.containsKey(playerKey)){
 			texture = fetchSkinFile(player, dragonStage);
 			
 			if(texture != null) {
@@ -74,19 +70,23 @@ public class DragonSkins
 			}else{
 				texture = fetchSkinFile(player, dragonStage, "glow");
 				playerGlowCache.put(playerKey, texture);
+				
+				if(texture == null){
+					DragonSurvivalMod.LOGGER.info("Custom glow for user {} doesn't exist", player.getGameProfile().getName());
+				}
 			}
 			
 		} else {
 			if(defaultGlowCache.containsKey(defaultKey)){
 				texture = defaultGlowCache.get(defaultKey);
 				
-				if(texture != null && Minecraft.getInstance().textureManager.getTexture(texture) == MissingTextureSprite.getTexture()){
-					return null;
-				}
-				
 			}else {
 				texture = constructTexture(type, dragonStage, "glow");
 				defaultGlowCache.put(defaultKey, texture);
+				
+				if(texture == null){
+					DragonSurvivalMod.LOGGER.info("Default glow for {} {} doesn't exist", dragonStage.name, type.name().toLowerCase(Locale.ROOT));
+				}
 			}
 		}
 		
@@ -125,7 +125,7 @@ public class DragonSkins
 	
 	private static ResourceLocation constructTexture(DragonType dragonType, DragonLevel stage, String... extra) {
 		String[] text = ArrayUtils.addAll(new String[]{dragonType.name().toLowerCase(Locale.ROOT), stage.name}, extra);
-		String texture = "textures/dragon/" + StringUtils.join(text, "_") + ".png";
-	    return new ResourceLocation(DragonSurvivalMod.MODID, texture);
+		Collection<ResourceLocation> rs = Minecraft.getInstance().getResourceManager().listResources("textures/dragon/", (s) -> true);
+		return rs.stream().filter((s) -> s.getNamespace().equals(DragonSurvivalMod.MODID) && s.getPath().equals("textures/dragon/" + StringUtils.join(text, "_") + ".png")).findFirst().orElse(null);
 	}
 }
