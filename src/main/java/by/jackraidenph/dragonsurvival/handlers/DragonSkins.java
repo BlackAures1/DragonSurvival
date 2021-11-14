@@ -109,9 +109,11 @@ public class DragonSkins
 			Minecraft.getInstance().getTextureManager().register(resourceLocation, new DynamicTexture(customTexture));
 			
 		}catch (IOException e){
-			if (!hasFailedFetch.contains(id)) {
-				DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", name);
-				hasFailedFetch.add(id);
+			if(extra == null || extra.length == 0) { //Fetching glow layer failing must not affect normal skin fetches
+				if (!hasFailedFetch.contains(id)) {
+					DragonSurvivalMod.LOGGER.info("Custom skin for user {} doesn't exist", name);
+					hasFailedFetch.add(id);
+				}
 			}
 			
 			return null;
