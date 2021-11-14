@@ -18,11 +18,13 @@ public class ServerConfig {
 	public final ForgeConfigSpec.BooleanValue enableFlightFallDamage;
 	public final ForgeConfigSpec.IntValue flightHungerThreshold;
 	public final ForgeConfigSpec.BooleanValue allowFlyingWithoutHunger;
+	public final ForgeConfigSpec.BooleanValue flyingUsesHunger;
+	public final ForgeConfigSpec.BooleanValue creativeFlight;
 	public final ForgeConfigSpec.IntValue altarUsageCooldown;
 	public final ForgeConfigSpec.DoubleValue newbornJump;
 	public final ForgeConfigSpec.DoubleValue youngJump;
 	public final ForgeConfigSpec.DoubleValue adultJump;
-	
+
 	// Specifics
     public final ForgeConfigSpec.BooleanValue customDragonFoods;
     public final ForgeConfigSpec.BooleanValue healthAdjustments;
@@ -57,7 +59,10 @@ public class ServerConfig {
     // Cave Dragon
     public final ForgeConfigSpec.DoubleValue caveWaterDamage; // 0.0 = Disabled
     public final ForgeConfigSpec.DoubleValue caveRainDamage; // 0.0 = Disabled
-    // Forest Dragon
+	public final ForgeConfigSpec.DoubleValue caveSplashDamage; // 0.0 = Disabled
+	public final ForgeConfigSpec.IntValue chargedSoupBuffDuration; // 0 = Disabled
+
+	// Forest Dragon
     public final ForgeConfigSpec.IntValue forestStressTicks; // 0 = Disabled
     public final ForgeConfigSpec.IntValue forestStressEffectDuration;
     public final ForgeConfigSpec.DoubleValue stressExhaustion;
@@ -69,22 +74,27 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue seaAllowWaterBottles;
     public final ForgeConfigSpec.IntValue seaTicksWithoutWaterRestored; // 0 = Disabled
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaAdditionalWaterUseables;
-    
+
     // Ore Loot (Networked for JEI) TODO: Addon for JEI to display the ore droprates when clicking on dust or bones.
     public final ForgeConfigSpec.DoubleValue humanOreDustChance;
     public final ForgeConfigSpec.DoubleValue dragonOreDustChance;
     public final ForgeConfigSpec.DoubleValue humanOreBoneChance;
     public final ForgeConfigSpec.DoubleValue dragonOreBoneChance;
     public final ForgeConfigSpec.ConfigValue<String> oresTag;
-	
+
+	//Items that deal damage when consumed by a specific dragon type
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaDragonHurtfulItems;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonHurtfulItems;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestDragonHurtfulItems;
+
     // Dragon Food (Networked for Dragonfruit)
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDragonFoods;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> forestDragonFoods;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> seaDragonFoods;
-    
+
 	ServerConfig(ForgeConfigSpec.Builder builder){
 		builder.push("server");
-		
+
 		// General
 		builder.push("general");
 		maxFlightSpeed = builder
@@ -110,9 +120,15 @@ public class ServerConfig {
 		flightHungerThreshold = builder
 				.comment("If the player's hunger is below this parameter, he can't open his wings.")
 				.defineInRange("flightHungerThreshold", 6, 0, 20);
+		flyingUsesHunger = builder
+				.comment("Whether you use up hunger while flying")
+				.define("flyingUsesHunger", true);
 		enableFlightFallDamage = builder
 				.comment("Whether damage from flight falling is enabled")
 				.define("enableFlightFallDamage", true);
+		creativeFlight = builder
+				.comment("Whether to use flight similar to creative rather then gliding")
+				.define("alternateFlight", false);
 
 		// Specifics
 		builder.pop().push("specifics");
@@ -190,6 +206,9 @@ public class ServerConfig {
 						"tag:forge:stone",
 						"tag:forge:ores"
 				), this::isValidBlockConfig);
+		chargedSoupBuffDuration = builder
+				.comment("How long in seconds should the cave fire effect from charged soup last. (Default to 5min) Set to 0 to disable.")
+				.defineInRange("chargedSoupBuffDuration", 300, 0, 10000);
 		builder.pop().push("forest"); // Forest Dragon Bonuses
 		forestFallReduction = builder
 				.comment("How many blocks of fall damage is mitigated for forest dragons. Set to 0.0 to disable.")
@@ -242,6 +261,9 @@ public class ServerConfig {
 		caveRainDamage = builder
 				.comment("The amount of damage taken per rain damage tick (once every 40 ticks). Set to 0.0 to disable rain damage.")
 				.defineInRange("rainDamage", 1.0, 0.0, 100.0);
+		caveSplashDamage = builder
+				.comment("The amount of damage taken when hit with a snowball or a water bottle. Set to 0.0 to disable splash damage.")
+				.defineInRange("splashDamage", 2.0, 0.0, 100.0);
 		builder.pop().push("forest"); // Forest Dragon Penalties
 		forestStressTicks = builder
 				.comment("The number of ticks in darkness before the forest dragon gets the Stressed effect. Set to 0 to disable to stress effect.")
@@ -297,7 +319,7 @@ public class ServerConfig {
         oresTag = builder
         		.comment("The tag that contains all ores that can drop dust/bones when harvested. Will not drop if the ore drops another of the items in this tag. Format: modid:id")
         		.define("oresTag", "forge:ores");
-        
+
 		// Dragon Food
 		builder.pop().push("food");
 		builder.comment("Dragon food formatting: item/tag:modid:id:food:saturation. Food/saturation values are optional as the human values will be used if missing.");
@@ -631,8 +653,39 @@ public class ServerConfig {
 						"item:aquafina:spider_crab_leg:4:1",
 						"item:aquafina:raw_stingray_slice:4:1"
 				), this::isValidFoodConfig);
+
+		builder.push("hurtful");
+		builder.comment("Dragon food formatting: item/tag:modid:itemid:damage.");
+
+		caveDragonHurtfulItems = builder
+				.comment("Items which will cause damage to cave dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToCaveDragon", Arrays.asList(
+						"item:minecraft:potion:2",
+						"item:minecraft:water_bottle:2",
+						"item:minecraft:milk_bucket:2"
+				), this::isValidHurtfulItem);
+
+		seaDragonHurtfulItems = builder
+				.comment("Items which will cause damage to sea dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToSeaDragon", Arrays.asList(), this::isValidHurtfulItem);
+
+		forestDragonHurtfulItems = builder
+				.comment("Items which will cause damage to forest dragons when consumed. Formatting: item/tag:modid:itemid:damage")
+				.defineList("hurtfulToForestDragon", Arrays.asList(),  this::isValidHurtfulItem);
 	}
-	
+
+	private boolean isValidHurtfulItem(Object food){
+		final String[] foodSplit = String.valueOf(food).split(":");
+		if (foodSplit.length != 4 || !(foodSplit[0].equalsIgnoreCase("item") || foodSplit[0].equalsIgnoreCase("tag")))
+			return false;
+		try {
+			final float damage = Float.parseFloat(foodSplit[3]);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+		return true;
+	}
+
 	private boolean isValidFoodConfig(Object food) {
 		final String[] foodSplit = String.valueOf(food).split(":");
 		if (foodSplit.length < 3 || foodSplit.length > 5 || foodSplit.length == 4 ||!(foodSplit[0].equalsIgnoreCase("item") || foodSplit[0].equalsIgnoreCase("tag")))
@@ -649,15 +702,15 @@ public class ServerConfig {
 		}
 		return true;
 	}
-	
+
 	private boolean isValidBlockConfig(Object block) {
 		final String[] blockSplit = String.valueOf(block).split(":");
 		return blockSplit.length == 3 && (blockSplit[0].equalsIgnoreCase("block") || blockSplit[0].equalsIgnoreCase("tag"));
 	}
-	
+
 	private boolean isValidItemConfig(Object item) {
 		final String[] itemSplit = String.valueOf(item).split(":");
 		return itemSplit.length == 3 && (itemSplit[0].equalsIgnoreCase("item") || itemSplit[0].equalsIgnoreCase("tag"));
 	}
-    
+
 }

@@ -7,9 +7,9 @@ import by.jackraidenph.dragonsurvival.network.StartJump;
 import by.jackraidenph.dragonsurvival.network.SyncCapabilityDebuff;
 import by.jackraidenph.dragonsurvival.registration.DragonEffects;
 import by.jackraidenph.dragonsurvival.renderer.CaveLavaFluidRenderer;
+import by.jackraidenph.dragonsurvival.util.DamageSources;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.passive.PigEntity;
@@ -27,6 +28,8 @@ import net.minecraft.entity.passive.StriderEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
@@ -35,8 +38,11 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -45,6 +51,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -295,12 +302,31 @@ public class SpecificsHandler {
         DamageSource damageSource = event.getSource();
         DragonStateProvider.getCap(livingEntity).ifPresent(dragonStateHandler -> {
             if (dragonStateHandler.isDragon()) {
-				if (damageSource.isFire() && dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.caveFireImmunity.get())
-					event.setCanceled(true);
-				else if (damageSource == DamageSource.SWEET_BERRY_BUSH && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestBushImmunity.get())
-					event.setCanceled(true);
-				else if ((damageSource == DamageSource.CACTUS) && dragonStateHandler.getType() == DragonType.FOREST && ConfigHandler.SERVER.bonuses.get() && ConfigHandler.SERVER.forestCactiImmunity.get())
-					event.setCanceled(true);
+				if(ConfigHandler.SERVER.bonuses.get()){
+					if (dragonStateHandler.getType() == DragonType.CAVE && ConfigHandler.SERVER.caveFireImmunity.get()){
+						if(damageSource.isFire() && ConfigHandler.SERVER.caveFireImmunity.get()){
+							event.setCanceled(true);
+						}
+						
+					}else if(dragonStateHandler.getType() == DragonType.FOREST){
+						if(damageSource == DamageSource.SWEET_BERRY_BUSH && ConfigHandler.SERVER.forestBushImmunity.get()){
+							event.setCanceled(true);
+						}else if(damageSource == DamageSource.CACTUS && ConfigHandler.SERVER.forestCactiImmunity.get()){
+							event.setCanceled(true);
+						}
+					}
+				}
+
+				
+				if(ConfigHandler.SERVER.caveSplashDamage.get() != 0.0) {
+					if (dragonStateHandler.getType() == DragonType.CAVE && !livingEntity.hasEffect(DragonEffects.FIRE)) {
+						if (damageSource instanceof IndirectEntityDamageSource) {
+							if (damageSource.getDirectEntity() instanceof SnowballEntity) {
+								livingEntity.hurt(DamageSource.GENERIC, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+							}
+						}
+					}
+				}
 			}
         });
     }
@@ -417,6 +443,77 @@ public class SpecificsHandler {
             }
         });
     }
+	
+	@SubscribeEvent
+	public void consumeItem(LivingEntityUseItemEvent.Finish destroyItemEvent) {
+		if (!ConfigHandler.SERVER.penalties.get())
+			return;
+		
+		if(!(destroyItemEvent.getEntityLiving() instanceof PlayerEntity)) return;
+		
+		PlayerEntity playerEntity = (PlayerEntity)destroyItemEvent.getEntityLiving();
+		ItemStack itemStack = destroyItemEvent.getItem();
+		
+		DragonStateProvider.getCap(playerEntity).ifPresent(dragonStateHandler -> {
+			if (dragonStateHandler.isDragon()) {
+				List<String> hurtfulItems = new ArrayList<>(
+						dragonStateHandler.getType() == DragonType.FOREST ? ConfigHandler.SERVER.forestDragonHurtfulItems.get() :
+						dragonStateHandler.getType() == DragonType.CAVE ? ConfigHandler.SERVER.caveDragonHurtfulItems.get() :
+						dragonStateHandler.getType() == DragonType.SEA ? ConfigHandler.SERVER.seaDragonHurtfulItems.get() : new ArrayList<>());
+
+				if(hurtfulItems.size() > 0){
+					ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+					
+					if(itemId != null){
+						for(String item : hurtfulItems){
+							boolean match = item.startsWith("item:" + itemId + ":");
+							
+							if(!match){
+								for(ResourceLocation tag : itemStack.getItem().getTags()){
+									if(item.startsWith("tag:" + tag + ":")){
+										match = true;
+										break;
+									}
+								}
+							}
+							
+							if(match){
+								String damage = item.substring(item.lastIndexOf(":") + 1);
+								playerEntity.hurt(DamageSource.GENERIC, Float.parseFloat(damage));
+								break;
+							}
+						}
+					}
+				}
+			}
+		});
+	}
+	
+	@SubscribeEvent
+	public void hitByPotion(ProjectileImpactEvent.Throwable potionEvent) {
+		if (!ConfigHandler.SERVER.penalties.get() || ConfigHandler.SERVER.caveSplashDamage.get() == 0.0)
+			return;
+
+		if(potionEvent.getThrowable() instanceof PotionEntity){
+			PotionEntity potionEntity = (PotionEntity)potionEvent.getThrowable();
+			if(potionEntity.getItem().getItem() != Items.SPLASH_POTION) return;
+			if(PotionUtils.getPotion(potionEntity.getItem()).getEffects().size() > 0) return; //Remove this line if you want potions with effects to also damage rather then just water ones.
+			
+			Vector3d pos = potionEvent.getRayTraceResult().getLocation();
+			List<PlayerEntity> entities = potionEntity.level.getEntities(EntityType.PLAYER, new AxisAlignedBB(pos.x - 5, pos.y - 1, pos.z - 5, pos.x + 5, pos.y + 1, pos.z + 5), (entity) -> entity.position().distanceTo(pos) <= 4);
+			
+			for(PlayerEntity player : entities){
+				if(player.hasEffect(DragonEffects.FIRE)) continue;
+				
+				DragonStateProvider.getCap(player).ifPresent(dragonStateHandler -> {
+					if (dragonStateHandler.isDragon()) {
+						if(dragonStateHandler.getType() != DragonType.CAVE) return;
+						player.hurt(DamageSources.WATER_BURN, ConfigHandler.SERVER.caveSplashDamage.get().floatValue());
+					}
+				});
+			}
+		}
+	}
 
     @SubscribeEvent
     public void onJump(LivingEvent.LivingJumpEvent jumpEvent) {

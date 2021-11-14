@@ -78,7 +78,7 @@ public class ClientEvents {
      * Third-person armor instances
      */
     public static ConcurrentHashMap<Integer, DragonEntity> playerArmorMap = new ConcurrentHashMap<>(20);
-    
+
     /**
      * Instance used for rendering first-person dragon model
      */
@@ -137,9 +137,9 @@ public class ClientEvents {
                         EntityRenderer<? super DragonEntity> dragonRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragonEntity.get());
                         dragonEntity.get().copyPosition(player);
                         dragonModel.setCurrentTexture(texture);
-    
+
                         ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, playerStateHandler.getType(), playerStateHandler.getLevel());
-    
+
                         final IBone neckandHead = dragonModel.getAnimationProcessor().getBone("Neck");
                         if (neckandHead != null)
                             neckandHead.setHidden(true);
@@ -157,15 +157,44 @@ public class ClientEvents {
                         final IBone neck = dragonArmorModel.getAnimationProcessor().getBone("Neck");
                         if (neck != null)
                             neck.setHidden(true);
+
+                        ItemStack chestPlateItem = player.getItemBySlot(EquipmentSlotType.CHEST);
+                        ItemStack legsItem = player.getItemBySlot(EquipmentSlotType.LEGS);
+                        ItemStack bootsItem = player.getItemBySlot(EquipmentSlotType.FEET);
+
+                        Color renderColor = ((DragonRenderer)dragonArmorRenderer).renderColor;
+
+                        if(chestPlateItem.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)chestPlateItem.getItem()).getColor(chestPlateItem);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
+
                         ResourceLocation chestplate = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.CHEST));
+
                         dragonArmorModel.setArmorTexture(chestplate);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
+
+                        if(legsItem.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)legsItem.getItem()).getColor(legsItem);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
+
                         ResourceLocation legs = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.LEGS));
+
                         dragonArmorModel.setArmorTexture(legs);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
+
+                        if(bootsItem.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)bootsItem.getItem()).getColor(bootsItem);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
+
                         ResourceLocation boots = new ResourceLocation(DragonSurvivalMod.MODID, constructArmorTexture(player, EquipmentSlotType.FEET));
                         dragonArmorModel.setArmorTexture(boots);
                         dragonArmorRenderer.render(dragonArmor, playerYaw, partialTicks, eventMatrixStack, buffers, light);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
 
                         eventMatrixStack.translate(0, 0, 0.15);
                     } catch (Throwable ignored) {
@@ -338,9 +367,9 @@ public class ClientEvents {
                     EntityRenderer<? super DragonEntity> dragonRenderer = mc.getEntityRenderDispatcher().getRenderer(dummyDragon);
                     dummyDragon.copyPosition(player);
                     dragonModel.setCurrentTexture(texture);
-                    
+
                     ((DragonRenderer)dragonRenderer).glowTexture = DragonSkins.getGlowTexture(player, cap.getType(), dragonStage);
-                    
+
                     final IBone leftwing = dragonModel.getAnimationProcessor().getBone("WingLeft");
                     final IBone rightWing = dragonModel.getAnimationProcessor().getBone("WingRight");
                     if (leftwing != null)
@@ -383,20 +412,54 @@ public class ClientEvents {
                         String legsTexture = constructArmorTexture(player, EquipmentSlotType.LEGS);
                         String bootsTexture = constructArmorTexture(player, EquipmentSlotType.FEET);
 
+                        ItemStack helmet = player.getItemBySlot(EquipmentSlotType.HEAD);
+                        ItemStack chestPlate = player.getItemBySlot(EquipmentSlotType.CHEST);
+                        ItemStack legs = player.getItemBySlot(EquipmentSlotType.LEGS);
+                        ItemStack boots = player.getItemBySlot(EquipmentSlotType.FEET);
+
+
                         DragonEntity dragonArmor = playerArmorMap.get(player.getId());
                         dragonArmor.copyPosition(player);
                         final IBone neck = dragonArmorModel.getAnimationProcessor().getBone("Neck");
                         if (neck != null)
                             neck.setHidden(false);
                         EntityRenderer<? super DragonEntity> dragonArmorRenderer = mc.getEntityRenderDispatcher().getRenderer(dragonArmor);
+
+                        Color renderColor = ((DragonRenderer)dragonArmorRenderer).renderColor;
+
+                        if(helmet.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)helmet.getItem()).getColor(helmet);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
+
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, helmetTexture));
                         dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
+
+                        if(chestPlate.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)chestPlate.getItem()).getColor(chestPlate);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
+
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, chestPlateTexture));
                         dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
+
+                        if(legs.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)legs.getItem()).getColor(legs);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, legsTexture));
                         dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
+
+                        if(boots.getItem() instanceof IDyeableArmorItem){
+                            int colorCode = ((IDyeableArmorItem)boots.getItem()).getColor(boots);
+                            ((DragonRenderer)dragonArmorRenderer).renderColor = new Color(colorCode);
+                        }
                         dragonArmorModel.setArmorTexture(new ResourceLocation(DragonSurvivalMod.MODID, bootsTexture));
                         dragonArmorRenderer.render(dummyDragon, yaw, partialRenderTick, matrixStack, renderTypeBuffer, eventLight);
+                        ((DragonRenderer)dragonArmorRenderer).renderColor = renderColor;
 
                         for (LayerRenderer<Entity, EntityModel<Entity>> layer : ((AccessorLivingRenderer) playerRenderer).getRenderLayers()) {
                             if (layer instanceof ParrotVariantLayer) {
@@ -443,7 +506,7 @@ public class ClientEvents {
                 ((AccessorEntityRenderer)renderPlayerEvent.getRenderer()).setShadowRadius(0.5F);
         });
     }
-    
+
     private static String constructArmorTexture(PlayerEntity playerEntity, EquipmentSlotType equipmentSlot) {
         String texture = "textures/armor/";
         Item item = playerEntity.getItemBySlot(equipmentSlot).getItem();

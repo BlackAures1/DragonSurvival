@@ -54,4 +54,16 @@ public class DragonRenderer extends GeoEntityRenderer<DragonEntity> {
 	{
 		return renderColor;
 	}
+	
+	public Color renderColor = new Color(255, 255, 255);
+	
+	@Override
+	public Color getRenderColor(DragonEntity animatable, float partialTicks, MatrixStack stack,
+			@Nullable
+					IRenderTypeBuffer renderTypeBuffer,
+			@Nullable
+					IVertexBuilder vertexBuilder, int packedLightIn)
+	{
+		return renderColor;
+	}
 }
