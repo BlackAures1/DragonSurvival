@@ -1,0 +1,4 @@
+Don't forget to set following things:
+
+blocks: properties and loot tables;
+mod: version and changes;

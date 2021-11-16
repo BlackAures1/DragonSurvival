@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "dragonsurvival:block/empty"
+    },
+    "lit=false": {
+      "model": "dragonsurvival:block/empty"
+    }
+  }
+}

@@ -39,9 +39,9 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class WingObtainmentController {
 	
-	private static Map<String, Integer> dragonPhrases = new HashMap<String, Integer>();
+	private static final Map<String, Integer> dragonPhrases = new HashMap<String, Integer>();
 
-	private static UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
+    private static final UUID enderDragonUUID = UUID.fromString("426642b9-2e88-4350-afa8-f99f75af5479");
 
 	public static void loadDragonPhrases() {
 		if (FMLLoader.getDist() != Dist.CLIENT)
@@ -105,7 +105,7 @@ public class WingObtainmentController {
 	    		Language language = Minecraft.getInstance().getLanguageManager().getSelected();
 	    		ClientPlayerEntity player = Minecraft.getInstance().player;
 	    		int messageId = player.getRandom().nextInt(dragonPhrases.getOrDefault(language.getCode(), dragonPhrases.getOrDefault("en_us", 1))) + 1;
-	    		event.setMessage(new StringTextComponent((new TranslationTextComponent("ds.endmessage." + messageId)).getString().replace("()", player.getDisplayName().getString())));
+	    		event.setMessage(new TranslationTextComponent("ds.endmessage." + messageId, player.getDisplayName().getString()));
 			} else if (event.getMessage().getString().equals("ds.dragon.grants.wings")) {
 				event.setMessage(new TranslationTextComponent("ds.dragon.grants.wings"));
 			}

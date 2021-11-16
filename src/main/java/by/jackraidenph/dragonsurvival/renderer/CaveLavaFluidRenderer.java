@@ -1,7 +1,6 @@
 package by.jackraidenph.dragonsurvival.renderer;
 
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.FluidBlockRenderer;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -28,8 +27,8 @@ public class CaveLavaFluidRenderer extends FluidBlockRenderer {
 
 	private static boolean isFaceOccludedByState(IBlockReader p_239284_0_, Direction p_239284_1_, float p_239284_2_, BlockPos p_239284_3_, BlockState p_239284_4_) {
 	      if (p_239284_4_.canOcclude()) {
-	         VoxelShape voxelshape = VoxelShapes.box(0.0D, 0.0D, 0.0D, 1.0D, (double)p_239284_2_, 1.0D);
-	         VoxelShape voxelshape1 = p_239284_4_.getOcclusionShape(p_239284_0_, p_239284_3_);
+	         VoxelShape voxelshape = VoxelShapes.box(0.0D, 0.0D, 0.0D, 1.0D, p_239284_2_, 1.0D);
+             VoxelShape voxelshape1 = p_239284_4_.getOcclusionShape(p_239284_0_, p_239284_3_);
 	         return VoxelShapes.blockOccudes(voxelshape, voxelshape1, p_239284_1_);
 	      } else {
 	         return false;
@@ -78,10 +77,9 @@ public class CaveLavaFluidRenderer extends FluidBlockRenderer {
                  float f8 = this.getWaterHeight(p_228796_1_, p_228796_2_.south(), p_228796_4_.getType());
                  float f9 = this.getWaterHeight(p_228796_1_, p_228796_2_.east().south(), p_228796_4_.getType());
                  float f10 = this.getWaterHeight(p_228796_1_, p_228796_2_.east(), p_228796_4_.getType());
-                 double d0 = (double)(p_228796_2_.getX() & 15);
-                 double d1 = (double)(p_228796_2_.getY() & 15);
-                 double d2 = (double)(p_228796_2_.getZ() & 15);
-                 float f11 = 0.001F;
+                 double d0 = p_228796_2_.getX() & 15;
+                 double d1 = p_228796_2_.getY() & 15;
+                 double d2 = p_228796_2_.getZ() & 15;
                  float f12 = flag2 ? 0.001F : 0.0F;
                  if (flag1 && !isFaceOccludedByNeighbor(p_228796_1_, p_228796_2_, Direction.UP, Math.min(Math.min(f7, f8), Math.min(f9, f10)))) {
                     flag7 = true;
@@ -110,18 +108,17 @@ public class CaveLavaFluidRenderer extends FluidBlockRenderer {
                        f20 = f17;
                     } else {
                        TextureAtlasSprite textureatlassprite = atextureatlassprite[1];
-                       float f21 = (float)MathHelper.atan2(vector3d.z, vector3d.x) - ((float)Math.PI / 2F);
+                       float f21 = (float) MathHelper.atan2(vector3d.z, vector3d.x) - ((float) Math.PI / 2F);
                        float f22 = MathHelper.sin(f21) * 0.25F;
                        float f23 = MathHelper.cos(f21) * 0.25F;
-                       float f24 = 8.0F;
-                       f13 = textureatlassprite.getU((double)(8.0F + (-f23 - f22) * 16.0F));
-                       f17 = textureatlassprite.getV((double)(8.0F + (-f23 + f22) * 16.0F));
-                       f14 = textureatlassprite.getU((double)(8.0F + (-f23 + f22) * 16.0F));
-                       f18 = textureatlassprite.getV((double)(8.0F + (f23 + f22) * 16.0F));
-                       f15 = textureatlassprite.getU((double)(8.0F + (f23 + f22) * 16.0F));
-                       f19 = textureatlassprite.getV((double)(8.0F + (f23 - f22) * 16.0F));
-                       f16 = textureatlassprite.getU((double)(8.0F + (f23 - f22) * 16.0F));
-                       f20 = textureatlassprite.getV((double)(8.0F + (-f23 - f22) * 16.0F));
+                       f13 = textureatlassprite.getU(8.0F + (-f23 - f22) * 16.0F);
+                       f17 = textureatlassprite.getV(8.0F + (-f23 + f22) * 16.0F);
+                       f14 = textureatlassprite.getU(8.0F + (-f23 + f22) * 16.0F);
+                       f18 = textureatlassprite.getV(8.0F + (f23 + f22) * 16.0F);
+                       f15 = textureatlassprite.getU(8.0F + (f23 + f22) * 16.0F);
+                       f19 = textureatlassprite.getV(8.0F + (f23 - f22) * 16.0F);
+                       f16 = textureatlassprite.getU(8.0F + (f23 - f22) * 16.0F);
+                       f20 = textureatlassprite.getV(8.0F + (-f23 - f22) * 16.0F);
                     }
 
                     float f43 = (f13 + f14 + f15 + f16) / 4.0F;
@@ -228,18 +225,18 @@ public class CaveLavaFluidRenderer extends FluidBlockRenderer {
 
                        float f48 = textureatlassprite2.getU(0.0D);
                        float f49 = textureatlassprite2.getU(8.0D);
-                       float f50 = textureatlassprite2.getV((double)((1.0F - f36) * 16.0F * 0.5F));
-                       float f28 = textureatlassprite2.getV((double)((1.0F - f38) * 16.0F * 0.5F));
+                       float f50 = textureatlassprite2.getV((1.0F - f36) * 16.0F * 0.5F);
+                       float f28 = textureatlassprite2.getV((1.0F - f38) * 16.0F * 0.5F);
                        float f29 = textureatlassprite2.getV(8.0D);
                        int k = this.getLightColor(p_228796_1_, blockpos);
                        float f30 = l < 2 ? f5 : f6;
                        float f31 = f4 * f30 * f;
                        float f32 = f4 * f30 * f1;
                        float f33 = f4 * f30 * f2;
-                       this.vertexVanilla(p_228796_3_, d3, d1 + (double)f36, d4, f31, f32, f33, alpha, f48, f50, k);
-                       this.vertexVanilla(p_228796_3_, d5, d1 + (double)f38, d6, f31, f32, f33, alpha, f49, f28, k);
-                       this.vertexVanilla(p_228796_3_, d5, d1 + (double)f12, d6, f31, f32, f33, alpha, f49, f29, k);
-                       this.vertexVanilla(p_228796_3_, d3, d1 + (double)f12, d4, f31, f32, f33, alpha, f48, f29, k);
+                       this.vertexVanilla(p_228796_3_, d3, d1 + (double) f36, d4, f31, f32, f33, alpha, f48, f50, k);
+                       this.vertexVanilla(p_228796_3_, d5, d1 + (double) f38, d6, f31, f32, f33, alpha, f49, f28, k);
+                       this.vertexVanilla(p_228796_3_, d5, d1 + (double) f12, d6, f31, f32, f33, alpha, f49, f29, k);
+                       this.vertexVanilla(p_228796_3_, d3, d1 + (double) f12, d4, f31, f32, f33, alpha, f48, f29, k);
                        if (textureatlassprite2 != atextureatlassprite[2]) {
                           this.vertexVanilla(p_228796_3_, d3, d1 + (double)f12, d4, f31, f32, f33, alpha, f48, f29, k);
                           this.vertexVanilla(p_228796_3_, d5, d1 + (double)f12, d6, f31, f32, f33, alpha, f49, f29, k);
@@ -269,7 +266,7 @@ public class CaveLavaFluidRenderer extends FluidBlockRenderer {
 	      int l = j & 255;
 	      int i1 = i >> 16 & 255;
 	      int j1 = j >> 16 & 255;
-	      return (k > l ? k : l) | (i1 > j1 ? i1 : j1) << 16;
+      return (Math.max(k, l)) | (Math.max(i1, j1)) << 16;
 	   }
 
 	   private float getWaterHeight(IBlockReader p_217640_1_, BlockPos p_217640_2_, Fluid p_217640_3_) {

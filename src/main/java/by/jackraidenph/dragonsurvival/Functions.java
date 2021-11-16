@@ -1,17 +1,25 @@
 package by.jackraidenph.dragonsurvival;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.BannerPattern;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.spawner.WorldEntitySpawner;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class Functions {
 
@@ -29,35 +37,63 @@ public class Functions {
         return ticks / 20;
     }
 
-    public static int ticksToMinutes(int ticks)
-    {
+    public static int ticksToMinutes(int ticks) {
         return ticksToSeconds(ticks) / 60;
     }
 
-    public static float getDefaultXRightLimbRotation(float limbSwing, float swingAmount) {
-        return MathHelper.cos((float) (limbSwing + Math.PI)) * swingAmount;
+    @Nullable
+    public static BlockPos findRandomSpawnPosition(PlayerEntity playerEntity, int p_221298_1_, int timesToCheck, float distance) {
+        int i = (p_221298_1_ == 0) ? 2 : (2 - p_221298_1_);
+        BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+
+        for (int i1 = 0; i1 < timesToCheck; i1++) {
+            float f = playerEntity.level.random.nextFloat() * 6.2831855F;
+            double xRandom = playerEntity.getX() + MathHelper.floor(MathHelper.cos(f) * distance * i) + playerEntity.level.random.nextInt(5);
+            double zRandom = playerEntity.getZ() + MathHelper.floor(MathHelper.sin(f) * distance * i) + playerEntity.level.random.nextInt(5);
+            int y = playerEntity.level.getHeight(Heightmap.Type.WORLD_SURFACE, (int) xRandom, (int) zRandom);
+            blockpos$mutable.set(xRandom, y, zRandom);
+            if (playerEntity.level.hasChunksAt(blockpos$mutable.getX() - 10, blockpos$mutable.getY() - 10, blockpos$mutable.getZ() - 10, blockpos$mutable.getX() + 10, blockpos$mutable.getY() + 10, blockpos$mutable.getZ() + 10) && playerEntity.level.getChunkSource().isEntityTickingChunk(new ChunkPos((BlockPos) blockpos$mutable)) && (WorldEntitySpawner.canSpawnAtBody(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, playerEntity.level, (BlockPos) blockpos$mutable, EntityTypesInit.HUNTER_HOUND) || (playerEntity.level.getBlockState(blockpos$mutable).is(Blocks.SNOW) && playerEntity.level.getBlockState((BlockPos) blockpos$mutable).isAir()))) {
+                return blockpos$mutable;
+            }
+        }
+        return null;
     }
 
-    public static float getDefaultXLeftLimbRotation(float limbSwing, float swingAmount) {
-        return MathHelper.cos(limbSwing) * swingAmount;
+    public static void spawn(MobEntity mobEntity, BlockPos blockPos, ServerWorld serverWorld) {
+        mobEntity.setPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
+        mobEntity.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(blockPos), SpawnReason.NATURAL, null, null);
+        serverWorld.addFreshEntity(mobEntity);
     }
 
-    /**
-     * Angle Y or Z
-     */
-    public static float getDefaultHeadYaw(float netYaw) {
-        return netYaw * 0.017453292F;
+    public static boolean isAirOrFluid(BlockPos blockPos, World world) {
+        return !world.getFluidState(blockPos).isEmpty() || world.isEmptyBlock(blockPos);
     }
 
-    /**
-     * Angle X
-     */
-    public static float getDefaultHeadPitch(float pitch) {
-        return pitch * 0.017453292F;
+    public static ListNBT createRandomPattern(BannerPattern.Builder builder, int times) {
+        if (times > 16)
+            times = 16;
+        if (times < 1)
+            times = 1;
+        Random random = new Random();
+        for (int i = 0; i < times; i++) {
+            builder = builder.addPattern(BannerPattern.values()[random.nextInt(BannerPattern.values().length)], DyeColor.values()[random.nextInt(DyeColor.values().length)]);
+        }
+        return builder.toListTag();
     }
 
-    public static float degreesToRadians(float degrees) {
-        return (float) (degrees * Math.PI / 180);
+    public static void copyBoneRotation(GeoBone from, GeoBone to) {
+        to.setRotationX(from.getRotationX());
+        to.setRotationY(from.getRotationY());
+        to.setRotationZ(from.getRotationZ());
+        if (!to.childBones.isEmpty()) {
+            for (GeoBone childBone : to.childBones) {
+                for (GeoBone bone : from.childBones) {
+                    if (childBone.getName().equals(bone.getName())) {
+                        copyBoneRotation(bone, childBone);
+                        break;
+                    }
+                }
+            }
+        }
     }
-
 }

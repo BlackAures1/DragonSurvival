@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "dragonsurvival:charged_soup",
+    "dragonsurvival:charged_coal",
+    "dragonsurvival:charred_meat",
+    "dragonsurvival:charred_mushroom",
+    "dragonsurvival:charred_seafood",
+    "dragonsurvival:charred_vegetable"
+  ]
+}

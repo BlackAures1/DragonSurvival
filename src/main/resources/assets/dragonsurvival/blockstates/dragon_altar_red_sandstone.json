@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=south": { "model": "dragonsurvival:block/dragon_altar_red_sandstone", "y": 0 },
+        "facing=west":  { "model": "dragonsurvival:block/dragon_altar_red_sandstone", "y": 90 },
+        "facing=north": { "model": "dragonsurvival:block/dragon_altar_red_sandstone", "y": 180 },
+        "facing=east":  { "model": "dragonsurvival:block/dragon_altar_red_sandstone", "y": 270 }
+    }
+}

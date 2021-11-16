@@ -20,7 +20,7 @@ public class DragonCapStorage implements Capability.IStorage<DragonStateHandler>
             tag.putDouble("headPitch", movementData.headPitch);
             tag.putBoolean("bite", movementData.bite);
             DragonStateHandler.DragonDebuffData debuffData = instance.getDebuffData();
-            tag.putInt("timeWithoutWater", debuffData.timeWithoutWater);
+            tag.putDouble("timeWithoutWater", debuffData.timeWithoutWater);
             tag.putInt("timeInDarkness", debuffData.timeInDarkness);
             tag.putBoolean("isHiding", instance.isHiding());
             tag.putFloat("size", instance.getSize());

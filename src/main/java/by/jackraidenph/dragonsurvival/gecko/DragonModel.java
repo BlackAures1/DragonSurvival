@@ -2,48 +2,16 @@ package by.jackraidenph.dragonsurvival.gecko;
 
 import by.jackraidenph.dragonsurvival.DragonSurvivalMod;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.file.AnimationFile;
-import software.bernie.geckolib3.geo.exception.GeckoLibException;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 
     private ResourceLocation currentTexture = new ResourceLocation(DragonSurvivalMod.MODID, "textures/dragon/cave_newborn.png");
-
-	public IBone neck;
-	public IBone neck1;
-	public IBone neck2;
-	public IBone neck3;
-	public IBone neck4;
-	public IBone head;
-
-	private boolean hasBones;
-
-	public void setupBones() {
-		if (hasBones || this.getAnimationProcessor().getModelRendererList().size() == 0)
-			return;
-
-		AnimationProcessor<DragonEntity> ap = this.getAnimationProcessor();
-
-		neck = ap.getBone("Neck");
-		neck1 = ap.getBone("Neck1");
-		neck2 = ap.getBone("Neck2");
-		neck3 = ap.getBone("Neck3");
-		neck4 = ap.getBone("Neck4");
-		head = ap.getBone("Head");
-
-		hasBones = true;
-	}
 
     @Override
     public ResourceLocation getModelLocation(DragonEntity dragonEntity) {
@@ -59,30 +27,14 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
         return currentTexture;
     }
 
-    @Override
-	public Animation getAnimation(String name, IAnimatable animatable) {
-    	DragonEntity dragonEntity = (DragonEntity)animatable;
-    	ResourceLocation animLocation = new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.animations.json");
-    	AnimationFile animation = GeckoLibCache.getInstance().getAnimations().get(animLocation);
-    	if (animation == null) {
-			throw new GeckoLibException(animLocation, "Could not find animation file. Please double check name.");
-		}
-		return animation.getAnimation(name);
-	}
-
 	@Override
 	public ResourceLocation getAnimationFileLocation(DragonEntity animatable) {
-		return null;
+		return new ResourceLocation(DragonSurvivalMod.MODID, "animations/dragon.animations.json");
 	}
-
-	private int biteTicks;
 
 	@Override
 	public void setLivingAnimations(DragonEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
 		super.setLivingAnimations(entity, uniqueID, customPredicate);
-		
-		if (customPredicate.getController() == null || !hasBones)
-			return;
 		
 		// TODO Replace temp head turn with system that includes vertical
 		PlayerEntity player = entity.getPlayer();
@@ -100,11 +52,18 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				// neck3: rot(30, 0, 0), mov(-2, 22.7551, -13.1526)
 				// neck4: rot(10, 0, 0), mov(-3, 19.4825, -13.4911)
 				// head: rot(20, 0, 0), mov(2.1, 37.4402, -12.953)
-				float rotation = -1F * (((float)playerStateHandler.getMovementData().bodyYaw) - (float)playerStateHandler.getMovementData().headYaw) * (float)Math.PI / 180F;
-				if (rotation > (float)Math.PI)
-					rotation = (float)Math.PI;
-				if (rotation < -(float)Math.PI)
-					rotation = -(float)Math.PI;
+				AnimationProcessor animationProcessor = getAnimationProcessor();
+				IBone neck = animationProcessor.getBone("Neck");
+				IBone neck1 = animationProcessor.getBone("Neck1");
+				IBone neck2 = animationProcessor.getBone("Neck2");
+				IBone neck3 = animationProcessor.getBone("Neck3");
+				IBone neck4 = animationProcessor.getBone("Neck4");
+				IBone head = animationProcessor.getBone("Head");
+				float rotation = -1F * (((float) playerStateHandler.getMovementData().bodyYaw) - (float) playerStateHandler.getMovementData().headYaw) * (float) Math.PI / 180F;
+				if (rotation > (float) Math.PI)
+					rotation = (float) Math.PI;
+				if (rotation < -(float) Math.PI)
+					rotation = -(float) Math.PI;
 				neck.setRotationY(-0.125F * rotation);
 				neck4.setRotationZ(-1F * -0.0555556F * rotation);
 				neck3.setRotationX((rotation >= 0 ? -1F : 1F) * 0.06944F * rotation + 0.523599F);
@@ -126,14 +85,7 @@ public class DragonModel extends AnimatedGeoModel<DragonEntity> {
 				head.setPositionX(-1F * 0.716197F * rotation);
 				head.setPositionY(-1F * (rotation >= 0 ? -1F : 1F) * -0.397887F * rotation);
 				head.setPositionZ((rotation >= 0 ? 1F : -1F) * -0.397887F * rotation);
-					
 			});
 		}
-		
-		
-		
-    	
-		
 	}
-    
 }

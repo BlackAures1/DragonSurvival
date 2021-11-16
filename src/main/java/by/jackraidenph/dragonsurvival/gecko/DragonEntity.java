@@ -3,7 +3,6 @@ package by.jackraidenph.dragonsurvival.gecko;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.DragonSizeHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
@@ -21,17 +20,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.Collections;
-
-public class DragonEntity extends LivingEntity implements IAnimatable {
+public class DragonEntity extends LivingEntity implements IAnimatable, CommonTraits {
     AnimationFactory animationFactory = new AnimationFactory(this);
-    public boolean isArmorModel;
-    
+
     /**
      * This reference must be updated whenever player is remade, for example, when changing dimensions
      */
     public volatile int player;
-    
+
     public DragonEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -46,80 +42,79 @@ public class DragonEntity extends LivingEntity implements IAnimatable {
         return animationFactory;
     }
 
+    @SuppressWarnings("rawtypes")
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         final PlayerEntity player = getPlayer();
         final AnimationController animationController = animationEvent.getController();
         AnimationBuilder builder = new AnimationBuilder();
         if (player != null) {
-        	DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
-	        	Vector3d motio = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
-	            boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
-	            // Main
-	            if (player.isSleeping())
-	            	builder.addAnimation("sleep", true);
-	            else if (player.isPassenger())
+            DragonStateProvider.getCap(player).ifPresent(playerStateHandler -> {
+                Vector3d motio = new Vector3d(player.getX() - player.xo, player.getY() - player.yo, player.getZ() - player.zo);
+                boolean isMovingHorizontal = Math.sqrt(Math.pow(motio.x, 2) + Math.pow(motio.z, 2)) > 0.005;
+                // Main
+                if (player.isSleeping())
+                    builder.addAnimation("sleep", true);
+                else if (player.isPassenger())
                     builder.addAnimation("sit", true);
-	            else if (player.isPassenger())
-	            	builder.addAnimation("idle", true); // TODO: Passenger animation for riding entities
-	            else if (playerStateHandler.getMovementData().bite)
-	                builder.addAnimation("bite");
-	            else if (player.getPose() == Pose.SWIMMING)
-	            	builder.addAnimation("swim_fast", true);
-	            else if ((player.isInLava() || player.isInWaterOrBubble()) && !player.isOnGround())
-	                builder.addAnimation("swim", true);
-	            else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
-	                builder.addAnimation("fly", true);
-	            else if (!player.isOnGround() && motio.y() < 0) {
-	            	builder.addAnimation("land", false);
-	            	builder.addAnimation("idle", true);
-	            }
-            	else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
-            		builder.addAnimation("jump", false);
-	            else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
-	            	// Player is Sneaking
-	            	 if (isMovingHorizontal && player.animationSpeed != 0f)
-	                     builder.addAnimation("sneak_walk", true);
-	                 else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
-	                     builder.addAnimation("dig_sneak", true);
-	                 else
-	                     builder.addAnimation("sneak", true);
-	            }
-	            else if (player.isSprinting())
-	                builder.addAnimation("run", true);
-	            else if (isMovingHorizontal && player.animationSpeed != 0f)
-	                builder.addAnimation("walk", true);
-	            else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
-	                builder.addAnimation("dig", true);
-	            else
-	            	builder.addAnimation("idle", true);
-	        });
+                else if (player.isPassenger())
+                    builder.addAnimation("idle", true); // TODO: Passenger animation for riding entities
+                else if (playerStateHandler.getMovementData().bite)
+                    builder.addAnimation("bite");
+                else if (player.getPose() == Pose.SWIMMING)
+                    builder.addAnimation("swim_fast", true);
+                else if ((player.isInLava() || player.isInWaterOrBubble()) && !player.isOnGround())
+                    builder.addAnimation("swim", true);
+                else if ((player.abilities.flying || ClientEvents.dragonsFlying.getOrDefault(player.getId(), false)) && !player.isOnGround() && !player.isInWater() && !player.isInLava() && player.getCapability(DragonStateProvider.DRAGON_CAPABILITY).orElse(null).hasWings())
+                    builder.addAnimation("fly", true);
+                else if (!player.isOnGround() && motio.y() < 0) {
+                    builder.addAnimation("land", false);
+                    builder.addAnimation("idle", true);
+                } else if (ClientEvents.dragonsJumpingTicks.getOrDefault(this.player, 0) > 0)
+                    builder.addAnimation("jump", false);
+                else if (player.isShiftKeyDown() || (!DragonSizeHandler.canPoseFit(player, Pose.STANDING) && DragonSizeHandler.canPoseFit(player, Pose.CROUCHING))) {
+                    // Player is Sneaking
+                    if (isMovingHorizontal && player.animationSpeed != 0f)
+                        builder.addAnimation("sneak_walk", true);
+                    else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
+                        builder.addAnimation("dig_sneak", true);
+                    else
+                        builder.addAnimation("sneak", true);
+                } else if (player.isSprinting())
+                    builder.addAnimation("run", true);
+                else if (isMovingHorizontal && player.animationSpeed != 0f)
+                    builder.addAnimation("walk", true);
+                else if (ClientEvents.dragonsDigging.getOrDefault(this.player, false))
+                    builder.addAnimation("dig", true);
+                else
+                    builder.addAnimation("idle", true);
+            });
         } else
-        	 builder.addAnimation("idle", true);
+            builder.addAnimation("idle", true);
         animationController.setAnimation(builder);
         return PlayState.CONTINUE;
     }
 
     @Override
     public Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
+        return getPlayer().getArmorSlots();
     }
 
     @Override
     public ItemStack getItemBySlot(EquipmentSlotType slotIn) {
-        return ItemStack.EMPTY;
+        return getPlayer().getItemBySlot(slotIn);
     }
 
     @Override
     public void setItemSlot(EquipmentSlotType slotIn, ItemStack stack) {
-
+        getPlayer().setItemSlot(slotIn, stack);
     }
 
     @Override
     public HandSide getMainArm() {
-        return HandSide.RIGHT;
+        return getPlayer().getMainArm();
     }
 
     PlayerEntity getPlayer() {
-        return (PlayerEntity)Minecraft.getInstance().player.clientLevel.getEntity(player);
+        return (PlayerEntity) level.getEntity(player);
     }
 }

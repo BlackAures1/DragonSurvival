@@ -4,11 +4,8 @@ import by.jackraidenph.dragonsurvival.capability.Capabilities;
 import by.jackraidenph.dragonsurvival.capability.DragonStateProvider;
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.gecko.DragonEntity;
-import by.jackraidenph.dragonsurvival.handlers.BlockInit;
 import by.jackraidenph.dragonsurvival.handlers.ClientEvents;
 import by.jackraidenph.dragonsurvival.handlers.DragonFoodHandler;
-import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.EventHandler;
 import by.jackraidenph.dragonsurvival.handlers.SpecificsHandler;
 import by.jackraidenph.dragonsurvival.handlers.WingObtainmentController;
 import by.jackraidenph.dragonsurvival.nest.DismantleNest;
@@ -16,10 +13,11 @@ import by.jackraidenph.dragonsurvival.nest.NestEntity;
 import by.jackraidenph.dragonsurvival.nest.SleepInNest;
 import by.jackraidenph.dragonsurvival.nest.ToggleRegeneration;
 import by.jackraidenph.dragonsurvival.network.*;
+import by.jackraidenph.dragonsurvival.registration.BlockInit;
+import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
 import by.jackraidenph.dragonsurvival.util.BiomeDictionaryHelper;
 import by.jackraidenph.dragonsurvival.util.DragonLevel;
 import by.jackraidenph.dragonsurvival.util.DragonType;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -32,6 +30,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.command.arguments.EntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.player.PlayerEntity;
@@ -114,7 +114,6 @@ public class DragonSurvivalMod {
         register(PacketSyncXPDevour.class, new PacketSyncXPDevour());
         register(PacketSyncPredatorStats.class, new PacketSyncPredatorStats());
         register(SynchronizeNest.class, new SynchronizeNest());
-        register(OpenDragonInventory.class, new OpenDragonInventory());
         register(SyncSize.class, new SyncSize());
         register(ToggleWings.class, new ToggleWings());
         register(OpenCrafting.class,new OpenCrafting());
@@ -230,8 +229,9 @@ public class DragonSurvivalMod {
                 (setFlyState, contextSupplier) -> {
                     if (contextSupplier.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
                         ClientEvents.dragonsFlying.put(setFlyState.playerid, setFlyState.flying);
-                        contextSupplier.get().setPacketHandled(true);
+
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, DiggingStatus.class, (diggingStatus, packetBuffer) -> {
@@ -245,9 +245,9 @@ public class DragonSurvivalMod {
                         Entity entity = minecraft.level.getEntity(diggingStatus.playerId);
                         if (entity instanceof PlayerEntity) {
                             ClientEvents.dragonsDigging.put(entity.getId(), diggingStatus.status);
-                            contextSupplier.get().setPacketHandled(true);
                         }
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, StartJump.class, (startJump, packetBuffer) -> {
@@ -260,9 +260,10 @@ public class DragonSurvivalMod {
                         Entity entity = Minecraft.getInstance().level.getEntity(startJump.playerId);
                         if (entity instanceof PlayerEntity) {
                             ClientEvents.dragonsJumpingTicks.put(entity.getId(), startJump.ticks);
-                            contextSupplier.get().setPacketHandled(true);
                         }
                     }
+                    //the spam source was in this handler
+                    contextSupplier.get().setPacketHandled(true);
                 });
 
         CHANNEL.registerMessage(nextPacketId++, RefreshDragons.class, (refreshDragons, packetBuffer) -> {
@@ -278,64 +279,83 @@ public class DragonSurvivalMod {
                                 e.printStackTrace();
                             }
                             ClientPlayerEntity myPlayer = Minecraft.getInstance().player;
-                            ClientEvents.dummyDragon2.getAndSet(EntityTypesInit.dragonEntity.create(myPlayer.level));
-                            ClientEvents.dummyDragon2.get().player = myPlayer.getId();
-
+                            ClientEvents.dragonEntity.getAndSet(EntityTypesInit.DRAGON.create(myPlayer.level));
+                            ClientEvents.dragonEntity.get().player = myPlayer.getId();
+                            ClientEvents.dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(myPlayer.level);
+                            if (ClientEvents.dragonArmor != null)
+                                ClientEvents.dragonArmor.player = myPlayer.getId();
                             PlayerEntity thatPlayer = (PlayerEntity) myPlayer.level.getEntity(refreshDragons.playerId);
                             if (thatPlayer != null) {
-                                DragonEntity dragonEntity = EntityTypesInit.dragonEntity.create(myPlayer.level);
+                                DragonEntity dragonEntity = EntityTypesInit.DRAGON.create(myPlayer.level);
                                 dragonEntity.player = thatPlayer.getId();
                                 ClientEvents.playerDragonHashMap.computeIfAbsent(thatPlayer.getId(), integer -> new AtomicReference<>(dragonEntity)).getAndSet(dragonEntity);
+                                DragonEntity dragonArmor = EntityTypesInit.DRAGON_ARMOR.create(myPlayer.level);
+                                dragonArmor.player = thatPlayer.getId();
+                                ClientEvents.playerArmorMap.computeIfAbsent(thatPlayer.getId(), integer -> dragonArmor);
                             }
                         });
                         thread.start();
-                        contextSupplier.get().setPacketHandled(true);
                     }
+                    contextSupplier.get().setPacketHandled(true);
                 });
         LOGGER.info("Successfully registered packets!");
     }
     
     @SubscribeEvent
     public void biomeLoadingEvent(BiomeLoadingEvent event) {
-    	List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesInclude.get()));
-        List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesExclude.get()));
-        List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
-        ResourceLocation biomeName = event.getName();
-        if (biomeName == null) return;
-        RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, biomeName);
-        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
-    	if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER) 
-    			&& biomeTypes.stream().anyMatch(x -> includeList.contains(x) 
-    			&& biomeTypes.stream().noneMatch(excludeList::contains))) {
-    		spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
-    	}
+        if (ConfigHandler.COMMON.predatorSpawnWeight.get() > 0) {
+            List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesInclude.get()));
+            List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(ConfigHandler.COMMON.predatorBiomesExclude.get()));
+            List<MobSpawnInfo.Spawners> spawns = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+            ResourceLocation biomeName = event.getName();
+            if (biomeName == null) return;
+            RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, biomeName);
+            Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
+            if (spawns.stream().anyMatch(x -> x.type.getCategory() == EntityClassification.MONSTER)
+                    && biomeTypes.stream().anyMatch(x -> includeList.contains(x)
+                    && biomeTypes.stream().noneMatch(excludeList::contains))) {
+                spawns.add(new MobSpawnInfo.Spawners(EntityTypesInit.MAGICAL_BEAST, ConfigHandler.COMMON.predatorSpawnWeight.get(), ConfigHandler.COMMON.minPredatorSpawn.get(), ConfigHandler.COMMON.maxPredatorSpawn.get()));
+            }
+        }
     }
     
     @SubscribeEvent
     public void serverRegisterCommandsEvent(RegisterCommandsEvent event) {
     	CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
         RootCommandNode<CommandSource> rootCommandNode = commandDispatcher.getRoot();
-        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermission(2)).build();
+        LiteralCommandNode<CommandSource> dragon = literal("dragon").requires(commandSource -> commandSource.hasPermission(2)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            return runCommand(type, 1, false, context.getSource().getPlayerOrException());
+        }).build();
 
-        ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest"}, builder)).build();
+        ArgumentCommandNode<CommandSource, String> dragonType = argument("dragon_type", StringArgumentType.string()).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"cave", "sea", "forest", "human"}, builder)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
+            return runCommand(type, 1, false, serverPlayerEntity);
+        }).build();
 
-        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).build();
+        ArgumentCommandNode<CommandSource, Integer> dragonStage = argument("dragon_stage", IntegerArgumentType.integer(1, 3)).suggests((context, builder) -> ISuggestionProvider.suggest(new String[]{"1", "2", "3"}, builder)).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            int stage = context.getArgument("dragon_stage", Integer.TYPE);
+            ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
+            return runCommand(type, stage, false, serverPlayerEntity);
+        }).build();
 
         ArgumentCommandNode<CommandSource, Boolean> giveWings = argument("wings", BoolArgumentType.bool()).executes(context -> {
             String type = context.getArgument("dragon_type", String.class);
             int stage = context.getArgument("dragon_stage", Integer.TYPE);
             boolean wings = context.getArgument("wings", Boolean.TYPE);
             ServerPlayerEntity serverPlayerEntity = context.getSource().getPlayerOrException();
-            serverPlayerEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).ifPresent(dragonStateHandler -> {
-                DragonType dragonType1 = DragonType.valueOf(type.toUpperCase());
-                dragonStateHandler.setType(dragonType1);
-                DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
-                dragonStateHandler.setHasWings(wings);
-                dragonStateHandler.setSize(dragonLevel.size, serverPlayerEntity);
-                dragonStateHandler.setPassengerId(0);
-                CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), dragonStateHandler.getPassengerId()));
-                serverPlayerEntity.refreshDimensions();
-            });
+            return runCommand(type, stage, wings, serverPlayerEntity);
+        }).build();
+    
+        ArgumentCommandNode<CommandSource, EntitySelector> target = argument("target", EntityArgument.players()).executes(context -> {
+            String type = context.getArgument("dragon_type", String.class);
+            int stage = context.getArgument("dragon_stage", Integer.TYPE);
+            boolean wings = context.getArgument("wings", Boolean.TYPE);
+            EntitySelector selector = context.getArgument("target", EntitySelector.class);
+            List<ServerPlayerEntity> serverPlayers = selector.findPlayers(context.getSource());
+            serverPlayers.forEach((player) -> runCommand(type, stage, wings, player));
             return 1;
         }).build();
 
@@ -343,9 +363,22 @@ public class DragonSurvivalMod {
         dragon.addChild(dragonType);
         dragonType.addChild(dragonStage);
         dragonStage.addChild(giveWings);
+        giveWings.addChild(target);
         LOGGER.info("Registered commands");
-    	
     }
-
     
+    private int runCommand(String type, int stage, boolean wings, ServerPlayerEntity serverPlayerEntity)
+    {
+        serverPlayerEntity.getCapability(DragonStateProvider.DRAGON_CAPABILITY).ifPresent(dragonStateHandler -> {
+            DragonType dragonType1 = type.equalsIgnoreCase("human") ? DragonType.NONE : DragonType.valueOf(type.toUpperCase());
+            dragonStateHandler.setType(dragonType1);
+            DragonLevel dragonLevel = DragonLevel.values()[stage - 1];
+            dragonStateHandler.setHasWings(wings);
+            dragonStateHandler.setSize(dragonLevel.size, serverPlayerEntity);
+            dragonStateHandler.setPassengerId(0);
+            CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayerEntity), new SynchronizeDragonCap(serverPlayerEntity.getId(), false, dragonType1, dragonLevel.size, wings, ConfigHandler.SERVER.caveLavaSwimmingTicks.get(), dragonStateHandler.getPassengerId()));
+            serverPlayerEntity.refreshDimensions();
+        });
+        return 1;
+    }
 }

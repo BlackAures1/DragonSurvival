@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+    "particle": "dragonsurvival:block/dragon_altar_blackstone_top",
+    "east": "dragonsurvival:block/dragon_altar_blackstone_east",
+    "west": "dragonsurvival:block/dragon_altar_blackstone_west",
+    "north": "dragonsurvival:block/dragon_altar_blackstone_north",
+    "south": "dragonsurvival:block/dragon_altar_blackstone_south",
+    "up": "dragonsurvival:block/dragon_altar_blackstone_top",
+    "down": "dragonsurvival:block/dragon_altar_blackstone_top"
+    }
+}

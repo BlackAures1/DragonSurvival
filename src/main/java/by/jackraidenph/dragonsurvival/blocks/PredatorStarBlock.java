@@ -2,8 +2,9 @@ package by.jackraidenph.dragonsurvival.blocks;
 
 import by.jackraidenph.dragonsurvival.config.ConfigHandler;
 import by.jackraidenph.dragonsurvival.entity.MagicalPredatorEntity;
-import by.jackraidenph.dragonsurvival.handlers.EntityTypesInit;
-import by.jackraidenph.dragonsurvival.handlers.ItemsInit;
+import by.jackraidenph.dragonsurvival.registration.DragonEffects;
+import by.jackraidenph.dragonsurvival.registration.EntityTypesInit;
+import by.jackraidenph.dragonsurvival.registration.ItemsInit;
 import by.jackraidenph.dragonsurvival.tiles.PredatorStarTileEntity;
 import by.jackraidenph.dragonsurvival.util.DamageSources;
 import net.minecraft.block.Block;
@@ -26,14 +27,13 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 
 import java.util.Random;
@@ -46,8 +46,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
 
     public PredatorStarBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
-        registerDefaultState(getStateDefinition().any()
-        		.setValue(WATERLOGGED, false));
+        registerDefaultState(getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -70,7 +69,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         	LivingEntity target = (LivingEntity)entity;
         	target.hurt(DamageSources.STAR_DRAIN, Float.MAX_VALUE);
             worldIn.destroyBlock(pos, false);
-            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get()) {
+            if (new Random().nextDouble() < ConfigHandler.COMMON.predatorStarSpawnChance.get() && worldIn.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(target.blockPosition()).inflate(50), playerEntity -> playerEntity.hasEffect(DragonEffects.PREDATOR_ANTI_SPAWN)).isEmpty()) {
                 MagicalPredatorEntity beast = EntityTypesInit.MAGICAL_BEAST.create(worldIn);
                 worldIn.addFreshEntity(beast);
                 beast.teleportTo(pos.getX(), pos.getY(), pos.getZ());
@@ -116,7 +115,7 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
     
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER));
+        return this.defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
     
     @Override
@@ -129,7 +128,6 @@ public class PredatorStarBlock extends Block implements IWaterLoggable {
         if (state.getValue(WATERLOGGED)) {
         	level.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-
         return super.updateShape(state, dir, state2, level, pos, pos2);
     }
     

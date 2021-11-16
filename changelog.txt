@@ -1,5 +1,122 @@
+1.16.5-0.0.46:
+- missing armor fix;
+- fix for first-person shaders.
+
+1.16.5-0.0.45:
+- changes in dragon model: fixed ancient bug with UV shoulder cubes location, fixed location of all ridges, partly fixed "gap" between ridge cubes during animation, fixed z-fighting of ridges, fixed jaw, all dragon parts united into common group, body sections now have separate parent-groups with suffix _sThanks, AIS!;
+- new decorative parts added to dragon model (about 100 new parts): several types of horns, two pairs of "ear" cubes with different angles, horizontal tail ridges, moustache, beard, one horn on the nose and one on the forehead. Thanks, AIS!;
+- changed dragon textures: fixes standard dragon textures to the new UV and fixes asymmetry/transitions/ladder pixels/missUV, etc. Thanks, AIS!;
+- many animation fixes and several new animations. New animation temporarily unused. Thanks, AIS!;
+- fixed dragon armor textures: extra pixels removed, wrong mirrors, dragon no longer blinks along with netherite armor grids;
+- added a new model for dragon armor rendering;
+- added 4 new types of armor for other mods.
+
+- dragon can not unfold wings if hungry below 6 units.Thanks, Horeak!;
+- cacti do not damage the forest dragon. Thanks, Horeak!;
+- sea dragon is faster to spend water in desert and nether, but slower at night. Thanks, Horeak!;
+- added config: altar cooldown, flying without hunger and sea dragon water consumption based on temperature, jump height at different stages;
+
+- fixed the bug that made the head turn animation stop moving (F3+T);
+- fixed the fishing bug;
+- fixed a very important and old bug with armor rendering!
+- English, Chinese (Ice flare+Gairlading), and Russian translations updated.
+
+1.16.5-0.0.44:
+- added effects: sea peace, forest magic, cave fire, calm animals, anti-predators;
+- added blocks: dragon memory, beacon empty, sea beacon peace, forest beacon magic, cave beacon fire;
+- added mechanics: buying an effect from a lighthouse for experience, damaging the player when he lacks experience, improving the lighthouse with items, creating a protected area with effects thanks to the memory block.
+- added beacon sounds - dragonsurvival:beacon_activate, dragonsurvival:beacon_deactivate, dragonsurvival:upgrade, dragonsurvival:get_effect;
+- added beacon textures;
+- added beacon particles - netherite_particle, gold_particle, diamond_particle;
+- added beacon configurations;
+- removed glare textures on horse riders;
+- added Spanish. Thanks Dgarden7!
+- improved translation in English and Russian;
+- re-frying cave food has been accelerated;
+- changed trade with the prince and princesses (now easier to pump them, but some items have become much more expensive);
+- improved the spawn of dragon hunters;
+- vanilla beacon returns in recipes.
+
+1.16.5-0.0.43:
+- required forge version - 36.2.0;
+- fixed knight helmet block drops;
+- fixed bolas/net rendering on other entities;
+- food items show which dragons they are appropriate to;
+- knight won't block attacks without a shield;
+- noses are returned to princesses.
+
+1.16.5-0.0.42:
+- updated Chinese, Russian;
+- dragon hunter textures updated;
+- charged charcoal recipe is more complicated;
+- charged soup recipe requires less charged charcoal;
+
+1.16.5-0.0.41:
+- added Armored Knight, Hunter, Knight Hound, Prince, Princesses (with config options);
+- added 3 Knight Helmets (trophy);
+- hitting or killing villagers (and princesses) gives "Evil dragon" effect to the dragon player;
+- "Evil dragon" triggers spawning of dragon hunters;
+- Princess or Prince can spawn around random player in overworld, and they have special trades;
+- added an option to toggle wing status notification and an option to toggle first person model;
+
+1.16.5-0.0.40:
+- added a config option to enable fall damage from dragon flight;
+- fall damage from dragon flight is now calculated based on speed and his size, and is non-lethal;
+- fixed 'Unknown custom packet identifier' spam in console;
+- fixed dragon sliding
+- fixed crash from Dragon Altar if custom dragon food is disabled;
+- added an option to toggle first person model rendering;
+- added an option to prevent dragons from using Elytra;
+- the nests can be placed in water now, and are waterloggable;
+
+1.16.5-0.0.39:
+- new languages have been added: Brazilian Portuguese and Traditional Chinese
+- chance of dust falling out for humans is increased to 1%
+- predators spawn only in End.
+- weakened health and attack of magical predators
+- sea dragons get speed boost on different variants of sandstone.
+- forest dragons get faster and stronger fear of dark
+- land time of sea dragons increased from 2400 to 15000 ticks.
+- bottle of water restores 5000 water ticks instead of 2400
+- nutritional value of charcoal was decreased from 5:6 to 4:2
+- added food compatibility with eanimod, environmental, untamedwilds, creatures and beast, snow pig, lees creatures, mystical world, toad terror and freshwarriors
+
+1.16.5-0.0.38:
+- updated and added items: charred meat, charred seafood, charred mushrooms, charred vegetables, which are obtained by re-cooking fried foods in furnace, smoker, and campfire.
+- all charred/charred foods can now be made into 1 coal unit
+- added charged soup for the cave dragon. Best food for a cave dragons and worst for a human. Recipe: put 3 fresh charged charcoal on top of 1 charred seafood/meat, 1 charred vegetable and 1 charred mushroom, then heat it all up on several buckets of lava in the workbench.
+- altar cooldown reduced to 1 second
+- added automatic compatibility of dragon rations and charred meat recipes through configuration with more than 80 mods (that's about 300 items). Don't forget to use the DragonFruit addon from Patreon, which shows exactly how much your dragon will get bonuses from food. The full list is available on GitHub:
+- charred food [https://github.com/DragonSurvivalTeam/DragonSurvival/tree/v1.16.x/src/main/resources/data/dragonsurvival/tags/items],
+- ration [https://github.com/DragonSurvivalTeam/DragonSurvival/blob/v1.16.x/src/main/java/by/jackraidenph/dragonsurvival/config/ServerConfig.java#L259-L482]
+- updated Russian, Chinese, French and English translations;
+- updated all recipes for creating charred foods;
+- fixed a problem with players from Turkey who had the "load_registries" error;
+- minor animation fix;
+- extra models and files removed.
+
+1.16.5-0.0.37:
+New:
+- added new altars of blackstone, nether brick, purple and red sandstone (special thanks to NoCube for textures and to mina987 for code)
+- added text help when selecting a dragon, compatible with the configuration file (features, weaknesses, diet)
+- when hitting an elder dragon to create an altar, sound is played
+- textures of all altars have been updated.
+- all animations and dragon model were upgraded (special thanks to AIS).
+- textures of dragons were improved: when attacking, lower jaw will not be visible, and a sea dragon does not have an extra 1 pixel on the wing now
+- each altar now has sounds appropriate to the type of material in all situations
+- altars no longer given a nest when is turned into a dragon
+- altars have strength and features appropriate to material
+- altars can now be crafted and are displayed in jei
+- altars no longer have 1 unit lighting
+- altars can now be rotated in all sides for decoration
+- altar names fixed
+- russian, french (Shaenarys), chinese (Ice flare-dragon ice) and english (Contra) localization updated
+
 1.16.5-0.0.36:
 fixed parrots not rendering while riding on dragons
+fixed missing nametags, added config option to enable >:(
+dragons no longer drop various items like shields and bows
+fixed item use being fired twice in mutiplayer
 
 1.16.5-0.0.35:
 fixed items in 3x3 crafting window not returning to player;

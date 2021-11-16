@@ -1,6 +1,6 @@
 package by.jackraidenph.dragonsurvival.nest;
 
-import by.jackraidenph.dragonsurvival.handlers.Containers;
+import by.jackraidenph.dragonsurvival.registration.Containers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

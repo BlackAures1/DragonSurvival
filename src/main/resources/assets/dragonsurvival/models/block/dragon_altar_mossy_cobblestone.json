@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+    "particle": "dragonsurvival:block/dragon_altar_mossy_cobblestone_top",
+    "east": "dragonsurvival:block/dragon_altar_mossy_cobblestone_east",
+    "west": "dragonsurvival:block/dragon_altar_mossy_cobblestone_west",
+    "north": "dragonsurvival:block/dragon_altar_mossy_cobblestone_north",
+    "south": "dragonsurvival:block/dragon_altar_mossy_cobblestone_south",
+    "up": "dragonsurvival:block/dragon_altar_mossy_cobblestone_top",
+    "down": "dragonsurvival:block/dragon_altar_mossy_cobblestone_top"
+    }
+}
